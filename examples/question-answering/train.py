@@ -16,15 +16,17 @@ if __name__ == '__main__':
     parser = SquadDataModule.add_argparse_args(parser)
     parser = LitQuestionAnsweringTransformer.add_argparse_args(parser)
     args = parser.parse_args()
+    args.do_train = False
 
     tokenizer = AutoTokenizer.from_pretrained(args.model_name_or_path, use_fast=args.use_fast)
 
-    dm = SquadDataModule(args, args.dataset_name, tokenizer)
+    dm = SquadDataModule(args, args.dataset_name, args.train_file, args.validation_file, tokenizer)
     dm.setup()
 
-    model = LitQuestionAnsweringTransformer(dm.model_name_or_path, dm.label2id, dm.tokenizer)
+    model = LitQuestionAnsweringTransformer(args.model_name_or_path, dm.tokenizer)
 
-    trainer = pl.Trainer.from_argparse_args(args.trainer)
-    trainer.fit(model, dm)
-    trainer.test(datamodule=dm)
+    trainer = pl.Trainer.from_argparse_args(args)
+    if args.do_train:
+        trainer.fit(model, dm)
+    trainer.test(model, datamodule=dm)
     model.save_pretrained("outputs")

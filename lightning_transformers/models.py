@@ -50,6 +50,12 @@ class LitQuestionAnsweringTransformer(LitTransformer):
             model_type=AutoModelForQuestionAnswering
         )
 
+    def create_metrics(self):
+        pass
+
+    def calculate_metrics(self, preds, labels, mode='val'):
+        return {}
+
 
 class LitTextClassificationTransformer(LitTransformer):
     def __init__(
