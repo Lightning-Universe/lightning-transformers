@@ -200,6 +200,13 @@ class TextClassificationDataModule(LitTransformerDataModule):
         ]
         self.ds.set_format("torch", columns=cols_to_keep)
 
+    def prepare_labels(self):
+        self.labels = self.ds['train'].features['labels']
+
+    @property
+    def num_classes(self):
+        return self.labels.num_classes
+
     @staticmethod
     def convert_to_features(example_batch, indices, tokenizer, input_feature_fields, padding, truncation, max_length):
         # Either encode single sentence or sentence pairs
