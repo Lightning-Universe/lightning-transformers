@@ -1,19 +1,17 @@
 import argparse
-import os
 
 import pytorch_lightning as pl
 from transformers import AutoTokenizer
 
+from lightning_transformers.base import TransformerAdamConfig
 from lightning_transformers.data import LitTransformerDataModule, TextClassificationDataModule
 from lightning_transformers.models import LitTextClassificationTransformer
-
-# TODO is this even needed? We can pass use_fast to the tokenizer
-os.environ["TOKENIZERS_PARALLELISM"] = "true"
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser = pl.Trainer.add_argparse_args(parser)
     parser = LitTransformerDataModule.add_argparse_args(parser)
+    parser = TransformerAdamConfig.add_argparse_args(parser)
     parser = LitTextClassificationTransformer.add_argparse_args(parser)
     args = parser.parse_args()
 
@@ -27,9 +25,20 @@ if __name__ == '__main__':
     )
     dm.setup()
 
-    model = LitTextClassificationTransformer(args.model_name_or_path, tokenizer)
+    optim_config = TransformerAdamConfig(
+        learning_rate=args.learning_rate,
+        adam_epsilon=args.adam_epsilon,
+        weight_decay=args.weight_decay,
+        warmup_steps=args.warmup_steps
+    )
+    model = LitTextClassificationTransformer(
+        model_name_or_path=args.model_name_or_path,
+        tokenizer=tokenizer,
+        optim_config=optim_config,
+        num_classes=dm.num_classes
+    )
 
-    trainer = pl.Trainer.from_argparse_args(args.trainer)
+    trainer = pl.Trainer.from_argparse_args(args)
     trainer.fit(model, dm)
     trainer.test(datamodule=dm)
     model.save_pretrained("outputs")
