@@ -53,7 +53,6 @@ class LitQuestionAnsweringTransformer(LitTransformer):
             model_type=AutoModelForQuestionAnswering
         )
 
-
 class LitTextClassificationTransformer(LitTransformer):
     def __init__(
             self,

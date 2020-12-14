@@ -1,11 +1,20 @@
-from typing import List
+from typing import List, Union
 
 import pytorch_lightning as pl
 import torch
 from pytorch_lightning.utilities import rank_zero_only
 from torch.optim import AdamW
-from transformers import AutoModelForSequenceClassification, AutoConfig, AutoTokenizer, get_linear_schedule_with_warmup
-
+from transformers import (
+    AutoConfig, 
+    AutoTokenizer, 
+)
+from transformers import (
+    AutoModelForQuestionAnswering,
+    AutoModelForSequenceClassification, 
+)
+from transformers import (
+    get_linear_schedule_with_warmup
+)
 
 class LitTransformer(pl.LightningModule):
     def __init__(
@@ -13,7 +22,7 @@ class LitTransformer(pl.LightningModule):
             model_name_or_path: str,
             label2id: List[str],
             tokenizer: AutoTokenizer,
-            model_type,
+            model_type: Union[AutoModelForSequenceClassification, AutoModelForSequenceClassification],
     ):
         super().__init__()
         self.save_hyperparameters()
@@ -26,7 +35,7 @@ class LitTransformer(pl.LightningModule):
             id2label={v: k for k, v in self.hparams.label2id.items()},
             label2id=self.hparams.label2id,
         )
-        self.model = AutoModelForSequenceClassification.from_pretrained(
+        self.model = model_type.from_pretrained(
             self.hparams.model_name_or_path, config=self.config
         )
         self.tokenizer = tokenizer
@@ -99,3 +108,12 @@ class LitTransformer(pl.LightningModule):
         self.hparams.save_dir = save_dir
         self.model.save_pretrained(self.hparams.save_dir)
         self.tokenizer.save_pretrained(self.hparams.save_dir)
+
+    @staticmethod
+    def add_argparse_args(parser):
+        parser.add_argument("--model_name_or_path", type=str, help="Path to pretrained model or model identifier from huggingface.co/models")
+        parser.add_argument("--config_name", type=str, default=None, help="Pretrained config name or path if not the same as model_name")
+        parser.add_argument("--tokenizer_name", type=str, default=None, help="Pretrained tokenizer name or path if not the same as model_name")
+        parser.add_argument("--cache_dir", type=str, help="Path to directory to store the pretrained models downloaded from huggingface.co")
+        parser.add_argument("--do_train", type=bool, default=True, help="Whether to train or make inference")
+        return parser
