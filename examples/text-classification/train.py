@@ -4,7 +4,7 @@ import os
 import pytorch_lightning as pl
 from transformers import AutoTokenizer
 
-from lightning_transformers.data import LitTransformerDataModule
+from lightning_transformers.data import LitTransformerDataModule, TextClassificationDataModule
 from lightning_transformers.models import LitTextClassificationTransformer
 
 # TODO is this even needed? We can pass use_fast to the tokenizer
@@ -19,10 +19,15 @@ if __name__ == '__main__':
 
     tokenizer = AutoTokenizer.from_pretrained(args.model_name_or_path, use_fast=args.use_fast)
 
-    dm = LitTransformerDataModule(args.dataset_name, args.train_file, args.validation_file)
+    dm = TextClassificationDataModule(
+        dataset_name=args.dataset_name,
+        train_file=args.train_file,
+        validation_file=args.validation_file,
+        tokenizer=tokenizer
+    )
     dm.setup()
 
-    model = LitTextClassificationTransformer(dm.model_name_or_path, dm.label2id, dm.tokenizer)
+    model = LitTextClassificationTransformer(args.model_name_or_path, tokenizer)
 
     trainer = pl.Trainer.from_argparse_args(args.trainer)
     trainer.fit(model, dm)
