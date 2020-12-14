@@ -23,6 +23,8 @@ class LitTransformer(pl.LightningModule):
             label2id: List[str],
             tokenizer: AutoTokenizer,
             model_type: Union[AutoModelForSequenceClassification, AutoModelForSequenceClassification],
+            learning_rate=1e-3,
+
     ):
         super().__init__()
         self.save_hyperparameters()
@@ -31,9 +33,6 @@ class LitTransformer(pl.LightningModule):
         # This could cause issues otherwise.
         self.config = AutoConfig.from_pretrained(
             self.hparams.model_name_or_path,
-            num_labels=len(self.hparams.label2id),
-            id2label={v: k for k, v in self.hparams.label2id.items()},
-            label2id=self.hparams.label2id,
         )
         self.model = model_type.from_pretrained(
             self.hparams.model_name_or_path, config=self.config
@@ -41,7 +40,7 @@ class LitTransformer(pl.LightningModule):
         self.tokenizer = tokenizer
 
         self.create_metrics()
-    
+
     def create_metrics(self):
         self.precision_metric = pl.metrics.Precision(num_classes=len(self.hparams.label2id))
         self.recall_metric = pl.metrics.Recall(num_classes=len(self.hparams.label2id))
@@ -58,14 +57,12 @@ class LitTransformer(pl.LightningModule):
         return self.model(**inputs)
 
     def training_step(self, batch, batch_idx):
-        del batch['idx']  # Why are we deleting an IDX here
         outputs = self(**batch)
         loss = outputs[0]
         self.log('train_loss', loss)
         return loss
 
     def validation_step(self, batch, batch_idx, dataloader_idx=0):
-        del batch['idx']
         outputs = self(**batch)
         val_loss, logits = outputs[:2]
         preds = torch.argmax(logits, axis=1)
@@ -74,15 +71,10 @@ class LitTransformer(pl.LightningModule):
         self.log('val_loss', val_loss, prog_bar=True)
 
     def test_step(self, batch, batch_idx, dataloader_idx=0):
-        del batch['labels']  # Again why are we deleting things from the batch? This can happen in the data module
         idxs = batch.pop('idx')
         outputs = self(**batch)
         logits = outputs[0]
         preds = torch.argmax(logits, axis=1)
-
-        # Should be an option, don't hardcode things in the code.
-        self.write_prediction('idxs', idxs, self.hparams.predictions_file)
-        self.write_prediction('preds', preds, self.hparams.predictions_file)
 
     def configure_optimizers(self):
         # We should offer defaults, and allow the user to override the module like a normal lightning module.
@@ -92,16 +84,16 @@ class LitTransformer(pl.LightningModule):
         optimizer_grouped_parameters = [
             {
                 "params": [p for n, p in self.model.named_parameters() if not any(nd in n for nd in no_decay)],
-                "weight_decay": self.hparams.weight_decay,
+                "weight_decay": 0.0,
             },
             {
                 "params": [p for n, p in self.model.named_parameters() if any(nd in n for nd in no_decay)],
                 "weight_decay": 0.0,
             },
         ]
-        optimizer = AdamW(optimizer_grouped_parameters, lr=self.hparams.learning_rate, eps=self.hparams.adam_epsilon)
+        optimizer = AdamW(optimizer_grouped_parameters, lr=self.hparams.learning_rate)
         scheduler = get_linear_schedule_with_warmup(
-            optimizer, num_warmup_steps=self.hparams.warmup_steps, num_training_steps=self.total_steps
+            optimizer, num_warmup_steps=10, num_training_steps=10
         )
         scheduler = {'scheduler': scheduler, 'interval': 'step', 'frequency': 1}
         return [optimizer], [scheduler]
