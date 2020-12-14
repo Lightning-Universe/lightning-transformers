@@ -1,8 +1,4 @@
-<<<<<<< HEAD
 from typing import List
-=======
-import pytorch_lightning as pl
->>>>>>> e32cbdbd8dbc05d2b56b6a812f9c33df19f9ed8b
 import torch
 from transformers import (
     AutoModelForSequenceClassification,
