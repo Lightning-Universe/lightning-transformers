@@ -40,6 +40,9 @@ class LitTransformer(pl.LightningModule):
         )
         self.tokenizer = tokenizer
 
+        self.create_metrics()
+    
+    def create_metrics(self):
         self.precision_metric = pl.metrics.Precision(num_classes=len(self.hparams.label2id))
         self.recall_metric = pl.metrics.Recall(num_classes=len(self.hparams.label2id))
         self.accuracy_metric = pl.metrics.Accuracy()

@@ -122,7 +122,6 @@ class LitTransformerDataModule(pl.LightningDataModule):
         parser.add_argument("--max_seq_length", type=int, default=384, help="The maximum total input sequence length after tokenization. Sequences longer"
             "than this will be truncated, sequences shorter will be padded.")
         parser.add_argument("--use_fast", type=bool, default=True, help="Wether to use fast tokenizer")
-
         return parser
 
 
@@ -164,6 +163,11 @@ class SquadDataModule(LitTransformerDataModule):
 
     def prepare_features(self):
 
+        from transformers import (
+            DataCollatorWithPadding
+            default_data_collator,
+        )
+
         self.prepare_functions()
 
         if self.args.do_train:
@@ -187,7 +191,7 @@ class SquadDataModule(LitTransformerDataModule):
         # Data collator
         # We have already padded to max length if the corresponding flag is True, otherwise we need to pad in the data
         # collator.
-        data_collator = default_data_collator if self.args.pad_to_max_length else DataCollatorWithPadding(tokenizer)
+        self.data_collator = default_data_collator if self.args.pad_to_max_length else DataCollatorWithPadding(tokenizer)
 
     @property
     def pad_on_right(self):
