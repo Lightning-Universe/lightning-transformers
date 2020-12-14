@@ -130,3 +130,12 @@ class MrpcDataModule(LitTransformerDataModule):
     label2id = {"not_equivalent": 0, "equivalent": 1}
     do_transform_labels = False
     train_val_split = None
+
+
+class SquadDataModule(LitTransformerDataModule):
+    dataset_name = 'squad'
+    subset_name = 'None'
+    text_fields = ['sentence1', 'sentence2']
+    label2id = {"not_equivalent": 0, "equivalent": 1}
+    do_transform_labels = False
+    train_val_split = None

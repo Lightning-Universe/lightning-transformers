@@ -1,6 +1,10 @@
 from typing import List
 
-from transformers import AutoModelForSequenceClassification, AutoTokenizer
+from transformers import (
+    AutoModelForSequenceClassification, 
+    AutoModelForQuestionAnswering,
+    AutoTokenizer,
+)
 
 from lightning_transformers.base import LitTransformer
 
@@ -46,7 +50,7 @@ class LitQuestionAnsweringTransformer(LitTransformer):
             model_name_or_path=model_name_or_path,
             label2id=label2id,
             tokenizer=tokenizer,
-            model_type=AutoModelForSequenceClassification
+            model_type=AutoModelForQuestionAnswering
         )
 
 
