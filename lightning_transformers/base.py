@@ -74,10 +74,12 @@ class LitTransformer(pl.LightningModule):
         self.log('val_loss', val_loss, prog_bar=True)
 
     def test_step(self, batch, batch_idx, dataloader_idx=0):
-        idxs = batch.pop('idx')
         outputs = self(**batch)
         logits = outputs[0]
         preds = torch.argmax(logits, axis=1)
+        metric_dict = self.calculate_metrics(batch, preds)
+        self.log_dict(metric_dict, prog_bar=True, on_step=False, on_epoch=True)
+        self.log('val_loss', val_loss, prog_bar=True)
 
     def configure_optimizers(self):
         # We should offer defaults, and allow the user to override the module like a normal lightning module.

@@ -24,6 +24,7 @@ if __name__ == '__main__':
     dm.setup()
 
     model = LitQuestionAnsweringTransformer(args.model_name_or_path, dm.tokenizer)
+    model.calculate_metrics = dm.calculate_metrics
 
     trainer = pl.Trainer.from_argparse_args(args)
     if args.do_train:

@@ -1,5 +1,5 @@
 from typing import List
-
+import torch
 from transformers import (
     AutoModelForSequenceClassification,
     AutoModelForQuestionAnswering,
@@ -46,6 +46,13 @@ class LitQuestionAnsweringTransformer(LitTransformer):
             tokenizer=tokenizer,
             model_type=AutoModelForQuestionAnswering
         )
+
+    def test_step(self, batch, batch_idx, dataloader_idx=0):
+        outputs = self(**batch)
+        logits = outputs[0]
+        preds = torch.argmax(logits, axis=1)
+        metric_dict = self.calculate_metrics(batch, preds)
+        self.log_dict(metric_dict, prog_bar=True, on_step=False, on_epoch=True)
 
     def create_metrics(self):
         pass

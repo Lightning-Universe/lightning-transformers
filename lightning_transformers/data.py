@@ -7,7 +7,8 @@ from torch.utils.data import DataLoader
 from transformers import AutoTokenizer
 from transformers import (
     default_data_collator,
-    DataCollatorWithPadding
+    DataCollatorWithPadding,
+    EvalPrediction
 )
 from lightning_transformers.utils import is_overridden
 
@@ -56,24 +57,34 @@ class LitTransformerDataModule(pl.LightningDataModule):
 
         self._prepare_labels()
 
+        self._load_and_prepare_metrics()
+
+    def is_overridden(self, method_name):
+        apply_udf = is_overridden(method_name, self, super_object=LitTransformerDataModule)
+        if apply_udf:
+            udf = getattr(self, method_name)
+            udf()
+        return apply_udf
+
     def _prepare_labels(self):
         pass
+
+    def _load_and_prepare_metrics(self):
+        self.is_overridden("load_and_prepare_metrics")
 
     @property
     def contains_test(self):
         return 'test' in self.ds
 
     def _pre_process(self):
-        if is_overridden("prepare_pre_processing_functions", self, super_object=LitTransformerDataModule):
-            
-            self.prepare_pre_processing_functions()
+        if self.is_overridden("prepare_pre_processing_functions"):
             
             if self.args.do_train:
                 self.ds["train"] = self.ds["train"].map(
                     self.prepare_train_features,
                     batched=True,
                     num_proc=self.args.preprocessing_num_workers,
-                    remove_columns=self.ds["train"].column_names,
+                    remove_columns=self.column_names,
                     load_from_cache_file=not self.args.load_from_cache_file,
                 )
                 self.train_dataloader = self._train_dataloader
@@ -83,7 +94,7 @@ class LitTransformerDataModule(pl.LightningDataModule):
                     self.prepare_validation_features,
                     batched=True,
                     num_proc=self.args.preprocessing_num_workers,
-                    remove_columns=self.ds["validation"].column_names,
+                    remove_columns=self.column_names,
                     load_from_cache_file=not self.args.load_from_cache_file,
                 )
                 if self.args.do_train and self.args.do_eval:
@@ -106,6 +117,9 @@ class LitTransformerDataModule(pl.LightningDataModule):
         pass
 
     def prepare_features(self):
+        pass
+
+    def load_and_prepare_metrics(self):
         pass
 
     def _load_dataset(self):
@@ -140,7 +154,6 @@ class LitTransformerDataModule(pl.LightningDataModule):
 
     def test_dataloader(self):
         dataset = self.ds['test'] if 'test' in self.ds else self.ds['validation']
-        import pdb; pdb.set_trace()
         return DataLoader(dataset, batch_size=self.batch_size, num_workers=self.num_workers, collate_fn=self.data_collator)
 
     @staticmethod
@@ -161,6 +174,8 @@ class LitTransformerDataModule(pl.LightningDataModule):
         parser.add_argument("--use_fast", type=bool, default=True, help="Use fast tokenization")
         parser.add_argument("--do_train", type=bool, default=False, help="Whether to train")
         parser.add_argument("--do_eval", type=bool, default=False, help="Whether to eval")
+        parser.add_argument("--output_dir", type=str, default='.', help="Where to save the predictions")
+
         return parser
 
 
@@ -232,11 +247,37 @@ class SquadDataModule(LitTransformerDataModule):
     do_transform_labels = False
     train_val_split = None
 
-    def create_metrics(self):
-        current_dir = os.path.sep.join(os.path.join(__file__).split(os.path.sep)[:-1])
-        metric = load_metric(os.path.join(current_dir, "squad_v2_local") if self.args.version_2_with_negative else "squad")
+    def load_and_prepare_metrics(self):
+        from lightning_transformers.question_answering.squad_preparation import (
+            post_processing_function,
+        )
+        self.load_metrics()
 
-        self.val_dataloader = None
+        kwargs = {
+            "examples": self.ds['validation'],
+            "version_2_with_negative": self.args.version_2_with_negative,
+            "n_best_size": self.args.n_best_size,
+            "max_answer_length": self.args.max_answer_length,
+            "null_score_diff_threshold": self.args.null_score_diff_threshold,
+            "output_dir": self.args.output_dir,
+            "is_world_process_zero": True
+        }
+
+        post_processing_function = partial(post_processing_function, *kwargs)
+
+        self.calculate_metrics = partial(self.calculate_metrics, post_processing_function=post_processing_function)
+
+    def calculate_metrics(self, features, predictions, post_processing_function=None):
+        import pdb; pdb.set_trace()
+        p = post_processing_function(features, predictions)
+        return self.compute_metrics(p)
+
+    def compute_metrics(self, p: EvalPrediction):
+        return self.metric.compute(predictions=p.predictions, references=p.label_ids)
+
+    def load_metrics(self):
+        current_dir = os.path.sep.join(os.path.join(__file__).split(os.path.sep)[:-1])
+        self.metric = load_metric(os.path.join(current_dir, "squad_v2_local") if self.args.version_2_with_negative else "squad")
 
     @property
     def pad_on_right(self):
