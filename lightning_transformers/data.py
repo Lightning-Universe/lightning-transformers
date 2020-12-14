@@ -9,11 +9,12 @@ from transformers import (
     default_data_collator,
     DataCollatorWithPadding
 )
-from pytorch_lightning.utilities.model_utils import is_overridden
+from lightning_transformers.utils import is_overridden
 
 class LitTransformerDataModule(pl.LightningDataModule):
     def __init__(
             self,
+            args,
             dataset_name: str,
             train_file: str,
             validation_file: str,
@@ -29,6 +30,7 @@ class LitTransformerDataModule(pl.LightningDataModule):
             train_val_split: Optional[int] = None,
             use_fast: bool = True):
         super().__init__()
+        self.args = args
         self.dataset_name = dataset_name
         self.train_file = train_file
         self.validation_file = validation_file
@@ -57,26 +59,35 @@ class LitTransformerDataModule(pl.LightningDataModule):
     def _prepare_labels(self):
         pass
 
+    @property
+    def contains_test(self):
+        return 'test' in self.ds
+
     def _pre_process(self):
-        self.prepare_pre_processing_functions()
+        if is_overridden("prepare_pre_processing_functions", self, super_object=LitTransformerDataModule):
+            
+            self.prepare_pre_processing_functions()
+            
+            if self.args.do_train:
+                self.ds["train"] = self.ds["train"].map(
+                    self.prepare_train_features,
+                    batched=True,
+                    num_proc=self.args.preprocessing_num_workers,
+                    remove_columns=self.ds["train"].column_names,
+                    load_from_cache_file=not self.args.load_from_cache_file,
+                )
+                self.train_dataloader = self._train_dataloader
 
-        if self.args.do_train:
-            self.ds["train"] = self.ds["train"].map(
-                self.prepare_train_features,
-                batched=True,
-                num_proc=self.args.preprocessing_num_workers,
-                remove_columns=self.column_names,
-                load_from_cache_file=not self.args.overwrite_cache,
-            )
-
-        if not self.args.do_train:
-            self.ds["validation"] = datasets["validation"].map(
-                self.prepare_validation_features,
-                batched=True,
-                num_proc=self.args.preprocessing_num_workers,
-                remove_columns=self.column_names,
-                load_from_cache_file=not self.args.overwrite_cache,
-            )
+            if not self.contains_test:
+                self.ds["validation"] = self.ds["validation"].map(
+                    self.prepare_validation_features,
+                    batched=True,
+                    num_proc=self.args.preprocessing_num_workers,
+                    remove_columns=self.ds["validation"].column_names,
+                    load_from_cache_file=not self.args.load_from_cache_file,
+                )
+                if self.args.do_train and self.args.do_eval:
+                    self.val_dataloader = self._val_dataloader
 
     def _post_process(self):
         pass
@@ -121,14 +132,16 @@ class LitTransformerDataModule(pl.LightningDataModule):
             self.ds['train'] = split['train']
             self.ds['validation'] = split['test']
 
-    def train_dataloader(self):
+    def _train_dataloader(self):
         return DataLoader(self.ds['train'], batch_size=self.batch_size, num_workers=self.num_workers, collate_fn=self.data_collator)
 
-    def val_dataloader(self):
+    def _val_dataloader(self):
         return DataLoader(self.ds['validation'], batch_size=self.batch_size, num_workers=self.num_workers, collate_fn=self.data_collator)
 
     def test_dataloader(self):
-        return DataLoader(self.ds['test'], batch_size=self.batch_size, num_workers=self.num_workers, collate_fn=self.data_collator)
+        dataset = self.ds['test'] if 'test' in self.ds else self.ds['validation']
+        import pdb; pdb.set_trace()
+        return DataLoader(dataset, batch_size=self.batch_size, num_workers=self.num_workers, collate_fn=self.data_collator)
 
     @staticmethod
     def add_argparse_args(parser):
@@ -146,6 +159,8 @@ class LitTransformerDataModule(pl.LightningDataModule):
                             help="The maximum total input sequence length after tokenization. Sequences longer"
                                  "than this will be truncated, sequences shorter will be padded.")
         parser.add_argument("--use_fast", type=bool, default=True, help="Use fast tokenization")
+        parser.add_argument("--do_train", type=bool, default=False, help="Whether to train")
+        parser.add_argument("--do_eval", type=bool, default=False, help="Whether to eval")
         return parser
 
 
@@ -245,7 +260,7 @@ class SquadDataModule(LitTransformerDataModule):
         answer_column_name = "answers" if "answers" in self.column_names else self.column_names[2]
         return question_column_name, context_column_name, answer_column_name
 
-    def prepare_data_processing_map_functions(self):
+    def prepare_pre_processing_functions(self):
         from lightning_transformers.question_answering.squad_preparation import (
             prepare_train_features,
             prepare_validation_features
@@ -262,7 +277,8 @@ class SquadDataModule(LitTransformerDataModule):
                   "doc_stride": self.args.doc_stride,
                   "pad_to_max_length": self.args.pad_to_max_length}
 
-        return partial(prepare_train_features, **kwargs), partial(prepare_validation_features, **kwargs)
+        self.prepare_train_features = partial(prepare_train_features, **kwargs)
+        self.prepare_validation_features = partial(prepare_validation_features, **kwargs)
 
     @staticmethod
     def add_argparse_args(parser):

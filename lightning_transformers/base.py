@@ -19,9 +19,9 @@ from transformers import (
 class LitTransformer(pl.LightningModule):
     def __init__(
             self,
-            model_name_or_path: str,
-            tokenizer: AutoTokenizer,
-            model_type: Union[AutoModelForSequenceClassification, AutoModelForSequenceClassification],
+            model_name_or_path: str = None,
+            tokenizer: AutoTokenizer = None,
+            model_type: Union[AutoModelForSequenceClassification, AutoModelForSequenceClassification] = None,
             learning_rate=1e-3,
 
     ):
@@ -31,6 +31,7 @@ class LitTransformer(pl.LightningModule):
         # We have to ensure that we only use rank 0 when downloading the model somehow.
         # This could cause issues otherwise.
         self.generate_config()
+        
         self.model = model_type.from_pretrained(
             self.hparams.model_name_or_path, config=self.config
         )
@@ -38,7 +39,7 @@ class LitTransformer(pl.LightningModule):
 
         self.create_metrics()
 
-    def generate_config(self)
+    def generate_config(self):
         self.config = AutoConfig.from_pretrained(
             self.hparams.model_name_or_path,
         )
@@ -112,5 +113,4 @@ class LitTransformer(pl.LightningModule):
         parser.add_argument("--config_name", type=str, default=None, help="Pretrained config name or path if not the same as model_name")
         parser.add_argument("--tokenizer_name", type=str, default=None, help="Pretrained tokenizer name or path if not the same as model_name")
         parser.add_argument("--cache_dir", type=str, help="Path to directory to store the pretrained models downloaded from huggingface.co")
-        parser.add_argument("--do_train", type=bool, default=True, help="Whether to train or make inference")
         return parser
