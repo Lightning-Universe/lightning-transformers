@@ -10,7 +10,7 @@ PyTorch-Lightning-Sandbox documentation
    :name: start
    :caption: Start here
 
-   api/pl_sandbox.sample_module
+   api/lightning_transformers.sample_module
 
 
 Indices and tables
