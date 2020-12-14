@@ -56,6 +56,26 @@ class LitQuestionAnsweringTransformer(LitTransformer):
     def calculate_metrics(self, preds, labels, mode='val'):
         return {}
 
+    def training_step(self, batch, batch_idx):
+        outputs = self(**batch)
+        loss = outputs[0]
+        self.log('train_loss', loss)
+        return loss
+
+    def validation_step(self, batch, batch_idx, dataloader_idx=0):
+        outputs = self(**batch)
+        val_loss, logits = outputs[:2]
+        preds = torch.argmax(logits, axis=1)
+        metric_dict = self.calculate_metrics(preds, batch['labels'])
+        self.log_dict(metric_dict, prog_bar=True, on_step=False, on_epoch=True)
+        self.log('val_loss', val_loss, prog_bar=True)
+
+    def test_step(self, batch, batch_idx, dataloader_idx=0):
+        idxs = batch.pop('idx')
+        outputs = self(**batch)
+        logits = outputs[0]
+        preds = torch.argmax(logits, axis=1)
+
 
 class LitTextClassificationTransformer(LitTransformer):
     def __init__(
