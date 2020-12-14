@@ -1,11 +1,15 @@
+import os
 from typing import Optional
 from functools import partial
 import pytorch_lightning as pl
-from datasets import load_dataset
-from pytorch_lightning.utilities.exceptions import MisconfigurationException
+from datasets import load_dataset, load_metric
 from torch.utils.data import DataLoader
 from transformers import AutoTokenizer
-
+from transformers import (
+    default_data_collator,
+    DataCollatorWithPadding
+)
+from pytorch_lightning.utilities.model_utils import is_overridden
 
 class LitTransformerDataModule(pl.LightningDataModule):
     def __init__(
@@ -42,13 +46,50 @@ class LitTransformerDataModule(pl.LightningDataModule):
 
     def setup(self, stage: Optional[str] = None):
 
-        self.load_dataset()
+        self._load_dataset()
 
-        self.split_ds()
+        self._split_ds()
 
-        self.prepare_features()
+        self._process_data()
 
-        self.prepare_labels()
+        self._prepare_labels()
+
+    def _prepare_labels(self):
+        pass
+
+    def _pre_process(self):
+        self.prepare_pre_processing_functions()
+
+        if self.args.do_train:
+            self.ds["train"] = self.ds["train"].map(
+                self.prepare_train_features,
+                batched=True,
+                num_proc=self.args.preprocessing_num_workers,
+                remove_columns=self.column_names,
+                load_from_cache_file=not self.args.overwrite_cache,
+            )
+
+        if not self.args.do_train:
+            self.ds["validation"] = datasets["validation"].map(
+                self.prepare_validation_features,
+                batched=True,
+                num_proc=self.args.preprocessing_num_workers,
+                remove_columns=self.column_names,
+                load_from_cache_file=not self.args.overwrite_cache,
+            )
+
+    def _post_process(self):
+        pass
+
+    def prepare_pre_processing_functions(self):
+        return True
+
+    def prepare_post_processing_functions(self):
+        pass
+
+    def _process_data(self):
+        self._pre_process()
+        self._post_process()
 
     def prepare_labels(self):
         pass
@@ -56,7 +97,7 @@ class LitTransformerDataModule(pl.LightningDataModule):
     def prepare_features(self):
         pass
 
-    def load_dataset(self):
+    def _load_dataset(self):
         if self.dataset_name is not None:
             # Downloading and loading a dataset from the hub.
             self.ds = load_dataset(self.dataset_name, self.dataset_config_name)
@@ -74,20 +115,20 @@ class LitTransformerDataModule(pl.LightningDataModule):
             extension = self.train_file.split(".")[-1]
             self.ds = load_dataset(extension, data_files=data_files, field="data")
 
-    def split_ds(self):
+    def _split_ds(self):
         if self.train_val_split is not None:
             split = self.ds['train'].train_test_split(self.train_val_split)
             self.ds['train'] = split['train']
             self.ds['validation'] = split['test']
 
     def train_dataloader(self):
-        return DataLoader(self.ds['train'], batch_size=self.batch_size, num_workers=self.num_workers)
+        return DataLoader(self.ds['train'], batch_size=self.batch_size, num_workers=self.num_workers, collate_fn=self.data_collator)
 
     def val_dataloader(self):
-        return DataLoader(self.ds['validation'], batch_size=self.batch_size, num_workers=self.num_workers)
+        return DataLoader(self.ds['validation'], batch_size=self.batch_size, num_workers=self.num_workers, collate_fn=self.data_collator)
 
     def test_dataloader(self):
-        return DataLoader(self.ds['test'], batch_size=self.batch_size, num_workers=self.num_workers)
+        return DataLoader(self.ds['test'], batch_size=self.batch_size, num_workers=self.num_workers, collate_fn=self.data_collator)
 
     @staticmethod
     def add_argparse_args(parser):
@@ -169,38 +210,18 @@ class TextClassificationDataModule(LitTransformerDataModule):
         ds.rename_column_('label', "labels")
         return ds
 
-
 class SquadDataModule(LitTransformerDataModule):
-    def prepare_features(self):
+    dataset_name = 'squad'
+    subset_name = None
+    label2id = {}
+    do_transform_labels = False
+    train_val_split = None
 
-        from transformers import (
-            DataCollatorWithPadding,
-            default_data_collator,
-        )
+    def create_metrics(self):
+        current_dir = os.path.sep.join(os.path.join(__file__).split(os.path.sep)[:-1])
+        metric = load_metric(os.path.join(current_dir, "squad_v2_local") if self.args.version_2_with_negative else "squad")
 
-        prepare_train_features, prepare_validation_features = self.prepare_data_processing_map_functions()
-
-        self.ds["train"] = self.ds["train"].map(
-            prepare_train_features,
-            batched=True,
-            num_proc=self.preprocessing_num_workers,
-            remove_columns=self.column_names,
-            load_from_cache_file=not self.load_from_cache_file,
-        )
-
-        self.ds["validation"] = self.ds["validation"].map(
-            prepare_validation_features,
-            batched=True,
-            num_proc=self.preprocessing_num_workers,
-            remove_columns=self.column_names,
-            load_from_cache_file=not self.load_from_cache_file,
-        )
-
-        # Data collator
-        # We have already padded to max length if the corresponding flag is True, otherwise we need to pad in the data
-        # collator.
-        self.data_collator = default_data_collator if self.args.pad_to_max_length else DataCollatorWithPadding(
-            self.tokenizer)
+        self.val_dataloader = None
 
     @property
     def pad_on_right(self):
@@ -212,6 +233,10 @@ class SquadDataModule(LitTransformerDataModule):
             return self.ds["train"].column_names
         else:
             return self.ds["validation"].column_names
+
+    @property
+    def data_collator(self):
+        return default_data_collator if self.args.pad_to_max_length else DataCollatorWithPadding(self.tokenizer)
 
     @property
     def qa_column_names(self):

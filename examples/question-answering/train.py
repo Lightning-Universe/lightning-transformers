@@ -22,9 +22,9 @@ if __name__ == '__main__':
     dm = SquadDataModule(args, args.dataset_name, tokenizer)
     dm.setup()
 
-    model = LitQuestionAnsweringTransformer(dm.model_name_or_path, dm.label2id, dm.tokenizer)
+    model = LitQuestionAnsweringTransformer(args.model_name_or_path, dm.label2id, dm.tokenizer)
 
-    trainer = pl.Trainer.from_argparse_args(args.trainer)
+    trainer = pl.Trainer.from_argparse_args(args)
     trainer.fit(model, dm)
     trainer.test(datamodule=dm)
     model.save_pretrained("outputs")
