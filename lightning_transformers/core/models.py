@@ -6,15 +6,11 @@ from transformers import (
     AutoTokenizer,
 )
 
-from lightning_transformers.base import LitTransformer, TransformerAdamConfig
+from lightning_transformers.core.base import LitTransformer
 
 
 class LitLanguageModelingTransformer(LitTransformer):
-    def __init__(
-            self,
-            model_name_or_path: str,
-            tokenizer: AutoTokenizer,
-            optim_config: TransformerAdamConfig):
+    def __init__(self, model_name_or_path: str, tokenizer: AutoTokenizer, optim_config):
         super().__init__(
             model_name_or_path=model_name_or_path,
             tokenizer=tokenizer,
@@ -28,7 +24,7 @@ class LitMultipleChoiceTransformer(LitTransformer):
             self,
             model_name_or_path: str,
             tokenizer: AutoTokenizer,
-            optim_config: TransformerAdamConfig):
+            optim_config):
         super().__init__(
             model_name_or_path=model_name_or_path,
             tokenizer=tokenizer,
@@ -38,17 +34,6 @@ class LitMultipleChoiceTransformer(LitTransformer):
 
 
 class LitQuestionAnsweringTransformer(LitTransformer):
-    def __init__(
-            self,
-            model_name_or_path: str,
-            tokenizer: AutoTokenizer,
-            optim_config: TransformerAdamConfig):
-        super().__init__(
-            model_name_or_path=model_name_or_path,
-            tokenizer=tokenizer,
-            optim_config=optim_config,
-            model_type=AutoModelForQuestionAnswering
-        )
 
     def test_step(self, batch, batch_idx, dataloader_idx=0):
         outputs = self(**batch)
@@ -78,7 +63,6 @@ class LitQuestionAnsweringTransformer(LitTransformer):
         self.log('val_loss', val_loss, prog_bar=True)
 
     def test_step(self, batch, batch_idx, dataloader_idx=0):
-        idxs = batch.pop('idx')
         outputs = self(**batch)
         logits = outputs[0]
         preds = torch.argmax(logits, axis=1)
@@ -89,7 +73,7 @@ class LitTextClassificationTransformer(LitTransformer):
             self,
             model_name_or_path: str,
             tokenizer: AutoTokenizer,
-            optim_config: TransformerAdamConfig,
+            optim_config,
             num_classes: int):
         self.num_classes = num_classes
         super().__init__(
@@ -143,7 +127,7 @@ class LitTextGenerationTransformer(LitTransformer):
             self,
             model_name_or_path: str,
             tokenizer: AutoTokenizer,
-            optim_config: TransformerAdamConfig):
+            optim_config):
         super().__init__(
             model_name_or_path=model_name_or_path,
             tokenizer=tokenizer,
@@ -157,7 +141,7 @@ class LitTokenClassificationTransformer(LitTransformer):
             self,
             model_name_or_path: str,
             tokenizer: AutoTokenizer,
-            optim_config: TransformerAdamConfig):
+            optim_config):
         super().__init__(
             model_name_or_path=model_name_or_path,
             tokenizer=tokenizer,

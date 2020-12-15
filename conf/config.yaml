@@ -1,0 +1,8 @@
+defaults: # for loading the default config
+  
+  - model: bert-base-uncased
+  - dataset: squad
+  - trainer: default
+  - optimizer: adamw
+
+task: ???

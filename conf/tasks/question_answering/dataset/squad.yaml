@@ -1,0 +1,20 @@
+# @package _group_
+_target_: lightning_transformers.core.data.LitQuestionAnsweringTransformerDataModule
+params: 
+  train_file: ''
+  validation_file: ''
+  dataset_config_name: ''
+  padding: 'max_length'
+  truncation: 'only_first'
+  max_length: 128
+  batch_size: batch_size
+  num_workers: 16
+  preprocessing_num_workers: 8
+  load_from_cache_file: True
+  use_fast: True
+  pad_to_max_length: True
+  version_2_with_negative: False
+  null_score_diff_threshold: .0
+  doc_stride: 128
+  n_best_size: 20
+  max_answer_length: 30
