@@ -97,6 +97,7 @@ class LitTransformerDataModule(pl.LightningDataModule):
                 self.train_dataloader = self._train_dataloader
 
             if not self.contains_test:
+                self.ds['validation_orginal'] = self.ds['validation'] 
                 self.ds["validation"] = self.ds["validation"].map(
                     self.prepare_validation_features,
                     batched=True,
@@ -167,6 +168,7 @@ class LitTransformerDataModule(pl.LightningDataModule):
         return DataLoader(self.ds['validation'], batch_size=self.args.batch_size, num_workers=self.args.num_workers, collate_fn=self.data_collator)
 
     def test_dataloader(self):
+
         dataset = self.ds['test'] if 'test' in self.ds else self.ds['validation']
         return DataLoader(dataset, batch_size=self.args.batch_size, num_workers=self.args.num_workers, collate_fn=self.data_collator)
 
@@ -245,7 +247,8 @@ class LitQuestionAnsweringTransformerDataModule(LitTransformerDataModule):
         self.load_metrics()
 
         kwargs = {
-            "examples": self.ds['validation'],
+            "features": self.ds['validation'],
+            "examples": self.ds['validation_orginal'],
             "version_2_with_negative": self.args.version_2_with_negative,
             "n_best_size": self.args.n_best_size,
             "max_answer_length": self.args.max_answer_length,
@@ -254,13 +257,12 @@ class LitQuestionAnsweringTransformerDataModule(LitTransformerDataModule):
             "is_world_process_zero": True
         }
 
-        post_processing_function = partial(self.modellib.post_processing_function, *kwargs)
+        post_process_function = partial(self.modellib.post_process_function, **kwargs)
 
-        self.calculate_metrics = partial(self.calculate_metrics, post_processing_function=post_processing_function)
+        self.calculate_metrics = partial(self.calculate_metrics, post_process_function=post_process_function)
 
-    def calculate_metrics(self, features, predictions, post_processing_function=None):
-        import pdb; pdb.set_trace()
-        p = post_processing_function(features, predictions)
+    def calculate_metrics(self, predictions, post_process_function=None):
+        p = post_process_function(predictions)
         return self.compute_metrics(p)
 
     def compute_metrics(self, p: EvalPrediction):

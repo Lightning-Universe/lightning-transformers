@@ -139,21 +139,20 @@ def prepare_validation_features(examples,
 
     return tokenized_examples
 
-def post_processing_function(features, 
-                             predictions, 
-                             examples=None, 
-                             version_2_with_negative=None,
-                             n_best_size=None,
-                             max_answer_length=None,
-                             null_score_diff_threshold=None,
-                             output_dir=None,
-                             is_world_process_zero=True,
-                             ):
+def post_process_function(predictions,
+                          features=None,  
+                          examples=None, 
+                          version_2_with_negative=None,
+                          n_best_size=None,
+                          max_answer_length=None,
+                          null_score_diff_threshold=None,
+                          output_dir=None,
+                          is_world_process_zero=True):
     # Post-processing: we match the start logits and end logits to answers in the original context.
     predictions = postprocess_qa_predictions(
-        examples=examples,
-        features=features,
-        predictions=predictions,
+        examples,
+        features,
+        predictions,
         version_2_with_negative=version_2_with_negative,
         n_best_size=n_best_size,
         max_answer_length=max_answer_length,
@@ -216,6 +215,7 @@ def postprocess_qa_predictions(
         is_world_process_zero (:obj:`bool`, `optional`, defaults to :obj:`True`):
             Whether this process is the main process or not (used to determine if logging/saves should be done).
     """
+    import pdb; pdb.set_trace()
     assert len(predictions) == 2, "`predictions` should be a tuple with two elements (start_logits, end_logits)."
     all_start_logits, all_end_logits = predictions
 

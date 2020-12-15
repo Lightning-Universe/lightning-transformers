@@ -132,6 +132,7 @@ def load_configuration():
 
 def instantiate_model(cfg, data_module):
     model = hydra.utils.instantiate(cfg.model, optim=cfg.optimizer, scheduler=cfg.scheduler)
+    model.calculate_metrics = data_module.calculate_metrics
     return model
 
 def instantiate_data_module(cfg):
