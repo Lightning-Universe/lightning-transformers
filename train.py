@@ -21,13 +21,16 @@ def train(cfg):
     log.info(OmegaConf.to_yaml(cfg))
 
     data_module: pl.LightningDataModule = instantiate_data_module(cfg)
+    data_module.setup()
     model: pl.LightningModule = instantiate_model(cfg, data_module)
 
     loggers: List[pl.callbacks.Callback] = initialize_loggers(cfg)
 
     trainer: pl.Trainer = instantiate(cfg.trainer, gpus=cfg.gpus, logger=loggers)
 
-    trainer.fit(model, data_module)
+    if cfg.training.do_train:
+        trainer.fit(model, datamodule=data_module)
+    trainer.test(model, datamodule=data_module)
 
 
 def main(cfg: DictConfig) -> None:

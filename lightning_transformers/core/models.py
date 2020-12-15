@@ -45,7 +45,7 @@ class LitQuestionAnsweringTransformer(LitTransformer):
     def create_metrics(self):
         pass
 
-    def calculate_metrics(self, preds, labels, mode='val'):
+    def calculate_metrics(self, preds, batch, mode='val'):
         return {}
 
     def training_step(self, batch, batch_idx):
@@ -58,7 +58,7 @@ class LitQuestionAnsweringTransformer(LitTransformer):
         outputs = self(**batch)
         val_loss, logits = outputs[:2]
         preds = torch.argmax(logits, axis=1)
-        metric_dict = self.calculate_metrics(preds, batch['labels'])
+        metric_dict = self.calculate_metrics(preds, batch)
         self.log_dict(metric_dict, prog_bar=True, on_step=False, on_epoch=True)
         self.log('val_loss', val_loss, prog_bar=True)
 

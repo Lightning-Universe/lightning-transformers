@@ -13,9 +13,12 @@ from transformers import (
 import importlib
 from argparse import Namespace
 from lightning_transformers.core.utils import is_overridden
+from lightning_transformers import __ROOT_DIR__
 
 class LitTransformerDataModule(pl.LightningDataModule):
     def __init__(self,
+                 task: str = None,
+                 training = None,
                  dataset_name: str = None,
                  train_file: str = None,
                  validation_file: str = None,
@@ -23,8 +26,6 @@ class LitTransformerDataModule(pl.LightningDataModule):
                  padding: str = 'max_length',
                  truncation: str = 'only_first',
                  max_length: int = 128,
-                 batch_size: int = 16,
-                 num_workers: int = 8,
                  preprocessing_num_workers: int = 8,
                  load_from_cache_file: bool = True,
                  dataset_config_name: Optional[str] = None,
@@ -32,7 +33,8 @@ class LitTransformerDataModule(pl.LightningDataModule):
                  use_fast: bool = True,
                  **kwargs):
         super().__init__()
-        self.args = Namespace(**kwargs)
+        self.args = Namespace(**kwargs, **training)
+        self.task = task
         self.dataset_name = dataset_name
         self.train_file = train_file
         self.validation_file = validation_file
@@ -41,14 +43,14 @@ class LitTransformerDataModule(pl.LightningDataModule):
         self.padding = padding
         self.truncation = truncation
         self.max_length = max_length
-        self.batch_size = batch_size
-        self.num_workers = num_workers
         self.preprocessing_num_workers = preprocessing_num_workers
         self.load_from_cache_file = load_from_cache_file
         self.train_val_split = train_val_split
         self.use_fast = use_fast
 
     def setup(self, stage: Optional[str] = None):
+
+        self._load_processing_module()
 
         self._load_dataset()
 
@@ -59,6 +61,10 @@ class LitTransformerDataModule(pl.LightningDataModule):
         self._prepare_labels()
 
         self._load_and_prepare_metrics()
+
+    def _load_processing_module(self):
+        path_to_modellib = ".".join(["lightning_transformers", "datasets", self.task, self.dataset_name, "processing"])
+        self.modellib = importlib.import_module(path_to_modellib)
 
     def is_overridden(self, method_name):
         apply_udf = is_overridden(method_name, self, super_object=LitTransformerDataModule)
@@ -84,9 +90,9 @@ class LitTransformerDataModule(pl.LightningDataModule):
                 self.ds["train"] = self.ds["train"].map(
                     self.prepare_train_features,
                     batched=True,
-                    num_proc=self.args.preprocessing_num_workers,
-                    remove_columns=self.column_names,
-                    load_from_cache_file=not self.args.load_from_cache_file,
+                    num_proc=self.preprocessing_num_workers,
+                    remove_columns=self.ds["train"].column_names,
+                    load_from_cache_file=not self.load_from_cache_file,
                 )
                 self.train_dataloader = self._train_dataloader
 
@@ -94,9 +100,9 @@ class LitTransformerDataModule(pl.LightningDataModule):
                 self.ds["validation"] = self.ds["validation"].map(
                     self.prepare_validation_features,
                     batched=True,
-                    num_proc=self.args.preprocessing_num_workers,
-                    remove_columns=self.column_names,
-                    load_from_cache_file=not self.args.load_from_cache_file,
+                    num_proc=self.preprocessing_num_workers,
+                    remove_columns=self.ds["validation"].column_names,
+                    load_from_cache_file=not self.load_from_cache_file,
                 )
                 if self.args.do_train and self.args.do_eval:
                     self.val_dataloader = self._val_dataloader
@@ -123,23 +129,30 @@ class LitTransformerDataModule(pl.LightningDataModule):
     def load_and_prepare_metrics(self):
         pass
 
+    def load_dataset(self):
+        pass
+
     def _load_dataset(self):
-        if self.dataset_name is not None:
-            # Downloading and loading a dataset from the hub.
-            self.ds = load_dataset(self.dataset_name, self.dataset_config_name)
+        if self.is_overridden("load_dataset"):
+            # User can override this function to load their own dataset.
+            pass
         else:
-            if not (self.train_file and self.validation_file):
-                raise MisconfigurationException(
-                    'You have not specified a dataset name'
-                    'and need to specify a custom train file and validation file to the data module.'
-                )
-            data_files = {}
-            if self.train_file is not None:
-                data_files["train"] = self.train_file
-            if self.validation_file is not None:
-                data_files["validation"] = self.validation_file
-            extension = self.train_file.split(".")[-1]
-            self.ds = load_dataset(extension, data_files=data_files, field="data")
+            if self.dataset_name is not None:
+                # Downloading and loading a dataset from the hub.
+                self.ds = load_dataset(self.dataset_name, self.dataset_config_name)
+            else:
+                if not (self.train_file and self.validation_file):
+                    raise MisconfigurationException(
+                        'You have not specified a dataset name'
+                        'and need to specify a custom train file and validation file to the data module.'
+                    )
+                data_files = {}
+                if self.train_file is not None:
+                    data_files["train"] = self.train_file
+                if self.validation_file is not None:
+                    data_files["validation"] = self.validation_file
+                extension = self.train_file.split(".")[-1]
+                self.ds = load_dataset(extension, data_files=data_files, field="data")
 
     def _split_ds(self):
         if self.train_val_split is not None:
@@ -148,14 +161,14 @@ class LitTransformerDataModule(pl.LightningDataModule):
             self.ds['validation'] = split['test']
 
     def _train_dataloader(self):
-        return DataLoader(self.ds['train'], batch_size=self.batch_size, num_workers=self.num_workers, collate_fn=self.data_collator)
+        return DataLoader(self.ds['train'], batch_size=self.args.batch_size, num_workers=self.args.num_workers, collate_fn=self.data_collator)
 
     def _val_dataloader(self):
-        return DataLoader(self.ds['validation'], batch_size=self.batch_size, num_workers=self.num_workers, collate_fn=self.data_collator)
+        return DataLoader(self.ds['validation'], batch_size=self.args.batch_size, num_workers=self.args.num_workers, collate_fn=self.data_collator)
 
     def test_dataloader(self):
         dataset = self.ds['test'] if 'test' in self.ds else self.ds['validation']
-        return DataLoader(dataset, batch_size=self.batch_size, num_workers=self.num_workers, collate_fn=self.data_collator)
+        return DataLoader(dataset, batch_size=self.args.batch_size, num_workers=self.args.num_workers, collate_fn=self.data_collator)
 
 
 class TextClassificationDataModule(LitTransformerDataModule):
@@ -229,10 +242,6 @@ class TextClassificationDataModule(LitTransformerDataModule):
 class LitQuestionAnsweringTransformerDataModule(LitTransformerDataModule):
 
     def load_and_prepare_metrics(self):
-
-        from lightning_transformers.question_answering.squad_preparation import (
-            post_processing_function,
-        )
         self.load_metrics()
 
         kwargs = {
@@ -245,7 +254,7 @@ class LitQuestionAnsweringTransformerDataModule(LitTransformerDataModule):
             "is_world_process_zero": True
         }
 
-        post_processing_function = partial(post_processing_function, *kwargs)
+        post_processing_function = partial(self.modellib.post_processing_function, *kwargs)
 
         self.calculate_metrics = partial(self.calculate_metrics, post_processing_function=post_processing_function)
 
@@ -284,11 +293,6 @@ class LitQuestionAnsweringTransformerDataModule(LitTransformerDataModule):
         return question_column_name, context_column_name, answer_column_name
 
     def prepare_pre_processing_functions(self):
-        from lightning_transformers.question_answering.squad_preparation import (
-            prepare_train_features,
-            prepare_validation_features
-        )
-
         question_column_name, context_column_name, answer_column_name = self.qa_column_names
 
         kwargs = {"tokenizer": self.tokenizer,
@@ -300,5 +304,5 @@ class LitQuestionAnsweringTransformerDataModule(LitTransformerDataModule):
                   "doc_stride": self.args.doc_stride,
                   "pad_to_max_length": self.args.pad_to_max_length}
 
-        self.prepare_train_features = partial(prepare_train_features, **kwargs)
-        self.prepare_validation_features = partial(prepare_validation_features, **kwargs)
+        self.prepare_train_features = partial(self.modellib.prepare_train_features, **kwargs)
+        self.prepare_validation_features = partial(self.modellib.prepare_validation_features, **kwargs)

@@ -18,10 +18,7 @@ import hydra
 import inspect
 from hydra.utils import instantiate
 from pytorch_lightning.loggers import WandbLogger
-
-
-ROOT_DIR = osp.dirname(osp.dirname(osp.dirname(__file__)))
-
+from lightning_transformers import __ROOT_DIR__
 
 def initialize_WandbLogger(*args, **kwargs):
 
@@ -103,7 +100,7 @@ def load_configuration():
     parser.add_argument("--dataset", type=str, default=True, help="")
     opt = parser.parse_known_args()[0]
     
-    path_to_config = osp.join(ROOT_DIR, "conf")
+    path_to_config = osp.join(__ROOT_DIR__, "conf")
     path_to_virtual_conf = osp.join(path_to_config, "tasks", opt.task) 
     files_to_move = [d for d in os.listdir(path_to_config) if (d != 'tasks' and d != "config.yaml")]
 
@@ -134,14 +131,17 @@ def load_configuration():
         cleanup(transported_files)
 
 def instantiate_model(cfg, data_module):
-    model_opt = cfg.model
-    model = hydra.utils.instantiate(model_opt, optim=cfg.optim)
+    model = hydra.utils.instantiate(cfg.model, optim=cfg.optimizer, scheduler=cfg.scheduler)
     return model
 
 def instantiate_data_module(cfg):
-    dataset_opt = cfg.dataset
-    tokenizer = AutoTokenizer.from_pretrained(cfg.overrides_model, use_fast=dataset_opt.use_fast)
-    data_module = hydra.utils.instantiate(cfg.dataset, tokenizer=tokenizer, dataset_name=cfg.overrides_dataset)
+    tokenizer = AutoTokenizer.from_pretrained(cfg.overrides_model, use_fast=cfg.dataset.use_fast)
+    data_module = hydra.utils.instantiate(
+        cfg.dataset, 
+        tokenizer=tokenizer, 
+        dataset_name=cfg.overrides_dataset, 
+        task=cfg.task, 
+        training=cfg.training)
     return data_module
 
 def is_overridden(method_name: str, model, super_object=None) -> bool:

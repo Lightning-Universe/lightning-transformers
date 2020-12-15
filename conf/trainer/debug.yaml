@@ -1,8 +1,10 @@
 # @package _group_
 _target_: pytorch_lightning.Trainer
-gpus: 1
-distributed_backend: ddp
+gpus: 0
 accumulate_grad_batches: 1
 profiler: False
 max_epochs: 1
-log_every_n_steps: 100
+limit_train_batches: 10
+limit_val_batches: 10
+limit_test_batches: 10
+
