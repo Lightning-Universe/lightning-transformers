@@ -1,5 +1,6 @@
-# @package _group_
-_target_: lightning_transformers.core.data.LitQuestionAnsweringTransformerDataModule
+# @package dataset
+_target_: lightning_transformers.task.question_answering.LitQuestionAnsweringTransformerDataModule
+dataset_name: squad
 train_file: ''
 validation_file: ''
 dataset_config_name: 'plain_text'
@@ -9,7 +10,6 @@ max_seq_length: 384
 max_length: 128
 preprocessing_num_workers: 8
 load_from_cache_file: True
-use_fast: True
 pad_to_max_length: True
 version_2_with_negative: False
 null_score_diff_threshold: .0

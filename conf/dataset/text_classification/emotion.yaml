@@ -1,0 +1,9 @@
+# @package dataset
+_target_: lightning_transformers.task.text_classification.LitTextClassificationDataModule
+dataset_name: emotion
+train_file: ''
+validation_file: ''
+padding: 'max_length'
+truncation: 'only_first'
+preprocessing_num_workers: 8
+load_from_cache_file: True

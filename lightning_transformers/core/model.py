@@ -1,38 +1,40 @@
-from dataclasses import dataclass
-from typing import Union, Optional
-from hydra.utils import get_class, instantiate
+from typing import Optional
+
 import pytorch_lightning as pl
+import torch
+from hydra.utils import get_class, instantiate
+from omegaconf import DictConfig
 from pytorch_lightning.utilities import rank_zero_only
-from torch.optim import AdamW
-from transformers import AutoTokenizer, AutoModelForSequenceClassification, AutoConfig
+from transformers import AutoConfig
 
 
 class LitTransformer(pl.LightningModule):
-    def __init__(self, name: Optional[str] = None, model_type: str = None, optim = None, scheduler = None):
+    def __init__(self,
+                 pretrained_model_name_or_path: str,
+                 model_type: str,
+                 optim: DictConfig,
+                 scheduler: Optional[DictConfig] = None,
+                 **kwargs):
         super().__init__()
         # Resolve the bug in Lightning save_hyperparameters
-        optim.lr = optim.lr
-        
+        optim.lr = optim.lr  # todo wat
+
         self.save_hyperparameters()
+        self.tokenizer = None  # todo set via data module
 
         # We have to ensure that we only use rank 0 when downloading the model somehow.
         # This could cause issues otherwise.
         self.generate_config()
 
-        self.model = get_class(model_type).from_pretrained(
-            self.hparams.name, config=self.config
+        self.model = get_class(self.hparams.model_type).from_pretrained(
+            pretrained_model_name_or_path=self.hparams.pretrained_model_name_or_path,
+            config=self.config
         )
-        self.create_metrics()
 
     def generate_config(self):
         self.config = AutoConfig.from_pretrained(
-            self.hparams.name,
+            self.hparams.pretrained_model_name_or_path,
         )
-
-    def create_metrics(self):
-        self.precision_metric = pl.metrics.Precision(num_classes=len(self.hparams.label2id))
-        self.recall_metric = pl.metrics.Recall(num_classes=len(self.hparams.label2id))
-        self.accuracy_metric = pl.metrics.Accuracy()
 
     def calculate_metrics(self, preds, labels, mode='val'):
         # Not required by all models. Only required for classification
@@ -90,4 +92,4 @@ class LitTransformer(pl.LightningModule):
     def save_pretrained(self, save_dir):
         self.hparams.save_dir = save_dir
         self.model.save_pretrained(self.hparams.save_dir)
-        self.hparams.tokenizer.save_pretrained(self.hparams.save_dir)
+        self.tokenizer.save_pretrained(self.hparams.save_dir)

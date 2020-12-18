@@ -1,4 +1,0 @@
-# @package _group_
-_target_: lightning_transformers.core.models.LitQuestionAnsweringTransformer
-name: 'bert-base-uncased'
-model_type: transformers.AutoModelForQuestionAnswering

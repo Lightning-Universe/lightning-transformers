@@ -1,35 +1,23 @@
-import sys
-from glob import glob
-import os
-import os.path as osp
-from typing import Union
-import argparse
-import hydra
-from hydra.experimental import compose, initialize
-import shutil
-from transformers import AutoTokenizer
-from omegaconf import OmegaConf
-
-from typing import Dict
-import shutil
-import os
-import subprocess
-import hydra
 import inspect
+import os
+import shutil
+import subprocess
+
+import hydra
 from hydra.utils import instantiate
 from pytorch_lightning.loggers import WandbLogger
-from lightning_transformers import __ROOT_DIR__
+from transformers import AutoTokenizer
 
-def initialize_WandbLogger(*args, **kwargs):
 
+def initialize_wandb_logger(*args, **kwargs):
     keys = [k for k in inspect.signature(WandbLogger.__init__).parameters.keys()][1:-1]
     wandb_dict = {k: kwargs.get(k) for k in keys}
 
     try:
         commit_sha = (
             subprocess.check_output(["git", "rev-parse", "HEAD"])
-            .decode("ascii")
-            .strip()
+                .decode("ascii")
+                .strip()
         )
     except:
         commit_sha = "n/a"
@@ -73,77 +61,37 @@ def initialize_loggers(cfg, *args, **kwargs):
             loggers.append(instantiate(logger, *args, **kwargs))
     return loggers
 
-def copytree(src, dst, symlinks=False, ignore=None):
-    if not os.path.exists(dst):
-        os.makedirs(dst)
-    for item in os.listdir(src):
-        s = os.path.join(src, item)
-        d = os.path.join(dst, item)
-        if os.path.isdir(s):
-            copytree(s, d, symlinks, ignore)
-        else:
-            if not os.path.exists(d) or os.stat(s).st_mtime - os.stat(d).st_mtime > 1:
-                shutil.copy2(s, d)
 
-def cleanup(transported_files):
-    for p in transported_files:
-        if os.path.exists(p):
-            if os.path.isfile(p): 
-                os.remove(p)
-            else:
-                shutil.rmtree(p)
-
-def load_configuration():
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--task", type=str, default=True, help="")
-    parser.add_argument("--model_name_or_path", type=str, default=True, help="")
-    parser.add_argument("--dataset", type=str, default=True, help="")
-    opt = parser.parse_known_args()[0]
-    
-    path_to_config = osp.join(__ROOT_DIR__, "conf")
-    path_to_virtual_conf = osp.join(path_to_config, "tasks", opt.task) 
-    files_to_move = [d for d in os.listdir(path_to_config) if (d != 'tasks' and d != "config.yaml")]
-
-    try:
-        transported_files = [osp.join(path_to_virtual_conf, "config.yaml")]
-        shutil.copyfile(osp.join(path_to_config, "config.yaml"), transported_files[0])
-        for p in files_to_move:
-            src = osp.join(path_to_config, p)
-            dst = osp.join(path_to_virtual_conf, p)
-            transported_files.append(dst)
-            copytree(src, dst)
-
-        path_to_conf = osp.join("..", "..","conf", "tasks", opt.task) 
-        initialize(path_to_conf)
-        overrides = sys.argv[::]
-        defaults = [v.replace('--', '') for v in overrides[1:7]]
-        hydra_defaults = [f"{defaults[0]}={defaults[1]}", f"{defaults[2]}={defaults[3]}", f"{defaults[4]}={defaults[5]}"]
-        cfg = compose("config.yaml", overrides=hydra_defaults + overrides[7:])
-        OmegaConf.set_struct(cfg, False)
-        cleanup(transported_files)
-        for i in range(2, len(defaults)):
-            if i % 2 == 0:
-                setattr(cfg, "overrides_" + defaults[i], defaults[i + 1])
-        return cfg
-    except KeyboardInterrupt:
-        cleanup(transported_files)
-    finally:
-        cleanup(transported_files)
-
-def instantiate_model(cfg, data_module):
-    model = hydra.utils.instantiate(cfg.model, optim=cfg.optimizer, scheduler=cfg.scheduler)
-    model.calculate_metrics = data_module.calculate_metrics
+def instantiate_model(model_config,
+                      optimizer_config,
+                      scheduler_config,
+                      **kwargs):
+    model = hydra.utils.instantiate(
+        config=model_config,
+        optim=optimizer_config,
+        scheduler=scheduler_config,
+        **kwargs
+    )
+    # model.calculate_metrics = data_module.calculate_metrics  # TODO remove this patching, put this into the model
     return model
 
-def instantiate_data_module(cfg):
-    tokenizer = AutoTokenizer.from_pretrained(cfg.overrides_model, use_fast=cfg.dataset.use_fast)
+
+def instantiate_tokenizer(cfg):
+    tokenizer = AutoTokenizer.from_pretrained(
+        pretrained_model_name_or_path=cfg.pretrained_model_name_or_path,
+        use_fast=cfg.task.dataset.use_fast
+    )
+    return tokenizer
+
+
+def instantiate_data_module(dataset_config, training_config, tokenizer):
     data_module = hydra.utils.instantiate(
-        cfg.dataset, 
-        tokenizer=tokenizer, 
-        dataset_name=cfg.overrides_dataset, 
-        task=cfg.task, 
-        training=cfg.training)
+        config=dataset_config,
+        training_config=training_config,
+        tokenizer=tokenizer
+    )
     return data_module
+
 
 def is_overridden(method_name: str, model, super_object=None) -> bool:
     assert super_object is not None

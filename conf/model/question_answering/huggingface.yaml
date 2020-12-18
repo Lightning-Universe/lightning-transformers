@@ -1,0 +1,4 @@
+# @package model
+_target_: lightning_transformers.task.question_answering.LitQuestionAnsweringTransformer
+model_type: transformers.AutoModelForSequenceClassification
+pretrained_model_name_or_path: bert-base-cased

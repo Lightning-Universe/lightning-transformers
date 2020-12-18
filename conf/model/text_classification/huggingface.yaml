@@ -1,0 +1,4 @@
+# @package model
+_target_: lightning_transformers.task.text_classification.LitTextClassificationTransformer
+model_type: transformers.AutoModelForSequenceClassification
+pretrained_model_name_or_path: &pretrained_model_name_or_path bert-base-cased

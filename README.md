@@ -1,13 +1,9 @@
 # lightning-transformers
 
-### PRINCIPAL CMD
+```bash
+# Training pre-trained bert-base-cased on SQuAD
+python train.py +model/question_answering=huggingface +dataset/question_answering=emotion
 
-```python
-python train.py --task={{TASK}} --model={{MODEL}} --dataset={{DATASET}} ...
+# Training pre-trained bert-base-cased on CARER emotion dataset
+python train.py +model/text_classification=huggingface +dataset/text_classification=emotion
 ```
-
-### SUPPORTED COMBINAISONS
-
-| `{{TASK}}` | `{{DATASET}}` | `{{MODEL}}` | CMD_LINE | WORKING      |
-| ------------- | ------------- | --------------------------- | ---------------------------- | ---------------------------- |
-| question_answering  | bert-base-uncased  | squad | ``python train.py --task question_answering --model bert-base-uncased --dataset squad`` | `True`  | 

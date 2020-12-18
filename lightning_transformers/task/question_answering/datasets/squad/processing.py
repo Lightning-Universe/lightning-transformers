@@ -4,10 +4,12 @@ from transformers import (
     EvalPrediction,
 )
 
+
 def compute_metrics(p: EvalPrediction, metric=None):
     return metric.compute(predictions=p.predictions, references=p.label_ids)
 
-def prepare_train_features(examples,  
+
+def prepare_train_features(examples,
                            tokenizer=None,
                            pad_on_right=None,
                            question_column_name=None,
@@ -88,7 +90,8 @@ def prepare_train_features(examples,
 
     return tokenized_examples
 
-def prepare_validation_features(examples,  
+
+def prepare_validation_features(examples,
                                 tokenizer=None,
                                 pad_on_right=None,
                                 question_column_name=None,
@@ -139,9 +142,10 @@ def prepare_validation_features(examples,
 
     return tokenized_examples
 
+
 def post_process_function(predictions,
-                          features=None,  
-                          examples=None, 
+                          features=None,
+                          examples=None,
                           version_2_with_negative=None,
                           n_best_size=None,
                           max_answer_length=None,
@@ -170,17 +174,18 @@ def post_process_function(predictions,
     references = [{"id": ex["id"], "answers": ex[answer_column_name]} for ex in datasets["validation"]]
     return EvalPrediction(predictions=formatted_predictions, label_ids=references)
 
+
 def postprocess_qa_predictions(
-    examples,
-    features,
-    predictions: Tuple[np.ndarray, np.ndarray],
-    version_2_with_negative: bool = False,
-    n_best_size: int = 20,
-    max_answer_length: int = 30,
-    null_score_diff_threshold: float = 0.0,
-    output_dir: Optional[str] = None,
-    prefix: Optional[str] = None,
-    is_world_process_zero: bool = True,
+        examples,
+        features,
+        predictions: Tuple[np.ndarray, np.ndarray],
+        version_2_with_negative: bool = False,
+        n_best_size: int = 20,
+        max_answer_length: int = 30,
+        null_score_diff_threshold: float = 0.0,
+        output_dir: Optional[str] = None,
+        prefix: Optional[str] = None,
+        is_world_process_zero: bool = True,
 ):
     """
     Post-processes the predictions of a question-answering model to convert them to answers that are substrings of the
@@ -215,7 +220,8 @@ def postprocess_qa_predictions(
         is_world_process_zero (:obj:`bool`, `optional`, defaults to :obj:`True`):
             Whether this process is the main process or not (used to determine if logging/saves should be done).
     """
-    import pdb; pdb.set_trace()
+    import pdb;
+    pdb.set_trace()
     assert len(predictions) == 2, "`predictions` should be a tuple with two elements (start_logits, end_logits)."
     all_start_logits, all_end_logits = predictions
 
@@ -268,17 +274,17 @@ def postprocess_qa_predictions(
                 }
 
             # Go through all possibilities for the `n_best_size` greater start and end logits.
-            start_indexes = np.argsort(start_logits)[-1 : -n_best_size - 1 : -1].tolist()
-            end_indexes = np.argsort(end_logits)[-1 : -n_best_size - 1 : -1].tolist()
+            start_indexes = np.argsort(start_logits)[-1: -n_best_size - 1: -1].tolist()
+            end_indexes = np.argsort(end_logits)[-1: -n_best_size - 1: -1].tolist()
             for start_index in start_indexes:
                 for end_index in end_indexes:
                     # Don't consider out-of-scope answers, either because the indices are out of bounds or correspond
                     # to part of the input_ids that are not in the context.
                     if (
-                        start_index >= len(offset_mapping)
-                        or end_index >= len(offset_mapping)
-                        or offset_mapping[start_index] is None
-                        or offset_mapping[end_index] is None
+                            start_index >= len(offset_mapping)
+                            or end_index >= len(offset_mapping)
+                            or offset_mapping[start_index] is None
+                            or offset_mapping[end_index] is None
                     ):
                         continue
                     # Don't consider answers with a length that is either < 0 or > max_answer_length.
@@ -312,7 +318,7 @@ def postprocess_qa_predictions(
         context = example["context"]
         for pred in predictions:
             offsets = pred.pop("offsets")
-            pred["text"] = context[offsets[0] : offsets[1]]
+            pred["text"] = context[offsets[0]: offsets[1]]
 
         # In the very rare edge case we have not a single non-null prediction, we create a fake prediction to avoid
         # failure.

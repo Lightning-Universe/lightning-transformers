@@ -1,10 +1,9 @@
 defaults: # for loading the default config
-  
-  - model: bert-base-uncased
-  - dataset: squad
   - training: default
   - trainer: debug
   - scheduler: linear_schedule_with_warmup
   - optimizer: adamw
+  - tokenizer: huggingface
 
-task: ???
+model: ???
+dataset: ???
