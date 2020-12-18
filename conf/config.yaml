@@ -1,0 +1,9 @@
+defaults: # for loading the default config
+  - training: default
+  - trainer: debug
+  - scheduler: linear_schedule_with_warmup
+  - optimizer: adamw
+  - tokenizer: huggingface
+
+model: ???
+dataset: ???

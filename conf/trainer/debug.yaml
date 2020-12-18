@@ -1,0 +1,8 @@
+# @package _group_
+_target_: pytorch_lightning.Trainer
+gpus: 0
+accumulate_grad_batches: 1
+profiler: False
+max_epochs: 1
+limit_train_batches: 1
+

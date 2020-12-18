@@ -1,0 +1,4 @@
+# @package _group_
+_target_: torch.optim.AdamW
+lr: ${training.lr}
+weight_decay: 0.001

@@ -1,0 +1,4 @@
+# @package tokenizer
+_target_: lightning_transformers.core.tokenizers.HuggingFaceTokenizer
+pretrained_model_name_or_path: ${model.pretrained_model_name_or_path}
+use_fast: true
