@@ -1,13 +1,7 @@
-from typing import Optional
-
-import pytorch_lightning as pl
-import torch
-from omegaconf import DictConfig
 from transformers import (
     AutoTokenizer,
 )
 
-from lightning_transformers.core.data import LitTextClassificationDataModule
 from lightning_transformers.core.model import LitTransformer
 
 

@@ -5,7 +5,6 @@ import torch
 from omegaconf import DictConfig
 
 from lightning_transformers.core.model import LitTransformer
-from lightning_transformers.task.text_classification import LitTextClassificationDataModule
 
 
 class LitTextClassificationTransformer(LitTransformer):
