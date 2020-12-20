@@ -32,7 +32,6 @@ class LitTextClassificationTransformer(LitTransformer):
 
     def validation_step(self, batch, batch_idx, dataloader_idx=0):
         del batch['idx']  # Can we hide this? this is given from the HF Feature object
-        print(batch)
         outputs = self(**batch)
         val_loss, logits = outputs[:2]
         preds = torch.argmax(logits, axis=1)

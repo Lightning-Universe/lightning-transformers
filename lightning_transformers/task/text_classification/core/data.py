@@ -1,12 +1,16 @@
+from typing import Any
+
+from datasets import Dataset
+
 from lightning_transformers.core import LitTransformerDataModule
 
 
 class LitTextClassificationDataModule(LitTransformerDataModule):
 
-    def process_data(self):
-        input_feature_fields = [k for k, v in self.ds['train'].features.items() if k not in ['label', 'idx']]
-        self.ds = LitTextClassificationDataModule.preprocess(
-            self.ds,
+    def prepare_data(self, dataset: Dataset) -> Dataset:
+        input_feature_fields = [k for k, v in dataset['train'].features.items() if k not in ['label', 'idx']]
+        dataset = LitTextClassificationDataModule.preprocess(
+            dataset,
             self.tokenizer,
             input_feature_fields,
             self.padding,
@@ -17,12 +21,14 @@ class LitTextClassificationDataModule(LitTransformerDataModule):
         cols_to_keep = [
             x
             for x in ['input_ids', 'attention_mask', 'token_type_ids', 'labels', 'idx']
-            if x in self.ds['train'].features
+            if x in dataset['train'].features
         ]
-        self.ds.set_format("torch", columns=cols_to_keep)
+        dataset.set_format("torch", columns=cols_to_keep)
+        return dataset
 
-    def prepare_labels(self):
-        self.labels = self.ds['train'].features['labels']
+    def prepare_labels(self, dataset: Dataset) -> Any:
+        labels = dataset['train'].features['labels']
+        return labels
 
     @property
     def num_classes(self):

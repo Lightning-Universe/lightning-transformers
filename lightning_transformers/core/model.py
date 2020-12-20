@@ -1,7 +1,6 @@
 from typing import Optional
 
 import pytorch_lightning as pl
-import torch
 from hydra.utils import get_class, instantiate
 from omegaconf import DictConfig
 from pytorch_lightning.utilities import rank_zero_only
@@ -35,38 +34,6 @@ class LitTransformer(pl.LightningModule):
         self.config = AutoConfig.from_pretrained(
             self.hparams.pretrained_model_name_or_path,
         )
-
-    def calculate_metrics(self, preds, labels, mode='val'):
-        # Not required by all models. Only required for classification
-        p = self.precision_metric(preds, labels)
-        r = self.recall_metric(preds, labels)
-        a = self.accuracy_metric(preds, labels)
-        return {f'{mode}_precision': p, f'{mode}_recall': r, f'{mode}_acc': a}
-
-    def forward(self, **inputs):
-        return self.model(**inputs)
-
-    def training_step(self, batch, batch_idx):
-        outputs = self(**batch)
-        loss = outputs[0]
-        self.log('train_loss', loss)
-        return loss
-
-    def validation_step(self, batch, batch_idx, dataloader_idx=0):
-        outputs = self(**batch)
-        val_loss, logits = outputs[:2]
-        preds = torch.argmax(logits, axis=1)
-        metric_dict = self.calculate_metrics(batch, preds)
-        self.log_dict(metric_dict, prog_bar=True, on_step=False, on_epoch=True)
-        self.log('val_loss', val_loss, prog_bar=True)
-
-    def test_step(self, batch, batch_idx, dataloader_idx=0):
-        outputs = self(**batch)
-        logits = outputs[0]
-        preds = torch.argmax(logits, axis=1)
-        metric_dict = self.calculate_metrics(batch, preds)
-        self.log_dict(metric_dict, prog_bar=True, on_step=False, on_epoch=True)
-        self.log('val_loss', val_loss, prog_bar=True)
 
     def configure_optimizers(self):
         """Prepare optimizer and schedule (linear warmup and decay)"""

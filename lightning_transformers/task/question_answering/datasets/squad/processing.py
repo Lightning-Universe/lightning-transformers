@@ -1,13 +1,13 @@
+import collections
+import json
+import os
 from typing import Tuple, Optional
-
+from pytorch_lightning import _logger as log
 import numpy as np
+from tqdm import tqdm
 from transformers import (
     EvalPrediction,
 )
-
-
-def compute_metrics(p: EvalPrediction, metric=None):
-    return metric.compute(predictions=p.predictions, references=p.label_ids)
 
 
 def prepare_train_features(examples,
@@ -18,8 +18,7 @@ def prepare_train_features(examples,
                            answer_column_name=None,
                            max_seq_length=None,
                            doc_stride=None,
-                           pad_to_max_length=None
-                           ):
+                           pad_to_max_length=None):
     # Tokenize our examples with truncation and maybe padding, but keep the overflows using a stride. This results
     # in one example possible giving several features when a context is long, each of those features having a
     # context that overlaps a bit the context of the previous feature.
@@ -221,8 +220,6 @@ def postprocess_qa_predictions(
         is_world_process_zero (:obj:`bool`, `optional`, defaults to :obj:`True`):
             Whether this process is the main process or not (used to determine if logging/saves should be done).
     """
-    import pdb;
-    pdb.set_trace()
     assert len(predictions) == 2, "`predictions` should be a tuple with two elements (start_logits, end_logits)."
     all_start_logits, all_end_logits = predictions
 
@@ -241,8 +238,7 @@ def postprocess_qa_predictions(
         scores_diff_json = collections.OrderedDict()
 
     # Logging.
-    logger.setLevel(logging.INFO if is_world_process_zero else logging.WARN)
-    logger.info(f"Post-processing {len(examples)} example predictions split into {len(features)} features.")
+    log.info(f"Post-processing {len(examples)} example predictions split into {len(features)} features.")
 
     # Let's loop over all the examples!
     for example_index, example in enumerate(tqdm(examples)):
@@ -375,14 +371,14 @@ def postprocess_qa_predictions(
                 output_dir, "null_odds.json" if prefix is None else f"null_odds_{prefix}".json
             )
 
-        logger.info(f"Saving predictions to {prediction_file}.")
+        log.info(f"Saving predictions to {prediction_file}.")
         with open(prediction_file, "w") as writer:
             writer.write(json.dumps(all_predictions, indent=4) + "\n")
-        logger.info(f"Saving nbest_preds to {nbest_file}.")
+        log.info(f"Saving nbest_preds to {nbest_file}.")
         with open(nbest_file, "w") as writer:
             writer.write(json.dumps(all_nbest_json, indent=4) + "\n")
         if version_2_with_negative:
-            logger.info(f"Saving null_odds to {null_odds_file}.")
+            log.info(f"Saving null_odds to {null_odds_file}.")
             with open(null_odds_file, "w") as writer:
                 writer.write(json.dumps(scores_diff_json, indent=4) + "\n")
 
