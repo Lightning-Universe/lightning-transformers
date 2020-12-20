@@ -12,7 +12,7 @@ from omegaconf import DictConfig
 import pytorch_lightning as pl
 from pytorch_lightning import _logger as log
 from lightning_transformers.core.utils import (
-    instantiate_model,
+    instantiate_downstream_model,
     instantiate_data_module
 )
 
@@ -30,7 +30,8 @@ def main(cfg: DictConfig):
     )
     data_module.setup()
 
-    model: LitTransformer = instantiate_model(
+    model: LitTransformer = instantiate_downstream_model(
+        task_config=cfg.task,
         model_config=cfg.model,
         optimizer_config=cfg.optimizer,
         scheduler_config=cfg.scheduler,

@@ -9,8 +9,8 @@ from transformers import AutoConfig
 
 class LitTransformer(pl.LightningModule):
     def __init__(self,
-                 pretrained_model_name_or_path: str,
-                 model_type: str,
+                 downstream_model_type: str,
+                 model: DictConfig,
                  optim: DictConfig,
                  scheduler: Optional[DictConfig] = None,
                  **kwargs):
@@ -25,14 +25,14 @@ class LitTransformer(pl.LightningModule):
         # This could cause issues otherwise.
         self.generate_config()
 
-        self.model = get_class(self.hparams.model_type).from_pretrained(
-            pretrained_model_name_or_path=self.hparams.pretrained_model_name_or_path,
+        self.model = get_class(self.hparams.downstream_model_type).from_pretrained(
+            pretrained_model_name_or_path=self.hparams.model.pretrained_model_name_or_path,
             config=self.config
         )
 
     def generate_config(self):
         self.config = AutoConfig.from_pretrained(
-            self.hparams.pretrained_model_name_or_path,
+            self.hparams.model.pretrained_model_name_or_path,
         )
 
     def configure_optimizers(self):
@@ -60,3 +60,6 @@ class LitTransformer(pl.LightningModule):
         self.hparams.save_dir = save_dir
         self.model.save_pretrained(self.hparams.save_dir)
         self.tokenizer.save_pretrained(self.hparams.save_dir)
+
+    def forward(self, **inputs):
+        return self.model(**inputs)

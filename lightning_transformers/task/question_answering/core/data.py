@@ -13,7 +13,7 @@ from lightning_transformers.core import LitTransformerDataModule
 
 class LitQuestionAnsweringTransformerDataModule(LitTransformerDataModule):
 
-    def prepare_data(self, dataset: Dataset) -> Dataset:
+    def process_data(self, dataset: Dataset) -> Dataset:
         question_column_name, context_column_name, answer_column_name = self.qa_column_names(dataset)
 
         kwargs = self.prepare_features_kwargs(

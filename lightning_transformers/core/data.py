@@ -1,9 +1,9 @@
 from argparse import Namespace
-from typing import Optional, Any
+from typing import Optional, Union, Any
 
 import hydra
 import pytorch_lightning as pl
-from datasets import load_dataset, Dataset
+from datasets import load_dataset, Dataset, DatasetDict
 from omegaconf import DictConfig
 from pytorch_lightning.utilities.exceptions import MisconfigurationException
 from torch.utils.data import DataLoader
@@ -43,12 +43,12 @@ class LitTransformerDataModule(pl.LightningDataModule):
     def setup(self, stage: Optional[str] = None):
         dataset = self.load_dataset()
         dataset = self.split_dataset(dataset)
-        dataset = self.prepare_data(dataset)
+        dataset = self.process_data(dataset)
         self.labels = self.prepare_labels(dataset)
         self.ds = dataset
         self.load_and_prepare_metrics()
 
-    def prepare_data(self, dataset: Dataset) -> Dataset:
+    def process_data(self, dataset: Dataset) -> Dataset:
         raise NotImplementedError
 
     def prepare_labels(self, dataset: Dataset) -> Any:

@@ -7,7 +7,7 @@ from lightning_transformers.core import LitTransformerDataModule
 
 class LitTextClassificationDataModule(LitTransformerDataModule):
 
-    def prepare_data(self, dataset: Dataset) -> Dataset:
+    def process_data(self, dataset: Dataset) -> Dataset:
         input_feature_fields = [k for k, v in dataset['train'].features.items() if k not in ['label', 'idx']]
         dataset = LitTextClassificationDataModule.preprocess(
             dataset,

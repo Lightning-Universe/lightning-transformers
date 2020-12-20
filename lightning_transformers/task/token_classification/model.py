@@ -15,5 +15,5 @@ class LitTokenClassificationTransformer(LitTransformer):
             pretrained_model_name_or_path=pretrained_model_name_or_path,
             tokenizer=tokenizer,
             optim_config=optim_config,
-            model_type=AutoModelForSequenceClassification
+            downstream_model_type=AutoModelForSequenceClassification
         )

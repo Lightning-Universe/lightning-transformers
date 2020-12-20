@@ -1,9 +1,13 @@
 # lightning-transformers
 
+### Current API
 ```bash
-# Training pre-trained bert-base-cased on SQuAD
-python train.py +model/question_answering=huggingface +dataset/question_answering=emotion
+# Train bert-base-cased on SQuAD using question answering task provided by huggingface
+python train.py +task/question_answering=huggingface +dataset/question_answering=squad
 
-# Training pre-trained bert-base-cased on CARER emotion dataset
-python train.py +model/text_classification=huggingface +dataset/text_classification=emotion
+# Train bert-base-cased on CARER emotion dataset using text classification task provided by huggingface
+python train.py +task/text_classification=huggingface +dataset/text_classification=emotion
+
+# (An example, not real) Swap to fairseq model that is compatible with text classification task provided by huggingface
+python train.py +task/text_classification=huggingface +model=fairseq +dataset/text_classification=emotion
 ```

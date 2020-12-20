@@ -1,6 +1,6 @@
 import torch
 
-from lightning_transformers.core.models.base import LitTransformer
+from lightning_transformers.core import LitTransformer
 
 
 class LitQuestionAnsweringTransformer(LitTransformer):
@@ -43,7 +43,7 @@ class LitQuestionAnsweringTransformer(LitTransformer):
                 end_logits.append(e_logits)
             start_logits = torch.cat(start_logits, dim=0)
             end_logits = torch.cat(end_logits, dim=0)
-            self.calculate_metrics((start_logits, end_logits))
+            self._calculate_metrics((start_logits, end_logits))
 
     def test_step(self, batch, batch_idx, dataloader_idx=0):
         outputs = self(**batch)

@@ -62,17 +62,21 @@ def initialize_loggers(cfg, *args, **kwargs):
     return loggers
 
 
-def instantiate_model(model_config,
-                      optimizer_config,
-                      scheduler_config,
-                      **kwargs):
+def instantiate_downstream_model(
+        task_config,
+        model_config,
+        optimizer_config,
+        scheduler_config,
+        **kwargs):
     model = hydra.utils.instantiate(
-        config=model_config,
+        config=task_config,
+        model=model_config,
         optim=optimizer_config,
         scheduler=scheduler_config,
         **kwargs
     )
-    # model.calculate_metrics = data_module.calculate_metrics  # TODO remove this patching, put this into the model
+    # TODO remove this patching, put this into the model. Metrics are stored in the lightning module...
+    # model.calculate_metrics = data_module.calculate_metrics
     return model
 
 
