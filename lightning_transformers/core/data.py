@@ -1,9 +1,9 @@
 from argparse import Namespace
-from typing import Optional, Union, Any
+from typing import Optional, Any
 
 import hydra
 import pytorch_lightning as pl
-from datasets import load_dataset, Dataset, DatasetDict
+from datasets import load_dataset, Dataset
 from omegaconf import DictConfig
 from pytorch_lightning.utilities.exceptions import MisconfigurationException
 from torch.utils.data import DataLoader

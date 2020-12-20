@@ -45,7 +45,6 @@ def main(cfg: DictConfig):
     if cfg.training.do_train:
         trainer.fit(model, datamodule=data_module)
     trainer.test(model, datamodule=data_module)
-    model.save_pretrained("outputs")
 
 
 if __name__ == "__main__":
