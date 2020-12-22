@@ -1,5 +1,12 @@
 # lightning-transformers
 
+The lightweight PyTorch wrapper for high-performance AI research.
+Scale your models, not the boilerplate.
+
+Transformers provides thousands of pretrained models to perform tasks on texts such as classification, information extraction, question answering, summarization, translation, text generation, etc in 100+ languages
+
+Lightning-Transformers disentangles Transformers code to decouple the science from the engineering. 
+
 ### Current API
 ```bash
 # Train bert-base-cased on CARER emotion dataset using text classification task provided by huggingface
@@ -41,4 +48,11 @@ python train.py \
     +task=huggingface/text_classification \
     +dataset=text_classification/emotion \
     +model=fairseq
+
+WIP
+
+# Train bert-base-cased on CARER emotion dataset using text classification task provided by huggingface
+python train.py \
+    +task=huggingface/multiple_choice \
+    +dataset=multiple_choice/swag
 ```
