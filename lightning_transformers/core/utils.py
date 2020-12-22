@@ -8,7 +8,6 @@ from hydra.utils import instantiate
 from pytorch_lightning.loggers import WandbLogger
 from transformers import AutoTokenizer
 
-
 def initialize_wandb_logger(*args, **kwargs):
     keys = [k for k in inspect.signature(WandbLogger.__init__).parameters.keys()][1:-1]
     wandb_dict = {k: kwargs.get(k) for k in keys}
@@ -28,8 +27,8 @@ def initialize_wandb_logger(*args, **kwargs):
         gitdiff = ""
 
     wandb_dict["config"] = {}
-    wandb_dict["config"].update(kwargs["model_config"])
-    wandb_dict["config"].update(kwargs["dataset_config"])
+    # wandb_dict["config"].update(kwargs["model_config"])
+    # wandb_dict["config"].update(kwargs["dataset_config"])
     wandb_dict["config"].update(
         {
             "run_path": os.getcwd(),
@@ -53,13 +52,10 @@ def initialize_wandb_logger(*args, **kwargs):
 
     return wandbLogger
 
-
 def initialize_loggers(cfg, *args, **kwargs):
-    loggers = []
     if cfg.log:
-        for logger in cfg.loggers.loggers:
-            loggers.append(instantiate(logger, *args, **kwargs))
-    return loggers
+        return instantiate(cfg.logger)
+    return None
 
 
 def instantiate_downstream_model(

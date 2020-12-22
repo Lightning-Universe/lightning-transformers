@@ -54,10 +54,6 @@ class LitTransformerDataModule(pl.LightningDataModule):
     def prepare_labels(self, dataset: Dataset) -> Any:
         pass
 
-    @property
-    def contains_test(self):
-        return 'test' in self.ds
-
     def load_and_prepare_metrics(self):
         pass
 

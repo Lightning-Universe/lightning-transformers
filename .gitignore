@@ -118,3 +118,4 @@ lightning_logs
 .DS_Store
 .*_submit.py
 checkpoints
+outputs

@@ -54,7 +54,7 @@ class LitTextClassificationDataModule(LitTransformerDataModule):
             texts_or_text_pairs = example_batch[input_feature_fields[0]]
 
         # Tokenize the text/text pairs
-        features = tokenizer.tokenize(
+        features = tokenizer(
             texts_or_text_pairs, padding=padding, truncation=truncation, max_length=max_length
         )
 

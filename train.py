@@ -1,4 +1,5 @@
 import os
+import warnings
 
 import hydra
 from hydra.utils import instantiate
@@ -10,18 +11,24 @@ os.environ["HYDRA_FULL_ERROR"] = "1"
 from omegaconf import DictConfig
 
 import pytorch_lightning as pl
+from pytorch_lightning.utilities.distributed import rank_zero_info, rank_zero_warn
 from pytorch_lightning import _logger as log
 from lightning_transformers.core.utils import (
     instantiate_downstream_model,
-    instantiate_data_module
+    instantiate_data_module,
+    initialize_loggers
 )
 
 
 @hydra.main(config_path='conf', config_name='config')
 def main(cfg: DictConfig):
-    log.info(OmegaConf.to_yaml(cfg))
+    if cfg.ignore_warnings:
+        warnings.simplefilter("ignore")
+    rank_zero_info(OmegaConf.to_yaml(cfg))
 
     os.environ['TOKENIZERS_PARALLELISM'] = 'TRUE'
+
+    logger = initialize_loggers(cfg)
 
     data_module: LitTransformerDataModule = instantiate_data_module(
         dataset_config=cfg.dataset,
@@ -40,10 +47,13 @@ def main(cfg: DictConfig):
 
     model.tokenizer = data_module.tokenizer
 
-    trainer: pl.Trainer = instantiate(cfg.trainer)
+    trainer: pl.Trainer = instantiate(cfg.trainer, logger=logger)
 
     if cfg.training.do_train:
-        trainer.fit(model, datamodule=data_module)
+        trainer.fit(
+            model, 
+            datamodule=data_module)
+    
     trainer.test(model, datamodule=data_module)
 
 

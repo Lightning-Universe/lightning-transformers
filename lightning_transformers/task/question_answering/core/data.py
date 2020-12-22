@@ -33,7 +33,7 @@ class LitQuestionAnsweringTransformerDataModule(LitTransformerDataModule):
                 load_from_cache_file=not self.load_from_cache_file,
             )
 
-        if not self.contains_test:
+        if "test" not in dataset:
             prepare_validation_features = partial(self.prepare_validation_function, **kwargs)
             dataset['validation_orginal'] = dataset['validation']
             dataset["validation"] = dataset["validation"].map(
