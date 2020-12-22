@@ -1,0 +1,8 @@
+# @package dataset
+_target_: lightning_transformers.task.language_modeling.LitWikiTextLanguageModelingTransformerDataModule
+dataset_name: wikitext
+dataset_config_name: wikitext-2-raw-v1
+train_file: null
+validation_file: null
+block_size: null
+validation_split_percentage: 5

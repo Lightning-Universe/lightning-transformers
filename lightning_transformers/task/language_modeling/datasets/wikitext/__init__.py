@@ -1,0 +1,4 @@
+from lightning_transformers.task.language_modeling.core.data import LitLanguageModelingTransformerDataModule
+
+class LitWikiTextLanguageModelingTransformerDataModule(LitLanguageModelingTransformerDataModule):
+    pass

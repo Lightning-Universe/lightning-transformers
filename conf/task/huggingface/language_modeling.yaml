@@ -1,0 +1,3 @@
+# @package task
+_target_: lightning_transformers.task.language_modeling.LitLanguageModelingTransformer
+downstream_model_type: transformers.AutoModelForCausalLM

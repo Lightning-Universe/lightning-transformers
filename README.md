@@ -57,8 +57,15 @@ python train.py \
 
 WIP
 
-# Train bert-base-cased on CARER emotion dataset using text classification task provided by huggingface
+# Train bert-base-cased on SWAG dataset using text classification task provided by huggingface
 python train.py \
     +task=huggingface/multiple_choice \
     +dataset=multiple_choice/swag
+
+
+# Train bert-base-cased on CARER emotion dataset using text classification task provided by huggingface
+python train.py \
+    +task=huggingface/language_modeling \
+    +dataset=language_modeling/wikitext \
+    model=language_modeling/gpt2
 ```
