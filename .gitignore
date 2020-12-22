@@ -119,3 +119,4 @@ lightning_logs
 .*_submit.py
 checkpoints
 outputs
+data

@@ -1,6 +1,17 @@
-from typing import List
+import csv
+import glob
+import json
+import logging
+import os
+from dataclasses import dataclass
+from enum import Enum
+from typing import List, Optional
+
+import tqdm
+
+from filelock import FileLock
 from pytorch_lightning import _logger as log 
-from lightning_transformers.tasks.multiple_choice.core.data import (
+from lightning_transformers.task.multiple_choice.core.data import (
     DataProcessor,
     InputExample
 )
@@ -10,17 +21,17 @@ class SwagProcessor(DataProcessor):
 
     def get_train_examples(self, data_dir):
         """See base class."""
-        logger.info("LOOKING AT {} train".format(data_dir))
+        log.info("LOOKING AT {} train".format(data_dir))
         return self._create_examples(self._read_csv(os.path.join(data_dir, "train.csv")), "train")
 
     def get_dev_examples(self, data_dir):
         """See base class."""
-        logger.info("LOOKING AT {} dev".format(data_dir))
+        log.info("LOOKING AT {} dev".format(data_dir))
         return self._create_examples(self._read_csv(os.path.join(data_dir, "val.csv")), "dev")
 
     def get_test_examples(self, data_dir):
         """See base class."""
-        logger.info("LOOKING AT {} dev".format(data_dir))
+        log.info("LOOKING AT {} dev".format(data_dir))
         raise ValueError(
             "For swag testing, the input file does not contain a label column. It can not be tested in current code"
             "setting!"

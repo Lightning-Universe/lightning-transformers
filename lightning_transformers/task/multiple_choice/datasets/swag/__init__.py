@@ -1,6 +1,9 @@
 
-from lightning_transformers.tasks.multiple_choice.core.data import LitMultipleChoiceDataModule
+from lightning_transformers.task.multiple_choice.core.data import LitMultipleChoiceDataModule
 from .processing import SwagProcessor
 
-class LitSwagMultipleChoiceDataModule(LitQuestionAnsweringTransformerDataModule):
-    processor: SwagProcessor
+class LitSwagMultipleChoiceDataModule(LitMultipleChoiceDataModule):
+
+    @property
+    def processor(self):
+        return SwagProcessor()

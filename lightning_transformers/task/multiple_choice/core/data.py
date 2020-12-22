@@ -1,12 +1,59 @@
 import os
+import torch
+from enum import Enum
+from typing import List, Optional
 from functools import partial
 from dataclasses import dataclass
 from datasets import load_metric, Dataset
+from transformers import PreTrainedTokenizer
 from lightning_transformers.core import LitTransformerDataModule
+from filelock import FileLock
+import tqdm
+from pytorch_lightning import _logger as log
 
 
 class LitMultipleChoiceDataModule(LitTransformerDataModule):
-    pass
+
+    def load_dataset(self):
+        datasets = {}
+
+        datasets["train"] = (
+            MultipleChoiceDataset(
+                data_dir=self.args.data_dir,
+                tokenizer=self.tokenizer,
+                task=self.dataset_name,
+                max_seq_length=self.args.max_seq_length,
+                overwrite_cache=self.args.overwrite_cache,
+                mode=Split.train,
+                processor=self.processor
+            )
+            if self.args.do_train
+            else None
+        )
+        datasets["validation"] = (
+            MultipleChoiceDataset(
+                data_dir=self.args.data_dir,
+                tokenizer=self.tokenizer,
+                task=self.dataset_name,
+                max_seq_length=self.args.max_seq_length,
+                overwrite_cache=self.args.overwrite_cache,
+                mode=Split.dev,
+                processor=self.processor
+            )
+            if self.args.do_eval
+            else None
+        )
+
+        return datasets
+
+    def process_data(self, dataset):
+        return dataset
+
+class Split(Enum):
+    train = "train"
+    dev = "dev"
+    test = "test"
+
 
 @dataclass(frozen=True)
 class InputExample:
@@ -60,6 +107,68 @@ class DataProcessor:
         """Gets the list of labels for this data set."""
         raise NotImplementedError()
 
+class MultipleChoiceDataset(Dataset):
+    """
+    This will be superseded by a framework-agnostic approach
+    soon.
+    """
+
+    features: List[InputFeatures]
+
+    def __init__(
+        self,
+        data_dir: str,
+        tokenizer: PreTrainedTokenizer,
+        task: str,
+        max_seq_length: Optional[int] = None,
+        overwrite_cache=False,
+        mode: Split = Split.train,
+        processor: DataProcessor = None
+    ):
+        cached_features_file = os.path.join(
+            data_dir,
+            "cached_{}_{}_{}_{}".format(
+                mode.value,
+                tokenizer.__class__.__name__,
+                str(max_seq_length),
+                task,
+            ),
+        )
+
+        # Make sure only the first process in distributed training processes the dataset,
+        # and the others will use the cache.
+        lock_path = cached_features_file + ".lock"
+        with FileLock(lock_path):
+
+            if os.path.exists(cached_features_file) and not overwrite_cache:
+                log.info(f"Loading features from cached file {cached_features_file}")
+                self.features = torch.load(cached_features_file)
+            else:
+                log.info(f"Creating features from dataset file at {data_dir}")
+                label_list = processor.get_labels()
+                if mode == Split.dev:
+                    examples = processor.get_dev_examples(data_dir)
+                elif mode == Split.test:
+                    examples = processor.get_test_examples(data_dir)
+                else:
+                    examples = processor.get_train_examples(data_dir)
+                log.info("Training examples: %s", len(examples))
+                features = convert_examples_to_features(
+                    examples,
+                    label_list,
+                    max_seq_length,
+                    tokenizer,
+                )
+                log.info("Saving features into cached file %s", cached_features_file)
+                torch.save(features, cached_features_file)
+                self.features = features
+
+    def __len__(self):
+        return len(self.features)
+
+    def __getitem__(self, i) -> InputFeatures:
+        return self.features[i]
+
 
 def convert_examples_to_features(
     examples: List[InputExample],
@@ -76,7 +185,7 @@ def convert_examples_to_features(
     features = []
     for (ex_index, example) in tqdm.tqdm(enumerate(examples), desc="convert examples to features"):
         if ex_index % 10000 == 0:
-            logger.info("Writing example %d of %d" % (ex_index, len(examples)))
+            log.info("Writing example %d of %d" % (ex_index, len(examples)))
         choices_inputs = []
         for ending_idx, (context, ending) in enumerate(zip(example.contexts, example.endings)):
             text_a = context
@@ -96,7 +205,7 @@ def convert_examples_to_features(
                 return_overflowing_tokens=True,
             )
             if "num_truncated_tokens" in inputs and inputs["num_truncated_tokens"] > 0:
-                logger.info(
+                log.info(
                     "Attention! you are cropping tokens (swag task is ok). "
                     "If you are training ARC and RACE and you are poping question + options,"
                     "you need to try to use a bigger max seq length!"
@@ -123,9 +232,5 @@ def convert_examples_to_features(
                 label=label,
             )
         )
-
-    for f in features[:2]:
-        logger.info("*** Example ***")
-        logger.info("feature: %s" % f)
 
     return features
