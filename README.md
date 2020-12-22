@@ -14,6 +14,12 @@ python train.py \
     +task=huggingface/text_classification \
     +dataset=text_classification/emotion \
 
+# Train roberta-base on SWAG dataset using multiple choice task provided by huggingface
+python train.py \
+    +task=huggingface/multiple_choice \
+    +dataset=multiple_choice/swag \
+    model=multiple_choice/roberta-base
+
 # Train bert-base-cased on SQuAD using question-answering task provided by huggingface with 1 gpu and batch_size=4
 python train.py \
     +task=huggingface/question_answering \

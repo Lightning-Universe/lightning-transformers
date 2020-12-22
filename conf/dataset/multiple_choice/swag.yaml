@@ -1,9 +1,9 @@
 # @package dataset
-_target_: lightning_transformers.task.multiple_choice.LitSwagMultipleChoiceDataModule
+_target_: lightning_transformers.task.multiple_choice.LitSwagMultipleChoiceTransformerDataModule
 dataset_name: swag
 train_file: ''
 validation_file: ''
-dataset_config_name: 'full'
+dataset_config_name: 'regular'
 padding: 'max_length'
 truncation: 'only_first'
 max_seq_length: 128

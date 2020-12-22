@@ -1,3 +1,3 @@
 from .core.model import LitMultipleChoiceTransformer
-from .core.data import LitMultipleChoiceDataModule
-from .datasets.swag import LitSwagMultipleChoiceDataModule
+from .core.data import LitMultipleChoiceTransformerDataModule
+from .datasets.swag import LitSwagMultipleChoiceTransformerDataModule

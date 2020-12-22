@@ -7,7 +7,6 @@ defaults: # for loading the default config
   - model: huggingface
   - logger: tchaton
 
-model: ???
 dataset: ???
 experiment_name: ${now:%Y-%m-%d}_${now:%H-%M-%S}
 log: False
