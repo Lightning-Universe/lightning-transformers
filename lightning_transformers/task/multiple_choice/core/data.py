@@ -55,11 +55,11 @@ class LitMultipleChoiceTransformerDataModule(LitTransformerDataModule):
             else DataCollatorForMultipleChoice(tokenizer=self.tokenizer)
 
     @property
-    def num_classes(self):
+    def num_classes(self) -> int:
         return len(self.ending_names)
 
     @property
-    def data_model_kwargs(self):
+    def data_model_kwargs(self) -> dict:
         return {
             'num_classes': self.num_classes
         }
