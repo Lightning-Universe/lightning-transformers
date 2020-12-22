@@ -61,7 +61,8 @@ class DataCollatorForMultipleChoice:
         batch_size = len(features)
         num_choices = len(features[0]["input_ids"])
         flattened_features = [
-            [{k: v[i] for k, v in feature.items()} for i in range(num_choices)] for feature in features
+            [{k: v[i] for k, v in feature.items()} for i in range(num_choices)]
+            for feature in features
         ]
         flattened_features = sum(flattened_features, [])
 
