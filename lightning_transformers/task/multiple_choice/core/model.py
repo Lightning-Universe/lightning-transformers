@@ -12,7 +12,8 @@ class LitMultipleChoiceTransformer(LitTransformer):
             model: DictConfig,
             optim: DictConfig,
             num_classes: int,
-            scheduler: Optional[DictConfig] = None):
+            scheduler: Optional[DictConfig] = None
+        ):
         self.num_classes = num_classes
         super().__init__(
             downstream_model_type=downstream_model_type,
