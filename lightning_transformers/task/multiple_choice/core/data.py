@@ -59,7 +59,7 @@ class LitMultipleChoiceTransformerDataModule(LitTransformerDataModule):
         return len(self.ending_names)
 
     @property
-    def data_model_kwargs(self):
+    def data_model_kwargs(self) -> dict:
         return {
             'num_classes': self.num_classes
         }
