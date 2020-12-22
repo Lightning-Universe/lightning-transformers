@@ -4,8 +4,8 @@ defaults: # for loading the default config
   - scheduler: linear_schedule_with_warmup
   - optimizer: adamw
   - tokenizer: huggingface
-  - model: huggingface
-  - logger: tchaton
+  - backbone: bert-base-cased
+  - logger: tchaton # todo: change this eventually
 
 dataset: ???
 experiment_name: ${now:%Y-%m-%d}_${now:%H-%M-%S}

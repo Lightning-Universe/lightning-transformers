@@ -8,6 +8,7 @@ from hydra.utils import instantiate
 from pytorch_lightning.loggers import WandbLogger
 from transformers import AutoTokenizer
 
+
 def initialize_wandb_logger(*args, **kwargs):
     keys = [k for k in inspect.signature(WandbLogger.__init__).parameters.keys()][1:-1]
     wandb_dict = {k: kwargs.get(k) for k in keys}
@@ -52,6 +53,7 @@ def initialize_wandb_logger(*args, **kwargs):
 
     return wandbLogger
 
+
 def initialize_loggers(cfg, *args, **kwargs):
     if cfg.log:
         return instantiate(cfg.logger)
@@ -60,13 +62,13 @@ def initialize_loggers(cfg, *args, **kwargs):
 
 def instantiate_downstream_model(
         task_config,
-        model_config,
+        backbone_model_config,
         optimizer_config,
         scheduler_config,
         **kwargs):
     model = hydra.utils.instantiate(
         config=task_config,
-        model=model_config,
+        backbone=backbone_model_config,
         optim=optimizer_config,
         scheduler=scheduler_config,
         **kwargs

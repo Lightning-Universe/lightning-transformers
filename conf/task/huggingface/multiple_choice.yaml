@@ -1,3 +1,0 @@
-# @package task
-_target_: lightning_transformers.task.multiple_choice.LitMultipleChoiceTransformer
-downstream_model_type: transformers.AutoModelForMultipleChoice
