@@ -7,11 +7,19 @@ python train.py \
     +task=huggingface/text_classification \
     +dataset=text_classification/emotion \
 
-# Train bert-base-cased on SQuAD using question-answering task provided by huggingface
+# Train bert-base-cased on SQuAD using question-answering task provided by huggingface with 1 gpu and batch_size=4
 python train.py \
     +task=huggingface/question_answering \
     +dataset=question_answering/squad
-    trainer.gpus=1
+    trainer.gpus=1 \
+    training.batch_size=4
+
+# Make an inference with pre-trained bert-base-cased on SQuAD using question-answering task provided by huggingface with 2 gpu.
+python train.py     \
+    +task=huggingface/question_answering \
+    +dataset=question_answering/squad \
+    trainer.gpus=2 \
+    training.do_train=False
 
 # Enable DDP + Sharding
 python train.py \
