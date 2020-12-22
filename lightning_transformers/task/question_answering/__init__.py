@@ -1,2 +1,2 @@
-from .core.model import LitQuestionAnsweringTransformer
-from .core.data import LitQuestionAnsweringTransformerDataModule
+from lightning_transformers.task.question_answering.core.model import LitQuestionAnsweringTransformer
+from lightning_transformers.task.question_answering.core.data import LitQuestionAnsweringTransformerDataModule

@@ -1,3 +1,3 @@
-from .core.model import LitMultipleChoiceTransformer
-from .core.data import LitMultipleChoiceTransformerDataModule
-from .datasets.swag import LitSwagMultipleChoiceTransformerDataModule
+from lightning_transformers.task.multiple_choice.core.model import LitMultipleChoiceTransformer
+from lightning_transformers.task.multiple_choice.core.data import LitMultipleChoiceTransformerDataModule
+from lightning_transformers.task.multiple_choice.datasets.swag import LitSwagMultipleChoiceTransformerDataModule
