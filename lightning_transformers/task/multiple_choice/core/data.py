@@ -55,7 +55,7 @@ class LitMultipleChoiceTransformerDataModule(LitTransformerDataModule):
             else DataCollatorForMultipleChoice(tokenizer=self.tokenizer)
 
     @property
-    def num_classes(self):
+    def num_classes(self) -> int:
         return len(self.ending_names)
 
     @property
