@@ -25,7 +25,8 @@ class LitTransformerDataModule(pl.LightningDataModule):
                  train_val_split: Optional[int] = None,
                  **kwargs):
         super().__init__()
-        self.args = Namespace(**kwargs, **training_config)
+        self._to_properties(kwargs)
+        self._to_properties(training_config)
         self.tokenizer = hydra.utils.instantiate(tokenizer)
         self.dataset_name = dataset_name
         self.train_file = train_file
@@ -39,6 +40,10 @@ class LitTransformerDataModule(pl.LightningDataModule):
         self.train_val_split = train_val_split
         self.ds = None
         self.labels = None
+
+    def _to_properties(self, kwargs):
+        for key, value in kwargs.items():
+            setattr(self, key, value)
 
     def setup(self, stage: Optional[str] = None):
         dataset = self.load_dataset()
@@ -86,16 +91,16 @@ class LitTransformerDataModule(pl.LightningDataModule):
     def train_dataloader(self):
         return DataLoader(
             self.ds['train'],
-            batch_size=self.args.batch_size,
-            num_workers=self.args.num_workers,
+            batch_size=self.batch_size,
+            num_workers=self.num_workers,
             collate_fn=self.data_collator
         )
 
     def val_dataloader(self):
         return DataLoader(
             self.ds['validation'],
-            batch_size=self.args.batch_size,
-            num_workers=self.args.num_workers,
+            batch_size=self.batch_size,
+            num_workers=self.num_workers,
             collate_fn=self.data_collator
         )
 
@@ -103,8 +108,8 @@ class LitTransformerDataModule(pl.LightningDataModule):
         dataset = self.ds['test'] if 'test' in self.ds else self.ds['validation']
         return DataLoader(
             dataset,
-            batch_size=self.args.batch_size,
-            num_workers=self.args.num_workers,
+            batch_size=self.batch_size,
+            num_workers=self.num_workers,
             collate_fn=self.data_collator
         )
 

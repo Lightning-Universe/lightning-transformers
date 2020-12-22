@@ -12,7 +12,7 @@ Lightning-Transformers disentangles Transformers code to decouple the science fr
 # Train bert-base-cased on CARER emotion dataset using text classification task provided by huggingface
 python train.py \
     +task=huggingface/text_classification \
-    +dataset=text_classification/emotion \
+    +dataset=text_classification/emotion 
 
 # Train roberta-base on SWAG dataset using multiple choice task provided by huggingface
 python train.py \

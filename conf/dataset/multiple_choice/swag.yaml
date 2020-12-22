@@ -11,8 +11,3 @@ max_length: 128
 preprocessing_num_workers: 8
 load_from_cache_file: True
 pad_to_max_length: True
-data_dir: '/home/ubuntu/projects/lightning-transformers/data/swag'
-download_cmd_line: |
-  git clone https://github.com/rowanz/swagaf.git
-  cp swagaf/data/* .
-  rm -r swagaf/

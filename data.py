@@ -26,7 +26,7 @@ class LitMultipleChoiceTransformerDataModule(LitTransformerDataModule):
             preprocess_function,
         )
 
-        kwargs = self._prepare_preprocess_function_kwargs()
+        kwargs = self._from .core.model()
         preprocess_function = partial(preprocess_function, **kwargs)
 
         dataset = dataset.map(
@@ -38,7 +38,7 @@ class LitMultipleChoiceTransformerDataModule(LitTransformerDataModule):
 
         return dataset
 
-    def _prepare_preprocess_function_kwargs(self):
+    def _from .core.model(self):
         kwargs = {
             "tokenizer": self.tokenizer,
             "context_name": self.context_name,

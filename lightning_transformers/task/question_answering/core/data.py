@@ -24,7 +24,7 @@ class LitQuestionAnsweringTransformerDataModule(LitTransformerDataModule):
 
         prepare_train_features = partial(self.prepare_train_features_function, **kwargs)
 
-        if self.args.do_train:
+        if self.do_train:
             dataset["train"] = dataset["train"].map(
                 prepare_train_features,
                 batched=True,
@@ -69,9 +69,9 @@ class LitQuestionAnsweringTransformerDataModule(LitTransformerDataModule):
             "question_column_name": question_column_name,
             "context_column_name": context_column_name,
             "answer_column_name": answer_column_name,
-            "max_seq_length": self.args.max_seq_length,
-            "doc_stride": self.args.doc_stride,
-            "pad_to_max_length": self.args.pad_to_max_length
+            "max_seq_length": self.max_seq_length,
+            "doc_stride": self.doc_stride,
+            "pad_to_max_length": self.pad_to_max_length
         }
         return kwargs
 
@@ -83,11 +83,11 @@ class LitQuestionAnsweringTransformerDataModule(LitTransformerDataModule):
         kwargs = {
             "features": self.ds['validation'],
             "examples": self.ds['validation_orginal'],
-            "version_2_with_negative": self.args.version_2_with_negative,
-            "n_best_size": self.args.n_best_size,
-            "max_answer_length": self.args.max_answer_length,
-            "null_score_diff_threshold": self.args.null_score_diff_threshold,
-            "output_dir": self.args.output_dir,
+            "version_2_with_negative": self.version_2_with_negative,
+            "n_best_size": self.n_best_size,
+            "max_answer_length": self.max_answer_length,
+            "null_score_diff_threshold": self.null_score_diff_threshold,
+            "output_dir": self.output_dir,
             "is_world_process_zero": True
         }
         return kwargs
@@ -102,21 +102,21 @@ class LitQuestionAnsweringTransformerDataModule(LitTransformerDataModule):
     def load_metrics(self):
         current_dir = os.path.sep.join(os.path.join(__file__).split(os.path.sep)[:-1])
         self.metric = load_metric(
-            os.path.join(current_dir, "squad_v2_local") if self.args.version_2_with_negative else "squad")
+            os.path.join(current_dir, "squad_v2_local") if self.version_2_with_negative else "squad")
 
     @property
     def pad_on_right(self):
         return self.tokenizer.padding_side == "right"
 
     def column_names(self, dataset: Dataset):
-        if self.args.do_train:
+        if self.do_train:
             return dataset["train"].column_names
         else:
             return dataset["validation"].column_names
 
     @property
     def data_collator(self):
-        return default_data_collator if self.args.pad_to_max_length else DataCollatorWithPadding(self.tokenizer)
+        return default_data_collator if self.pad_to_max_length else DataCollatorWithPadding(self.tokenizer)
 
     def qa_column_names(self, dataset: Dataset):
         column_names = self.column_names(dataset)

@@ -24,6 +24,7 @@ from lightning_transformers.core.utils import (
 def main(cfg: DictConfig):
     if cfg.ignore_warnings:
         warnings.simplefilter("ignore")
+    
     rank_zero_info(OmegaConf.to_yaml(cfg))
 
     os.environ['TOKENIZERS_PARALLELISM'] = 'TRUE'
