@@ -4,13 +4,13 @@ from lightning_transformers.task.multiple_choice.core.data import LitMultipleCho
 class LitSwagMultipleChoiceTransformerDataModule(LitMultipleChoiceTransformerDataModule):
 
     @property
-    def ending_names(self):
+    def ending_names(self) -> list:
         return [f"ending{i}" for i in range(4)]
 
     @property
-    def context_name(self):
+    def context_name(self) -> str:
         return "sent1"
 
     @property
-    def question_header_name(self):
+    def question_header_name(self) -> str:
         return "sent2"
