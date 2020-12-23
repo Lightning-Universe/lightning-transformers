@@ -5,21 +5,20 @@ import torch
 from omegaconf import DictConfig
 from transformers import AutoConfig
 
-from lightning_transformers.core.model import LitTransformer
+from lightning_transformers.core.model import LitAutoModelTransformer
 
 
-class LitTextClassificationTransformer(LitTransformer):
-    def __init__(
-            self,
-            downstream_model_type: str,
-            model: DictConfig,
-            optim: DictConfig,
-            num_classes: int,
-            scheduler: Optional[DictConfig] = None):
+class LitAutoModelTextClassificationTransformer(LitAutoModelTransformer):
+    def __init__(self,
+                 downstream_model_type: str,
+                 backbone: DictConfig,
+                 optim: DictConfig,
+                 num_classes: int,
+                 scheduler: Optional[DictConfig] = None):
         self.num_classes = num_classes
         super().__init__(
             downstream_model_type=downstream_model_type,
-            model=model,
+            backbone=backbone,
             optim=optim,
             scheduler=scheduler
         )
@@ -27,7 +26,7 @@ class LitTextClassificationTransformer(LitTransformer):
 
     def generate_config(self):
         self.config = AutoConfig.from_pretrained(
-            self.hparams.model.pretrained_model_name_or_path,
+            self.hparams.backbone.pretrained_model_name_or_path,
             num_labels=self.num_classes
         )
 

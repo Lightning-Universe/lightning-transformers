@@ -1,9 +1,9 @@
 import torch
 
-from lightning_transformers.core import LitTransformer
+from lightning_transformers.core import LitAutoModelTransformer
 
 
-class LitQuestionAnsweringTransformer(LitTransformer):
+class LitAutoModelQuestionAnsweringTransformer(LitAutoModelTransformer):
 
     def test_step(self, batch, batch_idx, dataloader_idx=0):
         outputs = self(**batch)

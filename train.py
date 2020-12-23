@@ -1,18 +1,12 @@
 import os
 import warnings
-
 import hydra
 from hydra.utils import instantiate
 from omegaconf import OmegaConf
-
-from lightning_transformers.core import LitTransformer, LitTransformerDataModule
-
-os.environ["HYDRA_FULL_ERROR"] = "1"
+from lightning_transformers.core import LitAutoModelTransformer, LitTransformerDataModule
 from omegaconf import DictConfig
-
 import pytorch_lightning as pl
-from pytorch_lightning.utilities.distributed import rank_zero_info, rank_zero_warn
-from pytorch_lightning import _logger as log
+from pytorch_lightning.utilities.distributed import rank_zero_info
 from lightning_transformers.core.utils import (
     instantiate_downstream_model,
     instantiate_data_module,
@@ -24,7 +18,7 @@ from lightning_transformers.core.utils import (
 def main(cfg: DictConfig):
     if cfg.ignore_warnings:
         warnings.simplefilter("ignore")
-    
+
     rank_zero_info(OmegaConf.to_yaml(cfg))
 
     os.environ['TOKENIZERS_PARALLELISM'] = 'TRUE'
@@ -38,9 +32,9 @@ def main(cfg: DictConfig):
     )
     data_module.setup()
 
-    model: LitTransformer = instantiate_downstream_model(
+    model: LitAutoModelTransformer = instantiate_downstream_model(
         task_config=cfg.task,
-        model_config=cfg.model,
+        backbone_model_config=cfg.backbone,
         optimizer_config=cfg.optimizer,
         scheduler_config=cfg.scheduler,
         **data_module.data_model_kwargs
@@ -52,9 +46,10 @@ def main(cfg: DictConfig):
 
     if cfg.training.do_train:
         trainer.fit(
-            model, 
-            datamodule=data_module)
-    
+            model=model,
+            datamodule=data_module
+        )
+
     trainer.test(model, datamodule=data_module)
 
 

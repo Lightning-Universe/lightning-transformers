@@ -1,2 +1,2 @@
 from .data import LitTextClassificationDataModule
-from .model import LitTextClassificationTransformer
+from .model import LitAutoModelTextClassificationTransformer

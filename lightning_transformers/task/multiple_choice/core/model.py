@@ -2,20 +2,20 @@ import torch
 from typing import Optional
 from omegaconf import DictConfig
 import pytorch_lightning as pl
-from lightning_transformers.core.model import LitTransformer
+from lightning_transformers.core.model import LitAutoModelTransformer
 
 
-class LitMultipleChoiceTransformer(LitTransformer):
+class LitAutoModelMultipleChoiceTransformer(LitAutoModelTransformer):
     def __init__(
             self,
             downstream_model_type: str,
-            model: DictConfig,
+            backbone: DictConfig,
             optim: DictConfig,
             num_classes: int,
             scheduler: Optional[DictConfig] = None):
         super().__init__(
             downstream_model_type=downstream_model_type,
-            model=model,
+            backbone=backbone,
             optim=optim,
             scheduler=scheduler
         )
