@@ -7,7 +7,9 @@ from datasets import load_dataset, Dataset
 from omegaconf import DictConfig
 from pytorch_lightning.utilities.exceptions import MisconfigurationException
 from torch.utils.data import DataLoader
-
+from transformers import (
+    default_data_collator,
+)
 
 class LitTransformerDataModule(pl.LightningDataModule):
     def __init__(self,
@@ -115,7 +117,7 @@ class LitTransformerDataModule(pl.LightningDataModule):
 
     @property
     def data_collator(self):
-        return None
+        return default_data_collator
 
     @property
     def data_model_kwargs(self):

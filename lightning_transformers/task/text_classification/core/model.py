@@ -59,12 +59,6 @@ class LitAutoModelTextClassificationTransformer(LitAutoModelTransformer):
         del batch['idx']
         return batch
 
-    def log_metrics(self, preds, labels, mode='val'):
-        p = self.precision_metric(preds, labels)
-        r = self.recall_metric(preds, labels)
-        a = self.accuracy_metric(preds, labels)
-        return {f'{mode}_precision': p, f'{mode}_recall': r, f'{mode}_acc': a}
-
     def _initialize_metrics(self, num_classes: int):
         self.precision_metric = pl.metrics.Precision(num_classes=num_classes)
         self.recall_metric = pl.metrics.Recall(num_classes=num_classes)

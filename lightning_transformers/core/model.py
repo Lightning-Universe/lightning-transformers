@@ -49,7 +49,7 @@ class LitAutoModelTransformer(LitTransformer):
                  scheduler: Optional[DictConfig] = None,
                  **kwargs):
         # Resolve the bug in Lightning save_hyperparameters
-        optim.lr = optim.lr  # todo wat
+        optim.lr = optim.lr  # todo Resolve this bug in Lightning directly
 
         self.save_hyperparameters()
 

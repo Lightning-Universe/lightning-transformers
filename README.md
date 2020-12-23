@@ -63,9 +63,10 @@ python train.py \
     +dataset=multiple_choice/swag
 
 
-# Train bert-base-cased on CARER emotion dataset using text classification task provided by huggingface
+# Train gpt2 on wikitext dataset using language modeling task provided by huggingface
 python train.py \
     +task=huggingface/language_modeling \
     +dataset=language_modeling/wikitext \
-    model=language_modeling/gpt2
+    backbone=gpt2 \
+    training.batch_size=1
 ```
