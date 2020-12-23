@@ -21,7 +21,7 @@ class LitLanguageModelingTransformerDataModule(LitTransformerDataModule):
 
     def process_data(self, dataset: Dataset) -> Dataset:
 
-        if self.args.do_train:
+        if self.do_train:
             column_names = dataset["train"].column_names
         else:
             column_names = dataset["validation"].column_names
@@ -39,23 +39,23 @@ class LitLanguageModelingTransformerDataModule(LitTransformerDataModule):
             batched=True,
             num_proc=self.preprocessing_num_workers,
             remove_columns=column_names,
-            load_from_cache_file=not self.args.overwrite_cache,
+            load_from_cache_file=not self.overwrite_cache,
         )
 
-        group_texts = partial(self.group_texts, block_size=self.block_size)
+        group_texts = partial(self.group_texts, block_size=self.effective_block_size)
 
         dataset = dataset.map(
             group_texts,
             batched=True,
             num_proc=self.preprocessing_num_workers,
-            load_from_cache_file=not self.args.overwrite_cache,
+            load_from_cache_file=not self.overwrite_cache,
         )
 
         return dataset
 
     @property
-    def block_size(self):
-        if self.args.block_size is None:
+    def effective_block_size(self):
+        if self.block_size is None:
             block_size = self.tokenizer.model_max_length
             if block_size > 1024:
                 logger.warn(
@@ -64,12 +64,12 @@ class LitLanguageModelingTransformerDataModule(LitTransformerDataModule):
                 )
             block_size = 1024
         else:
-            if self.args.block_size > self.tokenizer.model_max_length:
+            if self.block_size > self.tokenizer.model_max_length:
                 logger.warn(
-                    f"The block_size passed ({self.args.block_size}) is larger than the maximum length for the model"
+                    f"The block_size passed ({self.block_size}) is larger than the maximum length for the model"
                     f"({self.tokenizer.model_max_length}). Using block_size={self.tokenizer.model_max_length}."
                 )
-            block_size = min(self.args.block_size, self.tokenizer.model_max_length)
+            block_size = min(self.block_size, self.tokenizer.model_max_length)
         return block_size
 
     @staticmethod
