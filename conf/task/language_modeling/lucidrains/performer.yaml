@@ -1,2 +1,0 @@
-# @package task
-_target_: lightning_transformers.task.language_modeling.models.LitPerformerLanguageModelingTransformer
