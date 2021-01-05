@@ -1,5 +1,5 @@
 # @package dataset
-_target_: lightning_transformers.task.language_modeling.LitWikiTextLanguageModelingTransformerDataModule
+_target_: lightning_transformers.task.language_modeling.LitLanguageModelingTransformerDataModule
 dataset_name: wikitext
 dataset_config_name: wikitext-2-raw-v1
 train_file: null

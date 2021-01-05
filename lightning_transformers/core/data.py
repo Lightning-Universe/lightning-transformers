@@ -1,4 +1,3 @@
-from argparse import Namespace
 from typing import Optional, Any
 
 import hydra
@@ -10,6 +9,7 @@ from torch.utils.data import DataLoader
 from transformers import (
     default_data_collator,
 )
+
 
 class LitTransformerDataModule(pl.LightningDataModule):
     def __init__(self,

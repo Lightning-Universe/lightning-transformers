@@ -1,20 +1,12 @@
-import os
-import torch
 from functools import partial
-from enum import Enum
-from typing import List, Optional
-from functools import partial
-from dataclasses import dataclass
-from datasets import load_metric, Dataset
-from transformers import PreTrainedTokenizer
-from lightning_transformers.core import LitTransformerDataModule
-from filelock import FileLock
-import tqdm
+
+from datasets import Dataset
 from pytorch_lightning import _logger as log
 from transformers import (
     AutoTokenizer,
-    default_data_collator,
 )
+
+from lightning_transformers.core import LitTransformerDataModule
 
 
 class LitLanguageModelingTransformerDataModule(LitTransformerDataModule):
@@ -25,11 +17,11 @@ class LitLanguageModelingTransformerDataModule(LitTransformerDataModule):
             column_names = dataset["train"].column_names
         else:
             column_names = dataset["validation"].column_names
-        
+
         text_column_name = "text" if "text" in column_names else column_names[0]
 
         tokenize_function = partial(
-            self.tokenize_function, 
+            self.tokenize_function,
             tokenizer=self.tokenizer,
             text_column_name=text_column_name
         )
@@ -58,14 +50,14 @@ class LitLanguageModelingTransformerDataModule(LitTransformerDataModule):
         if self.block_size is None:
             block_size = self.tokenizer.model_max_length
             if block_size > 1024:
-                logger.warn(
+                log.warn(
                     f"The tokenizer picked seems to have a very large `model_max_length` ({self.tokenizer.model_max_length}). "
                     "Picking 1024 instead. You can change that default value by passing --block_size xxx."
                 )
             block_size = 1024
         else:
             if self.block_size > self.tokenizer.model_max_length:
-                logger.warn(
+                log.warn(
                     f"The block_size passed ({self.block_size}) is larger than the maximum length for the model"
                     f"({self.tokenizer.model_max_length}). Using block_size={self.tokenizer.model_max_length}."
                 )
@@ -73,13 +65,13 @@ class LitLanguageModelingTransformerDataModule(LitTransformerDataModule):
         return block_size
 
     @staticmethod
-    def tokenize_function(examples, 
+    def tokenize_function(examples,
                           tokenizer: AutoTokenizer = None,
                           text_column_name: str = None):
         return tokenizer(examples[text_column_name])
 
     @staticmethod
-    def group_texts(examples, 
+    def group_texts(examples,
                     block_size: int = None):
         # Concatenate all texts.
         concatenated_examples = {k: sum(examples[k], []) for k in examples.keys()}
@@ -89,7 +81,7 @@ class LitLanguageModelingTransformerDataModule(LitTransformerDataModule):
         total_length = (total_length // block_size) * block_size
         # Split by chunks of max_len.
         result = {
-            k: [t[i : i + block_size] for i in range(0, total_length, block_size)]
+            k: [t[i: i + block_size] for i in range(0, total_length, block_size)]
             for k, t in concatenated_examples.items()
         }
         result["labels"] = result["input_ids"].copy()

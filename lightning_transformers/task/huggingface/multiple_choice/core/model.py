@@ -1,7 +1,9 @@
-import torch
 from typing import Optional
-from omegaconf import DictConfig
+
 import pytorch_lightning as pl
+import torch
+from omegaconf import DictConfig
+
 from lightning_transformers.core.model import LitAutoModelTransformer
 
 
