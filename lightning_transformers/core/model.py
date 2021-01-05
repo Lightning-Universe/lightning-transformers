@@ -6,7 +6,7 @@ from omegaconf import DictConfig
 from transformers import AutoConfig
 
 
-class LitTransformer(pl.LightningModule):
+class LitTextTransformer(pl.LightningModule):
 
     def __init__(self,
                  model: Any,
@@ -41,7 +41,7 @@ class LitTransformer(pl.LightningModule):
         return self.model(**inputs)
 
 
-class LitAutoModelTransformer(LitTransformer):
+class LitAutoModelTransformer(LitTextTransformer):
     def __init__(self,
                  downstream_model_type: str,
                  backbone: DictConfig,

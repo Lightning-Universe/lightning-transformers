@@ -1,21 +1,13 @@
-import os
-import torch
-from enum import Enum
-from typing import List, Optional
 from functools import partial
-from dataclasses import dataclass
-from datasets import load_metric, Dataset
-from transformers import PreTrainedTokenizer
-from lightning_transformers.core import LitTransformerDataModule
-from filelock import FileLock
-import tqdm
-from pytorch_lightning import _logger as log
+
+from datasets import Dataset
 from transformers import (
     default_data_collator,
 )
+
+from lightning_transformers.core import LitTransformerDataModule
 from .data_utils import (
     DataCollatorForMultipleChoice,
-    preprocess_function,
 )
 
 

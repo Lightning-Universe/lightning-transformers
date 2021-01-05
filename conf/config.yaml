@@ -3,10 +3,9 @@ defaults: # for loading the default config
   - trainer: default
   - scheduler: linear_schedule_with_warmup
   - optimizer: adamw
-  - tokenizer: huggingface
-  - backbone: bert-base-cased
   - logger: tchaton # todo: change this eventually
 
+task: ???
 dataset: ???
 experiment_name: ${now:%Y-%m-%d}_${now:%H-%M-%S}
 log: False
