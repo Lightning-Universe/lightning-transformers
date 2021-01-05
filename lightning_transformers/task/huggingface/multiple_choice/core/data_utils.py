@@ -1,16 +1,10 @@
-import logging
-import os
-import sys
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from typing import Optional, Union, List
 
-import numpy as np
 import torch
-from datasets import load_dataset
-
 import transformers
 from transformers.tokenization_utils_base import PaddingStrategy, PreTrainedTokenizerBase
-from transformers.trainer_utils import is_main_process
+
 
 @dataclass
 class DataCollatorForMultipleChoice:

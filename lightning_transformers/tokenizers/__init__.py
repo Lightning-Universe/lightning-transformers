@@ -1,1 +1,1 @@
-from .huggingface import HuggingFaceTokenizer
+from .autotokenizer import TransformersAutoTokenizer
