@@ -1,19 +1,19 @@
-from argparse import Namespace
-from typing import Optional, Any
+from typing import Optional, Any, Union
 
-import hydra
 import pytorch_lightning as pl
 from datasets import load_dataset, Dataset
 from omegaconf import DictConfig
 from pytorch_lightning.utilities.exceptions import MisconfigurationException
+from tokenizers import Tokenizer
 from torch.utils.data import DataLoader
+from transformers import PreTrainedTokenizer, PreTrainedTokenizerFast
 
 
 class LitTransformerDataModule(pl.LightningDataModule):
     def __init__(self,
                  dataset_name: str,
                  training_config: DictConfig,
-                 tokenizer: DictConfig,
+                 tokenizer: Union[Tokenizer, PreTrainedTokenizer, PreTrainedTokenizerFast],
                  train_file: Optional[str] = None,
                  validation_file: Optional[str] = None,
                  padding: str = 'max_length',
@@ -27,7 +27,7 @@ class LitTransformerDataModule(pl.LightningDataModule):
         super().__init__()
         self._to_properties(kwargs)
         self._to_properties(training_config)
-        self.tokenizer = hydra.utils.instantiate(tokenizer)
+        self.tokenizer = tokenizer
         self.dataset_name = dataset_name
         self.train_file = train_file
         self.validation_file = validation_file

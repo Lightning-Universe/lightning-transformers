@@ -1,5 +1,5 @@
 # @package task
 defaults:
-  - backbone: huggingface/bert-base-cased
+  - /backbone@_group_: huggingface/bert-base-cased
 _target_: lightning_transformers.task.question_answering.LitAutoModelQuestionAnsweringTransformer
 downstream_model_type: transformers.AutoModelForQuestionAnswering

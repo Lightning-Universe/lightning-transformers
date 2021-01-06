@@ -1,5 +1,5 @@
 # @package dataset
-_target_: lightning_transformers.task.question_answering.datasets.LitSquadTransformerDataModule
+_target_: lightning_transformers.task.huggingface.question_answering.datasets.LitSquadTransformerDataModule
 dataset_name: squad
 train_file: ''
 validation_file: ''
