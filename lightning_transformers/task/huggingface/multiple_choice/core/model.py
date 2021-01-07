@@ -34,7 +34,6 @@ class MultipleChoiceTransformer(TaskTransformer):
         return loss
 
     def _step(self, batch, batch_idx, mode):
-        batch = self._remove_unneeded_batch_keys(batch)
         outputs = self(**batch)
         loss, logits = outputs[:2]
         preds = torch.argmax(logits, axis=1)
@@ -42,9 +41,6 @@ class MultipleChoiceTransformer(TaskTransformer):
         self.log_dict(metric_dict, prog_bar=True, on_step=False, on_epoch=True)
         self.log(f'{mode}_loss', loss, prog_bar=True, sync_dist=True)
         return loss
-
-    def _remove_unneeded_batch_keys(self, batch):
-        return batch
 
     def configure_metrics(self):
         self.precision_metric = pl.metrics.Precision(num_classes=self.num_classes)

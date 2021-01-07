@@ -3,10 +3,14 @@ from typing import Optional, Any
 import pytorch_lightning as pl
 from hydra.utils import get_class, instantiate
 from omegaconf import DictConfig
-from transformers import AutoConfig
 
 
 class LitTransformer(pl.LightningModule):
+    """
+    Base class for transformers.
+    Provides a few helper functions primarily for optimization and interface for text transformers.
+    """
+
     def __init__(self,
                  model: Any,
                  optim: DictConfig,
@@ -41,6 +45,12 @@ class LitTransformer(pl.LightningModule):
 
 
 class TaskTransformer(LitTransformer):
+    """
+    Base class for task specific transformers, wrapping pre-trained language models for downstream tasks.
+    The API is built on top of AutoModel and AutoConfig, provided by HuggingFace.
+
+    see: https://huggingface.co/transformers/model_doc/auto.html
+    """
     def __init__(self,
                  downstream_model_type: str,
                  backbone: DictConfig,
@@ -61,7 +71,7 @@ class TaskTransformer(LitTransformer):
             scheduler=self.hparams.scheduler
         )
 
-    def on_fit_start(self):
+    def setup(self, stage):
         self.configure_metrics()
 
     def configure_metrics(self):

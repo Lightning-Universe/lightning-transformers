@@ -2,6 +2,7 @@ import inspect
 import os
 import shutil
 import subprocess
+import warnings
 
 import hydra
 from hydra.utils import instantiate
@@ -58,6 +59,12 @@ def initialize_loggers(cfg, *args, **kwargs):
     if cfg.log:
         return instantiate(cfg.logger)
     return None
+
+
+def set_ignore_warnings():
+    warnings.simplefilter("ignore")
+    # set os environ variable for multiprocesses
+    os.environ['PYTHONWARNINGS'] = 'ignore'
 
 
 def instantiate_downstream_model(

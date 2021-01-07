@@ -1,23 +1,24 @@
 import os
-import warnings
+
 import hydra
-from hydra.utils import instantiate
-from omegaconf import OmegaConf
-from lightning_transformers.core import TaskTransformer, TransformerDataModule
-from omegaconf import DictConfig
 import pytorch_lightning as pl
+from hydra.utils import instantiate
+from omegaconf import DictConfig
+from omegaconf import OmegaConf
 from pytorch_lightning.utilities.distributed import rank_zero_info
+
+from lightning_transformers.core import TaskTransformer, TransformerDataModule
 from lightning_transformers.core.utils import (
     instantiate_downstream_model,
     instantiate_data_module,
-    initialize_loggers
+    initialize_loggers, set_ignore_warnings
 )
 
 
 @hydra.main(config_path='conf', config_name='config')
 def main(cfg: DictConfig):
     if cfg.ignore_warnings:
-        warnings.simplefilter("ignore")
+        set_ignore_warnings()
 
     rank_zero_info(OmegaConf.to_yaml(cfg))
 
