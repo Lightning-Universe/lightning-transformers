@@ -60,6 +60,8 @@ class LitTransformer(pl.LightningModule):
     @property
     def num_training_steps(self) -> int:
         """Total training steps inferred from datamodule and devices."""
+        if self.trainer.max_steps:
+            return self.trainer.max_steps
         batch_size = self.trainer.datamodule.batch_size
 
         if self.trainer.limit_train_batches != 0:
