@@ -9,7 +9,7 @@ from torch.utils.data import DataLoader
 from transformers import PreTrainedTokenizer, PreTrainedTokenizerFast
 
 
-class LitTransformerDataModule(pl.LightningDataModule):
+class TransformerDataModule(pl.LightningDataModule):
     def __init__(self,
                  dataset_name: str,
                  training_config: DictConfig,
@@ -118,5 +118,5 @@ class LitTransformerDataModule(pl.LightningDataModule):
         return None
 
     @property
-    def data_model_kwargs(self):
+    def config_data_args(self):
         return {}

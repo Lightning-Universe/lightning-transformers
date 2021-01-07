@@ -3,31 +3,23 @@ from typing import Optional
 import pytorch_lightning as pl
 import torch
 from omegaconf import DictConfig
-from transformers import AutoConfig
 
-from lightning_transformers.core.model import LitAutoModelTransformer
+from lightning_transformers.core.model import TaskTransformer
 
 
-class LitAutoModelTextClassificationTransformer(LitAutoModelTransformer):
+class TextClassificationTransformer(TaskTransformer):
     def __init__(self,
                  downstream_model_type: str,
                  backbone: DictConfig,
                  optim: DictConfig,
-                 num_classes: int,
-                 scheduler: Optional[DictConfig] = None):
-        self.num_classes = num_classes
+                 scheduler: Optional[DictConfig] = None,
+                 config_data_args: Optional[dict] = None):
         super().__init__(
             downstream_model_type=downstream_model_type,
             backbone=backbone,
             optim=optim,
-            scheduler=scheduler
-        )
-        self._initialize_metrics(num_classes=num_classes)
-
-    def generate_config(self):
-        self.config = AutoConfig.from_pretrained(
-            self.hparams.backbone.pretrained_model_name_or_path,
-            num_labels=self.num_classes
+            scheduler=scheduler,
+            config_data_args=config_data_args
         )
 
     def training_step(self, batch, batch_idx):
@@ -65,10 +57,14 @@ class LitAutoModelTextClassificationTransformer(LitAutoModelTransformer):
         a = self.accuracy_metric(preds, labels)
         return {f'{mode}_precision': p, f'{mode}_recall': r, f'{mode}_acc': a}
 
-    def _initialize_metrics(self, num_classes: int):
-        self.precision_metric = pl.metrics.Precision(num_classes=num_classes)
-        self.recall_metric = pl.metrics.Recall(num_classes=num_classes)
+    def configure_metrics(self):
+        self.precision_metric = pl.metrics.Precision(num_classes=self.num_classes)
+        self.recall_metric = pl.metrics.Recall(num_classes=self.num_classes)
         self.accuracy_metric = pl.metrics.Accuracy()
+
+    @property
+    def num_classes(self):
+        return self.trainer.datamodule.num_classes
 
     def _calculate_metrics(self, preds, labels, mode='val'):
         # Not required by all models. Only required for classification

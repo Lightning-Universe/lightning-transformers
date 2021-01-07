@@ -65,17 +65,15 @@ def instantiate_downstream_model(
         backbone_model_config,
         optimizer_config,
         scheduler_config,
-        **kwargs):
+        config_data_args):
     model = hydra.utils.instantiate(
         config=task_config,
         backbone=backbone_model_config,
         optim=optimizer_config,
         scheduler=scheduler_config,
-        _recursive_=False,
-        **kwargs
+        config_data_args=config_data_args,
+        _recursive_=False  # disable hydra instantiation for model to configure optimizer/schedulers
     )
-    # TODO remove this patching, put this into the model. Metrics are stored in the lightning module...
-    # model.calculate_metrics = data_module.calculate_metrics
     return model
 
 

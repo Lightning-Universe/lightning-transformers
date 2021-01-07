@@ -2,14 +2,14 @@ from typing import Any
 
 from datasets import Dataset
 
-from lightning_transformers.core import LitTransformerDataModule
+from lightning_transformers.core import TransformerDataModule
 
 
-class LitTextClassificationDataModule(LitTransformerDataModule):
+class TextClassificationDataModule(TransformerDataModule):
 
     def process_data(self, dataset: Dataset) -> Dataset:
         input_feature_fields = [k for k, v in dataset['train'].features.items() if k not in ['label', 'idx']]
-        dataset = LitTextClassificationDataModule.preprocess(
+        dataset = TextClassificationDataModule.preprocess(
             dataset,
             self.tokenizer,
             input_feature_fields,
@@ -35,9 +35,9 @@ class LitTextClassificationDataModule(LitTransformerDataModule):
         return self.labels.num_classes
 
     @property
-    def data_model_kwargs(self):
+    def config_data_args(self):
         return {
-            'num_classes': self.num_classes
+            'num_labels': self.num_classes
         }
 
     @staticmethod
@@ -66,7 +66,7 @@ class LitTextClassificationDataModule(LitTransformerDataModule):
     @staticmethod
     def preprocess(ds, tokenizer, input_feature_fields, padding='max_length', truncation='only_first', max_length=128):
         ds = ds.map(
-            LitTextClassificationDataModule.convert_to_features,
+            TextClassificationDataModule.convert_to_features,
             batched=True,
             with_indices=True,
             fn_kwargs={
