@@ -1,6 +1,8 @@
+import math
 from typing import Optional, Any
 
 import pytorch_lightning as pl
+from pytorch_lightning import _logger as log
 from hydra.utils import get_class, instantiate
 from omegaconf import DictConfig
 
@@ -36,9 +38,41 @@ class LitTransformer(pl.LightningModule):
             },
         ]
         optimizer = instantiate(self.optim, optimizer_grouped_parameters)
-        scheduler = instantiate(self.scheduler, optimizer)
+
+        if self.scheduler.num_training_steps < 0:
+            # less than 0 specifies to infer number of training steps
+            self.scheduler.num_training_steps = self.num_training_steps
+            log.info(f"Inferring number of training steps, set to {self.scheduler.num_training_steps}")
+
+        if isinstance(self.scheduler.num_warmup_steps, float):
+            # Convert float values to percentage of training steps to use as warmup
+            warmup_ratio = self.scheduler.num_warmup_steps
+            self.scheduler.num_warmup_steps = self.scheduler.num_training_steps * warmup_ratio
+            log.info(f"Inferring number of warmup steps from ratio, set to {self.scheduler.num_warmup_steps}")
+
+        scheduler = instantiate(
+            config=self.scheduler,
+            optimizer=optimizer
+        )
         scheduler = {'scheduler': scheduler, 'interval': 'step', 'frequency': 1}
         return [optimizer], [scheduler]
+
+    @property
+    def num_training_steps(self) -> int:
+        """Total training steps inferred from datamodule and devices."""
+        batch_size = self.trainer.datamodule.batch_size
+
+        if self.trainer.limit_train_batches != 0:
+            dataset_size = self.trainer.limit_train_batches
+        else:
+            dataset_size = len(self.trainer.datamodule.train_dataloader())
+
+        num_devices = max(1, self.trainer.num_gpus, self.trainer.num_processes)
+        if self.trainer.tpu_cores:
+            num_devices = max(num_devices, self.trainer.tpu_cores)
+
+        effective_batch_size = batch_size * self.trainer.accumulate_grad_batches * num_devices
+        return math.ceil(dataset_size / effective_batch_size) * self.trainer.max_epochs
 
 
 class TaskTransformer(LitTransformer):
