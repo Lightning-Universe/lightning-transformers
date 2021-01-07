@@ -71,6 +71,7 @@ def instantiate_downstream_model(
         backbone=backbone_model_config,
         optim=optimizer_config,
         scheduler=scheduler_config,
+        _recursive_=False,
         **kwargs
     )
     # TODO remove this patching, put this into the model. Metrics are stored in the lightning module...
