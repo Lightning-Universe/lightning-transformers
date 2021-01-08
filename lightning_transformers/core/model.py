@@ -1,5 +1,5 @@
 import math
-from typing import Optional, Any
+from typing import Optional, Any, Dict
 
 import pytorch_lightning as pl
 from pytorch_lightning import _logger as log
@@ -10,16 +10,14 @@ from omegaconf import DictConfig
 class LitTransformer(pl.LightningModule):
     """
     Base class for transformers.
-    Provides a few helper functions primarily for optimization and interface for text transformers.
+    Provides a few helper functions primarily for optimization.
     """
 
     def __init__(self,
                  model: Any,
                  optim: DictConfig,
-                 scheduler: DictConfig,
-                 tokenizer: Any = None):
+                 scheduler: DictConfig):
         super().__init__()
-        self.tokenizer = tokenizer
         self.model = model
         self.scheduler = scheduler
         self.optim = optim
@@ -115,3 +113,12 @@ class TaskTransformer(LitTransformer):
         and initialize any data specific metrics.
         """
         pass
+
+    def on_save_checkpoint(self, checkpoint: Dict[str, Any]):
+        datamodule = self.trainer.datamodule
+        if hasattr(datamodule, 'tokenizer') and datamodule.tokenizer is not None:
+            # Save tokenizer from datamodule for predictions
+            checkpoint['tokenizer'] = datamodule.tokenizer
+
+    def on_load_checkpoint(self, checkpoint: Dict[str, Any]) -> None:
+        self.tokenizer = checkpoint.get('tokenizer')
