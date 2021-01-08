@@ -1,7 +1,7 @@
-from lightning_transformers.task.huggingface.multiple_choice.core.data import LitMultipleChoiceTransformerDataModule
+from lightning_transformers.task.huggingface.multiple_choice.core.data import MultipleChoiceTransformerDataModule
 
 
-class LitSwagMultipleChoiceTransformerDataModule(LitMultipleChoiceTransformerDataModule):
+class SwagMultipleChoiceTransformerDataModule(MultipleChoiceTransformerDataModule):
 
     @property
     def ending_names(self) -> list:

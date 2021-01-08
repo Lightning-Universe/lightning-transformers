@@ -1,37 +1,24 @@
 from typing import Optional
 
 import pytorch_lightning as pl
-import torch
+from lightning_transformers.core.model import TaskTransformer
 from omegaconf import DictConfig
 
-from lightning_transformers.core.model import LitAutoModelTransformer
-
-
-class LitAutoModelMultipleChoiceTransformer(LitAutoModelTransformer):
+class MultipleChoiceTransformer(TaskTransformer):
     def __init__(
             self,
             downstream_model_type: str,
             backbone: DictConfig,
             optim: DictConfig,
-            num_classes: int,
-            scheduler: Optional[DictConfig] = None):
+            scheduler: Optional[DictConfig] = None,
+            config_data_args: Optional[dict] = None):
         super().__init__(
             downstream_model_type=downstream_model_type,
             backbone=backbone,
             optim=optim,
-            scheduler=scheduler
+            scheduler=scheduler,
+            config_data_args=config_data_args
         )
-        self._initialize_metrics(num_classes=num_classes)
-
-    def _step(self, batch, batch_idx, mode):
-        batch = self._remove_unneeded_batch_keys(batch)
-        outputs = self(**batch)
-        loss, logits = outputs[:2]
-        preds = torch.argmax(logits, axis=1)
-        metric_dict = self._calculate_metrics(preds, batch['labels'], mode=mode)
-        self.log_dict(metric_dict, prog_bar=True, on_step=False, on_epoch=True)
-        self.log(f'{mode}_loss', loss, prog_bar=True, sync_dist=True)  
-        return loss
 
     def training_step(self, batch, batch_idx):
         loss = self._step(batch, batch_idx, "train")
@@ -45,13 +32,23 @@ class LitAutoModelMultipleChoiceTransformer(LitAutoModelTransformer):
         loss = self._step(batch, batch_idx, "test")
         return loss
 
-    def _remove_unneeded_batch_keys(self, batch):
-        return batch
+    def _step(self, batch, batch_idx, mode):
+        outputs = self.model(**batch)
+        loss, logits = outputs[:2]
+        preds = torch.argmax(logits, axis=1)
+        metric_dict = self._calculate_metrics(preds, batch['labels'], mode=mode)
+        self.log_dict(metric_dict, prog_bar=True, on_step=False, on_epoch=True)
+        self.log(f'{mode}_loss', loss, prog_bar=True, sync_dist=True)
+        return loss
 
-    def _initialize_metrics(self, num_classes: int):
-        self.precision_metric = pl.metrics.Precision(num_classes=num_classes)
-        self.recall_metric = pl.metrics.Recall(num_classes=num_classes)
+    def configure_metrics(self):
+        self.precision_metric = pl.metrics.Precision(num_classes=self.num_classes)
+        self.recall_metric = pl.metrics.Recall(num_classes=self.num_classes)
         self.accuracy_metric = pl.metrics.Accuracy()
+
+    @property
+    def num_classes(self):
+        return self.trainer.datamodule.num_classes
 
     def _calculate_metrics(self, preds, labels, mode='val'):
         # Not required by all models. Only required for classification

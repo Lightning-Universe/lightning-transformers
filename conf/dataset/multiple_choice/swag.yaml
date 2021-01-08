@@ -1,5 +1,5 @@
 # @package dataset
-_target_: lightning_transformers.task.multiple_choice.LitSwagMultipleChoiceTransformerDataModule
+_target_: lightning_transformers.task.huggingface.multiple_choice.SwagMultipleChoiceTransformerDataModule
 dataset_name: swag
 train_file: ''
 validation_file: ''

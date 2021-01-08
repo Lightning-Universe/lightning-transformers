@@ -5,13 +5,13 @@ from transformers import (
     default_data_collator,
 )
 
-from lightning_transformers.core import LitTransformerDataModule
+from lightning_transformers.core import TransformerDataModule
 from .data_utils import (
     DataCollatorForMultipleChoice,
 )
 
 
-class LitMultipleChoiceTransformerDataModule(LitTransformerDataModule):
+class MultipleChoiceTransformerDataModule(TransformerDataModule):
 
     def process_data(self, dataset: Dataset) -> Dataset:
         from .data_utils import (
@@ -51,7 +51,7 @@ class LitMultipleChoiceTransformerDataModule(LitTransformerDataModule):
         return len(self.ending_names)
 
     @property
-    def data_model_kwargs(self) -> dict:
+    def config_data_args(self):
         return {
-            'num_classes': self.num_classes
+            'num_labels': self.num_classes
         }
