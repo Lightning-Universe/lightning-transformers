@@ -1,5 +1,5 @@
 # @package task
 defaults:
   - /backbone@_group_: huggingface/bert-base-cased
-_target_: lightning_transformers.task.language_modeling.LanguageModelingTransformer
+_target_: lightning_transformers.task.huggingface.language_modeling.LanguageModelingTransformer
 downstream_model_type: transformers.AutoModelForCausalLM

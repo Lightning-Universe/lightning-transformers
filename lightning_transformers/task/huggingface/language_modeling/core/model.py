@@ -9,7 +9,7 @@ class LanguageModelingTransformer(TaskTransformer):
         self.model.resize_token_embeddings(tokenizer_length)
 
     def _step(self, batch, batch_idx):
-        outputs = self(**batch)
+        outputs = self.model(**batch)
         loss, logits = outputs[:2]
         return loss
 

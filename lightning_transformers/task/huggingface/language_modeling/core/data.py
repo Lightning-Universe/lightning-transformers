@@ -1,10 +1,10 @@
 from functools import partial
+from typing import Union
 
 from datasets import Dataset
 from pytorch_lightning import _logger as log
-from transformers import (
-    AutoTokenizer,
-)
+from tokenizers import Tokenizer
+from transformers import PreTrainedTokenizer, PreTrainedTokenizerFast
 
 from lightning_transformers.core import TransformerDataModule
 
@@ -66,7 +66,7 @@ class LanguageModelingTransformerDataModule(TransformerDataModule):
 
     @staticmethod
     def tokenize_function(examples,
-                          tokenizer: AutoTokenizer = None,
+                          tokenizer: Union[Tokenizer, PreTrainedTokenizer, PreTrainedTokenizerFast],
                           text_column_name: str = None):
         return tokenizer(examples[text_column_name])
 
