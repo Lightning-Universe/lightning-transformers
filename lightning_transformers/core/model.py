@@ -3,10 +3,13 @@ from typing import Optional, Any
 import pytorch_lightning as pl
 from hydra.utils import get_class, instantiate
 from omegaconf import DictConfig
-from transformers import AutoConfig
 
 
-class LitTextTransformer(pl.LightningModule):
+class LitTransformer(pl.LightningModule):
+    """
+    Base class for transformers.
+    Provides a few helper functions primarily for optimization and interface for text transformers.
+    """
 
     def __init__(self,
                  model: Any,
@@ -37,37 +40,42 @@ class LitTextTransformer(pl.LightningModule):
         scheduler = {'scheduler': scheduler, 'interval': 'step', 'frequency': 1}
         return [optimizer], [scheduler]
 
-    def forward(self, **inputs):
-        return self.model(**inputs)
 
+class TaskTransformer(LitTransformer):
+    """
+    Base class for task specific transformers, wrapping pre-trained language models for downstream tasks.
+    The API is built on top of AutoModel and AutoConfig, provided by HuggingFace.
 
-class LitAutoModelTransformer(LitTextTransformer):
+    see: https://huggingface.co/transformers/model_doc/auto.html
+    """
+
     def __init__(self,
                  downstream_model_type: str,
                  backbone: DictConfig,
                  optim: DictConfig,
                  scheduler: Optional[DictConfig] = None,
-                 **kwargs):
+                 config_data_args: Optional[dict] = None):
         # Resolve the bug in Lightning save_hyperparameters
         optim.lr = optim.lr  # todo wat
-
         self.save_hyperparameters()
 
-        # We have to ensure that we only use rank 0 when downloading the model somehow.
-        # This could cause issues otherwise.
-        self.generate_config()
-
         model = get_class(self.hparams.downstream_model_type).from_pretrained(
-            pretrained_model_name_or_path=self.hparams.backbone.pretrained_model_name_or_path,
-            config=self.config
+            self.hparams.backbone.pretrained_model_name_or_path,
+            **self.hparams.config_data_args
         )
         super().__init__(
             model=model,
-            optim=optim,
-            scheduler=scheduler
+            optim=self.hparams.optim,
+            scheduler=self.hparams.scheduler
         )
 
-    def generate_config(self):
-        self.config = AutoConfig.from_pretrained(
-            self.hparams.backbone.pretrained_model_name_or_path,
-        )
+    def setup(self, stage):
+        self.configure_metrics()
+
+    def configure_metrics(self):
+        """
+        Override to configure metrics for train/validation/test.
+        This is called on fit start to have access to the data module,
+        and initialize any data specific metrics.
+        """
+        pass

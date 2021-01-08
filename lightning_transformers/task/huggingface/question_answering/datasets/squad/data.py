@@ -1,5 +1,5 @@
 from lightning_transformers.task.huggingface.question_answering.core.data import \
-    LitQuestionAnsweringTransformerDataModule
+    QuestionAnsweringTransformerDataModule
 from lightning_transformers.task.huggingface.question_answering.datasets.squad.processing import (
     prepare_train_features,
     prepare_validation_features,
@@ -7,7 +7,7 @@ from lightning_transformers.task.huggingface.question_answering.datasets.squad.p
 )
 
 
-class LitSquadTransformerDataModule(LitQuestionAnsweringTransformerDataModule):
+class LitSquadTransformerDataModule(QuestionAnsweringTransformerDataModule):
 
     @staticmethod
     def prepare_train_features_function(*args, **kwargs):

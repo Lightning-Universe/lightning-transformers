@@ -1,23 +1,24 @@
 import os
-import warnings
+
 import hydra
-from hydra.utils import instantiate
-from omegaconf import OmegaConf
-from lightning_transformers.core import LitAutoModelTransformer, LitTransformerDataModule
-from omegaconf import DictConfig
 import pytorch_lightning as pl
+from hydra.utils import instantiate
+from omegaconf import DictConfig
+from omegaconf import OmegaConf
 from pytorch_lightning.utilities.distributed import rank_zero_info
+
+from lightning_transformers.core import TaskTransformer, TransformerDataModule
 from lightning_transformers.core.utils import (
     instantiate_downstream_model,
     instantiate_data_module,
-    initialize_loggers
+    initialize_loggers, set_ignore_warnings
 )
 
 
 @hydra.main(config_path='conf', config_name='config')
 def main(cfg: DictConfig):
     if cfg.ignore_warnings:
-        warnings.simplefilter("ignore")
+        set_ignore_warnings()
 
     rank_zero_info(OmegaConf.to_yaml(cfg))
 
@@ -25,22 +26,20 @@ def main(cfg: DictConfig):
 
     logger = initialize_loggers(cfg)
 
-    data_module: LitTransformerDataModule = instantiate_data_module(
+    data_module: TransformerDataModule = instantiate_data_module(
         dataset_config=cfg.dataset,
         training_config=cfg.training,
         tokenizer=cfg.tokenizer
     )
     data_module.setup()
 
-    model: LitAutoModelTransformer = instantiate_downstream_model(
+    model: TaskTransformer = instantiate_downstream_model(
         task_config=cfg.task,
         backbone_model_config=cfg.backbone,
         optimizer_config=cfg.optimizer,
         scheduler_config=cfg.scheduler,
-        **data_module.data_model_kwargs
+        config_data_args=data_module.config_data_args
     )
-
-    model.tokenizer = data_module.tokenizer
 
     trainer: pl.Trainer = instantiate(cfg.trainer, logger=logger)
 
