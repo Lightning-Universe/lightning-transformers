@@ -91,8 +91,7 @@ class TaskTransformer(LitTransformer):
                  optim: DictConfig,
                  scheduler: Optional[DictConfig] = None,
                  config_data_args: Optional[dict] = None):
-        # Resolve the bug in Lightning save_hyperparameters
-        optim.lr = optim.lr  # todo Resolve this bug in Lightning directly
+        optim.lr = optim.lr  # todo Fixed in https://github.com/PyTorchLightning/pytorch-lightning/pull/5406
 
         self.save_hyperparameters()
 
