@@ -92,10 +92,9 @@ def instantiate_tokenizer(cfg):
     return tokenizer
 
 
-def instantiate_data_module(dataset_config, training_config, tokenizer):
+def instantiate_data_module(dataset_config, tokenizer):
     data_module = hydra.utils.instantiate(
         config=dataset_config,
-        training_config=training_config,
         tokenizer=tokenizer
     )
     return data_module

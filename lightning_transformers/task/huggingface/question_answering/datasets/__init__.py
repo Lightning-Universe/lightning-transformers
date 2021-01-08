@@ -1,1 +1,1 @@
-from .squad import LitSquadTransformerDataModule
+from .squad import SquadTransformerDataModule

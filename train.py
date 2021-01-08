@@ -28,7 +28,6 @@ def main(cfg: DictConfig):
 
     data_module: TransformerDataModule = instantiate_data_module(
         dataset_config=cfg.dataset,
-        training_config=cfg.training,
         tokenizer=cfg.tokenizer
     )
     data_module.setup()

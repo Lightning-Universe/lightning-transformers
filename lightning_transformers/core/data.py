@@ -2,7 +2,6 @@ from typing import Optional, Any, Union
 
 import pytorch_lightning as pl
 from datasets import load_dataset, Dataset
-from omegaconf import DictConfig
 from pytorch_lightning.utilities.exceptions import MisconfigurationException
 from tokenizers import Tokenizer
 from torch.utils.data import DataLoader
@@ -12,7 +11,8 @@ from transformers import PreTrainedTokenizer, PreTrainedTokenizerFast
 class TransformerDataModule(pl.LightningDataModule):
     def __init__(self,
                  dataset_name: str,
-                 training_config: DictConfig,
+                 batch_size: int,
+                 num_workers: int,
                  tokenizer: Union[Tokenizer, PreTrainedTokenizer, PreTrainedTokenizerFast],
                  train_file: Optional[str] = None,
                  validation_file: Optional[str] = None,
@@ -20,13 +20,14 @@ class TransformerDataModule(pl.LightningDataModule):
                  truncation: str = 'only_first',
                  max_length: int = 128,
                  preprocessing_num_workers: int = 8,
+                 overwrite_cache: bool = False,
                  load_from_cache_file: bool = True,
                  dataset_config_name: Optional[str] = None,
-                 train_val_split: Optional[int] = None,
-                 **kwargs):
+                 train_val_split: Optional[int] = None):
         super().__init__()
-        self._to_properties(kwargs)
-        self._to_properties(training_config)
+        self.batch_size = batch_size
+        self.num_workers = num_workers
+        self.overwrite_cache = overwrite_cache
         self.tokenizer = tokenizer
         self.dataset_name = dataset_name
         self.train_file = train_file
@@ -40,10 +41,6 @@ class TransformerDataModule(pl.LightningDataModule):
         self.train_val_split = train_val_split
         self.ds = None
         self.labels = None
-
-    def _to_properties(self, kwargs):
-        for key, value in kwargs.items():
-            setattr(self, key, value)
 
     def setup(self, stage: Optional[str] = None):
         dataset = self.load_dataset()

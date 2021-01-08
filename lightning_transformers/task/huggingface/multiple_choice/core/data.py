@@ -13,6 +13,15 @@ from .data_utils import (
 
 class MultipleChoiceTransformerDataModule(TransformerDataModule):
 
+    def __init__(self,
+                 max_seq_length: int,
+                 pad_to_max_length: int,
+                 *args,
+                 **kwargs):
+        super().__init__(*args, **kwargs)
+        self.max_seq_length = max_seq_length
+        self.pad_to_max_length = pad_to_max_length
+
     def process_data(self, dataset: Dataset) -> Dataset:
         from .data_utils import (
             preprocess_function,
@@ -45,6 +54,18 @@ class MultipleChoiceTransformerDataModule(TransformerDataModule):
     def data_collator(self):
         return default_data_collator if self.pad_to_max_length \
             else DataCollatorForMultipleChoice(tokenizer=self.tokenizer)
+
+    @property
+    def ending_names(self) -> list:
+        raise NotImplementedError
+
+    @property
+    def context_name(self) -> str:
+        raise NotImplementedError
+
+    @property
+    def question_header_name(self) -> str:
+        raise NotImplementedError
 
     @property
     def num_classes(self) -> int:
