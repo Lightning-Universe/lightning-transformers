@@ -90,7 +90,7 @@ class TaskTransformer(LitTransformer):
             downstream_model_type: str,
             backbone: DictConfig,
             optim: DictConfig,
-            tokenizer: Union[Tokenizer, PreTrainedTokenizer, PreTrainedTokenizerFast],
+            tokenizer: Optional[Union[Tokenizer, PreTrainedTokenizer, PreTrainedTokenizerFast]] = None,
             scheduler: Optional[DictConfig] = None,
             config_data_args: Optional[dict] = None):
         # Resolve the bug in Lightning save_hyperparameters
