@@ -34,7 +34,7 @@ class MultipleChoiceTransformer(TaskTransformer):
         return loss
 
     def _step(self, batch, batch_idx, mode):
-        outputs = self(**batch)
+        outputs = self.model(**batch)
         loss, logits = outputs[:2]
         preds = torch.argmax(logits, axis=1)
         metric_dict = self._calculate_metrics(preds, batch['labels'], mode=mode)

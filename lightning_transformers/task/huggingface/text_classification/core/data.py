@@ -58,9 +58,6 @@ class TextClassificationDataModule(TransformerDataModule):
             texts_or_text_pairs, padding=padding, truncation=truncation, max_length=max_length
         )
 
-        # idx is unique ID we can use to link predictions to original data
-        features['idx'] = indices
-
         return features
 
     @staticmethod

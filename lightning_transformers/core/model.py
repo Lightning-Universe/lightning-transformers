@@ -40,9 +40,6 @@ class LitTransformer(pl.LightningModule):
         scheduler = {'scheduler': scheduler, 'interval': 'step', 'frequency': 1}
         return [optimizer], [scheduler]
 
-    def forward(self, **inputs):
-        return self.model(**inputs)
-
 
 class TaskTransformer(LitTransformer):
     """
@@ -51,6 +48,7 @@ class TaskTransformer(LitTransformer):
 
     see: https://huggingface.co/transformers/model_doc/auto.html
     """
+
     def __init__(self,
                  downstream_model_type: str,
                  backbone: DictConfig,

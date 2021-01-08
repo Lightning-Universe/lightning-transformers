@@ -23,15 +23,13 @@ class TextClassificationTransformer(TaskTransformer):
         )
 
     def training_step(self, batch, batch_idx):
-        batch = self.on_model_step_start(batch, batch_idx)
-        outputs = self(**batch)
+        outputs = self.model(**batch)
         loss = outputs[0]
         self.log('train_loss', loss)
         return loss
 
     def validation_step(self, batch, batch_idx, dataloader_idx=0):
-        batch = self.on_model_step_start(batch, batch_idx)
-        outputs = self(**batch)
+        outputs = self.model(**batch)
         val_loss, logits = outputs[:2]
         preds = torch.argmax(logits, axis=1)
         metric_dict = self._calculate_metrics(preds, batch['labels'])
@@ -39,17 +37,12 @@ class TextClassificationTransformer(TaskTransformer):
         self.log('val_loss', val_loss, prog_bar=True, sync_dist=True)
 
     def test_step(self, batch, batch_idx, dataloader_idx=0):
-        batch = self.on_model_step_start(batch, batch_idx)
-        outputs = self(**batch)
+        outputs = self.model(**batch)
         val_loss, logits = outputs[:2]
         preds = torch.argmax(logits, axis=1)
         metric_dict = self._calculate_metrics(preds, batch['labels'], mode='test')
         self.log_dict(metric_dict, prog_bar=True, on_step=False, on_epoch=True)
         self.log('test_loss', val_loss, prog_bar=True, sync_dist=True)
-
-    def on_model_step_start(self, batch, batch_idx):
-        del batch['idx']
-        return batch
 
     def log_metrics(self, preds, labels, mode='val'):
         p = self.precision_metric(preds, labels)
