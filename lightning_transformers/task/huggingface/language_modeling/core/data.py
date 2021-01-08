@@ -6,10 +6,10 @@ from transformers import (
     AutoTokenizer,
 )
 
-from lightning_transformers.core import LitTransformerDataModule
+from lightning_transformers.core import TransformerDataModule
 
 
-class LitLanguageModelingTransformerDataModule(LitTransformerDataModule):
+class LanguageModelingTransformerDataModule(TransformerDataModule):
 
     def process_data(self, dataset: Dataset) -> Dataset:
 

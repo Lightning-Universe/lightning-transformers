@@ -1,7 +1,7 @@
-from lightning_transformers.core.model import LitAutoModelTransformer
+from lightning_transformers.core.model import TaskTransformer
 
 
-class LitLanguageModelingTransformer(LitAutoModelTransformer):
+class LanguageModelingTransformer(TaskTransformer):
 
     def on_fit_start(self):
         tokenizer = self.trainer.datamodule.tokenizer

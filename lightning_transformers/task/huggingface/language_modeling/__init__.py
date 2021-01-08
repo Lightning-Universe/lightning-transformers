@@ -1,2 +1,2 @@
-from lightning_transformers.task.huggingface.language_modeling.core.data import LitLanguageModelingTransformerDataModule
-from lightning_transformers.task.huggingface.language_modeling.core.model import LitLanguageModelingTransformer
+from lightning_transformers.task.huggingface.language_modeling.core.data import LanguageModelingTransformerDataModule
+from lightning_transformers.task.huggingface.language_modeling.core.model import LanguageModelingTransformer
