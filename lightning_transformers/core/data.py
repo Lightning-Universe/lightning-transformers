@@ -20,14 +20,12 @@ class TransformerDataModule(pl.LightningDataModule):
                  truncation: str = 'only_first',
                  max_length: int = 128,
                  preprocessing_num_workers: int = 8,
-                 overwrite_cache: bool = False,
                  load_from_cache_file: bool = True,
                  dataset_config_name: Optional[str] = None,
                  train_val_split: Optional[int] = None):
         super().__init__()
         self.batch_size = batch_size
         self.num_workers = num_workers
-        self.overwrite_cache = overwrite_cache
         self.tokenizer = tokenizer
         self.dataset_name = dataset_name
         self.train_file = train_file

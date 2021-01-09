@@ -34,7 +34,7 @@ class MultipleChoiceTransformerDataModule(TransformerDataModule):
             preprocess_function,
             batched=True,
             num_proc=self.preprocessing_num_workers,
-            load_from_cache_file=not self.overwrite_cache,
+            load_from_cache_file=self.load_from_cache_file,
         )
 
         return dataset
