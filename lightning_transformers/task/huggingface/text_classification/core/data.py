@@ -13,9 +13,9 @@ class TextClassificationDataModule(TransformerDataModule):
             dataset,
             self.tokenizer,
             input_feature_fields,
-            self.padding,
-            self.truncation,
-            self.max_length
+            self.cfg.padding,
+            self.cfg.truncation,
+            self.cfg.max_length
         )
 
         cols_to_keep = [

@@ -1,40 +1,39 @@
 import os
+from dataclasses import dataclass
 from functools import partial
 
-from datasets import load_metric, Dataset
+from datasets import load_metric, Dataset, Union
+from tokenizers import Tokenizer
 from transformers import (
     default_data_collator,
     DataCollatorWithPadding,
-    EvalPrediction
+    EvalPrediction, PreTrainedTokenizer, PreTrainedTokenizerFast
 )
 
 from lightning_transformers.core import TransformerDataModule
+from lightning_transformers.core.data import TransformerDataConfig
+
+
+@dataclass
+class QuestionAnsweringTransformerDataConfig(TransformerDataConfig):
+    max_seq_length: int = 128
+    pad_to_max_length: bool = True
+    do_train: bool = True
+    doc_stride: int = 128
+    version_2_with_negative: bool = False
+    n_best_size: int = 20
+    max_answer_length: int = 30
+    null_score_diff_threshold: float = .0
+    output_dir: str = './'
 
 
 class QuestionAnsweringTransformerDataModule(TransformerDataModule):
 
     def __init__(self,
-                 max_seq_length: int,
-                 pad_to_max_length: int,
-                 do_train: bool,
-                 doc_stride: int,
-                 version_2_with_negative: bool,
-                 n_best_size: int,
-                 max_answer_length: int,
-                 null_score_diff_threshold: float,
-                 output_dir: str,
-                 *args,
-                 **kwargs):
-        super().__init__(*args, **kwargs)
-        self.max_seq_length = max_seq_length
-        self.pad_to_max_length = pad_to_max_length
-        self.do_train = do_train
-        self.doc_stride = doc_stride
-        self.version_2_with_negative = version_2_with_negative
-        self.n_best_size = n_best_size
-        self.max_answer_length = max_answer_length
-        self.null_score_diff_threshold = null_score_diff_threshold
-        self.output_dir = output_dir
+                 tokenizer: Union[Tokenizer, PreTrainedTokenizer, PreTrainedTokenizerFast],
+                 cfg: QuestionAnsweringTransformerDataConfig):
+        super().__init__(tokenizer, cfg)
+        self.cfg = cfg
 
     def process_data(self, dataset: Dataset) -> Dataset:
         question_column_name, context_column_name, answer_column_name = self.qa_column_names(dataset)
@@ -47,13 +46,13 @@ class QuestionAnsweringTransformerDataModule(TransformerDataModule):
 
         prepare_train_features = partial(self.prepare_train_features_function, **kwargs)
 
-        if self.do_train:
+        if self.cfg.do_train:
             dataset["train"] = dataset["train"].map(
                 prepare_train_features,
                 batched=True,
-                num_proc=self.preprocessing_num_workers,
+                num_proc=self.cfg.preprocessing_num_workers,
                 remove_columns=dataset["train"].column_names,
-                load_from_cache_file=not self.load_from_cache_file,
+                load_from_cache_file=not self.cfg.load_from_cache_file,
             )
 
         if "test" not in dataset:
@@ -62,9 +61,9 @@ class QuestionAnsweringTransformerDataModule(TransformerDataModule):
             dataset["validation"] = dataset["validation"].map(
                 prepare_validation_features,
                 batched=True,
-                num_proc=self.preprocessing_num_workers,
+                num_proc=self.cfg.preprocessing_num_workers,
                 remove_columns=dataset["validation"].column_names,
-                load_from_cache_file=not self.load_from_cache_file,
+                load_from_cache_file=not self.cfg.load_from_cache_file,
             )
         return dataset
 
@@ -92,9 +91,9 @@ class QuestionAnsweringTransformerDataModule(TransformerDataModule):
             "question_column_name": question_column_name,
             "context_column_name": context_column_name,
             "answer_column_name": answer_column_name,
-            "max_seq_length": self.max_seq_length,
-            "doc_stride": self.doc_stride,
-            "pad_to_max_length": self.pad_to_max_length
+            "max_length": self.cfg.max_length,
+            "doc_stride": self.cfg.doc_stride,
+            "pad_to_max_length": self.cfg.pad_to_max_length
         }
 
     @staticmethod
@@ -105,11 +104,11 @@ class QuestionAnsweringTransformerDataModule(TransformerDataModule):
         return {
             "features": self.ds['validation'],
             "examples": self.ds['validation_original'],
-            "version_2_with_negative": self.version_2_with_negative,
-            "n_best_size": self.n_best_size,
-            "max_answer_length": self.max_answer_length,
-            "null_score_diff_threshold": self.null_score_diff_threshold,
-            "output_dir": self.output_dir,
+            "version_2_with_negative": self.cfg.version_2_with_negative,
+            "n_best_size": self.cfg.n_best_size,
+            "max_answer_length": self.cfg.max_answer_length,
+            "null_score_diff_threshold": self.cfg.null_score_diff_threshold,
+            "output_dir": self.cfg.output_dir,
             "is_world_process_zero": True
         }
 
@@ -123,21 +122,21 @@ class QuestionAnsweringTransformerDataModule(TransformerDataModule):
     def load_metrics(self):
         current_dir = os.path.sep.join(os.path.join(__file__).split(os.path.sep)[:-1])
         self.metric = load_metric(
-            os.path.join(current_dir, "squad_v2_local") if self.version_2_with_negative else "squad")
+            os.path.join(current_dir, "squad_v2_local") if self.cfg.version_2_with_negative else "squad")
 
     @property
     def pad_on_right(self):
         return self.tokenizer.padding_side == "right"
 
     def column_names(self, dataset: Dataset):
-        if self.do_train:
+        if self.cfg.do_train:
             return dataset["train"].column_names
         else:
             return dataset["validation"].column_names
 
     @property
     def data_collator(self):
-        return default_data_collator if self.pad_to_max_length else DataCollatorWithPadding(self.tokenizer)
+        return default_data_collator if self.cfg.pad_to_max_length else DataCollatorWithPadding(self.tokenizer)
 
     def qa_column_names(self, dataset: Dataset):
         column_names = self.column_names(dataset)

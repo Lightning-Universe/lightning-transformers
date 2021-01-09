@@ -1,3 +1,4 @@
+from dataclasses import dataclass
 from typing import Optional, Any, Union
 
 import pytorch_lightning as pl
@@ -8,37 +9,29 @@ from torch.utils.data import DataLoader
 from transformers import PreTrainedTokenizer, PreTrainedTokenizerFast
 
 
+@dataclass
+class TransformerDataConfig:
+    dataset_name: str
+    batch_size: int
+    num_workers: int
+    train_val_split: Optional[int] = None
+    train_file: Optional[str] = None
+    validation_file: Optional[str] = None
+    padding: str = 'max_length'
+    truncation: str = 'only_first'
+    max_length: int = 128
+    preprocessing_num_workers: int = 8
+    load_from_cache_file: bool = True
+    dataset_config_name: Optional[str] = None
+
+
 class TransformerDataModule(pl.LightningDataModule):
     def __init__(self,
-                 dataset_name: str,
-                 batch_size: int,
-                 num_workers: int,
                  tokenizer: Union[Tokenizer, PreTrainedTokenizer, PreTrainedTokenizerFast],
-                 train_file: Optional[str] = None,
-                 validation_file: Optional[str] = None,
-                 padding: str = 'max_length',
-                 truncation: str = 'only_first',
-                 max_length: int = 128,
-                 preprocessing_num_workers: int = 8,
-                 overwrite_cache: bool = False,
-                 load_from_cache_file: bool = True,
-                 dataset_config_name: Optional[str] = None,
-                 train_val_split: Optional[int] = None):
+                 cfg: TransformerDataConfig):
         super().__init__()
-        self.batch_size = batch_size
-        self.num_workers = num_workers
-        self.overwrite_cache = overwrite_cache
         self.tokenizer = tokenizer
-        self.dataset_name = dataset_name
-        self.train_file = train_file
-        self.validation_file = validation_file
-        self.dataset_config_name = dataset_config_name
-        self.padding = padding
-        self.truncation = truncation
-        self.max_length = max_length
-        self.preprocessing_num_workers = preprocessing_num_workers
-        self.load_from_cache_file = load_from_cache_file
-        self.train_val_split = train_val_split
+        self.cfg = cfg
         self.ds = None
         self.labels = None
 
@@ -60,27 +53,27 @@ class TransformerDataModule(pl.LightningDataModule):
         pass
 
     def load_dataset(self) -> Dataset:
-        if self.dataset_name is not None:
+        if self.cfg.dataset_name is not None:
             # Downloading and loading a dataset from the hub.
-            dataset = load_dataset(self.dataset_name, self.dataset_config_name)
+            dataset = load_dataset(self.cfg.dataset_name, self.cfg.dataset_config_name)
         else:
-            if not (self.train_file and self.validation_file):
+            if not (self.cfg.train_file and self.cfg.validation_file):
                 raise MisconfigurationException(
                     'You have not specified a dataset name'
                     'and need to specify a custom train file and validation file to the data module.'
                 )
             data_files = {}
-            if self.train_file is not None:
-                data_files["train"] = self.train_file
-            if self.validation_file is not None:
-                data_files["validation"] = self.validation_file
-            extension = self.train_file.split(".")[-1]
+            if self.cfg.train_file is not None:
+                data_files["train"] = self.cfg.train_file
+            if self.cfg.validation_file is not None:
+                data_files["validation"] = self.cfg.validation_file
+            extension = self.cfg.train_file.split(".")[-1]
             dataset = load_dataset(extension, data_files=data_files, field="data")
         return dataset
 
     def split_dataset(self, dataset: Dataset) -> Dataset:
-        if self.train_val_split is not None:
-            split = dataset['train'].train_test_split(self.train_val_split)
+        if self.cfg.train_val_split is not None:
+            split = dataset['train'].train_test_split(self.cfg.train_val_split)
             dataset['train'] = split['train']
             dataset['validation'] = split['test']
         return dataset
@@ -88,16 +81,16 @@ class TransformerDataModule(pl.LightningDataModule):
     def train_dataloader(self):
         return DataLoader(
             self.ds['train'],
-            batch_size=self.batch_size,
-            num_workers=self.num_workers,
+            batch_size=self.cfg.batch_size,
+            num_workers=self.cfg.num_workers,
             collate_fn=self.data_collator
         )
 
     def val_dataloader(self):
         return DataLoader(
             self.ds['validation'],
-            batch_size=self.batch_size,
-            num_workers=self.num_workers,
+            batch_size=self.cfg.batch_size,
+            num_workers=self.cfg.num_workers,
             collate_fn=self.data_collator
         )
 
@@ -105,8 +98,8 @@ class TransformerDataModule(pl.LightningDataModule):
         dataset = self.ds['test'] if 'test' in self.ds else self.ds['validation']
         return DataLoader(
             dataset,
-            batch_size=self.batch_size,
-            num_workers=self.num_workers,
+            batch_size=self.cfg.batch_size,
+            num_workers=self.cfg.num_workers,
             collate_fn=self.data_collator
         )
 
