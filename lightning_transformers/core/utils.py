@@ -72,30 +72,28 @@ def instantiate_downstream_model(
         backbone_model_config,
         optimizer_config,
         scheduler_config,
+        tokenizer,
         config_data_args):
-    model = hydra.utils.instantiate(
+    return hydra.utils.instantiate(
         config=task_config,
         backbone=backbone_model_config,
         optim=optimizer_config,
         scheduler=scheduler_config,
+        tokenizer=tokenizer,
         config_data_args=config_data_args,
         _recursive_=False  # disable hydra instantiation for model to configure optimizer/schedulers
     )
-    return model
 
 
 def instantiate_tokenizer(cfg):
-    tokenizer = AutoTokenizer.from_pretrained(
-        pretrained_model_name_or_path=cfg.pretrained_model_name_or_path,
-        use_fast=cfg.task.dataset.use_fast
+    return hydra.utils.instantiate(
+        config=cfg
     )
-    return tokenizer
 
 
 def instantiate_data_module(dataset_config, training_config, tokenizer):
-    data_module = hydra.utils.instantiate(
+    return hydra.utils.instantiate(
         config=dataset_config,
         training_config=training_config,
         tokenizer=tokenizer
     )
-    return data_module

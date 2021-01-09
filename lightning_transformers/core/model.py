@@ -1,25 +1,25 @@
 import math
-from typing import Optional, Any
+from typing import Optional, Any, Dict, Union
 
 import pytorch_lightning as pl
 from pytorch_lightning import _logger as log
 from hydra.utils import get_class, instantiate
 from omegaconf import DictConfig
+from tokenizers import Tokenizer
+from transformers import PreTrainedTokenizerFast, PreTrainedTokenizer
 
 
 class LitTransformer(pl.LightningModule):
     """
     Base class for transformers.
-    Provides a few helper functions primarily for optimization and interface for text transformers.
+    Provides a few helper functions primarily for optimization.
     """
 
     def __init__(self,
                  model: Any,
                  optim: DictConfig,
-                 scheduler: DictConfig,
-                 tokenizer: Any = None):
+                 scheduler: DictConfig):
         super().__init__()
-        self.tokenizer = tokenizer
         self.model = model
         self.scheduler = scheduler
         self.optim = optim
@@ -85,15 +85,25 @@ class TaskTransformer(LitTransformer):
     see: https://huggingface.co/transformers/model_doc/auto.html
     """
 
-    def __init__(self,
-                 downstream_model_type: str,
-                 backbone: DictConfig,
-                 optim: DictConfig,
-                 scheduler: Optional[DictConfig] = None,
-                 config_data_args: Optional[dict] = None):
+    def __init__(
+            self,
+            downstream_model_type: str,
+            backbone: DictConfig,
+            optim: DictConfig,
+            tokenizer: Optional[Union[Tokenizer, PreTrainedTokenizer, PreTrainedTokenizerFast]] = None,
+            scheduler: Optional[DictConfig] = None,
+            config_data_args: Optional[dict] = None):
         # Resolve the bug in Lightning save_hyperparameters
         optim.lr = optim.lr  # todo wat
-        self.save_hyperparameters()
+
+        self.tokenizer = tokenizer  # tokenizer saving handled via on save/load hooks
+        self.save_hyperparameters(
+            'downstream_model_type',
+            'backbone',
+            'optim',
+            'scheduler',
+            'config_data_args'
+        )
 
         model = get_class(self.hparams.downstream_model_type).from_pretrained(
             self.hparams.backbone.pretrained_model_name_or_path,
@@ -115,3 +125,10 @@ class TaskTransformer(LitTransformer):
         and initialize any data specific metrics.
         """
         pass
+
+    def on_save_checkpoint(self, checkpoint: Dict[str, Any]):
+        # Save tokenizer from datamodule for predictions
+        checkpoint['tokenizer'] = self.tokenizer
+
+    def on_load_checkpoint(self, checkpoint: Dict[str, Any]) -> None:
+        self.tokenizer = checkpoint['tokenizer']
