@@ -1,4 +1,3 @@
-# @package _group_
 _target_: torch.optim.SGD
 lr: ${training.lr}
 momentum: 0.9
