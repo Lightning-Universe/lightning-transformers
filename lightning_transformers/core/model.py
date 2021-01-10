@@ -62,6 +62,7 @@ class TaskTransformer(LitTransformer):
     """
     Base class for task specific transformers
     """
+
     def setup(self, stage):
         self.configure_metrics()
 

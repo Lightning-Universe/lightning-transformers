@@ -1,10 +1,13 @@
 import logging
+from typing import Optional
 
 import pytorch_lightning as pl
 import torch
 from hydra.utils import get_class, instantiate
 from omegaconf import DictConfig
 from transformers import PreTrainedTokenizerBase, AutoTokenizer
+
+from lightning_transformers.huggingface import HFTransformerDataModule
 
 
 class Instantiator:
@@ -33,32 +36,19 @@ class HydraInstantiator(Instantiator):
     def scheduler(self, cfg: DictConfig, optimizer: torch.optim.Optimizer) -> torch.optim.lr_scheduler._LRScheduler:
         return instantiate(cfg, optimizer=optimizer)
 
-    def datamodule(self, cfg: DictConfig, tokenizer: PreTrainedTokenizerBase) -> pl.LightningDataModule:
+    def data_module(
+        self, cfg: DictConfig, tokenizer: Optional[PreTrainedTokenizerBase] = None
+    ) -> HFTransformerDataModule:
         return instantiate(cfg, tokenizer=tokenizer)
 
-    def tokenizer(self, cfg: DictConfig) -> AutoTokenizer:
+    def tokenizer(self, cfg: DictConfig) -> PreTrainedTokenizerBase:
         return AutoTokenizer.from_pretrained(
-            pretrained_model_name_or_path=cfg.pretrained_model_name_or_path, use_fast=cfg.task.dataset.use_fast
+            pretrained_model_name_or_path=cfg.pretrained_model_name_or_path, use_fast=cfg.use_fast
         )
 
     def logger(self, cfg: DictConfig) -> logging.Logger:
         if cfg.log:
             return instantiate(cfg.logger)
 
-    # def downstream_model(
-    #    self,
-    #    cfg: DictConfig,
-    #    backbone: DictConfig,
-    #    optimizer: DictConfig,
-    #    scheduler: DictConfig,
-    #    config_data_args: DictConfig,
-    # ) -> "TODO":
-    #    return instantiate(
-    #        cfg,
-    #        backbone=backbone,
-    #        optimizer=optimizer,
-    #        scheduler=scheduler,
-    #        config_data_args=config_data_args,
-    #        # disable hydra instantiation for model to configure optimizer/schedulers
-    #        _recursive_=False,
-    #    )
+    def trainer(self, cfg: DictConfig, **kwargs) -> pl.Trainer:
+        return instantiate(cfg, **kwargs)

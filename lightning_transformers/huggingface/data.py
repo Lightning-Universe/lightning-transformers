@@ -24,16 +24,20 @@ class HFTransformerDataConfig(TransformerDataConfig):
 
 
 class HFTransformerDataModule(TransformerDataModule):
-    def __init__(self, tokenizer: PreTrainedTokenizerBase, cfg: HFTransformerDataConfig):
+    def __init__(
+        self,
+        cfg: HFTransformerDataConfig,
+        tokenizer: Optional[PreTrainedTokenizerBase] = None,
+    ):
+        super().__init__(cfg)
         # TODO: we can save the tokenizer here instead of in the LitModule
         # after https://github.com/PyTorchLightning/pytorch-lightning/pull/3792
         self.tokenizer = tokenizer
-        super().__init__(cfg)
 
     def load_dataset(self) -> Dataset:
         if self.cfg.dataset_name is not None:
             # Downloading and loading a dataset from the hub.
-            return load_dataset(self.cfg.dataset_name, self.cfg.dataset_config_name)
+            return load_dataset(self.cfg.dataset_name)
         data_files = {}
         if self.cfg.train_file is not None:
             data_files["train"] = self.cfg.train_file
@@ -47,7 +51,7 @@ class HFTransformerDataModule(TransformerDataModule):
         return load_dataset(extension, data_files=data_files, field="data")
 
     def split_dataset(self, dataset: Dataset) -> Dataset:
-        if self.cfg.train_val_split is not None:
+        if getattr(self.cfg, "train_val_split", None) is not None:
             split = dataset["train"].train_test_split(self.cfg.train_val_split)
             dataset["train"] = split["train"]
             dataset["validation"] = split["test"]

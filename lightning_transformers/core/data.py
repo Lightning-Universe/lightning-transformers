@@ -35,8 +35,8 @@ class TransformerDataModule(pl.LightningDataModule):
     def process_data(self, dataset: Dict[str, Dataset]) -> Dict[str, Dataset]:
         return dataset
 
-    def prepare_labels(self, dataset: Dict[str, Dataset]) -> Any:
-        pass
+    def prepare_labels(self, dataset: Dict[str, Dataset]) -> Optional[Any]:
+        return
 
     def load_and_prepare_metrics(self):
         pass

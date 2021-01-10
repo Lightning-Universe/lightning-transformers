@@ -27,5 +27,4 @@ class HFTransformer(TaskTransformer):
         model = instantiator.model(cfg.model)
         optimizer = instantiator.optimizer(model, cfg.optimizer)
         scheduler = instantiator.scheduler(cfg.scheduler, optimizer)
-        tokenizer = instantiator.tokenizer(cfg.tokenizer) if cfg.tokenizer is not None else None
-        super().__init__(model, optimizer, scheduler, tokenizer=tokenizer)
+        super().__init__(model, optimizer, scheduler)
