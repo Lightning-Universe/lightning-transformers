@@ -11,6 +11,10 @@ class TextClassificationTransformer(HFTransformer):
         super().__init__(*args, **kwargs)
         self.metrics = {}
 
+    def setup(self, stage):
+        super().setup(stage)
+        self.model.num_labels = self.num_classes
+
     def training_step(self, batch: Any, batch_idx: int) -> torch.Tensor:
         outputs = self.model(**batch)
         loss = outputs[0]
@@ -35,7 +39,7 @@ class TextClassificationTransformer(HFTransformer):
         self.log("test_loss", loss, prog_bar=True, sync_dist=True)
         return loss
 
-    def configure_metrics(self) -> None:
+    def configure_metrics(self, _) -> None:
         self.metrics = {
             "precision": pl.metrics.Precision(num_classes=self.num_classes),
             "recall": pl.metrics.Recall(num_classes=self.num_classes),
@@ -46,8 +50,6 @@ class TextClassificationTransformer(HFTransformer):
     def num_classes(self) -> int:
         return self.trainer.datamodule.num_classes
 
-    def compute_metrics(
-        self, preds, labels, mode="val"
-    ) -> Dict[str, torch.Tensor]:
+    def compute_metrics(self, preds, labels, mode="val") -> Dict[str, torch.Tensor]:
         # Not required by all models. Only required for classification
         return {f"{mode}_{k}": metric(preds, labels) for k, metric in self.metrics.items()}

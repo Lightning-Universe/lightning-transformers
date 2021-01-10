@@ -53,10 +53,10 @@ class TaskTransformer(LitTransformer):
     Base class for task specific transformers
     """
 
-    def setup(self, stage):
-        self.configure_metrics()
+    def setup(self, stage: str):
+        self.configure_metrics(stage)
 
-    def configure_metrics(self) -> Optional[Any]:
+    def configure_metrics(self, stage: str) -> Optional[Any]:
         """
         Override to configure metrics for train/validation/test.
         This is called on fit start to have access to the data module,
