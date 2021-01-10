@@ -1,12 +1,11 @@
 import os
 
 import hydra
-import pytorch_lightning as pl
 from omegaconf import OmegaConf, DictConfig
 from pytorch_lightning.utilities.distributed import rank_zero_info
 
 from lightning_transformers.core.utils import set_ignore_warnings
-from lightning_transformers.huggingface import HFTransformerDataModule
+from lightning_transformers.huggingface import HFTransformerDataModule, HFTransformer
 from lightning_transformers.huggingface.instantiator import HydraInstantiator
 
 
@@ -30,7 +29,7 @@ def main(cfg: DictConfig):
     # the instantiator will use them to instantiate the backbone
     instantiator.state["backbone"] = data_module.config_data_args
 
-    model: pl.LightningModule = instantiator.model(cfg)
+    model: HFTransformer = instantiator.model(cfg.task)
     trainer = instantiator.trainer(cfg.trainer, logger=instantiator.logger(cfg))
 
     if cfg.training.do_train:
