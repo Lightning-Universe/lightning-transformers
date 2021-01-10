@@ -11,7 +11,7 @@ from lightning_transformers.core.data import TransformerDataConfig
 
 @dataclass
 class HFTransformerDataConfig(TransformerDataConfig):
-    dataset_name: str
+    dataset_name: Optional[str] = None
     train_val_split: Optional[int] = None
     train_file: Optional[str] = None
     validation_file: Optional[str] = None
@@ -25,12 +25,12 @@ class HFTransformerDataConfig(TransformerDataConfig):
 
 class HFTransformerDataModule(TransformerDataModule):
     def __init__(self, tokenizer: PreTrainedTokenizerBase, cfg: HFTransformerDataConfig):
-        # TODO: tokenizer here or in model?
+        # TODO: we can save the tokenizer here instead of in the LitModule
+        # after https://github.com/PyTorchLightning/pytorch-lightning/pull/3792
         self.tokenizer = tokenizer
         super().__init__(cfg)
 
     def load_dataset(self) -> Dataset:
-        # TODO: dataset_name is not Optional in dataclass, should it?
         if self.cfg.dataset_name is not None:
             # Downloading and loading a dataset from the hub.
             return load_dataset(self.cfg.dataset_name, self.cfg.dataset_config_name)

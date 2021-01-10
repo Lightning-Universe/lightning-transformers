@@ -56,3 +56,19 @@ class LitTransformer(pl.LightningModule):
 
         effective_batch_size = self.trainer.datamodule.batch_size * self.trainer.accumulate_grad_batches * num_devices
         return (dataset_size // effective_batch_size) * self.trainer.max_epochs
+
+
+class TaskTransformer(LitTransformer):
+    """
+    Base class for task specific transformers
+    """
+    def setup(self, stage):
+        self.configure_metrics()
+
+    def configure_metrics(self):
+        """
+        Override to configure metrics for train/validation/test.
+        This is called on fit start to have access to the data module,
+        and initialize any data specific metrics.
+        """
+        pass
