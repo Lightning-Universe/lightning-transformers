@@ -1,18 +1,34 @@
 from dataclasses import dataclass
-from typing import Optional
+from typing import Dict
 
-from omegaconf import DictConfig
+from pytorch_lightning import _logger as log
 
 from lightning_transformers.core.model import TaskTransformer
 from lightning_transformers.huggingface.instantiator import Instantiator
 
 
 @dataclass
+class HFModelConfig:
+    downstream_model_type: str
+    pretrained_model_name_or_path: str
+
+
+@dataclass
+class HFOptimizerConfig:
+    weight_decay: float
+
+
+@dataclass
+class HFSchedulerConfig:
+    num_training_steps: int
+    num_warmup_steps: float
+
+
+@dataclass
 class HFTransformerConfig:
-    model: DictConfig
-    optimizer: DictConfig
-    scheduler: DictConfig
-    tokenizer: Optional[DictConfig] = None
+    model: HFModelConfig
+    optimizer: HFOptimizerConfig
+    scheduler: HFSchedulerConfig
 
 
 class HFTransformer(TaskTransformer):
@@ -28,3 +44,21 @@ class HFTransformer(TaskTransformer):
         optimizer = instantiator.optimizer(model, cfg.optimizer)
         scheduler = instantiator.scheduler(cfg.scheduler, optimizer)
         super().__init__(model, optimizer, scheduler)
+        self._num_training_steps = cfg.scheduler.num_training_steps
+        self._num_warmup_steps = cfg.scheduler.num_warmup_steps
+
+    def configure_optimizers(self) -> Dict:
+        """Prepare optimizer and scheduler (linear warmup and decay)"""
+        # TODO: where are these used?
+        # TODO: should this be in core instead?
+        if self._num_training_steps < 0:
+            # less than 0 specifies to infer number of training steps
+            self._num_training_steps = self.num_training_steps
+            log.info(f"Inferring number of training steps, set to {self._num_training_steps}")
+
+        if isinstance(self._num_warmup_steps, float):
+            # Convert float values to percentage of training steps to use as warmup
+            self._num_warmup_steps *= self._num_training_steps
+            log.info(f"Inferring number of warmup steps from ratio, set to {self._num_warmup_steps}")
+
+        return super().configure_optimizers()

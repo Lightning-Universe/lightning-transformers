@@ -1,6 +1,7 @@
+from typing import Dict, Optional, Any
+
 import pytorch_lightning as pl
 import torch
-from pytorch_lightning import _logger as log
 
 
 class LitTransformer(pl.LightningModule):
@@ -20,19 +21,8 @@ class LitTransformer(pl.LightningModule):
         self.optimizer = optimizer
         self.scheduler = scheduler
 
-    def configure_optimizers(self):
-        """Prepare optimizer and schedule (linear warmup and decay)"""
-        if self.scheduler.num_training_steps < 0:
-            # less than 0 specifies to infer number of training steps
-            self.scheduler.num_training_steps = self.num_training_steps
-            log.info(f"Inferring number of training steps, set to {self.scheduler.num_training_steps}")
-
-        if isinstance(self.scheduler.num_warmup_steps, float):
-            # Convert float values to percentage of training steps to use as warmup
-            warmup_ratio = self.scheduler.num_warmup_steps
-            self.scheduler.num_warmup_steps = self.scheduler.num_training_steps * warmup_ratio
-            log.info(f"Inferring number of warmup steps from ratio, set to {self.scheduler.num_warmup_steps}")
-
+    def configure_optimizers(self) -> Dict:
+        """Prepare optimizer and scheduler"""
         return {
             "optimizer": self.optimizer,
             "lr_scheduler": {"scheduler": self.scheduler, "interval": "step", "frequency": 1},
@@ -66,7 +56,7 @@ class TaskTransformer(LitTransformer):
     def setup(self, stage):
         self.configure_metrics()
 
-    def configure_metrics(self):
+    def configure_metrics(self) -> Optional[Any]:
         """
         Override to configure metrics for train/validation/test.
         This is called on fit start to have access to the data module,
