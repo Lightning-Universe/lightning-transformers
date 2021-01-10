@@ -26,7 +26,6 @@ class HFSchedulerConfig:
 
 @dataclass
 class HFTransformerConfig:
-    backbone: HFBackboneConfig
     optimizer: HFOptimizerConfig
     scheduler: HFSchedulerConfig
 
@@ -39,13 +38,13 @@ class HFTransformer(TaskTransformer):
     see: https://huggingface.co/transformers/model_doc/auto.html
     """
 
-    def __init__(self, instantiator: Instantiator, cfg: HFTransformerConfig):
-        model = instantiator.backbone(cfg.backbone)
-        optimizer = instantiator.optimizer(model, cfg.optimizer)
-        scheduler = instantiator.scheduler(cfg.scheduler, optimizer)
+    def __init__(self, instantiator: Instantiator, module: HFTransformerConfig, backbone: HFBackboneConfig):
+        model = instantiator.backbone(backbone)
+        optimizer = instantiator.optimizer(model, module.optimizer)
+        scheduler = instantiator.scheduler(module.scheduler, optimizer)
         super().__init__(model, optimizer, scheduler)
-        self._num_training_steps = cfg.scheduler.num_training_steps
-        self._num_warmup_steps = cfg.scheduler.num_warmup_steps
+        self._num_training_steps = module.scheduler.num_training_steps
+        self._num_warmup_steps = module.scheduler.num_warmup_steps
 
     def configure_optimizers(self) -> Dict:
         """Prepare optimizer and scheduler (linear warmup and decay)"""

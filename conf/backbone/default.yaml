@@ -1,2 +1,0 @@
-downstream_model_type: transformers.AutoModelForSequenceClassification
-pretrained_model_name_or_path: bert-base-cased

@@ -1,0 +1,3 @@
+_target_: lightning_transformers.core.TaskTransformer
+optimizer: ${optimizer}
+scheduler: ${scheduler}

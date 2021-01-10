@@ -20,7 +20,7 @@ class HydraInstantiator(Instantiator):
         self._state = {}
 
     def model(self, cfg: DictConfig) -> pl.LightningModule:
-        return instantiate(cfg.task, self, cfg)
+        return instantiate(cfg.task, self)
 
     def backbone(self, cfg: DictConfig) -> torch.nn.Module:
         return get_class(cfg.downstream_model_type).from_pretrained(
