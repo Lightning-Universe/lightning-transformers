@@ -1,2 +1,2 @@
-from lightning_transformers.huggingface.model import HFLitTransformer
-from lightning_transformers.huggingface.model import HFTaskTransformer
+from lightning_transformers.huggingface.data import HFTransformerDataModule
+from lightning_transformers.huggingface.model import HFTransformer

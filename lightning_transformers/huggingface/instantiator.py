@@ -13,48 +13,48 @@ class Instantiator:
 
 
 class HydraInstantiator(Instantiator):
-    def model(self, config: DictConfig) -> torch.nn.Module:
-        return get_class(config.downstream_model_type).from_pretrained(config.pretrained_model_name_or_path)
+    def model(self, cfg: DictConfig) -> torch.nn.Module:
+        return get_class(cfg.downstream_model_type).from_pretrained(cfg.pretrained_model_name_or_path)
 
-    def optimizer(self, model: torch.nn.Module, config: DictConfig) -> torch.optim.Optimizer:
+    def optimizer(self, model: torch.nn.Module, cfg: DictConfig) -> torch.optim.Optimizer:
         no_decay = ["bias", "LayerNorm.weight"]
         grouped_parameters = [
             {
                 "params": [p for n, p in model.named_parameters() if not any(nd in n for nd in no_decay)],
-                "weight_decay": config.weight_decay,
+                "weight_decay": cfg.weight_decay,
             },
             {
                 "params": [p for n, p in model.named_parameters() if any(nd in n for nd in no_decay)],
                 "weight_decay": 0.0,
             },
         ]
-        return instantiate(config, grouped_parameters)
+        return instantiate(cfg, grouped_parameters)
 
-    def scheduler(self, config: DictConfig, optimizer: torch.optim.Optimizer) -> torch.optim.lr_scheduler._LRScheduler:
-        return instantiate(config, optimizer=optimizer)
+    def scheduler(self, cfg: DictConfig, optimizer: torch.optim.Optimizer) -> torch.optim.lr_scheduler._LRScheduler:
+        return instantiate(cfg, optimizer=optimizer)
 
-    def datamodule(self, config: DictConfig, tokenizer: PreTrainedTokenizerBase) -> pl.LightningDataModule:
-        return instantiate(config, tokenizer=tokenizer)
+    def datamodule(self, cfg: DictConfig, tokenizer: PreTrainedTokenizerBase) -> pl.LightningDataModule:
+        return instantiate(cfg, tokenizer=tokenizer)
 
-    def instantiate_tokenizer(self, config: DictConfig) -> AutoTokenizer:
+    def tokenizer(self, cfg: DictConfig) -> AutoTokenizer:
         return AutoTokenizer.from_pretrained(
-            pretrained_model_name_or_path=config.pretrained_model_name_or_path, use_fast=config.task.dataset.use_fast
+            pretrained_model_name_or_path=cfg.pretrained_model_name_or_path, use_fast=cfg.task.dataset.use_fast
         )
 
-    def logger(self, config: DictConfig) -> logging.Logger:
-        if config.log:
-            return instantiate(config.logger)
+    def logger(self, cfg: DictConfig) -> logging.Logger:
+        if cfg.log:
+            return instantiate(cfg.logger)
 
     # def downstream_model(
     #    self,
-    #    config: DictConfig,
+    #    cfg: DictConfig,
     #    backbone: DictConfig,
     #    optimizer: DictConfig,
     #    scheduler: DictConfig,
     #    config_data_args: DictConfig,
     # ) -> "TODO":
     #    return instantiate(
-    #        config,
+    #        cfg,
     #        backbone=backbone,
     #        optimizer=optimizer,
     #        scheduler=scheduler,
