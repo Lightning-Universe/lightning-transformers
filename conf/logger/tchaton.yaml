@@ -7,4 +7,4 @@ anonymous: False
 project: ${dataset.dataset_name}
 experiment:
 entity: 'tchaton'
-group: ${backbone.pretrained_model_name_or_path}
+group: ${task.pretrained_model_name_or_path}

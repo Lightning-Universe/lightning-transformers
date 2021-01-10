@@ -1,6 +1,8 @@
-batch_size: 16
-num_workers: 16
-do_train: True
+do_train: False
 do_eval: True
 lr: 1e-3
 output_dir: '.'
+
+# read in dataset
+batch_size: 16
+num_workers: 16
