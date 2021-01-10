@@ -19,9 +19,12 @@ class HydraInstantiator(Instantiator):
     def __init__(self):
         self._state = {}
 
-    def model(self, cfg: DictConfig) -> torch.nn.Module:
+    def model(self, cfg: DictConfig) -> pl.LightningModule:
+        return instantiate(cfg.task, self, cfg)
+
+    def backbone(self, cfg: DictConfig) -> torch.nn.Module:
         return get_class(cfg.downstream_model_type).from_pretrained(
-            cfg.pretrained_model_name_or_path, **self._state["model"]
+            cfg.pretrained_model_name_or_path, **self._state["backbone"]
         )
 
     def optimizer(self, model: torch.nn.Module, cfg: DictConfig) -> torch.optim.Optimizer:

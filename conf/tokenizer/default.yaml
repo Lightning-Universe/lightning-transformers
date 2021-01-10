@@ -1,2 +1,2 @@
-pretrained_model_name_or_path: ${task.pretrained_model_name_or_path}
+pretrained_model_name_or_path: ${backbone.pretrained_model_name_or_path}
 use_fast: true

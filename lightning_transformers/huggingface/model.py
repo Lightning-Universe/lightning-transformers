@@ -8,7 +8,7 @@ from lightning_transformers.huggingface.instantiator import Instantiator
 
 
 @dataclass
-class HFModelConfig:
+class HFBackboneConfig:
     downstream_model_type: str
     pretrained_model_name_or_path: str
 
@@ -26,7 +26,7 @@ class HFSchedulerConfig:
 
 @dataclass
 class HFTransformerConfig:
-    model: HFModelConfig
+    backbone: HFBackboneConfig
     optimizer: HFOptimizerConfig
     scheduler: HFSchedulerConfig
 
@@ -40,7 +40,7 @@ class HFTransformer(TaskTransformer):
     """
 
     def __init__(self, instantiator: Instantiator, cfg: HFTransformerConfig):
-        model = instantiator.model(cfg.model)
+        model = instantiator.backbone(cfg.backbone)
         optimizer = instantiator.optimizer(model, cfg.optimizer)
         scheduler = instantiator.scheduler(cfg.scheduler, optimizer)
         super().__init__(model, optimizer, scheduler)

@@ -1,7 +1,7 @@
 import os
 
 import hydra
-from hydra.utils import get_class
+import pytorch_lightning as pl
 from omegaconf import OmegaConf, DictConfig
 from pytorch_lightning.utilities.distributed import rank_zero_info
 
@@ -27,10 +27,10 @@ def main(cfg: DictConfig):
     data_module.setup()
 
     # save some model arguments which are only known dynamically.
-    # the instantiator will use them to instantiate the model
-    instantiator.state["model"] = data_module.config_data_args
+    # the instantiator will use them to instantiate the backbone
+    instantiator.state["backbone"] = data_module.config_data_args
 
-    model = get_class(cfg.task._target_)(instantiator, cfg)
+    model: pl.LightningModule = instantiator.model(cfg)
     trainer = instantiator.trainer(cfg.trainer, logger=instantiator.logger(cfg))
 
     if cfg.training.do_train:

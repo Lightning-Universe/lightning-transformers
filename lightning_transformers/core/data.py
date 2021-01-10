@@ -44,7 +44,7 @@ class TransformerDataModule(pl.LightningDataModule):
     def train_dataloader(self) -> DataLoader:
         return DataLoader(
             self.ds["train"],
-            batch_size=self.cfg.batch_size,
+            batch_size=self.batch_size,
             num_workers=self.cfg.num_workers,
             collate_fn=self.collate_fn,
         )
@@ -52,7 +52,7 @@ class TransformerDataModule(pl.LightningDataModule):
     def val_dataloader(self) -> DataLoader:
         return DataLoader(
             self.ds["validation"],
-            batch_size=self.cfg.batch_size,
+            batch_size=self.batch_size,
             num_workers=self.cfg.num_workers,
             collate_fn=self.collate_fn,
         )
@@ -61,10 +61,14 @@ class TransformerDataModule(pl.LightningDataModule):
         if "test" in self.ds:
             return DataLoader(
                 self.ds["test"],
-                batch_size=self.cfg.batch_size,
+                batch_size=self.batch_size,
                 num_workers=self.cfg.num_workers,
                 collate_fn=self.collate_fn,
             )
+
+    @property
+    def batch_size(self) -> int:
+        return self.cfg.batch_size
 
     @property
     def collate_fn(self) -> Optional[Callable]:
