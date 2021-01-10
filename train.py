@@ -10,7 +10,7 @@ from lightning_transformers.core import TaskTransformer, TransformerDataModule
 from lightning_transformers.core.utils import (
     instantiate_downstream_model,
     instantiate_data_module,
-    initialize_loggers, set_ignore_warnings
+    initialize_loggers, set_ignore_warnings, instantiate_tokenizer
 )
 
 
@@ -25,6 +25,10 @@ def main(cfg: DictConfig):
 
     logger = initialize_loggers(cfg)
 
+    tokenizer = instantiate_tokenizer(
+        cfg=cfg.tokenizer
+    )
+
     data_module: TransformerDataModule = instantiate_data_module(
         dataset_config=cfg.dataset,
         tokenizer=cfg.tokenizer
@@ -36,6 +40,7 @@ def main(cfg: DictConfig):
         backbone_model_config=cfg.backbone,
         optimizer_config=cfg.optimizer,
         scheduler_config=cfg.scheduler,
+        tokenizer=tokenizer,
         config_data_args=data_module.config_data_args
     )
 

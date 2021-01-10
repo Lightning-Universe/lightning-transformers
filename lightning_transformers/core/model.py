@@ -6,7 +6,7 @@ from pytorch_lightning import _logger as log
 class LitTransformer(pl.LightningModule):
     """
     Base class for transformers.
-    Provides a few helper functions primarily for optimization and interface for text transformers.
+    Provides a few helper functions primarily for optimization.
     """
 
     def __init__(
@@ -73,3 +73,10 @@ class TaskTransformer(LitTransformer):
         and initialize any data specific metrics.
         """
         pass
+
+    def on_save_checkpoint(self, checkpoint: Dict[str, Any]):
+        # Save tokenizer from datamodule for predictions
+        checkpoint['tokenizer'] = self.tokenizer
+
+    def on_load_checkpoint(self, checkpoint: Dict[str, Any]) -> None:
+        self.tokenizer = checkpoint['tokenizer']
