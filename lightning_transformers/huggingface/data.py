@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import Optional
+from typing import Optional, Dict, Any
 
 from datasets import Dataset, load_dataset
 from pytorch_lightning.utilities.exceptions import MisconfigurationException
@@ -24,14 +24,8 @@ class HFTransformerDataConfig(TransformerDataConfig):
 
 
 class HFTransformerDataModule(TransformerDataModule):
-    def __init__(
-        self,
-        cfg: HFTransformerDataConfig,
-        tokenizer: Optional[PreTrainedTokenizerBase] = None,
-    ):
+    def __init__(self, cfg: HFTransformerDataConfig, tokenizer: Optional[PreTrainedTokenizerBase] = None):
         super().__init__(cfg)
-        # TODO: we can save the tokenizer here instead of in the LitModule
-        # after https://github.com/PyTorchLightning/pytorch-lightning/pull/3792
         self.tokenizer = tokenizer
 
     def load_dataset(self) -> Dataset:
@@ -56,3 +50,10 @@ class HFTransformerDataModule(TransformerDataModule):
             dataset["train"] = split["train"]
             dataset["validation"] = split["test"]
         return dataset
+
+    def on_save_checkpoint(self, checkpoint: Dict[str, Any]):
+        # Save tokenizer from datamodule for predictions
+        checkpoint['tokenizer'] = self.tokenizer
+
+    def on_load_checkpoint(self, checkpoint: Dict[str, Any]) -> None:
+        self.tokenizer = checkpoint['tokenizer']
