@@ -16,8 +16,13 @@ class Instantiator:
 
 
 class HydraInstantiator(Instantiator):
+    def __init__(self):
+        self._state = {}
+
     def model(self, cfg: DictConfig) -> torch.nn.Module:
-        return get_class(cfg.downstream_model_type).from_pretrained(cfg.pretrained_model_name_or_path)
+        return get_class(cfg.downstream_model_type).from_pretrained(
+            cfg.pretrained_model_name_or_path, **self._state["model"]
+        )
 
     def optimizer(self, model: torch.nn.Module, cfg: DictConfig) -> torch.optim.Optimizer:
         no_decay = ["bias", "LayerNorm.weight"]
@@ -52,3 +57,7 @@ class HydraInstantiator(Instantiator):
 
     def trainer(self, cfg: DictConfig, **kwargs) -> pl.Trainer:
         return instantiate(cfg, **kwargs)
+
+    @property
+    def state(self):
+        return self._state

@@ -1,4 +1,4 @@
-do_train: False
+do_train: True
 do_eval: True
 lr: 1e-3
 output_dir: '.'

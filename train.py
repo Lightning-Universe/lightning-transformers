@@ -26,6 +26,10 @@ def main(cfg: DictConfig):
     )
     data_module.setup()
 
+    # save some model arguments which are only known dynamically.
+    # the instantiator will use them to instantiate the model
+    instantiator.state["model"] = data_module.config_data_args
+
     model = get_class(cfg.task._target_)(instantiator, cfg)
     trainer = instantiator.trainer(cfg.trainer, logger=instantiator.logger(cfg))
 

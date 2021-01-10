@@ -11,10 +11,6 @@ class TextClassificationTransformer(HFTransformer):
         super().__init__(*args, **kwargs)
         self.metrics = {}
 
-    def setup(self, stage):
-        super().setup(stage)
-        self.model.num_labels = self.num_classes
-
     def training_step(self, batch: Any, batch_idx: int) -> torch.Tensor:
         outputs = self.model(**batch)
         loss = outputs[0]
