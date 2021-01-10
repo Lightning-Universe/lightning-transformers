@@ -7,7 +7,7 @@ from lightning_transformers.task.huggingface.question_answering.datasets.squad.p
 )
 
 
-class LitSquadTransformerDataModule(QuestionAnsweringTransformerDataModule):
+class SquadTransformerDataModule(QuestionAnsweringTransformerDataModule):
 
     @staticmethod
     def prepare_train_features_function(*args, **kwargs):

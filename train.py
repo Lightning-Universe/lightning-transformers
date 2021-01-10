@@ -3,8 +3,7 @@ import os
 import hydra
 import pytorch_lightning as pl
 from hydra.utils import instantiate
-from omegaconf import DictConfig
-from omegaconf import OmegaConf
+from omegaconf import OmegaConf, DictConfig
 from pytorch_lightning.utilities.distributed import rank_zero_info
 
 from lightning_transformers.core import TaskTransformer, TransformerDataModule
@@ -32,8 +31,7 @@ def main(cfg: DictConfig):
 
     data_module: TransformerDataModule = instantiate_data_module(
         dataset_config=cfg.dataset,
-        training_config=cfg.training,
-        tokenizer=tokenizer
+        tokenizer=cfg.tokenizer
     )
     data_module.setup()
 

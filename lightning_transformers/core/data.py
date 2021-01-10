@@ -1,49 +1,22 @@
-from typing import Optional, Any, Union
+from dataclasses import dataclass
+from typing import Optional, Any, Callable, Dict
 
 import pytorch_lightning as pl
-from datasets import load_dataset, Dataset
-from omegaconf import DictConfig
-from pytorch_lightning.utilities.exceptions import MisconfigurationException
-from tokenizers import Tokenizer
-from torch.utils.data import DataLoader
-from transformers import PreTrainedTokenizer, PreTrainedTokenizerFast
+from torch.utils.data import DataLoader, Dataset
+
+
+@dataclass
+class TransformerDataConfig:
+    batch_size: int
+    num_workers: int
 
 
 class TransformerDataModule(pl.LightningDataModule):
-    def __init__(self,
-                 dataset_name: str,
-                 training_config: DictConfig,
-                 tokenizer: Union[Tokenizer, PreTrainedTokenizer, PreTrainedTokenizerFast],
-                 train_file: Optional[str] = None,
-                 validation_file: Optional[str] = None,
-                 padding: str = 'max_length',
-                 truncation: str = 'only_first',
-                 max_length: int = 128,
-                 preprocessing_num_workers: int = 8,
-                 load_from_cache_file: bool = True,
-                 dataset_config_name: Optional[str] = None,
-                 train_val_split: Optional[int] = None,
-                 **kwargs):
+    def __init__(self, cfg: TransformerDataConfig):
         super().__init__()
-        self._to_properties(kwargs)
-        self._to_properties(training_config)
-        self.tokenizer = tokenizer
-        self.dataset_name = dataset_name
-        self.train_file = train_file
-        self.validation_file = validation_file
-        self.dataset_config_name = dataset_config_name
-        self.padding = padding
-        self.truncation = truncation
-        self.max_length = max_length
-        self.preprocessing_num_workers = preprocessing_num_workers
-        self.load_from_cache_file = load_from_cache_file
-        self.train_val_split = train_val_split
+        self.cfg = cfg
         self.ds = None
         self.labels = None
-
-    def _to_properties(self, kwargs):
-        for key, value in kwargs.items():
-            setattr(self, key, value)
 
     def setup(self, stage: Optional[str] = None):
         dataset = self.load_dataset()
@@ -53,70 +26,50 @@ class TransformerDataModule(pl.LightningDataModule):
         self.ds = dataset
         self.load_and_prepare_metrics()
 
-    def process_data(self, dataset: Dataset) -> Dataset:
+    def load_dataset(self) -> Dict[str, Dataset]:
         raise NotImplementedError
 
-    def prepare_labels(self, dataset: Dataset) -> Any:
-        pass
+    def split_dataset(self, dataset: Dict[str, Dataset]) -> Dict[str, Dataset]:
+        return dataset
+
+    def process_data(self, dataset: Dict[str, Dataset]) -> Dict[str, Dataset]:
+        return dataset
+
+    def prepare_labels(self, dataset: Dict[str, Dataset]) -> Optional[Any]:
+        return
 
     def load_and_prepare_metrics(self):
         pass
 
-    def load_dataset(self) -> Dataset:
-        if self.dataset_name is not None:
-            # Downloading and loading a dataset from the hub.
-            dataset = load_dataset(self.dataset_name, self.dataset_config_name)
-        else:
-            if not (self.train_file and self.validation_file):
-                raise MisconfigurationException(
-                    'You have not specified a dataset name'
-                    'and need to specify a custom train file and validation file to the data module.'
-                )
-            data_files = {}
-            if self.train_file is not None:
-                data_files["train"] = self.train_file
-            if self.validation_file is not None:
-                data_files["validation"] = self.validation_file
-            extension = self.train_file.split(".")[-1]
-            dataset = load_dataset(extension, data_files=data_files, field="data")
-        return dataset
-
-    def split_dataset(self, dataset: Dataset) -> Dataset:
-        if self.train_val_split is not None:
-            split = dataset['train'].train_test_split(self.train_val_split)
-            dataset['train'] = split['train']
-            dataset['validation'] = split['test']
-        return dataset
-
-    def train_dataloader(self):
+    def train_dataloader(self) -> DataLoader:
         return DataLoader(
-            self.ds['train'],
-            batch_size=self.batch_size,
-            num_workers=self.num_workers,
-            collate_fn=self.data_collator
+            self.ds["train"],
+            batch_size=self.cfg.batch_size,
+            num_workers=self.cfg.num_workers,
+            collate_fn=self.collate_fn,
         )
 
-    def val_dataloader(self):
+    def val_dataloader(self) -> DataLoader:
         return DataLoader(
-            self.ds['validation'],
-            batch_size=self.batch_size,
-            num_workers=self.num_workers,
-            collate_fn=self.data_collator
+            self.ds["validation"],
+            batch_size=self.cfg.batch_size,
+            num_workers=self.cfg.num_workers,
+            collate_fn=self.collate_fn,
         )
 
-    def test_dataloader(self):
-        dataset = self.ds['test'] if 'test' in self.ds else self.ds['validation']
-        return DataLoader(
-            dataset,
-            batch_size=self.batch_size,
-            num_workers=self.num_workers,
-            collate_fn=self.data_collator
-        )
+    def test_dataloader(self) -> Optional[DataLoader]:
+        if "test" in self.ds:
+            return DataLoader(
+                self.ds["test"],
+                batch_size=self.cfg.batch_size,
+                num_workers=self.cfg.num_workers,
+                collate_fn=self.collate_fn,
+            )
 
     @property
-    def data_collator(self):
+    def collate_fn(self) -> Optional[Callable]:
         return None
 
     @property
-    def config_data_args(self):
+    def config_data_args(self) -> Dict:
         return {}
