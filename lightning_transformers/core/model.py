@@ -73,10 +73,3 @@ class TaskTransformer(LitTransformer):
         and initialize any data specific metrics.
         """
         pass
-
-    def on_save_checkpoint(self, checkpoint: Dict[str, Any]):
-        # Save tokenizer from datamodule for predictions
-        checkpoint['tokenizer'] = self.tokenizer
-
-    def on_load_checkpoint(self, checkpoint: Dict[str, Any]) -> None:
-        self.tokenizer = checkpoint['tokenizer']
