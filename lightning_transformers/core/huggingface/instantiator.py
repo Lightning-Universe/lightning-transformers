@@ -22,9 +22,8 @@ class HydraInstantiator(Instantiator):
     def __init__(self):
         self._state = {}
 
-    def model(self, task: DictConfig, optimizer: DictConfig, scheduler: DictConfig):  # -> HFTransformer:
-        cls = get_class(task._target_)
-        return cls(self, task.backbone, optimizer, scheduler)
+    def model(self, cfg: DictConfig):  # -> HFTransformer:
+        return instantiate(cfg, self)
 
     def backbone(self, cfg: DictConfig) -> torch.nn.Module:
         return get_class(cfg.downstream_model_type).from_pretrained(
