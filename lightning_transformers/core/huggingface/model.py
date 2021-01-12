@@ -4,7 +4,7 @@ from typing import Dict
 from pytorch_lightning import _logger as log
 
 from lightning_transformers.core.model import TaskTransformer
-from lightning_transformers.huggingface.instantiator import Instantiator
+from lightning_transformers.core.huggingface.instantiator import Instantiator
 
 
 @dataclass

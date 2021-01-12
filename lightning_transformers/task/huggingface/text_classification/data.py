@@ -3,7 +3,7 @@ from typing import Any, Dict, List
 from datasets import Dataset
 from transformers import PreTrainedTokenizerBase
 
-from lightning_transformers.huggingface import HFTransformerDataModule
+from lightning_transformers.core.huggingface import HFTransformerDataModule
 
 
 class TextClassificationDataModule(HFTransformerDataModule):

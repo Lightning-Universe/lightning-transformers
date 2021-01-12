@@ -1,4 +1,4 @@
-_target_: lightning_transformers.huggingface.task.text_classification.TextClassificationTransformer
+_target_: lightning_transformers.task.huggingface.text_classification.TextClassificationTransformer
 module: ${module}
 backbone:
   downstream_model_type: transformers.AutoModelForSequenceClassification

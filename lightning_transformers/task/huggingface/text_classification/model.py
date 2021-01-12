@@ -3,7 +3,7 @@ from typing import Any, Dict
 import pytorch_lightning as pl
 import torch
 
-from lightning_transformers.huggingface import HFTransformer
+from lightning_transformers.core.huggingface import HFTransformer
 
 
 class TextClassificationTransformer(HFTransformer):

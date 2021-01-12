@@ -5,8 +5,8 @@ from omegaconf import OmegaConf, DictConfig
 from pytorch_lightning.utilities.distributed import rank_zero_info
 
 from lightning_transformers.core.utils import set_ignore_warnings
-from lightning_transformers.huggingface import HFTransformerDataModule, HFTransformer
-from lightning_transformers.huggingface.instantiator import HydraInstantiator
+from lightning_transformers.core.huggingface import HFTransformerDataModule, HFTransformer
+from lightning_transformers.core.huggingface.instantiator import HydraInstantiator
 
 
 @hydra.main(config_path="conf", config_name="config")

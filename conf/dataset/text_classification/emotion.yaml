@@ -1,5 +1,5 @@
 # @package dataset
-_target_: lightning_transformers.huggingface.task.text_classification.TextClassificationDataModule
+_target_: lightning_transformers.task.huggingface.text_classification.TextClassificationDataModule
 cfg:
   dataset_name: emotion
   train_file: ''

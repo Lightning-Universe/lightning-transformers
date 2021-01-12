@@ -7,7 +7,11 @@ from hydra.utils import get_class, instantiate
 from omegaconf import DictConfig
 from transformers import PreTrainedTokenizerBase, AutoTokenizer
 
-from lightning_transformers.huggingface import HFTransformerDataModule, HFTransformer
+from lightning_transformers.core.huggingface import HFTransformerDataModule
+
+
+# FIXME: circular import
+# from lightning_transformers.core.huggingface import HFTransformer
 
 
 class Instantiator:
@@ -19,7 +23,7 @@ class HydraInstantiator(Instantiator):
     def __init__(self):
         self._state = {}
 
-    def model(self, cfg: DictConfig) -> HFTransformer:
+    def model(self, cfg: DictConfig):  # -> HFTransformer:
         return instantiate(cfg, self)
 
     def backbone(self, cfg: DictConfig) -> torch.nn.Module:
