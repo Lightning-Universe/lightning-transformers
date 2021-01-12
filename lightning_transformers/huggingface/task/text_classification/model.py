@@ -17,23 +17,20 @@ class TextClassificationTransformer(HFTransformer):
         self.log("train_loss", loss)
         return loss
 
-    def validation_step(self, batch: Any, batch_idx: int, dataloader_idx: int = 0) -> torch.Tensor:
+    def common_step(self, prefix: str, batch: Any) -> torch.Tensor:
         outputs = self.model(**batch)
         loss, logits = outputs[:2]
         preds = torch.argmax(logits, dim=1)
-        metric_dict = self.compute_metrics(preds, batch["labels"])
+        metric_dict = self.compute_metrics(preds, batch["labels"], mode=prefix)
         self.log_dict(metric_dict, prog_bar=True, on_step=False, on_epoch=True)
-        self.log("val_loss", loss, prog_bar=True, sync_dist=True)
+        self.log(f"{prefix}_loss", loss, prog_bar=True, sync_dist=True)
         return loss
 
+    def validation_step(self, batch: Any, batch_idx: int, dataloader_idx: int = 0) -> torch.Tensor:
+        return self.common_step("val", batch)
+
     def test_step(self, batch: Any, batch_idx: int, dataloader_idx: int = 0) -> torch.Tensor:
-        outputs = self.model(**batch)
-        loss, logits = outputs[:2]
-        preds = torch.argmax(logits, dim=1)
-        metric_dict = self.compute_metrics(preds, batch["labels"], mode="test")
-        self.log_dict(metric_dict, prog_bar=True, on_step=False, on_epoch=True)
-        self.log("test_loss", loss, prog_bar=True, sync_dist=True)
-        return loss
+        return self.common_step("test", batch)
 
     def configure_metrics(self, _) -> None:
         self.metrics = {
