@@ -5,9 +5,12 @@ import pytorch_lightning as pl
 import torch
 from hydra.utils import get_class, instantiate
 from omegaconf import DictConfig
-from transformers import PreTrainedTokenizerBase, AutoTokenizer
+from transformers import AutoTokenizer, PreTrainedTokenizerBase
 
-from lightning_transformers.huggingface import HFTransformerDataModule
+from lightning_transformers.core.huggingface import HFTransformerDataModule
+
+# FIXME: circular import
+# from lightning_transformers.core.huggingface import HFTransformer
 
 
 class Instantiator:
@@ -16,8 +19,16 @@ class Instantiator:
 
 
 class HydraInstantiator(Instantiator):
-    def model(self, cfg: DictConfig) -> torch.nn.Module:
-        return get_class(cfg.downstream_model_type).from_pretrained(cfg.pretrained_model_name_or_path)
+    def __init__(self):
+        self._state = {}
+
+    def model(self, cfg: DictConfig):  # -> HFTransformer:
+        return instantiate(cfg, self)
+
+    def backbone(self, cfg: DictConfig) -> torch.nn.Module:
+        return get_class(cfg.downstream_model_type).from_pretrained(
+            cfg.pretrained_model_name_or_path, **self._state["backbone"]
+        )
 
     def optimizer(self, model: torch.nn.Module, cfg: DictConfig) -> torch.optim.Optimizer:
         no_decay = ["bias", "LayerNorm.weight"]
@@ -52,3 +63,7 @@ class HydraInstantiator(Instantiator):
 
     def trainer(self, cfg: DictConfig, **kwargs) -> pl.Trainer:
         return instantiate(cfg, **kwargs)
+
+    @property
+    def state(self):
+        return self._state

@@ -1,2 +1,2 @@
 from lightning_transformers.core.data import TransformerDataModule
-from lightning_transformers.core.model import TaskTransformer, LitTransformer
+from lightning_transformers.core.model import LitTransformer, TaskTransformer

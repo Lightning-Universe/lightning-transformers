@@ -1,56 +1,40 @@
 import os
 
 import hydra
-import pytorch_lightning as pl
-from hydra.utils import instantiate
-from omegaconf import OmegaConf, DictConfig
+from omegaconf import DictConfig, OmegaConf
 from pytorch_lightning.utilities.distributed import rank_zero_info
 
-from lightning_transformers.core import TaskTransformer, TransformerDataModule
-from lightning_transformers.core.utils import (
-    instantiate_downstream_model,
-    instantiate_data_module,
-    initialize_loggers, set_ignore_warnings, instantiate_tokenizer
-)
+from lightning_transformers.core import TaskTransformer
+from lightning_transformers.core.huggingface import HFTransformerDataModule
+from lightning_transformers.core.huggingface.instantiator import HydraInstantiator
+from lightning_transformers.core.utils import set_ignore_warnings
 
 
-@hydra.main(config_path='conf', config_name='config')
+@hydra.main(config_path="conf", config_name="config")
 def main(cfg: DictConfig):
     if cfg.ignore_warnings:
         set_ignore_warnings()
 
     rank_zero_info(OmegaConf.to_yaml(cfg))
 
-    os.environ['TOKENIZERS_PARALLELISM'] = 'TRUE'
+    os.environ["TOKENIZERS_PARALLELISM"] = "TRUE"
 
-    logger = initialize_loggers(cfg)
+    instantiator = HydraInstantiator()
 
-    tokenizer = instantiate_tokenizer(
-        cfg=cfg.tokenizer
-    )
-
-    data_module: TransformerDataModule = instantiate_data_module(
-        dataset_config=cfg.dataset,
-        tokenizer=cfg.tokenizer
+    data_module: HFTransformerDataModule = instantiator.data_module(
+        cfg.dataset, tokenizer=instantiator.tokenizer(cfg.tokenizer)
     )
     data_module.setup()
 
-    model: TaskTransformer = instantiate_downstream_model(
-        task_config=cfg.task,
-        backbone_model_config=cfg.backbone,
-        optimizer_config=cfg.optimizer,
-        scheduler_config=cfg.scheduler,
-        tokenizer=tokenizer,
-        config_data_args=data_module.config_data_args
-    )
+    # save some model arguments which are only known dynamically.
+    # the instantiator will use them to instantiate the backbone
+    instantiator.state["backbone"] = data_module.config_data_args
 
-    trainer: pl.Trainer = instantiate(cfg.trainer, logger=logger)
+    model: TaskTransformer = instantiator.model(cfg.task)
+    trainer = instantiator.trainer(cfg.trainer, logger=instantiator.logger(cfg))
 
     if cfg.training.do_train:
-        trainer.fit(
-            model=model,
-            datamodule=data_module
-        )
+        trainer.fit(model, datamodule=data_module)
 
     trainer.test(model, datamodule=data_module)
 
