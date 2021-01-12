@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from typing import Optional
 
-from lightning_transformers.core.config import HydraConfig, SchedulerConfig
+from lightning_transformers.core.config import HydraConfig, OptimizerConfig, SchedulerConfig
 from lightning_transformers.core.data import TransformerDataConfig
 
 
@@ -35,3 +35,10 @@ class HFBackboneConfig(HydraConfig):
 class HFSchedulerConfig(SchedulerConfig):
     num_training_steps: int = -1
     num_warmup_steps: float = 0.1
+
+
+@dataclass
+class HFTaskConfig(HydraConfig):
+    backbone: HFBackboneConfig = HFBackboneConfig()
+    optimizer: OptimizerConfig = OptimizerConfig()
+    scheduler: HFSchedulerConfig = HFSchedulerConfig()

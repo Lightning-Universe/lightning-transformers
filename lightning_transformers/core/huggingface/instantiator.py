@@ -2,11 +2,17 @@ from typing import Optional
 
 import torch
 from hydra.utils import get_class, instantiate
+from pytorch_lightning import Trainer
 from transformers import AutoTokenizer, PreTrainedTokenizerBase
 
-from lightning_transformers.core.config import OptimizerConfig, SchedulerConfig
-from lightning_transformers.core.huggingface import HFTransformerDataModule
-from lightning_transformers.core.huggingface.config import HFBackboneConfig, HFTokenizerConfig, HFTransformerDataConfig
+from lightning_transformers.core.config import OptimizerConfig, SchedulerConfig, TrainerConfig
+from lightning_transformers.core.huggingface import HFTransformer, HFTransformerDataModule
+from lightning_transformers.core.huggingface.config import (
+    HFBackboneConfig,
+    HFTaskConfig,
+    HFTokenizerConfig,
+    HFTransformerDataConfig,
+)
 
 
 class Instantiator:
@@ -17,6 +23,9 @@ class Instantiator:
 class HydraInstantiator(Instantiator):
     def __init__(self):
         self.state = {}
+
+    def model(self, cfg: HFTaskConfig) -> HFTransformer:
+        return instantiate(cfg)
 
     def backbone(self, cfg: HFBackboneConfig) -> torch.nn.Module:
         return get_class(cfg.downstream_model_type).from_pretrained(
@@ -52,9 +61,5 @@ class HydraInstantiator(Instantiator):
             pretrained_model_name_or_path=cfg.pretrained_model_name_or_path, use_fast=cfg.use_fast
         )
 
-    def trainer(self, cfg: DictConfig, **kwargs) -> pl.Trainer:
-        return instantiate(cfg, **kwargs)
-
-    @property
-    def state(self):
-        return self._state
+    def trainer(self, cfg: TrainerConfig) -> Trainer:
+        return instantiate(cfg)
