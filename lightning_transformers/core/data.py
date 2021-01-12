@@ -1,14 +1,9 @@
-from dataclasses import dataclass
 from typing import Optional, Any, Callable, Dict
 
 import pytorch_lightning as pl
 from torch.utils.data import DataLoader, Dataset
 
-
-@dataclass
-class TransformerDataConfig:
-    batch_size: int
-    num_workers: int
+from lightning_transformers.core.config import TransformerDataConfig
 
 
 class TransformerDataModule(pl.LightningDataModule):

@@ -1,28 +1,10 @@
-from dataclasses import dataclass
 from typing import Dict
 
 from pytorch_lightning import _logger as log
 
+from lightning_transformers.core.huggingface.config import HFBackboneConfig, HFOptimizerConfig, HFSchedulerConfig
 from lightning_transformers.core.huggingface.instantiator import Instantiator
 from lightning_transformers.core.model import TaskTransformer
-
-
-@dataclass
-class HFBackboneConfig:
-    downstream_model_type: str
-    pretrained_model_name_or_path: str
-
-
-@dataclass
-class HFOptimizerConfig:
-    lr: float = 1e-3
-    weight_decay: float = 0.0
-
-
-@dataclass
-class HFSchedulerConfig:
-    num_training_steps: int = -1
-    num_warmup_steps: float = 0.1
 
 
 class HFTransformer(TaskTransformer):

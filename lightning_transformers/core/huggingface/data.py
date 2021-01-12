@@ -1,4 +1,3 @@
-from dataclasses import dataclass
 from typing import Optional, Dict, Any
 
 from datasets import Dataset, load_dataset
@@ -6,21 +5,7 @@ from pytorch_lightning.utilities.exceptions import MisconfigurationException
 from transformers import PreTrainedTokenizerBase
 
 from lightning_transformers.core import TransformerDataModule
-from lightning_transformers.core.data import TransformerDataConfig
-
-
-@dataclass
-class HFTransformerDataConfig(TransformerDataConfig):
-    dataset_name: Optional[str] = None
-    train_val_split: Optional[int] = None
-    train_file: Optional[str] = None
-    validation_file: Optional[str] = None
-    padding: str = "max_length"
-    truncation: str = "only_first"
-    max_length: int = 128
-    preprocessing_num_workers: int = 8
-    load_from_cache_file: bool = True
-    dataset_config_name: Optional[str] = None
+from lightning_transformers.core.huggingface.config import HFTransformerDataConfig
 
 
 class HFTransformerDataModule(TransformerDataModule):
