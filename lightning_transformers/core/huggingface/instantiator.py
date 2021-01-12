@@ -44,7 +44,7 @@ class HydraInstantiator(Instantiator):
         ]
         return instantiate(cfg, grouped_parameters)
 
-    def scheduler(self, cfg: DictConfig, optimizer: torch.optim.Optimizer) -> torch.optim.lr_scheduler.LambdaLR:
+    def scheduler(self, cfg: DictConfig, optimizer: torch.optim.Optimizer) -> torch.optim.lr_scheduler._LRScheduler:
         return instantiate(cfg, optimizer=optimizer)
 
     def data_module(
