@@ -1,9 +1,9 @@
 import torch
 
-from lightning_transformers.core import TaskTransformer
+from lightning_transformers.core.huggingface import HFTransformer
 
 
-class QuestionAnsweringTransformer(TaskTransformer):
+class QuestionAnsweringTransformer(HFTransformer):
 
     def test_step(self, batch, batch_idx, dataloader_idx=0):
         outputs = self.model(**batch)
