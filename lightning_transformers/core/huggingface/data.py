@@ -1,4 +1,4 @@
-from typing import Optional, Dict, Any
+from typing import Any, Dict, Optional
 
 from datasets import Dataset, load_dataset
 from pytorch_lightning.utilities.exceptions import MisconfigurationException

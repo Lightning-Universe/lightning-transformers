@@ -2,7 +2,8 @@ from typing import Dict
 
 from pytorch_lightning import _logger as log
 
-from lightning_transformers.core.huggingface.config import HFBackboneConfig, HFOptimizerConfig, HFSchedulerConfig
+from lightning_transformers.core.config import OptimizerConfig
+from lightning_transformers.core.huggingface.config import HFBackboneConfig, HFSchedulerConfig
 from lightning_transformers.core.huggingface.instantiator import Instantiator
 from lightning_transformers.core.model import TaskTransformer
 
@@ -19,7 +20,7 @@ class HFTransformer(TaskTransformer):
         self,
         instantiator: Instantiator,
         backbone: HFBackboneConfig,
-        optimizer: HFOptimizerConfig,
+        optimizer: OptimizerConfig,
         scheduler: HFSchedulerConfig,
     ):
         model = instantiator.backbone(backbone)
