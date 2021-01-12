@@ -1,17 +1,12 @@
-import logging
 from typing import Optional
 
-import pytorch_lightning as pl
 import torch
 from hydra.utils import get_class, instantiate
-from omegaconf import DictConfig
-from transformers import PreTrainedTokenizerBase, AutoTokenizer
+from transformers import AutoTokenizer, PreTrainedTokenizerBase
 
+from lightning_transformers.core.config import OptimizerConfig, SchedulerConfig
 from lightning_transformers.core.huggingface import HFTransformerDataModule
-
-
-# FIXME: circular import
-# from lightning_transformers.core.huggingface import HFTransformer
+from lightning_transformers.core.huggingface.config import HFBackboneConfig, HFTokenizerConfig, HFTransformerDataConfig
 
 
 class Instantiator:
@@ -21,17 +16,14 @@ class Instantiator:
 
 class HydraInstantiator(Instantiator):
     def __init__(self):
-        self._state = {}
+        self.state = {}
 
-    def model(self, cfg: DictConfig):  # -> HFTransformer:
-        return instantiate(cfg, self)
-
-    def backbone(self, cfg: DictConfig) -> torch.nn.Module:
+    def backbone(self, cfg: HFBackboneConfig) -> torch.nn.Module:
         return get_class(cfg.downstream_model_type).from_pretrained(
-            cfg.pretrained_model_name_or_path, **self._state["backbone"]
+            cfg.pretrained_model_name_or_path, **self.state["backbone"]
         )
 
-    def optimizer(self, model: torch.nn.Module, cfg: DictConfig) -> torch.optim.Optimizer:
+    def optimizer(self, model: torch.nn.Module, cfg: OptimizerConfig) -> torch.optim.Optimizer:
         no_decay = ["bias", "LayerNorm.weight"]
         grouped_parameters = [
             {
@@ -45,26 +37,20 @@ class HydraInstantiator(Instantiator):
         ]
         return instantiate(cfg, grouped_parameters)
 
-    def scheduler(self, cfg: DictConfig, optimizer: torch.optim.Optimizer) -> torch.optim.lr_scheduler._LRScheduler:
+    def scheduler(
+        self, cfg: SchedulerConfig, optimizer: torch.optim.Optimizer
+    ) -> torch.optim.lr_scheduler._LRScheduler:
         return instantiate(cfg, optimizer=optimizer)
 
     def data_module(
-        self, cfg: DictConfig, tokenizer: Optional[PreTrainedTokenizerBase] = None
+        self, cfg: HFTransformerDataConfig, tokenizer: Optional[PreTrainedTokenizerBase] = None
     ) -> HFTransformerDataModule:
         return instantiate(cfg, tokenizer=tokenizer)
 
-    def tokenizer(self, cfg: DictConfig) -> PreTrainedTokenizerBase:
+    def tokenizer(self, cfg: HFTokenizerConfig) -> PreTrainedTokenizerBase:
         return AutoTokenizer.from_pretrained(
             pretrained_model_name_or_path=cfg.pretrained_model_name_or_path, use_fast=cfg.use_fast
         )
 
-    def logger(self, cfg: DictConfig) -> logging.Logger:
-        if cfg.log:
-            return instantiate(cfg.logger)
-
     def trainer(self, cfg: DictConfig, **kwargs) -> pl.Trainer:
         return instantiate(cfg, **kwargs)
-
-    @property
-    def state(self):
-        return self._state

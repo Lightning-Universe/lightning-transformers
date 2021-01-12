@@ -1,4 +1,4 @@
-from typing import Dict, Optional, Any
+from typing import Any, Dict, Optional
 
 import pytorch_lightning as pl
 import torch

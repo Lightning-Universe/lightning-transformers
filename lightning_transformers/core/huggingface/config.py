@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 from typing import Optional
 
+from lightning_transformers.core.config import HydraConfig, SchedulerConfig
 from lightning_transformers.core.data import TransformerDataConfig
 
 
@@ -19,18 +20,18 @@ class HFTransformerDataConfig(TransformerDataConfig):
 
 
 @dataclass
-class HFBackboneConfig:
-    downstream_model_type: str
-    pretrained_model_name_or_path: str
+class HFTokenizerConfig(HydraConfig):
+    pretrained_model_name_or_path: Optional[str] = None
+    use_fast: bool = True
 
 
 @dataclass
-class HFOptimizerConfig:
-    lr: float = 1e-3
-    weight_decay: float = 0.0
+class HFBackboneConfig(HydraConfig):
+    downstream_model_type: Optional[str] = None
+    pretrained_model_name_or_path: Optional[str] = None
 
 
 @dataclass
-class HFSchedulerConfig:
+class HFSchedulerConfig(SchedulerConfig):
     num_training_steps: int = -1
     num_warmup_steps: float = 0.1

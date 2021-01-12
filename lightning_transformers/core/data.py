@@ -1,4 +1,4 @@
-from typing import Optional, Any, Callable, Dict
+from typing import Any, Callable, Dict, Optional
 
 import pytorch_lightning as pl
 from torch.utils.data import DataLoader, Dataset
