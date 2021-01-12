@@ -54,3 +54,7 @@ class HydraInstantiator(Instantiator):
 
     def trainer(self, cfg: DictConfig, **kwargs) -> pl.Trainer:
         return instantiate(cfg, **kwargs)
+
+    @property
+    def state(self):
+        return self._state
