@@ -13,13 +13,15 @@ class LitTransformer(pl.LightningModule):
     def __init__(
         self,
         model: torch.nn.Module,
-        optimizer: torch.optim.Optimizer,
-        scheduler: torch.optim.lr_scheduler._LRScheduler,
+        optimizer: Optional[torch.optim.Optimizer] = None,
+        scheduler: Optional[torch.optim.lr_scheduler._LRScheduler] = None,
     ):
         super().__init__()
         self.model = model
-        self.optimizer = optimizer
-        self.scheduler = scheduler
+        # some optimizers/schedulers need parameters only known dynamically
+        # allow users to override the getter to instantiate them lazily
+        self._optimizer = optimizer
+        self._scheduler = scheduler
 
     def configure_optimizers(self) -> Dict:
         """Prepare optimizer and scheduler"""
@@ -27,6 +29,22 @@ class LitTransformer(pl.LightningModule):
             "optimizer": self.optimizer,
             "lr_scheduler": {"scheduler": self.scheduler, "interval": "step", "frequency": 1},
         }
+
+    @property
+    def optimizer(self):
+        return self._optimizer
+
+    @optimizer.setter
+    def optimizer(self, value):
+        self._optimizer = value
+
+    @property
+    def scheduler(self):
+        return self._scheduler
+
+    @scheduler.setter
+    def scheduler(self, value):
+        self._scheduler = value
 
     @property
     def num_training_steps(self) -> int:
