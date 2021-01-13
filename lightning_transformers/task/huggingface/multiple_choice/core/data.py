@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 from functools import partial
+from typing import Optional
 
 from datasets import Dataset, Union
 from tokenizers import Tokenizer
@@ -29,7 +30,7 @@ class MultipleChoiceTransformerDataModule(HFTransformerDataModule):
         super().__init__(cfg, tokenizer)
         self.cfg = cfg
 
-    def process_data(self, dataset: Dataset) -> Dataset:
+    def process_data(self, dataset: Dataset, stage: Optional[str] = None) -> Dataset:
         from .data_utils import (
             preprocess_function,
         )
