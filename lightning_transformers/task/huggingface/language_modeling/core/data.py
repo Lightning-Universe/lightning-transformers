@@ -4,17 +4,14 @@ from typing import Union, Callable, Optional
 from datasets import Dataset
 from pytorch_lightning import _logger as log
 from tokenizers import Tokenizer
-from transformers import PreTrainedTokenizer, PreTrainedTokenizerFast, default_data_collator, PreTrainedTokenizerBase
+from transformers import PreTrainedTokenizer, PreTrainedTokenizerFast, default_data_collator
 
 from lightning_transformers.core.huggingface import HFTransformerDataModule
 from lightning_transformers.task.huggingface.language_modeling.core.config import LanguageModelingDataConfig
 
 
 class LanguageModelingTransformerDataModule(HFTransformerDataModule):
-
-    def __init__(self, cfg: LanguageModelingDataConfig, tokenizer: Optional[PreTrainedTokenizerBase] = None):
-        super().__init__(cfg, tokenizer)
-        self.cfg = cfg
+    cfg: LanguageModelingDataConfig
 
     def process_data(self, dataset: Dataset, stage: Optional[str] = None) -> Dataset:
 
