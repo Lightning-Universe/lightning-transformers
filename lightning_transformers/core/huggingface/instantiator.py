@@ -24,18 +24,8 @@ class HydraInstantiator(Instantiator):
         self._state = {}
 
     def model(self,
-              task_cfg: DictConfig,
-              backbone_cfg: DictConfig,
-              optimizer_cfg: DictConfig,
-              scheduler_cfg: DictConfig):  # -> HFTransformer:
-        return instantiate(
-            task_cfg,
-            self,
-            backbone_cfg=backbone_cfg,
-            optimizer_cfg=optimizer_cfg,
-            scheduler_cfg=scheduler_cfg,
-            _recursive_=False
-        )
+              task_cfg: DictConfig):  # -> HFTransformer:
+        return instantiate(task_cfg, self)
 
     def optimizer(self, model: torch.nn.Module, cfg: DictConfig) -> torch.optim.Optimizer:
         no_decay = ["bias", "LayerNorm.weight"]

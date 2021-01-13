@@ -20,15 +20,15 @@ class HFTransformer(TaskTransformer):
             self,
             instantiator: Instantiator,
             downstream_model_type: str,
-            backbone_cfg: HFBackboneConfig,
-            optimizer_cfg: OptimizerConfig,
-            scheduler_cfg: HFSchedulerConfig,
+            backbone: HFBackboneConfig,
+            optimizer: OptimizerConfig,
+            scheduler: HFSchedulerConfig,
     ):
-        model = instantiator.backbone(downstream_model_type, backbone_cfg)
+        model = instantiator.backbone(downstream_model_type, backbone)
         super().__init__(model)
         self.instantiator = instantiator
-        self.optimizer_cfg = optimizer_cfg
-        self.scheduler_cfg = scheduler_cfg
+        self.optimizer_cfg = optimizer
+        self.scheduler_cfg = scheduler
 
     def prepare_warmup(self, cfg: HFSchedulerConfig):
         if cfg.num_training_steps < 0:

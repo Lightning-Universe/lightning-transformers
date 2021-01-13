@@ -31,10 +31,7 @@ def main(cfg: DictConfig):
     instantiator.state["backbone"] = data_module.config_data_args
 
     model: TaskTransformer = instantiator.model(
-        task_cfg=cfg.task,
-        backbone_cfg=cfg.backbone,
-        optimizer_cfg=cfg.optimizer,
-        scheduler_cfg=cfg.scheduler
+        task_cfg=cfg.task
     )
     trainer = instantiator.trainer(cfg.trainer, logger=instantiator.logger(cfg))
 
