@@ -1,19 +1,29 @@
 from functools import partial
-from typing import Union
+from typing import Union, Optional, Callable
 
 from datasets import Dataset
 from pytorch_lightning import _logger as log
 from tokenizers import Tokenizer
-from transformers import PreTrainedTokenizer, PreTrainedTokenizerFast
+from transformers import PreTrainedTokenizer, PreTrainedTokenizerFast, PreTrainedTokenizerBase, default_data_collator
 
-from lightning_transformers.core import TransformerDataModule
+from lightning_transformers.core.huggingface import HFTransformerDataModule
+from lightning_transformers.core.huggingface.config import HFTransformerDataConfig
 
 
-class LanguageModelingTransformerDataModule(TransformerDataModule):
+class LanguageModelingDataConfig(HFTransformerDataConfig):
+    do_train: bool = True
+    block_size: int = 128
+
+
+class LanguageModelingTransformerDataModule(HFTransformerDataModule):
+
+    def __init__(self, cfg: LanguageModelingDataConfig, tokenizer: Optional[PreTrainedTokenizerBase] = None):
+        super().__init__(cfg, tokenizer)
+        self.cfg = cfg
 
     def process_data(self, dataset: Dataset) -> Dataset:
 
-        if self.do_train:
+        if self.cfg.do_train:
             column_names = dataset["train"].column_names
         else:
             column_names = dataset["validation"].column_names
@@ -29,9 +39,9 @@ class LanguageModelingTransformerDataModule(TransformerDataModule):
         dataset = dataset.map(
             tokenize_function,
             batched=True,
-            num_proc=self.preprocessing_num_workers,
+            num_proc=self.cfg.preprocessing_num_workers,
             remove_columns=column_names,
-            load_from_cache_file=not self.overwrite_cache,
+            load_from_cache_file=self.cfg.load_from_cache_file,
         )
 
         group_texts = partial(self.group_texts, block_size=self.effective_block_size)
@@ -39,15 +49,15 @@ class LanguageModelingTransformerDataModule(TransformerDataModule):
         dataset = dataset.map(
             group_texts,
             batched=True,
-            num_proc=self.preprocessing_num_workers,
-            load_from_cache_file=not self.overwrite_cache,
+            num_proc=self.cfg.preprocessing_num_workers,
+            load_from_cache_file=self.cfg.load_from_cache_file,
         )
 
         return dataset
 
     @property
     def effective_block_size(self):
-        if self.block_size is None:
+        if self.cfg.block_size is None:
             block_size = self.tokenizer.model_max_length
             if block_size > 1024:
                 log.warn(
@@ -56,12 +66,12 @@ class LanguageModelingTransformerDataModule(TransformerDataModule):
                 )
             block_size = 1024
         else:
-            if self.block_size > self.tokenizer.model_max_length:
+            if self.cfg.block_size > self.tokenizer.model_max_length:
                 log.warn(
-                    f"The block_size passed ({self.block_size}) is larger than the maximum length for the model"
+                    f"The block_size passed ({self.cfg.block_size}) is larger than the maximum length for the model"
                     f"({self.tokenizer.model_max_length}). Using block_size={self.tokenizer.model_max_length}."
                 )
-            block_size = min(self.block_size, self.tokenizer.model_max_length)
+            block_size = min(self.cfg.block_size, self.tokenizer.model_max_length)
         return block_size
 
     @staticmethod
@@ -86,3 +96,7 @@ class LanguageModelingTransformerDataModule(TransformerDataModule):
         }
         result["labels"] = result["input_ids"].copy()
         return result
+
+    @property
+    def collate_fn(self) -> Optional[Callable]:
+        return default_data_collator

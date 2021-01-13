@@ -1,7 +1,7 @@
-from lightning_transformers.core.model import TaskTransformer
+from lightning_transformers.core.huggingface import HFTransformer
 
 
-class LanguageModelingTransformer(TaskTransformer):
+class LanguageModelingTransformer(HFTransformer):
 
     def on_fit_start(self):
         tokenizer = self.trainer.datamodule.tokenizer
