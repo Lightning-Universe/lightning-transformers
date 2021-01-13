@@ -1,18 +1,13 @@
 from functools import partial
-from typing import Union, Optional, Callable
+from typing import Union, Callable, Optional
 
 from datasets import Dataset
 from pytorch_lightning import _logger as log
 from tokenizers import Tokenizer
-from transformers import PreTrainedTokenizer, PreTrainedTokenizerFast, PreTrainedTokenizerBase, default_data_collator
+from transformers import PreTrainedTokenizer, PreTrainedTokenizerFast, default_data_collator, PreTrainedTokenizerBase
 
 from lightning_transformers.core.huggingface import HFTransformerDataModule
-from lightning_transformers.core.huggingface.config import HFTransformerDataConfig
-
-
-class LanguageModelingDataConfig(HFTransformerDataConfig):
-    do_train: bool = True
-    block_size: int = 128
+from lightning_transformers.task.huggingface.language_modeling.core.config import LanguageModelingDataConfig
 
 
 class LanguageModelingTransformerDataModule(HFTransformerDataModule):
@@ -21,9 +16,9 @@ class LanguageModelingTransformerDataModule(HFTransformerDataModule):
         super().__init__(cfg, tokenizer)
         self.cfg = cfg
 
-    def process_data(self, dataset: Dataset) -> Dataset:
+    def process_data(self, dataset: Dataset, stage: Optional[str] = None) -> Dataset:
 
-        if self.cfg.do_train:
+        if stage == 'train':
             column_names = dataset["train"].column_names
         else:
             column_names = dataset["validation"].column_names
@@ -56,7 +51,7 @@ class LanguageModelingTransformerDataModule(HFTransformerDataModule):
         return dataset
 
     @property
-    def effective_block_size(self):
+    def effective_block_size(self) -> int:
         if self.cfg.block_size is None:
             block_size = self.tokenizer.model_max_length
             if block_size > 1024:
@@ -98,5 +93,5 @@ class LanguageModelingTransformerDataModule(HFTransformerDataModule):
         return result
 
     @property
-    def collate_fn(self) -> Optional[Callable]:
+    def collate_fn(self) -> Callable:
         return default_data_collator

@@ -1,6 +1,7 @@
 import os
 from dataclasses import dataclass
 from functools import partial
+from typing import Optional
 
 from datasets import load_metric, Dataset, Union
 from tokenizers import Tokenizer
@@ -35,7 +36,7 @@ class QuestionAnsweringTransformerDataModule(HFTransformerDataModule):
         super().__init__(cfg, tokenizer)
         self.cfg = cfg
 
-    def process_data(self, dataset: Dataset) -> Dataset:
+    def process_data(self, dataset: Dataset, stage: Optional[str] = None) -> Dataset:
         question_column_name, context_column_name, answer_column_name = self.qa_column_names(dataset)
 
         kwargs = self.prepare_features_kwargs(

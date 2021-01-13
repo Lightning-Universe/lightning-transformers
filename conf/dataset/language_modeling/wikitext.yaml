@@ -6,7 +6,6 @@ cfg:
   train_file: null
   validation_file: null
   block_size: null
-  do_train: True
   preprocessing_num_workers: 1
   load_from_cache_file: True
 
