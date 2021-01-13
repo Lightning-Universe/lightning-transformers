@@ -1,6 +1,3 @@
+# @package task
 _target_: lightning_transformers.task.huggingface.text_classification.TextClassificationTransformer
-backbone:
-  downstream_model_type: transformers.AutoModelForSequenceClassification
-  pretrained_model_name_or_path: bert-base-cased
-optimizer: ${optimizer}
-scheduler: ${scheduler}
+downstream_model_type: transformers.AutoModelForSequenceClassification
