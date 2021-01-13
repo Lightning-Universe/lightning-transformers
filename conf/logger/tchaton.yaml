@@ -1,4 +1,3 @@
-# @package _group_
 _target_: lightning_transformers.core.utils.initialize_wandb_logger
 experiment_name: ${experiment_name}
 save_dir: ''
@@ -8,4 +7,3 @@ anonymous: False
 project: ${dataset.dataset_name}
 experiment:
 entity: 'tchaton'
-group: ${backbone.pretrained_model_name_or_path}

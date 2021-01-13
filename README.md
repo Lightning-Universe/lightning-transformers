@@ -7,7 +7,6 @@ Transformers provides thousands of pretrained models to perform tasks on texts s
 
 Lightning-Transformers disentangles Transformers code to decouple the science from the engineering. 
 
-### Current API
 ```bash
 # Train bert-base-cased on CARER emotion dataset using text classification task provided by huggingface
 python train.py \
@@ -18,12 +17,12 @@ python train.py \
 python train.py \
     +task=huggingface/multiple_choice \
     +dataset=multiple_choice/swag \
-    backbone=roberta-base
+    backbone.pretrained_model_name_or_path=roberta-base
 
 # Train bert-base-cased on SQuAD using question-answering task provided by huggingface with 1 gpu and batch_size=4
 python train.py \
     +task=huggingface/question_answering \
-    +dataset=question_answering/squad
+    +dataset=question_answering/squad \
     trainer.gpus=1 \
     training.batch_size=4
 
@@ -54,19 +53,4 @@ python train.py \
     +task=huggingface/text_classification \
     +dataset=text_classification/emotion \
     +backbone=fairseq
-
-WIP
-
-# Train bert-base-cased on SWAG dataset using text classification task provided by huggingface
-python train.py \
-    +task=huggingface/multiple_choice \
-    +dataset=multiple_choice/swag
-
-
-# Train gpt2 on wikitext dataset using language modeling task provided by huggingface
-python train.py \
-    +task=huggingface/language_modeling \
-    +dataset=language_modeling/wikitext \
-    backbone=gpt2 \
-    training.batch_size=1
 ```

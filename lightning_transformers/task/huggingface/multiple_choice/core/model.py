@@ -1,24 +1,10 @@
-from typing import Optional
-
 import pytorch_lightning as pl
-from lightning_transformers.core.model import TaskTransformer
-from omegaconf import DictConfig
+import torch
 
-class MultipleChoiceTransformer(TaskTransformer):
-    def __init__(
-            self,
-            downstream_model_type: str,
-            backbone: DictConfig,
-            optim: DictConfig,
-            scheduler: Optional[DictConfig] = None,
-            config_data_args: Optional[dict] = None):
-        super().__init__(
-            downstream_model_type=downstream_model_type,
-            backbone=backbone,
-            optim=optim,
-            scheduler=scheduler,
-            config_data_args=config_data_args
-        )
+from lightning_transformers.core.huggingface import HFTransformer
+
+
+class MultipleChoiceTransformer(HFTransformer):
 
     def training_step(self, batch, batch_idx):
         loss = self._step(batch, batch_idx, "train")

@@ -1,12 +1,13 @@
 defaults: # for loading the default config
   - training: default
   - trainer: default
-  - scheduler: linear_schedule_with_warmup
   - optimizer: adamw
+  - scheduler: linear_schedule_with_warmup
+  - tokenizer: default
   - logger: tchaton # todo: change this eventually
 
 task: ???
 dataset: ???
 experiment_name: ${now:%Y-%m-%d}_${now:%H-%M-%S}
 log: False
-ignore_warnings: True
+ignore_warnings: True # todo: check warnings before release
