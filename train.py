@@ -24,7 +24,7 @@ def main(cfg: DictConfig):
     data_module: HFTransformerDataModule = instantiator.data_module(
         cfg.dataset, tokenizer=instantiator.tokenizer(cfg.tokenizer)
     )
-    data_module.setup('train')
+    data_module.setup('fit')
 
     # save some model arguments which are only known dynamically.
     # the instantiator will use them to instantiate the backbone

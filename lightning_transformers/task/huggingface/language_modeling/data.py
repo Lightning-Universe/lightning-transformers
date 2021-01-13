@@ -7,7 +7,7 @@ from tokenizers import Tokenizer
 from transformers import PreTrainedTokenizer, PreTrainedTokenizerFast, default_data_collator
 
 from lightning_transformers.core.huggingface import HFTransformerDataModule
-from lightning_transformers.task.huggingface.language_modeling.core.config import LanguageModelingDataConfig
+from lightning_transformers.task.huggingface.language_modeling.config import LanguageModelingDataConfig
 
 
 class LanguageModelingTransformerDataModule(HFTransformerDataModule):
@@ -15,7 +15,7 @@ class LanguageModelingTransformerDataModule(HFTransformerDataModule):
 
     def process_data(self, dataset: Dataset, stage: Optional[str] = None) -> Dataset:
 
-        if stage == 'train':
+        if stage == 'fit':
             column_names = dataset["train"].column_names
         else:
             column_names = dataset["validation"].column_names
