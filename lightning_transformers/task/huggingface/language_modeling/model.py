@@ -10,7 +10,7 @@ class LanguageModelingTransformer(HFTransformer):
 
     def _step(self, batch, batch_idx):
         outputs = self.model(**batch)
-        loss, logits = outputs[:2]
+        loss = outputs[0]
         return loss
 
     def training_step(self, batch, batch_idx):
