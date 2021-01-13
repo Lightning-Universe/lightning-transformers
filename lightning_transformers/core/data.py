@@ -16,7 +16,7 @@ class TransformerDataModule(pl.LightningDataModule):
     def setup(self, stage: Optional[str] = None):
         dataset = self.load_dataset()
         dataset = self.split_dataset(dataset)
-        dataset = self.process_data(dataset)
+        dataset = self.process_data(dataset, stage=stage)
         self.labels = self.prepare_labels(dataset)
         self.ds = dataset
         self.load_and_prepare_metrics()
@@ -27,7 +27,7 @@ class TransformerDataModule(pl.LightningDataModule):
     def split_dataset(self, dataset: Dict[str, Dataset]) -> Dict[str, Dataset]:
         return dataset
 
-    def process_data(self, dataset: Dict[str, Dataset]) -> Dict[str, Dataset]:
+    def process_data(self, dataset: Dict[str, Dataset], stage: Optional[str] = None) -> Dict[str, Dataset]:
         return dataset
 
     def prepare_labels(self, dataset: Dict[str, Dataset]) -> Optional[Any]:

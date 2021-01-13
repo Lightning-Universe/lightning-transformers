@@ -9,6 +9,8 @@ from lightning_transformers.core.huggingface.config import HFTransformerDataConf
 
 
 class HFTransformerDataModule(TransformerDataModule):
+    cfg: HFTransformerDataConfig
+
     def __init__(self, cfg: HFTransformerDataConfig, tokenizer: Optional[PreTrainedTokenizerBase] = None):
         super().__init__(cfg)
         self.tokenizer = tokenizer

@@ -1,28 +1,53 @@
+# Copyright 2020 The HuggingFace Team All rights reserved.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# Adapted from:
+# https://github.com/huggingface/transformers/blob/master/examples/question-answering/run_qa.py
+# https://github.com/huggingface/transformers/blob/master/examples/question-answering/utils_qa.py
+
+# Changes:
+#   - Use pytorch_lightning logger
+#   - Adapt function arguments
+
 import collections
 import json
 import os
-from typing import Tuple, Optional
-from pytorch_lightning import _logger as log
+from typing import Optional, Tuple
+
 import numpy as np
-from tqdm import tqdm
-from transformers import (
-    EvalPrediction,
-)
+from pytorch_lightning import _logger as logger
+from tqdm.auto import tqdm
+from transformers import EvalPrediction
+
+# Disable formatting for easier diffs with upstream
+# fmt: off
 
 
-def prepare_train_features(examples,
-                           tokenizer=None,
-                           pad_on_right=None,
-                           question_column_name=None,
-                           context_column_name=None,
-                           answer_column_name=None,
-                           max_seq_length=None,
-                           doc_stride=None,
-                           pad_to_max_length=None):
+def prepare_train_features(
+    examples,
+    tokenizer=None,
+    pad_on_right=None,
+    question_column_name=None,
+    context_column_name=None,
+    answer_column_name=None,
+    max_seq_length=None,
+    doc_stride=None,
+    pad_to_max_length=None
+):
     # Tokenize our examples with truncation and maybe padding, but keep the overflows using a stride. This results
     # in one example possible giving several features when a context is long, each of those features having a
     # context that overlaps a bit the context of the previous feature.
-    
     tokenized_examples = tokenizer(
         examples[question_column_name if pad_on_right else context_column_name],
         examples[context_column_name if pad_on_right else question_column_name],
@@ -92,15 +117,17 @@ def prepare_train_features(examples,
     return tokenized_examples
 
 
-def prepare_validation_features(examples,
-                                tokenizer=None,
-                                pad_on_right=None,
-                                question_column_name=None,
-                                context_column_name=None,
-                                answer_column_name=None,
-                                max_seq_length=None,
-                                doc_stride=None,
-                                pad_to_max_length=None):
+def prepare_validation_features(
+    examples,
+    tokenizer=None,
+    pad_on_right=None,
+    question_column_name=None,
+    context_column_name=None,
+    answer_column_name=None,
+    max_seq_length=None,
+    doc_stride=None,
+    pad_to_max_length=None
+):
     # Tokenize our examples with truncation and maybe padding, but keep the overflows using a stride. This results
     # in one example possible giving several features when a context is long, each of those features having a
     # context that overlaps a bit the context of the previous feature.
@@ -139,31 +166,31 @@ def prepare_validation_features(examples,
             for k, o in enumerate(tokenized_examples["offset_mapping"][i])
         ]
 
-    tokenized_examples.pop("offset_mapping")
-
     return tokenized_examples
 
 
-def post_process_function(predictions,
-                          features=None,
-                          examples=None,
-                          version_2_with_negative=None,
-                          n_best_size=None,
-                          max_answer_length=None,
-                          null_score_diff_threshold=None,
-                          output_dir=None,
-                          is_world_process_zero=True):
+def post_processing_function(
+    predictions,
+    features=None,
+    examples=None,
+    version_2_with_negative=None,
+    n_best_size=None,
+    max_answer_length=None,
+    null_score_diff_threshold=None,
+    output_dir=None,
+    is_world_process_zero=True
+):
     # Post-processing: we match the start logits and end logits to answers in the original context.
     predictions = postprocess_qa_predictions(
-        examples,
-        features,
-        predictions,
+        examples=examples,
+        features=features,
+        predictions=predictions,
         version_2_with_negative=version_2_with_negative,
         n_best_size=n_best_size,
         max_answer_length=max_answer_length,
         null_score_diff_threshold=null_score_diff_threshold,
         output_dir=output_dir,
-        is_world_process_zero=is_world_process_zero,
+        is_world_process_zero=is_world_process_zero(),
     )
     # Format the result to the format the metric expects.
     if version_2_with_negative:
@@ -177,16 +204,16 @@ def post_process_function(predictions,
 
 
 def postprocess_qa_predictions(
-        examples,
-        features,
-        predictions: Tuple[np.ndarray, np.ndarray],
-        version_2_with_negative: bool = False,
-        n_best_size: int = 20,
-        max_answer_length: int = 30,
-        null_score_diff_threshold: float = 0.0,
-        output_dir: Optional[str] = None,
-        prefix: Optional[str] = None,
-        is_world_process_zero: bool = True,
+    examples,
+    features,
+    predictions: Tuple[np.ndarray, np.ndarray],
+    version_2_with_negative: bool = False,
+    n_best_size: int = 20,
+    max_answer_length: int = 30,
+    null_score_diff_threshold: float = 0.0,
+    output_dir: Optional[str] = None,
+    prefix: Optional[str] = None,
+    is_world_process_zero: bool = True,
 ):
     """
     Post-processes the predictions of a question-answering model to convert them to answers that are substrings of the
@@ -239,7 +266,7 @@ def postprocess_qa_predictions(
         scores_diff_json = collections.OrderedDict()
 
     # Logging.
-    log.info(f"Post-processing {len(examples)} example predictions split into {len(features)} features.")
+    logger.info(f"Post-processing {len(examples)} example predictions split into {len(features)} features.")
 
     # Let's loop over all the examples!
     for example_index, example in enumerate(tqdm(examples)):
@@ -272,17 +299,17 @@ def postprocess_qa_predictions(
                 }
 
             # Go through all possibilities for the `n_best_size` greater start and end logits.
-            start_indexes = np.argsort(start_logits)[-1: -n_best_size - 1: -1].tolist()
-            end_indexes = np.argsort(end_logits)[-1: -n_best_size - 1: -1].tolist()
+            start_indexes = np.argsort(start_logits)[-1 : -n_best_size - 1 : -1].tolist()
+            end_indexes = np.argsort(end_logits)[-1 : -n_best_size - 1 : -1].tolist()
             for start_index in start_indexes:
                 for end_index in end_indexes:
                     # Don't consider out-of-scope answers, either because the indices are out of bounds or correspond
                     # to part of the input_ids that are not in the context.
                     if (
-                            start_index >= len(offset_mapping)
-                            or end_index >= len(offset_mapping)
-                            or offset_mapping[start_index] is None
-                            or offset_mapping[end_index] is None
+                        start_index >= len(offset_mapping)
+                        or end_index >= len(offset_mapping)
+                        or offset_mapping[start_index] is None
+                        or offset_mapping[end_index] is None
                     ):
                         continue
                     # Don't consider answers with a length that is either < 0 or > max_answer_length.
@@ -316,7 +343,7 @@ def postprocess_qa_predictions(
         context = example["context"]
         for pred in predictions:
             offsets = pred.pop("offsets")
-            pred["text"] = context[offsets[0]: offsets[1]]
+            pred["text"] = context[offsets[0] : offsets[1]]
 
         # In the very rare edge case we have not a single non-null prediction, we create a fake prediction to avoid
         # failure.
@@ -353,7 +380,7 @@ def postprocess_qa_predictions(
 
         # Make `predictions` JSON-serializable by casting np.float back to float.
         all_nbest_json[example["id"]] = [
-            {k: (float(v) if isinstance(v, (np.float32, np.float64)) else v) for k, v in pred.items()}
+            {k: (float(v) if isinstance(v, (np.float16, np.float32, np.float64)) else v) for k, v in pred.items()}
             for pred in predictions
         ]
 
@@ -372,14 +399,14 @@ def postprocess_qa_predictions(
                 output_dir, "null_odds.json" if prefix is None else f"null_odds_{prefix}".json
             )
 
-        log.info(f"Saving predictions to {prediction_file}.")
+        logger.info(f"Saving predictions to {prediction_file}.")
         with open(prediction_file, "w") as writer:
             writer.write(json.dumps(all_predictions, indent=4) + "\n")
-        log.info(f"Saving nbest_preds to {nbest_file}.")
+        logger.info(f"Saving nbest_preds to {nbest_file}.")
         with open(nbest_file, "w") as writer:
             writer.write(json.dumps(all_nbest_json, indent=4) + "\n")
         if version_2_with_negative:
-            log.info(f"Saving null_odds to {null_odds_file}.")
+            logger.info(f"Saving null_odds to {null_odds_file}.")
             with open(null_odds_file, "w") as writer:
                 writer.write(json.dumps(scores_diff_json, indent=4) + "\n")
 

@@ -1,3 +1,4 @@
+# @package task
 _target_: lightning_transformers.task.huggingface.text_classification.TextClassificationTransformer
 backbone:
   downstream_model_type: transformers.AutoModelForSequenceClassification
