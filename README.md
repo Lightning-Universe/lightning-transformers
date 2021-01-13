@@ -17,7 +17,7 @@ python train.py \
 python train.py \
     +task=huggingface/multiple_choice \
     +dataset=multiple_choice/swag \
-    backbone.pretrained_model_name_or_path=roberta-base
+    task.backbone.pretrained_model_name_or_path=roberta-base
 
 # Train bert-base-cased on SQuAD using question-answering task provided by huggingface with 1 gpu and batch_size=4
 python train.py \
@@ -25,6 +25,13 @@ python train.py \
     +dataset=question_answering/squad \
     trainer.gpus=1 \
     training.batch_size=4
+
+# Train gpt2 on wikitext dataset using language modeling task provided by huggingface
+python train.py \
+    +task=huggingface/language_modeling \
+    +dataset=language_modeling/wikitext \
+    training.batch_size=1 \
+    task.backbone.pretrained_model_name_or_path=gpt2
 
 # Make an inference with pre-trained bert-base-cased on SQuAD using question-answering task provided by huggingface with 2 gpu.
 python train.py \
@@ -43,7 +50,7 @@ python train.py \
 python train.py \
     +task=huggingface/text_classification \
     +dataset=text_classification/emotion \
-    backbone.pretrained_model_name_or_path=roberta-base \
+    task.backbone.pretrained_model_name_or_path=roberta-base \
     trainer=sharded
 
 # (An example, not real) 

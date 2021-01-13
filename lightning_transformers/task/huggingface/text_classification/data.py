@@ -1,4 +1,4 @@
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Optional
 
 from datasets import Dataset
 from transformers import PreTrainedTokenizerBase
@@ -7,7 +7,7 @@ from lightning_transformers.core.huggingface import HFTransformerDataModule
 
 
 class TextClassificationDataModule(HFTransformerDataModule):
-    def process_data(self, dataset: Dataset) -> Dataset:
+    def process_data(self, dataset: Dataset, stage: Optional[str] = None) -> Dataset:
         input_feature_fields = [k for k, v in dataset["train"].features.items() if k not in ["label", "idx"]]
         dataset = TextClassificationDataModule.preprocess(
             dataset,
@@ -38,7 +38,8 @@ class TextClassificationDataModule(HFTransformerDataModule):
 
     @staticmethod
     def convert_to_features(
-        example_batch: Any, _, tokenizer: PreTrainedTokenizerBase, input_feature_fields: List[str], **tokenizer_kwargs
+            example_batch: Any, _, tokenizer: PreTrainedTokenizerBase, input_feature_fields: List[str],
+            **tokenizer_kwargs
     ):
         # Either encode single sentence or sentence pairs
         if len(input_feature_fields) > 1:
