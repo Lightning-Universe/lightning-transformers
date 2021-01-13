@@ -10,12 +10,12 @@ from transformers import (
     EvalPrediction, PreTrainedTokenizer, PreTrainedTokenizerFast
 )
 
-from lightning_transformers.core import TransformerDataModule
-from lightning_transformers.core.data import TransformerDataConfig
+from lightning_transformers.core.huggingface import HFTransformerDataModule
+from lightning_transformers.core.huggingface.config import HFTransformerDataConfig
 
 
 @dataclass
-class QuestionAnsweringTransformerDataConfig(TransformerDataConfig):
+class QuestionAnsweringTransformerDataConfig(HFTransformerDataConfig):
     max_seq_length: int = 128
     pad_to_max_length: bool = True
     do_train: bool = True
@@ -27,12 +27,12 @@ class QuestionAnsweringTransformerDataConfig(TransformerDataConfig):
     output_dir: str = './'
 
 
-class QuestionAnsweringTransformerDataModule(TransformerDataModule):
+class QuestionAnsweringTransformerDataModule(HFTransformerDataModule):
 
     def __init__(self,
                  tokenizer: Union[Tokenizer, PreTrainedTokenizer, PreTrainedTokenizerFast],
                  cfg: QuestionAnsweringTransformerDataConfig):
-        super().__init__(tokenizer, cfg)
+        super().__init__(cfg, tokenizer)
         self.cfg = cfg
 
     def process_data(self, dataset: Dataset) -> Dataset:

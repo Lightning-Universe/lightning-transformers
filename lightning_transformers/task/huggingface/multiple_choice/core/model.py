@@ -1,10 +1,10 @@
 import pytorch_lightning as pl
 import torch
 
-from lightning_transformers.core.model import TaskTransformer
+from lightning_transformers.core.huggingface import HFTransformer
 
 
-class MultipleChoiceTransformer(TaskTransformer):
+class MultipleChoiceTransformer(HFTransformer):
 
     def training_step(self, batch, batch_idx):
         loss = self._step(batch, batch_idx, "train")
