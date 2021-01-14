@@ -2,8 +2,9 @@ import collections
 import json
 import os
 from typing import Tuple, Optional
-from pytorch_lightning import _logger as log
+
 import numpy as np
+from pytorch_lightning import _logger as log
 from tqdm import tqdm
 from transformers import (
     EvalPrediction,

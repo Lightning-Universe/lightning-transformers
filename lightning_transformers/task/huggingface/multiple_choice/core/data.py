@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 from functools import partial
+from typing import Optional
 
 from datasets import Dataset, Union
 from tokenizers import Tokenizer
@@ -8,28 +9,28 @@ from transformers import (
     PreTrainedTokenizer, PreTrainedTokenizerFast
 )
 
-from lightning_transformers.core import TransformerDataModule
-from lightning_transformers.core.data import TransformerDataConfig
+from lightning_transformers.core.huggingface import HFTransformerDataModule
+from lightning_transformers.core.huggingface.config import HFTransformerDataConfig
 from .data_utils import (
     DataCollatorForMultipleChoice,
 )
 
 
 @dataclass
-class MultipleChoiceTransformerDataConfig(TransformerDataConfig):
+class MultipleChoiceTransformerDataConfig(HFTransformerDataConfig):
     max_seq_length: int = 128
     pad_to_max_length: bool = True
 
 
-class MultipleChoiceTransformerDataModule(TransformerDataModule):
+class MultipleChoiceTransformerDataModule(HFTransformerDataModule):
 
     def __init__(self,
                  tokenizer: Union[Tokenizer, PreTrainedTokenizer, PreTrainedTokenizerFast],
                  cfg: MultipleChoiceTransformerDataConfig):
-        super().__init__(tokenizer, cfg)
+        super().__init__(cfg, tokenizer)
         self.cfg = cfg
 
-    def process_data(self, dataset: Dataset) -> Dataset:
+    def process_data(self, dataset: Dataset, stage: Optional[str] = None) -> Dataset:
         from .data_utils import (
             preprocess_function,
         )

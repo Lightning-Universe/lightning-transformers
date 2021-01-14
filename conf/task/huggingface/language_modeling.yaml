@@ -1,0 +1,6 @@
+# @package task
+_target_: lightning_transformers.task.huggingface.language_modeling.LanguageModelingTransformer
+downstream_model_type: transformers.AutoModelForCausalLM
+backbone: ${backbone}
+optimizer: ${optimizer}
+scheduler: ${scheduler}

@@ -2,6 +2,7 @@
 _target_: lightning_transformers.task.huggingface.text_classification.TextClassificationDataModule
 cfg:
   dataset_name: emotion
+  dataset_config_name: null
   train_file: ''
   validation_file: ''
   padding: 'max_length'

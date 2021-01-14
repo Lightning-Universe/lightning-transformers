@@ -29,7 +29,7 @@ def run(
     data_module: HFTransformerDataModule = instantiator.data_module(
         dataset, tokenizer=instantiator.tokenizer(tokenizer)
     )
-    data_module.setup()
+    data_module.setup("fit")
 
     # save some model arguments which are only known dynamically.
     # the instantiator will use them to instantiate the backbone

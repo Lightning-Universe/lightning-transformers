@@ -27,11 +27,6 @@ class HydraInstantiator(Instantiator):
     def model(self, cfg: HFTaskConfig) -> HFTransformer:
         return instantiate(cfg)
 
-    def backbone(self, cfg: HFBackboneConfig) -> torch.nn.Module:
-        return get_class(cfg.downstream_model_type).from_pretrained(
-            cfg.pretrained_model_name_or_path, **self.state["backbone"]
-        )
-
     def optimizer(self, model: torch.nn.Module, cfg: OptimizerConfig) -> torch.optim.Optimizer:
         no_decay = ["bias", "LayerNorm.weight"]
         grouped_parameters = [
@@ -55,6 +50,13 @@ class HydraInstantiator(Instantiator):
         self, cfg: HFTransformerDataConfig, tokenizer: Optional[PreTrainedTokenizerBase] = None
     ) -> HFTransformerDataModule:
         return instantiate(cfg, tokenizer=tokenizer)
+
+    # todo: These are HF specific instantiation not Hydra
+    # todo: most of this code should live in a base class outside core/huggingface/
+    def backbone(self, downstream_model_type: str, backbone_cfg: HFBackboneConfig) -> torch.nn.Module:
+        return get_class(downstream_model_type).from_pretrained(
+            backbone_cfg.pretrained_model_name_or_path, **self._state["backbone"]
+        )
 
     def tokenizer(self, cfg: HFTokenizerConfig) -> PreTrainedTokenizerBase:
         return AutoTokenizer.from_pretrained(

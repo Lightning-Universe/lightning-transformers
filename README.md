@@ -26,6 +26,13 @@ python train.py \
     trainer.gpus=1 \
     training.batch_size=4
 
+# Train gpt2 on wikitext dataset using language modeling task provided by huggingface
+python train.py \
+    +task=huggingface/language_modeling \
+    +dataset=language_modeling/wikitext \
+    training.batch_size=1 \
+    backbone.pretrained_model_name_or_path=gpt2
+
 # Make an inference with pre-trained bert-base-cased on SQuAD using question-answering task provided by huggingface with 2 gpu.
 python train.py \
     +task=huggingface/question_answering \
