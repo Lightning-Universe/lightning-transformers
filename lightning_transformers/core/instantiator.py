@@ -17,8 +17,8 @@ class Instantiator:
 
 
 class HydraInstantiator(Instantiator):
-    def model(self, task_cfg: DictConfig, model_data_args) -> TaskTransformer:
-        return instantiate(task_cfg, self, **model_data_args)
+    def model(self, cfg: DictConfig, model_data_args) -> TaskTransformer:
+        return instantiate(cfg, self, **model_data_args)
 
     def optimizer(self, model: torch.nn.Module, cfg: DictConfig) -> torch.optim.Optimizer:
         no_decay = ["bias", "LayerNorm.weight"]
