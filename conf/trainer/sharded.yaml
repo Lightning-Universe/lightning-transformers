@@ -1,4 +1,3 @@
-# @package _group_
 _target_: pytorch_lightning.Trainer
 logger: True
 checkpoint_callback: True
