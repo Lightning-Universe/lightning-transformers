@@ -21,18 +21,15 @@ def main(cfg: DictConfig):
     instantiator = HydraInstantiator()
 
     data_module: TransformerDataModule = instantiator.data_module(
-        cfg=cfg.dataset,
-        tokenizer=instantiator.tokenizer(cfg.tokenizer)
+        cfg=cfg.dataset, tokenizer=instantiator.tokenizer(cfg.tokenizer)
     )
-    data_module.setup('fit')
+    data_module.setup("fit")
 
     # save some model arguments which are only known dynamically.
     # the instantiator will use them to instantiate the backbone
     instantiator.state["backbone"] = data_module.config_data_args
 
-    model: TaskTransformer = instantiator.model(
-        task_cfg=cfg.task
-    )
+    model: TaskTransformer = instantiator.model(cfg=cfg.task)
     trainer = instantiator.trainer(cfg.trainer, logger=instantiator.logger(cfg))
 
     if cfg.training.do_train:

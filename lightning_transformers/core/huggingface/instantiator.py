@@ -8,10 +8,10 @@ from omegaconf import DictConfig
 from transformers import AutoTokenizer, PreTrainedTokenizerBase
 
 from lightning_transformers.core.huggingface import HFTransformerDataModule
+from lightning_transformers.core.huggingface.config import HFBackboneConfig
 
 # FIXME: circular import
 # from lightning_transformers.core.huggingface import HFTransformer
-from lightning_transformers.core.huggingface.config import HFBackboneConfig
 
 
 class Instantiator:
@@ -23,9 +23,8 @@ class HydraInstantiator(Instantiator):
     def __init__(self):
         self._state = {}
 
-    def model(self,
-              task_cfg: DictConfig):  # -> HFTransformer:
-        return instantiate(task_cfg, self)
+    def model(self, cfg: DictConfig):  # -> HFTransformer:
+        return instantiate(cfg, self)
 
     def optimizer(self, model: torch.nn.Module, cfg: DictConfig) -> torch.optim.Optimizer:
         no_decay = ["bias", "LayerNorm.weight"]
@@ -45,7 +44,7 @@ class HydraInstantiator(Instantiator):
         return instantiate(cfg, optimizer=optimizer)
 
     def data_module(
-            self, cfg: DictConfig, tokenizer: Optional[PreTrainedTokenizerBase] = None
+        self, cfg: DictConfig, tokenizer: Optional[PreTrainedTokenizerBase] = None
     ) -> HFTransformerDataModule:
         return instantiate(cfg, tokenizer=tokenizer)
 

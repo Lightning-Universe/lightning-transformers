@@ -1,5 +1,5 @@
 from functools import partial
-from typing import Union, Callable, Optional
+from typing import Callable, Optional, Union
 
 from datasets import Dataset
 from pytorch_lightning import _logger as log
@@ -14,19 +14,10 @@ class LanguageModelingTransformerDataModule(HFTransformerDataModule):
     cfg: LanguageModelingDataConfig
 
     def process_data(self, dataset: Dataset, stage: Optional[str] = None) -> Dataset:
-
-        if stage == 'fit':
-            column_names = dataset["train"].column_names
-        else:
-            column_names = dataset["validation"].column_names
-
+        column_names = dataset["train" if stage == "fit" else "validation"].column_names
         text_column_name = "text" if "text" in column_names else column_names[0]
 
-        tokenize_function = partial(
-            self.tokenize_function,
-            tokenizer=self.tokenizer,
-            text_column_name=text_column_name
-        )
+        tokenize_function = partial(self.tokenize_function, tokenizer=self.tokenizer, text_column_name=text_column_name)
 
         dataset = dataset.map(
             tokenize_function,
@@ -67,14 +58,15 @@ class LanguageModelingTransformerDataModule(HFTransformerDataModule):
         return block_size
 
     @staticmethod
-    def tokenize_function(examples,
-                          tokenizer: Union[Tokenizer, PreTrainedTokenizer, PreTrainedTokenizerFast],
-                          text_column_name: str = None):
+    def tokenize_function(
+        examples,
+        tokenizer: Union[Tokenizer, PreTrainedTokenizer, PreTrainedTokenizerFast],
+        text_column_name: str = None,
+    ):
         return tokenizer(examples[text_column_name])
 
     @staticmethod
-    def group_texts(examples,
-                    block_size: int = None):
+    def group_texts(examples, block_size: int = None):
         # Concatenate all texts.
         concatenated_examples = {k: sum(examples[k], []) for k in examples.keys()}
         total_length = len(concatenated_examples[list(examples.keys())[0]])
@@ -83,7 +75,7 @@ class LanguageModelingTransformerDataModule(HFTransformerDataModule):
         total_length = (total_length // block_size) * block_size
         # Split by chunks of max_len.
         result = {
-            k: [t[i: i + block_size] for i in range(0, total_length, block_size)]
+            k: [t[i : i + block_size] for i in range(0, total_length, block_size)]
             for k, t in concatenated_examples.items()
         }
         result["labels"] = result["input_ids"].copy()
