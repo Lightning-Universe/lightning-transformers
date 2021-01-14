@@ -77,3 +77,9 @@ class TransformerDataModule(pl.LightningDataModule):
         Returns: Dict of args
         """
         return {}
+
+
+class TransformerTokenizerDataModule(TransformerDataModule):
+    def __init__(self, cfg: TransformerDataConfig, tokenizer: Any):
+        super().__init__(cfg)
+        self.tokenizer = tokenizer
