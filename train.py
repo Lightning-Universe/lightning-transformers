@@ -21,7 +21,7 @@ def main(cfg: DictConfig):
     instantiator = HydraInstantiator()
 
     data_module: TransformerDataModule = instantiator.data_module(
-        data_cfg=cfg.dataset,
+        cfg=cfg.dataset,
         tokenizer=instantiator.tokenizer(cfg.tokenizer)
     )
     data_module.setup('fit')

@@ -45,9 +45,9 @@ class HydraInstantiator(Instantiator):
         return instantiate(cfg, optimizer=optimizer)
 
     def data_module(
-            self, data_cfg: DictConfig, tokenizer: Optional[PreTrainedTokenizerBase] = None
+            self, cfg: DictConfig, tokenizer: Optional[PreTrainedTokenizerBase] = None
     ) -> HFTransformerDataModule:
-        return instantiate(data_cfg, tokenizer=tokenizer)
+        return instantiate(cfg, tokenizer=tokenizer)
 
     # todo: These are HF specific instantiation not Hydra
     # todo: most of this code should live in a base class outside core/huggingface/
