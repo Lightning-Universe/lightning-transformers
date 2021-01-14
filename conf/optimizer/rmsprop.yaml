@@ -1,2 +1,3 @@
+# @package _group_
 _target_: torch.optim.RMSprop
 lr: ${training.lr}
