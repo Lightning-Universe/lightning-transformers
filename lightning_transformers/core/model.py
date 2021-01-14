@@ -27,7 +27,11 @@ class LitTransformer(pl.LightningModule):
         """Prepare optimizer and scheduler"""
         return {
             "optimizer": self.optimizer,
-            "lr_scheduler": {"scheduler": self.scheduler, "interval": "step", "frequency": 1},
+            "lr_scheduler": {
+                "scheduler": self.scheduler,
+                "interval": "step",
+                "frequency": 1,
+            },
         }
 
     @property
@@ -36,17 +40,27 @@ class LitTransformer(pl.LightningModule):
         if self.trainer.max_steps:
             return self.trainer.max_steps
 
-        dataset_size = (
-            self.trainer.limit_train_batches
-            if self.trainer.limit_train_batches != 0
-            else len(self.trainer.datamodule.train_dataloader())
-        )
+        if (
+            isinstance(self.trainer.limit_train_batches, int)
+            and self.trainer.limit_train_batches != 0
+        ):
+            dataset_size = self.trainer.limit_train_batches
+        elif isinstance(self.trainer.limit_train_batches, float):
+            # limit_train_batches is a percentage of batches
+            dataset_size = len(self.trainer.datamodule.train_dataloader())
+            dataset_size = int(dataset_size * self.trainer.limit_train_batches)
+        else:
+            dataset_size = len(self.trainer.datamodule.train_dataloader())
 
         num_devices = max(1, self.trainer.num_gpus, self.trainer.num_processes)
         if self.trainer.tpu_cores:
             num_devices = max(num_devices, self.trainer.tpu_cores)
 
-        effective_batch_size = self.trainer.datamodule.batch_size * self.trainer.accumulate_grad_batches * num_devices
+        effective_batch_size = (
+            self.trainer.datamodule.batch_size
+            * self.trainer.accumulate_grad_batches
+            * num_devices
+        )
         return (dataset_size // effective_batch_size) * self.trainer.max_epochs
 
 
