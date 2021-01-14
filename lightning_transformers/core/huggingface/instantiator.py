@@ -1,12 +1,15 @@
-from typing import Optional
+from dataclasses import dataclass
+from typing import Optional, Dict, Union
 
+import dacite
 import torch
 from hydra.utils import get_class, instantiate
+from omegaconf import DictConfig, OmegaConf
 from pytorch_lightning import Trainer
 from transformers import AutoTokenizer, PreTrainedTokenizerBase
 
 from lightning_transformers.core.config import OptimizerConfig, SchedulerConfig, TrainerConfig
-from lightning_transformers.core.huggingface import HFTransformer, HFTransformerDataModule
+from lightning_transformers.core.huggingface import HFTransformerDataModule
 from lightning_transformers.core.huggingface.config import (
     HFBackboneConfig,
     HFTaskConfig,
@@ -24,7 +27,7 @@ class HydraInstantiator(Instantiator):
     def __init__(self):
         self.state = {}
 
-    def model(self, cfg: HFTaskConfig) -> HFTransformer:
+    def model(self, cfg: HFTaskConfig):  # -> HFTransformer:
         return instantiate(cfg)
 
     def optimizer(self, model: torch.nn.Module, cfg: OptimizerConfig) -> torch.optim.Optimizer:
@@ -65,3 +68,20 @@ class HydraInstantiator(Instantiator):
 
     def trainer(self, cfg: TrainerConfig) -> Trainer:
         return instantiate(cfg)
+
+    def dictconfig_to_dataclass(self, cfg: DictConfig) -> Union[DictConfig, dataclass]:
+        # resolve interpolations
+        cfg = OmegaConf.create(OmegaConf.to_container(cfg, resolve=True))
+        converted = self._recursive_convert(cfg)
+        return converted
+
+    def _recursive_convert(self, cfg: DictConfig) -> Union[DictConfig, dataclass]:
+        target = cfg.pop("_target_config_", None)
+        for k, v in cfg.items():
+            if isinstance(v, DictConfig):
+                cfg[k] = self._recursive_convert(v)
+        if target:
+            cls = get_class(target)
+            return dacite.from_dict(data_class=cls(), data=OmegaConf.to_container(cfg))
+        return cfg
+
