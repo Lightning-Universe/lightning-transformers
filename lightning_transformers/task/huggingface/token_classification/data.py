@@ -39,6 +39,12 @@ class TokenClassificationDataModule(HFTransformerDataModule):
             num_proc=self.cfg.preprocessing_num_workers,
             load_from_cache_file=self.cfg.load_from_cache_file,
         )
+        cols_to_keep = [
+            x
+            for x in ["input_ids", "attention_mask", "token_type_ids", "labels", "idx"]
+            if x in dataset["train"].features
+        ]
+        dataset.set_format(columns=cols_to_keep)
         return dataset
 
     def _setup_input_fields(self, dataset, stage):
@@ -72,16 +78,21 @@ class TokenClassificationDataModule(HFTransformerDataModule):
         else:
             label_list = get_label_list(dataset["train"][label_column_name])
             label_to_id = {l: i for i, l in enumerate(label_list)}
-        num_labels = len(label_list)
-        self.label_to_id, self.num_labels = label_to_id, num_labels
+        self._labels = label_list
+        self.label_to_id = label_to_id
+
+    def prepare_labels(self, dataset: Dataset) -> Optional[Any]:
+        return self._labels
 
     @property
     def num_classes(self) -> int:
-        return self.num_labels
+        if self.labels is None:
+            raise ValueError("Labels has not been set, have you called setup(fit) on the datamodule?")
+        return len(self.labels)
 
     @property
-    def config_data_args(self) -> Dict[str, int]:
-        return {"num_labels": self.num_classes}
+    def model_data_args(self) -> Dict[str, Any]:
+        return {"labels": self.labels}
 
     @staticmethod
     def convert_to_features(
@@ -127,4 +138,4 @@ class TokenClassificationDataModule(HFTransformerDataModule):
 
     @property
     def collate_fn(self) -> Optional[Callable]:
-        return DataCollatorForTokenClassification(self.tokenizer)
+        return DataCollatorForTokenClassification(tokenizer=self.tokenizer)
