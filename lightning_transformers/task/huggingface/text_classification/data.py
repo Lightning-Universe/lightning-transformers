@@ -38,8 +38,7 @@ class TextClassificationDataModule(HFTransformerDataModule):
 
     @staticmethod
     def convert_to_features(
-            example_batch: Any, _, tokenizer: PreTrainedTokenizerBase, input_feature_fields: List[str],
-            **tokenizer_kwargs
+        example_batch: Any, _, tokenizer: PreTrainedTokenizerBase, input_feature_fields: List[str], **tokenizer_kwargs
     ):
         # Either encode single sentence or sentence pairs
         if len(input_feature_fields) > 1:

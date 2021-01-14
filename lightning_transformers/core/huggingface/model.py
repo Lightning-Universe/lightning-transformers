@@ -19,11 +19,12 @@ class HFTransformer(TaskTransformer):
     def __init__(
         self,
         instantiator: Instantiator,
+        downstream_model_type: str,
         backbone: HFBackboneConfig,
         optimizer: OptimizerConfig,
         scheduler: HFSchedulerConfig,
     ):
-        model = instantiator.backbone(backbone)
+        model = instantiator.backbone(downstream_model_type, backbone)
         super().__init__(model)
         self.instantiator = instantiator
         self.optimizer_cfg = optimizer
