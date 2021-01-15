@@ -1,0 +1,6 @@
+# @package task
+_target_: lightning_transformers.task.huggingface.summarization.SummarizationTransformer
+downstream_model_type: transformers.AutoModelForSeq2SeqLM
+backbone: ${backbone}
+optimizer: ${optimizer}
+scheduler: ${scheduler}
