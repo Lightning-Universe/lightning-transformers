@@ -1,4 +1,3 @@
-from dataclasses import dataclass
 from functools import partial
 from typing import Any, Callable, Dict, Optional
 
@@ -6,14 +5,7 @@ from datasets import ClassLabel, Dataset
 from transformers import DataCollatorForTokenClassification, PreTrainedTokenizerBase
 
 from lightning_transformers.core.huggingface import HFTransformerDataModule
-from lightning_transformers.core.huggingface.config import HFTransformerDataConfig
-
-
-@dataclass
-class TokenClassificationDataConfig(HFTransformerDataConfig):
-    task_name: str = "ner"
-    label_all_tokens: bool = False
-    pad_to_max_length: bool = False
+from lightning_transformers.task.huggingface.token_classification.config import TokenClassificationDataConfig
 
 
 class TokenClassificationDataModule(HFTransformerDataModule):
@@ -48,12 +40,9 @@ class TokenClassificationDataModule(HFTransformerDataModule):
         return dataset
 
     def _setup_input_fields(self, dataset, stage):
-        if stage == "fit":
-            column_names = dataset["train"].column_names
-            features = dataset["train"].features
-        else:
-            column_names = dataset["validation"].column_names
-            features = dataset["validation"].features
+        split = "train" if stage == "fit" else "validation"
+        column_names = dataset[split].column_names
+        features = dataset[split].features
         text_column_name = "tokens" if "tokens" in column_names else column_names[0]
         label_column_name = (
             f"{self.cfg.task_name}_tags" if f"{self.cfg.task_name}_tags" in column_names else column_names[1]
@@ -61,22 +50,19 @@ class TokenClassificationDataModule(HFTransformerDataModule):
         return features, label_column_name, text_column_name
 
     def _prepare_labels(self, dataset, features, label_column_name) -> Optional[Any]:
-        # In the event the labels are not a `Sequence[ClassLabel]`, we will need to go through the dataset to get the
-        # unique labels.
-        def get_label_list(labels):
-            unique_labels = set()
+        def unique_labels(labels):
+            unique = set()
             for label in labels:
-                unique_labels = unique_labels | set(label)
-            label_list = list(unique_labels)
-            label_list.sort()
-            return label_list
+                unique = unique | set(label)
+            return sorted(unique)
 
         if isinstance(features[label_column_name].feature, ClassLabel):
             label_list = features[label_column_name].feature.names
             # No need to convert the labels since they are already ints.
             label_to_id = {i: i for i in range(len(label_list))}
         else:
-            label_list = get_label_list(dataset["train"][label_column_name])
+            # Create unique label set from train dataset.
+            label_list = unique_labels(dataset["train"][label_column_name])
             label_to_id = {l: i for i, l in enumerate(label_list)}
         self._labels = label_list
         self.label_to_id = label_to_id
@@ -87,7 +73,7 @@ class TokenClassificationDataModule(HFTransformerDataModule):
     @property
     def num_classes(self) -> int:
         if self.labels is None:
-            raise ValueError("Labels has not been set, have you called setup(fit) on the datamodule?")
+            raise ValueError("Labels has not been set, have you called `datamodule.setup('fit')`?")
         return len(self.labels)
 
     @property
