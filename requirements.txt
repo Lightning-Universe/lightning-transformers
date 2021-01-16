@@ -3,3 +3,4 @@ torch>=1.6
 transformers
 datasets
 hydra-core>=1.1.0.dev2 # todo: swap to 1.1 version once out
+fairscale
