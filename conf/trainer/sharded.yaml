@@ -1,6 +1,6 @@
 defaults:
-  - default
-_target_: pytorch_lightning.Trainer
+  - default # add args from default trainer conf
 gpus: 2
+accelerator: ddp
 plugins: "ddp_sharded"
 amp_backend: 'native'
