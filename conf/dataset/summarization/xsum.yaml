@@ -5,12 +5,13 @@ cfg:
   dataset_config_name: null
   train_file: ''
   validation_file: ''
+  cache_dir: null
   padding: 'max_length'
   truncation: 'only_first'
   preprocessing_num_workers: 1
   load_from_cache_file: True
-  max_target_length: 1024
-  max_source_length: 128
+  max_source_length: 1024
+  max_target_length: 128
 
   # torch data-loader specific arguments
   batch_size: ${training.batch_size}

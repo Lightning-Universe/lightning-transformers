@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 from functools import partial
-from typing import Any, Callable, Optional
+from typing import Any, Callable, Optional, Tuple
 
 from datasets import Dataset
 from transformers import default_data_collator, PreTrainedTokenizerBase
@@ -18,24 +18,19 @@ class Seq2SeqDataConfig(HFTransformerDataConfig):
 
 class Seq2SeqDataModule(HFTransformerDataModule):
     cfg: Seq2SeqDataConfig
-    src_text_column_name: str = "src_text"
-    tgt_text_column_name: str = "tgt_text"
 
     def process_data(self, dataset: Dataset, stage: Optional[str] = None) -> Dataset:
-        self.format_dataset_columns(
-            dataset=dataset,
-            src_text_column_name=self.src_text_column_name,
-            tgt_text_column_name=self.tgt_text_column_name,
-        )
+
+        src_text_column_name, tgt_text_column_name = self.source_target_column_names(dataset, stage)
 
         convert_to_features = partial(
-            Seq2SeqDataModule.convert_to_features,
+            self.convert_to_features,
             tokenizer=self.tokenizer,
             padding=self.cfg.padding,
             max_source_length=self.cfg.max_source_length,
             max_target_length=self.cfg.max_target_length,
-            src_text_column_name=self.src_text_column_name,
-            tgt_text_column_name=self.tgt_text_column_name,
+            src_text_column_name=src_text_column_name,
+            tgt_text_column_name=tgt_text_column_name,
         )
         dataset = dataset.map(
             convert_to_features,
@@ -48,8 +43,8 @@ class Seq2SeqDataModule(HFTransformerDataModule):
         dataset.set_format(columns=cols_to_keep)
         return dataset
 
-    def format_dataset_columns(self, dataset: Dataset, src_text_column_name: str, tgt_text_column_name: str):
-        pass
+    def source_target_column_names(self, dataset: Dataset, stage: Optional[str] = None) -> Tuple[str, str]:
+        raise NotImplementedError
 
     def setup_input_fields(self, dataset, stage):
         if stage == "fit":

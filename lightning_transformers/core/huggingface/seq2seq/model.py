@@ -6,7 +6,7 @@ from pytorch_lightning import _logger as log
 from lightning_transformers.core.huggingface import HFTransformer
 
 
-class Seq2SeqTransformer(HFTransformer):
+class HFSeq2SeqTransformer(HFTransformer):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.metrics = {}

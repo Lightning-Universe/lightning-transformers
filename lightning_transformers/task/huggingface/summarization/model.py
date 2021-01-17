@@ -1,29 +1,22 @@
-from dataclasses import dataclass
 from typing import Any
 
 import torch
 
-from lightning_transformers.core.huggingface.seq2seq.model import Seq2SeqTransformer
+from lightning_transformers.core.huggingface.seq2seq.model import HFSeq2SeqTransformer
+from lightning_transformers.task.huggingface.summarization.config import HFSummarizationTransformerConfig
 from lightning_transformers.task.huggingface.summarization.metric import RougeMetric
 
 
-@dataclass
-class SummarizationTransformerMetricsConfig:
-    use_stemmer: bool = True
-    rouge_newline_sep: bool = True
-    return_precision_and_recall: bool = True
-
-
-class SummarizationTransformer(Seq2SeqTransformer):
+class HFSummarizationTransformer(HFSeq2SeqTransformer):
     def __init__(
         self,
         *args,
-        metrics_cfg: SummarizationTransformerMetricsConfig = SummarizationTransformerMetricsConfig(),
+        cfg: HFSummarizationTransformerConfig,
         **kwargs
     ):
         super().__init__(*args, **kwargs)
         self.metrics = None
-        self.metrics_cfg = metrics_cfg
+        self.cfg = cfg
 
     @property
     def task(self) -> str:

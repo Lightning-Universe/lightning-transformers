@@ -1,6 +1,10 @@
 # @package task
-_target_: lightning_transformers.task.huggingface.summarization.SummarizationTransformer
+_target_: lightning_transformers.task.huggingface.summarization.HFSummarizationTransformer
 downstream_model_type: transformers.AutoModelForSeq2SeqLM
 backbone: ${backbone}
 optimizer: ${optimizer}
 scheduler: ${scheduler}
+cfg:
+  use_stemmer: True
+  rouge_newline_sep: True
+  return_precision_and_recall: True
