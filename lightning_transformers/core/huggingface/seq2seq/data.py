@@ -12,7 +12,7 @@ class Seq2SeqDataModule(HFTransformerDataModule):
     cfg: Seq2SeqDataConfig
 
     def process_data(self, dataset: Dataset, stage: Optional[str] = None) -> Dataset:
-        src_text_column_name, tgt_text_column_name = self.source_target_column_names(dataset, stage)
+        src_text_column_name, tgt_text_column_name = self.source_target_column_names
 
         convert_to_features = partial(
             self.convert_to_features,
@@ -34,14 +34,9 @@ class Seq2SeqDataModule(HFTransformerDataModule):
         dataset.set_format(columns=cols_to_keep)
         return dataset
 
-    def source_target_column_names(self, dataset: Dataset, stage: Optional[str] = None) -> Tuple[str, str]:
+    @property
+    def source_target_column_names(self) -> Tuple[str, str]:
         raise NotImplementedError
-
-    def setup_input_fields(self, dataset, stage):
-        split = "train" if stage == "fit" else "validation"
-        column_names = dataset[split].column_names
-        features = dataset[split].features
-        return features, column_names
 
     @staticmethod
     def convert_to_features(
@@ -63,5 +58,5 @@ class Seq2SeqDataModule(HFTransformerDataModule):
         return encoded_results
 
     @property
-    def collate_fn(self) -> Optional[Callable]:
+    def collate_fn(self) -> Callable:
         return default_data_collator

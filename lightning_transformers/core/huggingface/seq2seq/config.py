@@ -6,9 +6,9 @@ from lightning_transformers.core.huggingface.config import HFTransformerDataConf
 
 @dataclass
 class HFSeq2SeqTransformerConfig:
-    val_target_max_length: Optional[int]
-    num_beams: Optional[int]
-    compute_generate_metrics: bool
+    val_target_max_length: Optional[int] = 128
+    num_beams: Optional[int] = 1
+    compute_generate_metrics: bool = True
 
 
 @dataclass
