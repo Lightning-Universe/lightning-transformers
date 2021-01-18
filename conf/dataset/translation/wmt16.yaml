@@ -1,7 +1,5 @@
 # @package dataset
 _target_: lightning_transformers.task.huggingface.translation.WMT16TranslationDataModule
-defaults:
-  - override backbone: huggingface/mt5-small
 cfg:
   dataset_name: wmt16
   dataset_config_name: 'ro-en' # WMT translation datasets: ['cs-en', 'de-en', 'fi-en', 'ro-en', 'ru-en', 'tr-en']

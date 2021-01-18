@@ -1,7 +1,5 @@
 # @package dataset
 _target_: lightning_transformers.task.huggingface.summarization.CNNDailyMailSummarizationDataModule
-defaults:
-  - backbone@_group_: t5-base
 cfg:
   dataset_name: cnn_dailymail
   dataset_config_name: 3.0.0
