@@ -1,4 +1,3 @@
-from dataclasses import dataclass
 from functools import partial
 from typing import Any, Callable, Optional, Tuple
 
@@ -6,21 +5,13 @@ from datasets import Dataset
 from transformers import default_data_collator, PreTrainedTokenizerBase
 
 from lightning_transformers.core.huggingface import HFTransformerDataModule
-from lightning_transformers.core.huggingface.config import HFTransformerDataConfig
-
-
-@dataclass
-class Seq2SeqDataConfig(HFTransformerDataConfig):
-    max_target_length: int = 128
-    max_source_length: int = 1024
-    padding: str = "longest"
+from lightning_transformers.core.huggingface.seq2seq.config import Seq2SeqDataConfig
 
 
 class Seq2SeqDataModule(HFTransformerDataModule):
     cfg: Seq2SeqDataConfig
 
     def process_data(self, dataset: Dataset, stage: Optional[str] = None) -> Dataset:
-
         src_text_column_name, tgt_text_column_name = self.source_target_column_names(dataset, stage)
 
         convert_to_features = partial(
@@ -47,12 +38,9 @@ class Seq2SeqDataModule(HFTransformerDataModule):
         raise NotImplementedError
 
     def setup_input_fields(self, dataset, stage):
-        if stage == "fit":
-            column_names = dataset["train"].column_names
-            features = dataset["train"].features
-        else:
-            column_names = dataset["validation"].column_names
-            features = dataset["validation"].features
+        split = "train" if stage == "fit" else "validation"
+        column_names = dataset[split].column_names
+        features = dataset[split].features
         return features, column_names
 
     @staticmethod
@@ -77,7 +65,3 @@ class Seq2SeqDataModule(HFTransformerDataModule):
     @property
     def collate_fn(self) -> Optional[Callable]:
         return default_data_collator
-
-    @property
-    def task(self):
-        raise NotImplementedError

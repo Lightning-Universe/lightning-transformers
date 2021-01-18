@@ -1,4 +1,4 @@
-from typing import Tuple, Optional
+from typing import Optional, Tuple
 
 from datasets import Dataset
 
@@ -11,7 +11,3 @@ class TranslationDataModule(Seq2SeqDataModule):
 
     def source_target_column_names(self, dataset: Dataset, stage: Optional[str] = None) -> Tuple[str, str]:
         return self.cfg.src_lang, self.cfg.tgt_lang
-
-    @property
-    def task(self) -> str:
-        return "translation"

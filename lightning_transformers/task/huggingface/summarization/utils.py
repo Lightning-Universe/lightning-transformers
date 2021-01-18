@@ -1,5 +1,6 @@
 # todo: Add proper HF licence
 # Copyright 2020 The HuggingFace Team. All rights reserved.
+# fmt: off
 
 import re
 

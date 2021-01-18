@@ -5,7 +5,7 @@ from pytorch_lightning import _logger as log
 
 from lightning_transformers.core.huggingface import HFTransformer
 from lightning_transformers.core.huggingface.seq2seq.config import HFSeq2SeqTransformerConfig
-from lightning_transformers.core.huggingface.seq2seq.utils import _pad_tensors_to_max_len, lmap
+from lightning_transformers.core.huggingface.seq2seq.utils import _pad_tensors_to_max_len
 
 
 class HFSeq2SeqTransformer(HFTransformer):
@@ -62,9 +62,9 @@ class HFSeq2SeqTransformer(HFTransformer):
                 model_cfg=self.model.config, tensor=generated_tokens, max_length=max_length
             )
         pred_str = self.tokenizer.batch_decode(generated_tokens, skip_special_tokens=True)
-        pred_str = lmap(str.strip, pred_str)
+        pred_str = [str.strip(s) for s in pred_str]
         return pred_str
 
     def tokenize_labels(self, labels: torch.Tensor) -> List[str]:
         label_str = self.tokenizer.batch_decode(labels, skip_special_tokens=True)
-        return lmap(str.strip, label_str)
+        return [str.strip(s) for s in label_str]
