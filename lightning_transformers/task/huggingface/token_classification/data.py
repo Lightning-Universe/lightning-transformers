@@ -19,7 +19,7 @@ class TokenClassificationDataModule(HFTransformerDataModule):
         convert_to_features = partial(
             TokenClassificationDataModule.convert_to_features,
             tokenizer=self.tokenizer,
-            pad_to_max_length=self.cfg.pad_to_max_length,
+            padding=self.cfg.padding,
             label_all_tokens=self.cfg.label_all_tokens,
             label_to_id=self.label_to_id,
             text_column_name=text_column_name,
@@ -49,20 +49,14 @@ class TokenClassificationDataModule(HFTransformerDataModule):
         )
         return features, label_column_name, text_column_name
 
-    def _prepare_labels(self, dataset, features, label_column_name) -> Optional[Any]:
-        def unique_labels(labels):
-            unique = set()
-            for label in labels:
-                unique = unique | set(label)
-            return sorted(unique)
-
+    def _prepare_labels(self, dataset, features, label_column_name):
         if isinstance(features[label_column_name].feature, ClassLabel):
             label_list = features[label_column_name].feature.names
             # No need to convert the labels since they are already ints.
             label_to_id = {i: i for i in range(len(label_list))}
         else:
             # Create unique label set from train dataset.
-            label_list = unique_labels(dataset["train"][label_column_name])
+            label_list = sorted(set(label for column in dataset["train"][label_column_name] for label in column))
             label_to_id = {l: i for i, l in enumerate(label_list)}
         self._labels = label_list
         self.label_to_id = label_to_id
@@ -84,13 +78,12 @@ class TokenClassificationDataModule(HFTransformerDataModule):
     def convert_to_features(
         examples: Any,
         tokenizer: PreTrainedTokenizerBase,
-        pad_to_max_length: bool,
+        padding: bool,
         label_all_tokens: bool,
         label_to_id,
         text_column_name,
         label_column_name,
     ):
-        padding = "max_length" if pad_to_max_length else False
 
         tokenized_inputs = tokenizer(
             examples[text_column_name],
