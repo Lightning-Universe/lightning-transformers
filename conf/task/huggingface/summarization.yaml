@@ -7,4 +7,6 @@ scheduler: ${scheduler}
 cfg:
   use_stemmer: True
   rouge_newline_sep: True
-  return_precision_and_recall: True
+  val_target_max_length: 142
+  num_beams: null
+  compute_generate_metrics: True

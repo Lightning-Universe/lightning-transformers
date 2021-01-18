@@ -7,3 +7,6 @@ scheduler: ${scheduler}
 cfg:
   n_gram: 4
   smooth: False
+  val_target_max_length: 142
+  num_beams: null
+  compute_generate_metrics: True

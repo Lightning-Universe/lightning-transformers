@@ -1,37 +1,22 @@
-# Copyright 2020 The HuggingFace Team. All rights reserved.
-
-import re
-from typing import List
+from typing import Dict, List
 
 import numpy as np
 import torch
-from filelock import FileLock
 from pytorch_lightning.metrics import Metric
 from rouge_score import rouge_scorer, scoring
 from rouge_score.scoring import AggregateScore, Score
 
-try:
-    import nltk
-
-    NLTK_AVAILABLE = True
-except (ImportError, ModuleNotFoundError):
-    NLTK_AVAILABLE = False
-
-if NLTK_AVAILABLE:
-    with FileLock(".lock") as lock:
-        nltk.download("punkt", quiet=True)
+from lightning_transformers.task.huggingface.summarization.utils import add_newline_to_end_of_each_sentence
 
 
 class RougeMetric(Metric):
     def __init__(
         self,
-        return_precision_and_recall: bool,
         rouge_newline_sep: bool,
         use_stemmer: bool,
         rouge_keys: List[str] = ("rouge1", "rouge2", "rougeL", "rougeLsum"),
     ):
         super().__init__()
-        self.return_precision_and_recall = return_precision_and_recall
         self.rouge_newline_sep = rouge_newline_sep
         self.rouge_keys = rouge_keys
         self.use_stemmer = use_stemmer
@@ -52,11 +37,11 @@ class RougeMetric(Metric):
                 score = torch.tensor([score.precision, score.recall, score.fmeasure])
                 getattr(self, key).append(score)
 
-    def compute(self):
+    def compute(self) -> Dict[str, float]:
         scores = {key: getattr(self, key) for key in self.rouge_keys}
         self.aggregator.add_scores(scores)
         result = self.aggregator.aggregate()
-        return format_rouge_results(result, self.return_precision_and_recall)
+        return format_rouge_results(result)
 
 
 class RougeBatchAggregator(scoring.BootstrapAggregator):
@@ -80,23 +65,11 @@ class RougeBatchAggregator(scoring.BootstrapAggregator):
         self._scores = scores
 
 
-def format_rouge_results(result, return_precision_and_recall):
-    if return_precision_and_recall:
-        return extract_rouge_mid_statistics(result)  # here we return dict
-    else:
-        return {k: round(v.mid.fmeasure * 100, 4) for k, v in result.items()}
-
-
-def extract_rouge_mid_statistics(dct):
-    new_dict = {}
-    for k1, v1 in dct.items():
-        mid = v1.mid
-        new_dict[k1] = {stat: round(getattr(mid, stat), 4) for stat in ["precision", "recall", "fmeasure"]}
-    return new_dict
-
-
-def add_newline_to_end_of_each_sentence(x: str) -> str:
-    """This was added to get rougeLsum scores matching published rougeL scores for BART and PEGASUS."""
-    re.sub("<n>", "", x)  # remove pegasus newline char
-    assert NLTK_AVAILABLE, "nltk must be installed to separate newlines between sentences. (pip install nltk)"
-    return "\n".join(nltk.sent_tokenize(x))
+def format_rouge_results(result: Dict[str, AggregateScore], decimal_places: int = 4) -> Dict[str, float]:
+    flattened_result = {}
+    for rouge_key, rouge_aggregate_score in result.items():
+        for stat in ["precision", "recall", "fmeasure"]:
+            mid = rouge_aggregate_score.mid
+            score = round(getattr(mid, stat), decimal_places)
+            flattened_result[f"{rouge_key}_{stat}"] = score
+    return flattened_result
