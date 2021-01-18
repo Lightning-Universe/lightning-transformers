@@ -1,0 +1,6 @@
+# @package task
+_target_: lightning_transformers.task.huggingface.token_classification.TokenClassificationTransformer
+downstream_model_type: transformers.AutoModelForTokenClassification
+backbone: ${backbone}
+optimizer: ${optimizer}
+scheduler: ${scheduler}
