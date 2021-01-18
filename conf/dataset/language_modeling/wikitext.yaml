@@ -5,6 +5,7 @@ cfg:
   dataset_config_name: wikitext-2-raw-v1
   train_file: null
   validation_file: null
+  cache_dir: null
   block_size: null
   preprocessing_num_workers: 1
   load_from_cache_file: True

@@ -1,4 +1,4 @@
-from typing import Dict, Any
+from typing import Dict
 
 from hydra.utils import get_class
 from pytorch_lightning import _logger as log
@@ -52,3 +52,7 @@ class HFTransformer(TaskTransformer):
         self.prepare_warmup(self.scheduler_cfg)
         self.scheduler = self.instantiator.scheduler(self.scheduler_cfg, self.optimizer)
         return super().configure_optimizers()
+
+    @property
+    def tokenizer(self):
+        return self.trainer.datamodule.tokenizer
