@@ -8,6 +8,7 @@ from lightning_transformers.core.data import TransformerDataConfig
 @dataclass
 class HFTransformerDataConfig(TransformerDataConfig):
     dataset_name: Optional[str] = None
+    dataset_config_name: Optional[str] = None
     train_val_split: Optional[int] = None
     train_file: Optional[str] = None
     validation_file: Optional[str] = None
@@ -16,7 +17,7 @@ class HFTransformerDataConfig(TransformerDataConfig):
     max_length: int = 128
     preprocessing_num_workers: int = 8
     load_from_cache_file: bool = True
-    dataset_config_name: Optional[str] = None
+    cache_dir: Optional[str] = None
 
 
 @dataclass

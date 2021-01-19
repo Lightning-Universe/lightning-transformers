@@ -4,7 +4,7 @@ from typing import Callable, Optional, Union
 from datasets import Dataset
 from pytorch_lightning import _logger as log
 from tokenizers import Tokenizer
-from transformers import PreTrainedTokenizer, PreTrainedTokenizerFast, default_data_collator
+from transformers import default_data_collator, PreTrainedTokenizer, PreTrainedTokenizerFast
 
 from lightning_transformers.core.huggingface import HFTransformerDataModule
 from lightning_transformers.task.huggingface.language_modeling.config import LanguageModelingDataConfig

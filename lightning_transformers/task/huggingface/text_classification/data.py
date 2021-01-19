@@ -33,7 +33,7 @@ class TextClassificationDataModule(HFTransformerDataModule):
         return self.labels.num_classes
 
     @property
-    def config_data_args(self) -> Dict[str, int]:
+    def model_data_args(self) -> Dict[str, int]:
         return {"num_labels": self.num_classes}
 
     @staticmethod
@@ -53,6 +53,7 @@ class TextClassificationDataModule(HFTransformerDataModule):
     @staticmethod
     def preprocess(ds: Dataset, **fn_kwargs) -> Dataset:
         ds = ds.map(
+            # todo: change this to self.convert_to_features for users to override
             TextClassificationDataModule.convert_to_features, batched=True, with_indices=True, fn_kwargs=fn_kwargs
         )
         ds.rename_column_("label", "labels")

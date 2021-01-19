@@ -1,5 +1,4 @@
 import os
-from dataclasses import dataclass
 
 import hydra
 from omegaconf import DictConfig, OmegaConf
@@ -7,9 +6,8 @@ from pytorch_lightning.utilities.distributed import rank_zero_info
 
 from lightning_transformers.core import TaskTransformer
 from lightning_transformers.core.config import TrainerConfig
-from lightning_transformers.core.huggingface import HFTransformerDataModule
 from lightning_transformers.core.huggingface.config import HFTaskConfig, HFTokenizerConfig, HFTransformerDataConfig
-from lightning_transformers.core.huggingface.instantiator import HydraInstantiator, Instantiator
+from lightning_transformers.core.instantiator import HydraInstantiator, Instantiator
 from lightning_transformers.core.utils import set_ignore_warnings
 
 
@@ -27,17 +25,13 @@ def run(
 
     os.environ["TOKENIZERS_PARALLELISM"] = "TRUE"
 
-    data_module: HFTransformerDataModule = instantiator.data_module(
-        dataset, tokenizer=instantiator.tokenizer(tokenizer)
-    )
+    instantiator = HydraInstantiator()
+
+    data_module: TransformerDataModule = instantiator.data_module(cfg=cfg.dataset, tokenizer=cfg.tokenizer)
     data_module.setup("fit")
 
-    # save some model arguments which are only known dynamically.
-    # the instantiator will use them to instantiate the backbone
-    instantiator.state["backbone"] = data_module.config_data_args
-
-    model: TaskTransformer = instantiator.model(task)
-    trainer = instantiator.trainer(trainer)
+    model: TaskTransformer = instantiator.model(cfg=cfg.task, model_data_args=data_module.model_data_args)
+    trainer = instantiator.trainer(cfg.trainer, logger=instantiator.logger(cfg))
 
     if do_train:
         trainer.fit(model, datamodule=data_module)

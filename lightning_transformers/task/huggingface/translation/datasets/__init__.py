@@ -1,0 +1,1 @@
+from lightning_transformers.task.huggingface.translation.datasets.wmt16 import WMT16TranslationDataModule

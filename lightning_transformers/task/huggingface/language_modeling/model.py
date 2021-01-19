@@ -3,8 +3,7 @@ from lightning_transformers.core.huggingface import HFTransformer
 
 class LanguageModelingTransformer(HFTransformer):
     def on_fit_start(self):
-        tokenizer = self.trainer.datamodule.tokenizer
-        tokenizer_length = len(tokenizer)
+        tokenizer_length = len(self.tokenizer)
         self.model.resize_token_embeddings(tokenizer_length)
 
     def _step(self, batch, batch_idx):

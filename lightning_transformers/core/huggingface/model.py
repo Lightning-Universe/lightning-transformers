@@ -1,10 +1,11 @@
 from typing import Dict
 
+from hydra.utils import get_class
 from pytorch_lightning import _logger as log
 
 from lightning_transformers.core.config import OptimizerConfig
 from lightning_transformers.core.huggingface.config import HFBackboneConfig, HFSchedulerConfig
-from lightning_transformers.core.huggingface.instantiator import Instantiator
+from lightning_transformers.core.instantiator import Instantiator
 from lightning_transformers.core.model import TaskTransformer
 
 
@@ -23,8 +24,11 @@ class HFTransformer(TaskTransformer):
         backbone: HFBackboneConfig,
         optimizer: OptimizerConfig,
         scheduler: HFSchedulerConfig,
+        **config_data_args,
     ):
-        model = instantiator.backbone(downstream_model_type, backbone)
+        model = get_class(downstream_model_type).from_pretrained(
+            backbone.pretrained_model_name_or_path, **config_data_args
+        )
         super().__init__(model)
         self.instantiator = instantiator
         self.optimizer_cfg = optimizer
@@ -48,3 +52,7 @@ class HFTransformer(TaskTransformer):
         self.prepare_warmup(self.scheduler_cfg)
         self.scheduler = self.instantiator.scheduler(self.scheduler_cfg, self.optimizer)
         return super().configure_optimizers()
+
+    @property
+    def tokenizer(self):
+        return self.trainer.datamodule.tokenizer
