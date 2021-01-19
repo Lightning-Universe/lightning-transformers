@@ -80,7 +80,7 @@ class MultipleChoiceTransformerDataModule(HFTransformerDataModule):
         return len(self.ending_names)
 
     @property
-    def config_data_args(self):
+    def model_data_args(self):
         return {
             'num_labels': self.num_classes
         }

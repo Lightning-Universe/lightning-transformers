@@ -1,24 +1,25 @@
-from typing import Any, Dict, Optional
+from typing import Any, Dict
 
 from datasets import Dataset, load_dataset
 from pytorch_lightning.utilities.exceptions import MisconfigurationException
 from transformers import PreTrainedTokenizerBase
 
-from lightning_transformers.core import TransformerDataModule
+from lightning_transformers.core.data import TransformerTokenizerDataModule
 from lightning_transformers.core.huggingface.config import HFTransformerDataConfig
 
 
-class HFTransformerDataModule(TransformerDataModule):
+class HFTransformerDataModule(TransformerTokenizerDataModule):
     cfg: HFTransformerDataConfig
-
-    def __init__(self, cfg: HFTransformerDataConfig, tokenizer: Optional[PreTrainedTokenizerBase] = None):
-        super().__init__(cfg)
-        self.tokenizer = tokenizer
+    tokenizer: PreTrainedTokenizerBase
 
     def load_dataset(self) -> Dataset:
         if self.cfg.dataset_name is not None:
             # Downloading and loading a dataset from the hub.
-            return load_dataset(self.cfg.dataset_name, self.cfg.dataset_config_name)
+            return load_dataset(
+                path=self.cfg.dataset_name,
+                name=self.cfg.dataset_config_name,
+                cache_dir=self.cfg.cache_dir
+            )
         data_files = {}
         if self.cfg.train_file is not None:
             data_files["train"] = self.cfg.train_file

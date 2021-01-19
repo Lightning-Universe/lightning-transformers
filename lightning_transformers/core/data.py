@@ -70,5 +70,16 @@ class TransformerDataModule(pl.LightningDataModule):
         return None
 
     @property
-    def config_data_args(self) -> Dict:
+    def model_data_args(self) -> Dict:
+        """
+        Override to provide the model with additional args.
+        This is useful to provide the number of classes/pixels to the model or any other data specific args
+        Returns: Dict of args
+        """
         return {}
+
+
+class TransformerTokenizerDataModule(TransformerDataModule):
+    def __init__(self, cfg: TransformerDataConfig, tokenizer: Any):
+        super().__init__(cfg)
+        self.tokenizer = tokenizer

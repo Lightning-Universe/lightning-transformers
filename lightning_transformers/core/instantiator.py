@@ -1,16 +1,14 @@
 import logging
-from typing import Optional
+from typing import Optional, Union
 
 import pytorch_lightning as pl
 import torch
-from hydra.utils import get_class, instantiate
+from hydra.utils import instantiate
 from omegaconf import DictConfig
-from transformers import AutoTokenizer, PreTrainedTokenizerBase
 
-from lightning_transformers.core.huggingface import HFTransformerDataModule
-
-# FIXME: circular import
-# from lightning_transformers.core.huggingface import HFTransformer
+from lightning_transformers.core import TransformerDataModule
+from lightning_transformers.core.data import TransformerTokenizerDataModule
+from lightning_transformers.core.model import TaskTransformer
 
 
 class Instantiator:
@@ -19,16 +17,8 @@ class Instantiator:
 
 
 class HydraInstantiator(Instantiator):
-    def __init__(self):
-        self._state = {}
-
-    def model(self, cfg: DictConfig):  # -> HFTransformer:
-        return instantiate(cfg, self)
-
-    def backbone(self, cfg: DictConfig) -> torch.nn.Module:
-        return get_class(cfg.downstream_model_type).from_pretrained(
-            cfg.pretrained_model_name_or_path, **self._state["backbone"]
-        )
+    def model(self, cfg: DictConfig, model_data_args) -> TaskTransformer:
+        return instantiate(cfg, self, **model_data_args)
 
     def optimizer(self, model: torch.nn.Module, cfg: DictConfig) -> torch.optim.Optimizer:
         no_decay = ["bias", "LayerNorm.weight"]
@@ -48,14 +38,11 @@ class HydraInstantiator(Instantiator):
         return instantiate(cfg, optimizer=optimizer)
 
     def data_module(
-        self, cfg: DictConfig, tokenizer: Optional[PreTrainedTokenizerBase] = None
-    ) -> HFTransformerDataModule:
-        return instantiate(cfg, tokenizer=tokenizer)
-
-    def tokenizer(self, cfg: DictConfig) -> PreTrainedTokenizerBase:
-        return AutoTokenizer.from_pretrained(
-            pretrained_model_name_or_path=cfg.pretrained_model_name_or_path, use_fast=cfg.use_fast
-        )
+        self, cfg: DictConfig, tokenizer: Optional[DictConfig]
+    ) -> Union[TransformerDataModule, TransformerTokenizerDataModule]:
+        if tokenizer:
+            return instantiate(cfg, tokenizer=instantiate(tokenizer))
+        return instantiate(cfg)
 
     def logger(self, cfg: DictConfig) -> logging.Logger:
         if cfg.log:
@@ -63,7 +50,3 @@ class HydraInstantiator(Instantiator):
 
     def trainer(self, cfg: DictConfig, **kwargs) -> pl.Trainer:
         return instantiate(cfg, **kwargs)
-
-    @property
-    def state(self):
-        return self._state

@@ -17,7 +17,7 @@ track_grad_norm: -1
 check_val_every_n_epoch: 1
 fast_dev_run: False
 accumulate_grad_batches: 1
-max_epochs: 1000
+max_epochs: 1
 min_epochs: 1
 max_steps: null
 min_steps: null

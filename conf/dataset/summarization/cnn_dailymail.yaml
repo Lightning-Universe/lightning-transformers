@@ -1,0 +1,18 @@
+# @package dataset
+_target_: lightning_transformers.task.huggingface.summarization.CNNDailyMailSummarizationDataModule
+cfg:
+  dataset_name: cnn_dailymail
+  dataset_config_name: 3.0.0
+  train_file: ''
+  validation_file: ''
+  cache_dir: null
+  padding: 'max_length'
+  truncation: 'only_first'
+  preprocessing_num_workers: 1
+  load_from_cache_file: True
+  max_source_length: 1024
+  max_target_length: 128
+
+  # torch data-loader specific arguments
+  batch_size: ${training.batch_size}
+  num_workers: ${training.num_workers}

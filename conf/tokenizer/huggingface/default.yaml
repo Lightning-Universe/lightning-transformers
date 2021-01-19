@@ -1,0 +1,4 @@
+# @package tokenizer
+_target_: transformers.AutoTokenizer.from_pretrained
+pretrained_model_name_or_path: ${backbone.pretrained_model_name_or_path}
+use_fast: true
