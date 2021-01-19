@@ -44,7 +44,6 @@ class QuestionAnsweringTransformerDataModule(HFTransformerDataModule):
         if "test" not in dataset:
             kwargs.pop("answer_column_name")
             prepare_validation_features = partial(self.convert_to_validation_features, **kwargs)
-            dataset["validation_original"] = dataset["validation"]  # keep an original copy for computing metrics
             dataset["validation"] = dataset["validation"].map(
                 prepare_validation_features,
                 batched=True,

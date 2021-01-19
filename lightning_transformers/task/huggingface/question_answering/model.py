@@ -13,9 +13,6 @@ class QuestionAnsweringTransformer(HFTransformer):
         return loss
 
     def validation_step(self, batch: Any, batch_idx: int, dataloader_idx: int = 0) -> Dict[str, torch.Tensor]:
-        # todo: this needs to be removed here before passing into the model
-        # todo: however is needed for metrics computation eventually...
-        batch.pop("offset_mapping")
         outputs = self.model(**batch)
         loss = outputs[0]
         self.log("val_loss", loss, prog_bar=True, sync_dist=True)
