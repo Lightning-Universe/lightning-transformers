@@ -1,6 +1,7 @@
 from functools import partial
-from typing import Any, Callable, Optional
+from typing import Any, Callable, Dict, Optional
 
+import torch
 from datasets import Dataset
 from transformers import DataCollatorWithPadding, default_data_collator, PreTrainedTokenizerBase
 
@@ -18,6 +19,7 @@ class QuestionAnsweringTransformerDataModule(HFTransformerDataModule):
         question_column_name = "question" if "question" in column_names else column_names[0]
         context_column_name = "context" if "context" in column_names else column_names[1]
         answer_column_name = "answers" if "answers" in column_names else column_names[2]
+        self.answer_column_name = answer_column_name
 
         kwargs = {
             "tokenizer": self.tokenizer,
@@ -87,4 +89,13 @@ class QuestionAnsweringTransformerDataModule(HFTransformerDataModule):
         doc_stride: int,
         padding: str,
     ):
+        raise NotImplementedError
+
+    def postprocess_func(
+        self,
+        dataset: Dataset,
+        validation_dataset: Dataset,
+        original_validation_dataset: Dataset,
+        predictions: Dict[int, torch.Tensor],
+    ) -> Any:
         raise NotImplementedError

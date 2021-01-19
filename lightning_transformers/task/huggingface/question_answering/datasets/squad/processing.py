@@ -32,15 +32,15 @@ from transformers import EvalPrediction, PreTrainedTokenizerBase
 
 
 def prepare_train_features(
-    examples: Any,
-    tokenizer: PreTrainedTokenizerBase,
-    pad_on_right: bool,
-    question_column_name: str,
-    context_column_name: str,
-    answer_column_name: str,
-    max_length: int,
-    doc_stride: int,
-    padding: str
+        examples: Any,
+        tokenizer: PreTrainedTokenizerBase,
+        pad_on_right: bool,
+        question_column_name: str,
+        context_column_name: str,
+        answer_column_name: str,
+        max_length: int,
+        doc_stride: int,
+        padding: str
 ):
     # Tokenize our examples with truncation and maybe padding, but keep the overflows using a stride. This results
     # in one example possible giving several features when a context is long, each of those features having a
@@ -115,14 +115,14 @@ def prepare_train_features(
 
 
 def prepare_validation_features(
-    examples: Any,
-    tokenizer: PreTrainedTokenizerBase,
-    pad_on_right: bool,
-    question_column_name: str,
-    context_column_name: str,
-    max_length: int,
-    doc_stride: int,
-    padding: str
+        examples: Any,
+        tokenizer: PreTrainedTokenizerBase,
+        pad_on_right: bool,
+        question_column_name: str,
+        context_column_name: str,
+        max_length: int,
+        doc_stride: int,
+        padding: str
 ):
     # Tokenize our examples with truncation and maybe padding, but keep the overflows using a stride. This results
     # in one example possible giving several features when a context is long, each of those features having a
@@ -166,16 +166,16 @@ def prepare_validation_features(
 
 
 def post_processing_function(
-    datasets,
-    predictions,
-    answer_column_name,
-    features=None,
-    examples=None,
-    version_2_with_negative=None,
-    n_best_size=None,
-    max_answer_length=None,
-    null_score_diff_threshold=None,
-    output_dir=None,
+        datasets,
+        predictions,
+        answer_column_name,
+        features=None,
+        examples=None,
+        version_2_with_negative=None,
+        n_best_size=None,
+        max_answer_length=None,
+        null_score_diff_threshold=None,
+        output_dir=None,
 ):
     # Post-processing: we match the start logits and end logits to answers in the original context.
     predictions = postprocess_qa_predictions(
