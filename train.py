@@ -42,10 +42,11 @@ def main(cfg: DictConfig):
     rank_zero_info(OmegaConf.to_yaml(cfg))
     instantiator = HydraInstantiator()
     cfg = instantiator.dictconfig_to_dataclass(cfg)
+    print(cfg)
     run(
         instantiator,
         ignore_warnings=cfg.ignore_warnings,
-        do_train=cfg.do_train,
+        do_train=cfg.training.do_train,
         dataset=cfg.dataset,
         tokenizer=cfg.tokenizer,
         task=cfg.task,

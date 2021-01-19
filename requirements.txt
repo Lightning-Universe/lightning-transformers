@@ -6,6 +6,5 @@ transformers
 datasets
 # hydra
 hydra-core>=1.1.0.dev2 # todo: swap to 1.1 version once out
-dacite
 # task-specific
 rouge-score
