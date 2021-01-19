@@ -16,34 +16,31 @@
 # https://github.com/huggingface/transformers/blob/master/examples/question-answering/run_qa.py
 # https://github.com/huggingface/transformers/blob/master/examples/question-answering/utils_qa.py
 
-# Changes:
-#   - Use pytorch_lightning logger
-#   - Adapt function arguments
-
-import collections
-import json
-import os
-from typing import Optional, Tuple
-
-import numpy as np
-from pytorch_lightning import _logger as logger
-from tqdm.auto import tqdm
-from transformers import EvalPrediction
-
 # Disable formatting for easier diffs with upstream
 # fmt: off
 
 
+import collections
+import json
+import os
+from typing import Any, Optional, Tuple
+
+import numpy as np
+from pytorch_lightning import _logger as logger
+from tqdm.auto import tqdm
+from transformers import EvalPrediction, PreTrainedTokenizerBase
+
+
 def prepare_train_features(
-    examples,
-    tokenizer=None,
-    pad_on_right=None,
-    question_column_name=None,
-    context_column_name=None,
-    answer_column_name=None,
-    max_seq_length=None,
-    doc_stride=None,
-    pad_to_max_length=None
+    examples: Any,
+    tokenizer: PreTrainedTokenizerBase,
+    pad_on_right: bool,
+    question_column_name: str,
+    context_column_name: str,
+    answer_column_name: str,
+    max_length: int,
+    doc_stride: int,
+    padding: str
 ):
     # Tokenize our examples with truncation and maybe padding, but keep the overflows using a stride. This results
     # in one example possible giving several features when a context is long, each of those features having a
@@ -52,11 +49,11 @@ def prepare_train_features(
         examples[question_column_name if pad_on_right else context_column_name],
         examples[context_column_name if pad_on_right else question_column_name],
         truncation="only_second" if pad_on_right else "only_first",
-        max_length=max_seq_length,
+        max_length=max_length,
         stride=doc_stride,
         return_overflowing_tokens=True,
         return_offsets_mapping=True,
-        padding="max_length" if pad_to_max_length else False,
+        padding=padding,
     )
 
     # Since one example might give us several features if it has a long context, we need a map from a feature to
@@ -118,15 +115,14 @@ def prepare_train_features(
 
 
 def prepare_validation_features(
-    examples,
-    tokenizer=None,
-    pad_on_right=None,
-    question_column_name=None,
-    context_column_name=None,
-    answer_column_name=None,
-    max_seq_length=None,
-    doc_stride=None,
-    pad_to_max_length=None
+    examples: Any,
+    tokenizer: PreTrainedTokenizerBase,
+    pad_on_right: bool,
+    question_column_name: str,
+    context_column_name: str,
+    max_length: int,
+    doc_stride: int,
+    padding: str
 ):
     # Tokenize our examples with truncation and maybe padding, but keep the overflows using a stride. This results
     # in one example possible giving several features when a context is long, each of those features having a
@@ -135,11 +131,11 @@ def prepare_validation_features(
         examples[question_column_name if pad_on_right else context_column_name],
         examples[context_column_name if pad_on_right else question_column_name],
         truncation="only_second" if pad_on_right else "only_first",
-        max_length=max_seq_length,
+        max_length=max_length,
         stride=doc_stride,
         return_overflowing_tokens=True,
         return_offsets_mapping=True,
-        padding="max_length" if pad_to_max_length else False,
+        padding=padding,
     )
 
     # Since one example might give us several features if it has a long context, we need a map from a feature to
@@ -159,10 +155,10 @@ def prepare_validation_features(
         sample_index = sample_mapping[i]
         tokenized_examples["example_id"].append(examples["id"][sample_index])
 
-        # Set to None the offset_mapping that are not part of the context so it's easy to determine if a token
-        # position is part of the context or not.
+        # Set to start_index/end_index to [-1, 1] if the offset_mapping that are not part of the context
+        # so it's easy to determine if a token position is part of the context or not.
         tokenized_examples["offset_mapping"][i] = [
-            (o if sequence_ids[k] == context_index else None)
+            (o if sequence_ids[k] == context_index else (-1, -1))
             for k, o in enumerate(tokenized_examples["offset_mapping"][i])
         ]
 
@@ -170,7 +166,9 @@ def prepare_validation_features(
 
 
 def post_processing_function(
+    datasets,
     predictions,
+    answer_column_name,
     features=None,
     examples=None,
     version_2_with_negative=None,
@@ -178,7 +176,6 @@ def post_processing_function(
     max_answer_length=None,
     null_score_diff_threshold=None,
     output_dir=None,
-    is_world_process_zero=True
 ):
     # Post-processing: we match the start logits and end logits to answers in the original context.
     predictions = postprocess_qa_predictions(
@@ -190,7 +187,6 @@ def post_processing_function(
         max_answer_length=max_answer_length,
         null_score_diff_threshold=null_score_diff_threshold,
         output_dir=output_dir,
-        is_world_process_zero=is_world_process_zero(),
     )
     # Format the result to the format the metric expects.
     if version_2_with_negative:
@@ -213,7 +209,6 @@ def postprocess_qa_predictions(
     null_score_diff_threshold: float = 0.0,
     output_dir: Optional[str] = None,
     prefix: Optional[str] = None,
-    is_world_process_zero: bool = True,
 ):
     """
     Post-processes the predictions of a question-answering model to convert them to answers that are substrings of the
@@ -245,8 +240,6 @@ def postprocess_qa_predictions(
             answers, are saved in `output_dir`.
         prefix (:obj:`str`, `optional`):
             If provided, the dictionaries mentioned above are saved with `prefix` added to their names.
-        is_world_process_zero (:obj:`bool`, `optional`, defaults to :obj:`True`):
-            Whether this process is the main process or not (used to determine if logging/saves should be done).
     """
     assert len(predictions) == 2, "`predictions` should be a tuple with two elements (start_logits, end_logits)."
     all_start_logits, all_end_logits = predictions
@@ -308,8 +301,8 @@ def postprocess_qa_predictions(
                     if (
                         start_index >= len(offset_mapping)
                         or end_index >= len(offset_mapping)
-                        or offset_mapping[start_index] is None
-                        or offset_mapping[end_index] is None
+                        or offset_mapping[start_index] == -1
+                        or offset_mapping[end_index] == -1
                     ):
                         continue
                     # Don't consider answers with a length that is either < 0 or > max_answer_length.

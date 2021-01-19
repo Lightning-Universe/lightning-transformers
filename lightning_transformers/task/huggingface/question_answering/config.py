@@ -14,17 +14,12 @@
 
 # Adapted from:
 # https://github.com/huggingface/transformers/blob/master/examples/question-answering/run_qa.py
+# fmt: off
 
-# Changes:
-#   - Rename class
 
 from dataclasses import dataclass, field
-from typing import Optional
 
 from lightning_transformers.core.huggingface.config import HFTransformerDataConfig
-
-# Disable formatting for easier diffs with upstream
-# fmt: off
 
 
 @dataclass
@@ -33,38 +28,11 @@ class QuestionAnsweringTransformerDataConfig(HFTransformerDataConfig):
     Arguments pertaining to what data we are going to input our model for training and eval.
     """
 
-    dataset_name: Optional[str] = field(
-        default=None, metadata={"help": "The name of the dataset to use (via the datasets library)."}
-    )
-    dataset_config_name: Optional[str] = field(
-        default=None, metadata={"help": "The configuration name of the dataset to use (via the datasets library)."}
-    )
-    train_file: Optional[str] = field(default=None,
-                                      metadata={"help": "The input training data file (a text file)."})
-    validation_file: Optional[str] = field(
-        default=None,
-        metadata={"help": "An optional input evaluation data file to evaluate the perplexity on (a text file)."},
-    )
-    overwrite_cache: bool = field(
-        default=False, metadata={"help": "Overwrite the cached training and evaluation sets"}
-    )
-    preprocessing_num_workers: Optional[int] = field(
-        default=None,
-        metadata={"help": "The number of processes to use for the preprocessing."},
-    )
-    max_seq_length: int = field(
+    max_length: int = field(
         default=384,
         metadata={
             "help": "The maximum total input sequence length after tokenization. Sequences longer "
                     "than this will be truncated, sequences shorter will be padded."
-        },
-    )
-    pad_to_max_length: bool = field(
-        default=True,
-        metadata={
-            "help": "Whether to pad all samples to `max_seq_length`. "
-                    "If False, will pad the samples dynamically when batching to the maximum length in the batch (which can "
-                    "be faster on GPU but will be slower on TPU)."
         },
     )
     version_2_with_negative: bool = field(
