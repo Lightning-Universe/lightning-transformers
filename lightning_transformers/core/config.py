@@ -5,6 +5,7 @@ from typing import Optional
 @dataclass
 class HydraConfig:
     _target_: Optional[str] = None
+    _target_config_: Optional[str] = None
 
 
 @dataclass

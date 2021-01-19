@@ -15,6 +15,7 @@ def run(
     instantiator: Instantiator,
     ignore_warnings: bool = True,
     do_train: bool = True,
+    # TODO: these should be non-HF
     dataset: HFTransformerDataConfig = HFTransformerDataConfig(),
     tokenizer: HFTokenizerConfig = HFTokenizerConfig(),
     task: HFTaskConfig = HFTaskConfig(),

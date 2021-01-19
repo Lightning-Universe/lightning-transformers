@@ -1,5 +1,6 @@
 # @package task
 _target_: lightning_transformers.task.huggingface.text_classification.TextClassificationTransformer
+_recursive_: False  # do not construct optimizer/scheduler
 downstream_model_type: transformers.AutoModelForSequenceClassification
 backbone: ${backbone}
 optimizer: ${optimizer}
