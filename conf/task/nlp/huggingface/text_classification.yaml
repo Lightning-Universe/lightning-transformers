@@ -1,0 +1,6 @@
+# @package task
+_target_: lightning_transformers.task.nlp.huggingface.text_classification.TextClassificationTransformer
+downstream_model_type: transformers.AutoModelForSequenceClassification
+backbone: ${backbone}
+optimizer: ${optimizer}
+scheduler: ${scheduler}

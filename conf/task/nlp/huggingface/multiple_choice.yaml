@@ -1,0 +1,5 @@
+# @package task
+defaults:
+  - /backbone@_group_: huggingface/bert-base-cased
+_target_: lightning_transformers.task.nlp.huggingface.multiple_choice.MultipleChoiceTransformer
+downstream_model_type: transformers.AutoModelForMultipleChoice
