@@ -16,7 +16,7 @@ class TransformerDataModule(pl.LightningDataModule):
     def setup(self, stage: Optional[str] = None):
         dataset = self.load_dataset()
         dataset = self.split_dataset(dataset)
-        dataset = self.process_data(dataset, stage)
+        dataset = self.process_data(dataset, stage=stage)
         self.labels = self.prepare_labels(dataset)
         self.ds = dataset
         self.load_and_prepare_metrics()

@@ -1,1 +1,1 @@
-from .data import SquadTransformerDataModule
+from lightning_transformers.task.huggingface.question_answering.datasets.squad.data import SquadTransformerDataModule
