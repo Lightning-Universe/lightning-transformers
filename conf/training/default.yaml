@@ -1,6 +1,6 @@
 do_train: True
 do_eval: True
-lr: 1e-3
+lr: 5e-5
 output_dir: '.'
 
 # read in dataset

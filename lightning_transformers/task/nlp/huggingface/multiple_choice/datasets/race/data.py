@@ -4,24 +4,23 @@ from typing import Any, Dict, Optional
 from datasets import Dataset
 from transformers import PreTrainedTokenizerBase
 
-from lightning_transformers.task.nlp.huggingface.multiple_choice.data import MultipleChoiceTransformerDataModule
+from lightning_transformers.task.huggingface.multiple_choice.data import MultipleChoiceTransformerDataModule
 
 
-class SwagMultipleChoiceTransformerDataModule(MultipleChoiceTransformerDataModule):
-    num_choices: int = 4  # there are four different endings to select in the SWAG dataset
-
+class RaceMultipleChoiceTransformerDataModule(MultipleChoiceTransformerDataModule):
     @property
-    def num_classes(self) -> int:
-        return len(self.ending_column_names)
+    def choices(self) -> list:
+        return ["A", "B", "C", "D"]
 
     def process_data(self, dataset: Dataset, stage: Optional[str] = None) -> Dataset:
         convert_to_features = partial(
             self.convert_to_features,
             tokenizer=self.tokenizer,
-            num_choices=self.num_choices,
             context_name=self.context_name,
+            choices=self.choices,
             question_header_name=self.question_header_name,
-            ending_names=self.ending_column_names,
+            answer_column_name=self.answer_column_name,
+            options_column_name=self.options_column_name,
             max_length=self.cfg.max_length,
             padding=self.cfg.padding,
         )
@@ -43,32 +42,43 @@ class SwagMultipleChoiceTransformerDataModule(MultipleChoiceTransformerDataModul
         return dataset
 
     @property
-    def ending_column_names(self) -> list:
-        return [f"ending{i}" for i in range(self.num_choices)]
+    def context_name(self):
+        return "article"
 
     @property
-    def context_name(self) -> str:
-        return "sent1"
+    def question_header_name(self):
+        return "question"
 
     @property
-    def question_header_name(self) -> str:
-        return "sent2"
+    def answer_column_name(self):
+        return "answer"
+
+    @property
+    def options_column_name(self):
+        return "options"
+
+    @property
+    def num_classes(self) -> int:
+        return len(self.choices)
 
     @staticmethod
     def convert_to_features(
         examples: Any,
         tokenizer: PreTrainedTokenizerBase,
-        num_choices: int,
         padding: str,
         context_name: str,
+        choices: list,
         question_header_name: str,
-        ending_names: list,
+        answer_column_name: str,
+        options_column_name: str,
         max_length: int,
     ) -> Dict:
+        num_choices = len(choices)
         first_sentences = [[context] * num_choices for context in examples[context_name]]
         question_headers = examples[question_header_name]
+        options = examples[options_column_name]
         second_sentences = [
-            [f"{header} {examples[end][i]}" for end in ending_names] for i, header in enumerate(question_headers)
+            [f"{header} {option}" for option in options[i]] for i, header in enumerate(question_headers)
         ]
 
         # Flatten out
@@ -79,7 +89,12 @@ class SwagMultipleChoiceTransformerDataModule(MultipleChoiceTransformerDataModul
         tokenized_examples = tokenizer(
             first_sentences, second_sentences, truncation=True, max_length=max_length, padding=padding
         )
+
         # Un-flatten
-        return {
+        result = {
             k: [v[i : i + num_choices] for i in range(0, len(v), num_choices)] for k, v in tokenized_examples.items()
         }
+
+        label_to_idx = {k: i for i, k in enumerate(choices)}  # convert to label_to_idx
+        result["label"] = [label_to_idx[label] for label in examples[answer_column_name]]
+        return result

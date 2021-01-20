@@ -33,11 +33,10 @@ class TextClassificationTransformer(HFTransformer):
         return self.common_step("test", batch)
 
     def configure_metrics(self, _) -> None:
-        self.metrics = {
-            "precision": pl.metrics.Precision(num_classes=self.num_classes),
-            "recall": pl.metrics.Recall(num_classes=self.num_classes),
-            "acc": pl.metrics.Accuracy(),
-        }
+        self.prec = pl.metrics.Precision(num_classes=self.num_classes)
+        self.recall = pl.metrics.Recall(num_classes=self.num_classes)
+        self.acc = pl.metrics.Accuracy()
+        self.metrics = {"precision": self.prec, "recall": self.recall, "accuracy": self.acc}
 
     @property
     def num_classes(self) -> int:

@@ -1,5 +1,8 @@
+# todo: Add proper HF licence
+# Copyright 2020 The HuggingFace Team. All rights reserved.
+
 from dataclasses import dataclass
-from typing import List, Optional, Union
+from typing import Optional, Union
 
 import torch
 from transformers.tokenization_utils_base import PaddingStrategy, PreTrainedTokenizerBase
@@ -13,8 +16,8 @@ class DataCollatorForMultipleChoice:
     Args:
         tokenizer (:class:`~transformers.PreTrainedTokenizer` or :class:`~transformers.PreTrainedTokenizerFast`):
             The tokenizer used for encoding the data.
-        padding (:obj:`bool`, :obj:`str` or :class:`~transformers.tokenization_utils_base.PaddingStrategy`, `optional`,
-         defaults to :obj:`True`):
+        padding (:obj:`bool`, :obj:`str` or :class:`~transformers.tokenization_utils_base.PaddingStrategy`,
+            `optional`, defaults to :obj:`True`):
             Select a strategy to pad the returned sequences (according to the model's padding side and padding index)
             among:
 
@@ -60,34 +63,3 @@ class DataCollatorForMultipleChoice:
         # Add back labels
         batch["labels"] = torch.tensor(labels, dtype=torch.int64)
         return batch
-
-
-def preprocess_function(
-    examples,
-    tokenizer=None,
-    context_name: List[str] = None,
-    question_header_name: str = None,
-    ending_names: str = None,
-    max_seq_length: int = None,
-    pad_to_max_length: int = None,
-):
-    first_sentences = [[context] * 4 for context in examples[context_name]]
-    question_headers = examples[question_header_name]
-    second_sentences = [
-        [f"{header} {examples[end][i]}" for end in ending_names] for i, header in enumerate(question_headers)
-    ]
-
-    # Flatten out
-    first_sentences = sum(first_sentences, [])
-    second_sentences = sum(second_sentences, [])
-
-    # Tokenize
-    tokenized_examples = tokenizer(
-        first_sentences,
-        second_sentences,
-        truncation=True,
-        max_length=max_seq_length,
-        padding="max_length" if pad_to_max_length else False,
-    )
-    # Un-flatten
-    return {k: [v[i : i + 4] for i in range(0, len(v), 4)] for k, v in tokenized_examples.items()}
