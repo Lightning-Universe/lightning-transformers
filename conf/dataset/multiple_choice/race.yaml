@@ -1,5 +1,5 @@
 # @package dataset
-_target_: lightning_transformers.task.huggingface.multiple_choice.RaceMultipleChoiceTransformerDataModule
+_target_: lightning_transformers.task.nlp.huggingface.multiple_choice.RaceMultipleChoiceTransformerDataModule
 cfg:
   dataset_name: race
   train_file: ''

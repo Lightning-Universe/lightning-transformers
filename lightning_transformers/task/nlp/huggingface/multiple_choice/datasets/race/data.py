@@ -4,7 +4,7 @@ from typing import Any, Dict, Optional
 from datasets import Dataset
 from transformers import PreTrainedTokenizerBase
 
-from lightning_transformers.task.huggingface.multiple_choice.data import MultipleChoiceTransformerDataModule
+from lightning_transformers.task.nlp.huggingface.multiple_choice.data import MultipleChoiceTransformerDataModule
 
 
 class RaceMultipleChoiceTransformerDataModule(MultipleChoiceTransformerDataModule):

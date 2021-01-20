@@ -1,7 +1,7 @@
 import pytorch_lightning as pl
 import torch
 
-from lightning_transformers.core.huggingface import HFTransformer
+from lightning_transformers.core.nlp.huggingface import HFTransformer
 
 
 class MultipleChoiceTransformer(HFTransformer):
