@@ -1,15 +1,15 @@
-from typing import Dict
+from typing import Any, Dict, Optional
 
 from hydra.utils import get_class
 from pytorch_lightning import _logger as log
+from transformers import pipeline
 
 from lightning_transformers.core.config import OptimizerConfig
-from lightning_transformers.core.instantiator import Instantiator
-from lightning_transformers.core.model import TaskTransformer
+from lightning_transformers.core.hydra_model import HydraTaskTransformer
 from lightning_transformers.core.nlp.huggingface.config import HFBackboneConfig, HFSchedulerConfig
 
 
-class HFTransformer(TaskTransformer):
+class HFTransformer(HydraTaskTransformer):
     """
     Base class for task specific transformers, wrapping pre-trained language models for downstream tasks.
     The API is built on top of AutoModel and AutoConfig, provided by HuggingFace.
@@ -19,20 +19,19 @@ class HFTransformer(TaskTransformer):
 
     def __init__(
         self,
-        instantiator: Instantiator,
         downstream_model_type: str,
         backbone: HFBackboneConfig,
         optimizer: OptimizerConfig,
         scheduler: HFSchedulerConfig,
         **config_data_args,
     ):
+        super().__init__(optimizer, scheduler)
         model = get_class(downstream_model_type).from_pretrained(
             backbone.pretrained_model_name_or_path, **config_data_args
         )
-        super().__init__(model)
-        self.instantiator = instantiator
-        self.optimizer_cfg = optimizer
-        self.scheduler_cfg = scheduler
+        self.model = model
+        self.pipeline = None
+        self._tokenizer = None
 
     def prepare_warmup(self, cfg: HFSchedulerConfig):
         if cfg.num_training_steps < 0:
@@ -45,14 +44,43 @@ class HFTransformer(TaskTransformer):
             cfg.num_warmup_steps *= cfg.num_training_steps
             log.info(f"Inferring number of warmup steps from ratio, set to {cfg.num_warmup_steps}")
 
-    def configure_optimizers(self) -> Dict:
-        self.optimizer = self.instantiator.optimizer(self.model, self.optimizer_cfg)
-        # prepare_warmup needs the datamodule to be available when `self.num_training_steps`
-        # is called that is why this is done here and not in the __init__
-        self.prepare_warmup(self.scheduler_cfg)
-        self.scheduler = self.instantiator.scheduler(self.scheduler_cfg, self.optimizer)
-        return super().configure_optimizers()
-
     @property
     def tokenizer(self):
+        if self._tokenizer:
+            return self._tokenizer
         return self.trainer.datamodule.tokenizer
+
+    @tokenizer.setter
+    def tokenizer(self, tokenizer):
+        self._tokenizer = tokenizer
+
+    @property
+    def default_pipeline_task(self) -> Optional[str]:
+        """
+        Override to define what HuggingFace pipeline task to use.
+        Returns: Optional string to define what pipeline task to use.
+        """
+        return None
+
+    @default_pipeline_task.setter
+    def default_pipeline_task(self, pipeline: str):
+        self._pipeline = pipeline
+
+    def initialize_pipeline(self, pipeline_task: Optional[str] = None):
+        pipeline_task = pipeline_task if pipeline_task else self.default_pipeline_task
+        if pipeline_task:
+            self.pipeline = pipeline(task=self.default_pipeline_task, model=self.model, tokenizer=self.tokenizer)
+        else:
+            raise NotImplementedError("Currently there is no support for using HuggingFace Pipelines with this task")
+
+    def predict(self, *args, **kwargs) -> Any:
+        if self.pipeline is None:
+            self.initialize_pipeline()
+        return self.pipeline(*args, **kwargs)
+
+    def on_save_checkpoint(self, checkpoint: Dict[str, Any]):
+        # Save tokenizer from datamodule for predict
+        checkpoint["tokenizer"] = self.tokenizer
+
+    def on_load_checkpoint(self, checkpoint: Dict[str, Any]) -> None:
+        self.tokenizer = checkpoint["tokenizer"]

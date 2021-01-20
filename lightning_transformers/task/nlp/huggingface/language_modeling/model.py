@@ -1,3 +1,5 @@
+from typing import Optional
+
 from lightning_transformers.core.nlp.huggingface import HFTransformer
 
 
@@ -23,3 +25,7 @@ class LanguageModelingTransformer(HFTransformer):
     def test_step(self, batch, batch_idx, dataloader_idx=0):
         loss = self._step(batch, batch_idx)
         self.log("test_loss", loss, sync_dist=True)
+
+    @property
+    def default_pipeline_task(self) -> Optional[str]:
+        return "text-generation"

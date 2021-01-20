@@ -1,3 +1,5 @@
+from typing import Optional
+
 from transformers import MBartTokenizer
 
 from lightning_transformers.core.nlp.huggingface.seq2seq.model import HFSeq2SeqTransformer
@@ -39,3 +41,7 @@ class HFTranslationTransformer(HFSeq2SeqTransformer):
             if self.model.config.decoder_start_token_id is None:
                 assert tgt_lang is not None, "mBart requires --tgt_lang"
                 self.model.config.decoder_start_token_id = self.tokenizer.lang_code_to_id[tgt_lang]
+
+    @property
+    def pipeline_task(self) -> Optional[str]:
+        return "translation_xx_to_yy"

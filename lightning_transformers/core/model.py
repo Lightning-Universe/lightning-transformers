@@ -1,7 +1,6 @@
 from typing import Any, Dict, Optional
 
 import pytorch_lightning as pl
-import torch
 
 
 class LitTransformer(pl.LightningModule):
@@ -9,19 +8,6 @@ class LitTransformer(pl.LightningModule):
     Base class for transformers.
     Provides a few helper functions primarily for optimization.
     """
-
-    def __init__(
-        self,
-        model: torch.nn.Module,
-        optimizer: Optional[torch.optim.Optimizer] = None,
-        scheduler: Optional[torch.optim.lr_scheduler._LRScheduler] = None,
-    ):
-        super().__init__()
-        self.model = model
-        # some optimizers/schedulers need parameters only known dynamically
-        # allow users to override the getter to instantiate them lazily
-        self.optimizer = optimizer
-        self.scheduler = scheduler
 
     def configure_optimizers(self) -> Dict:
         """Prepare optimizer and scheduler"""

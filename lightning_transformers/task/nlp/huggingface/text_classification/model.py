@@ -1,4 +1,4 @@
-from typing import Any, Dict
+from typing import Any, Dict, Optional
 
 import pytorch_lightning as pl
 import torch
@@ -9,6 +9,7 @@ from lightning_transformers.core.nlp.huggingface import HFTransformer
 class TextClassificationTransformer(HFTransformer):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.save_hyperparameters()
         self.metrics = {}
 
     def training_step(self, batch: Any, batch_idx: int) -> torch.Tensor:
@@ -45,3 +46,7 @@ class TextClassificationTransformer(HFTransformer):
     def compute_metrics(self, preds, labels, mode="val") -> Dict[str, torch.Tensor]:
         # Not required by all models. Only required for classification
         return {f"{mode}_{k}": metric(preds, labels) for k, metric in self.metrics.items()}
+
+    @property
+    def pipeline_task(self) -> Optional[str]:
+        return "sentiment-analysis"

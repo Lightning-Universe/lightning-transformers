@@ -1,4 +1,4 @@
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Optional
 
 import pytorch_lightning as pl
 import torch
@@ -50,3 +50,7 @@ class TokenClassificationTransformer(HFTransformer):
         labels = labels[labels != -100]
         # Not required by all models. Only required for classification
         return {f"{mode}_{k}": metric(predictions, labels) for k, metric in self.metrics.items()}
+
+    @property
+    def pipeline_task(self) -> Optional[str]:
+        return "ner"

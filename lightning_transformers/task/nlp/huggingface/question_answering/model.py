@@ -1,4 +1,4 @@
-from typing import Any, Dict
+from typing import Any, Dict, Optional
 
 import torch
 
@@ -22,3 +22,7 @@ class QuestionAnsweringTransformer(HFTransformer):
         outputs = self.model(**batch)
         loss, logits = outputs[:2]
         return loss
+
+    @property
+    def pipeline_task(self) -> Optional[str]:
+        return "question-answering"
