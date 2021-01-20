@@ -2,7 +2,6 @@ from lightning_transformers.task.huggingface.multiple_choice.data import (  # no
     MultipleChoiceTransformerDataModule,
 )
 from lightning_transformers.task.huggingface.multiple_choice.datasets import (  # noqa: F401
-    ArcMultipleChoiceTransformerDataModule,
     RaceMultipleChoiceTransformerDataModule,
     SwagMultipleChoiceTransformerDataModule,
 )
