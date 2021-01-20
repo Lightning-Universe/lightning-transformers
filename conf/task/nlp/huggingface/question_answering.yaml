@@ -1,0 +1,6 @@
+# @package task
+_target_: lightning_transformers.task.nlp.huggingface.question_answering.QuestionAnsweringTransformer
+downstream_model_type: transformers.AutoModelForQuestionAnswering
+backbone: ${backbone}
+optimizer: ${optimizer}
+scheduler: ${scheduler}

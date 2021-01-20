@@ -4,7 +4,7 @@ defaults: # for loading the default config
   - optimizer: adamw
   - scheduler: linear_schedule_with_warmup
   - tokenizer: huggingface/default
-  - backbone: huggingface/default
+  - backbone: nlp/huggingface/default
   - logger: tchaton # todo: change this eventually
 
 task: ???
