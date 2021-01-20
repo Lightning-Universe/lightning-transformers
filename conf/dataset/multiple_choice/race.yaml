@@ -1,10 +1,10 @@
 # @package dataset
-_target_: lightning_transformers.task.huggingface.multiple_choice.SwagMultipleChoiceTransformerDataModule
+_target_: lightning_transformers.task.huggingface.multiple_choice.RaceMultipleChoiceTransformerDataModule
 cfg:
-  dataset_name: swag
+  dataset_name: race
   train_file: ''
   validation_file: ''
-  dataset_config_name: 'regular'
+  dataset_config_name: 'all'
   padding: False
   truncation: 'only_first'
   max_seq_length: 128

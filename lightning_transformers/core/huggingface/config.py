@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import Optional
+from typing import Optional, Union
 
 from lightning_transformers.core.data import TransformerDataConfig
 
@@ -11,7 +11,7 @@ class HFTransformerDataConfig(TransformerDataConfig):
     train_val_split: Optional[int] = None
     train_file: Optional[str] = None
     validation_file: Optional[str] = None
-    padding: str = "max_length"
+    padding: Union[str, bool] = "max_length"
     truncation: str = "only_first"
     max_length: int = 128
     preprocessing_num_workers: int = 8
