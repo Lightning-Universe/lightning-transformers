@@ -31,6 +31,7 @@ class HFTransformer(TaskTransformer):
         )
         super().__init__(model=model, optimizer=optimizer, scheduler=scheduler, instantiator=instantiator)
         self.instantiator = instantiator
+        self._tokenizer = None
 
     @property
     def tokenizer(self):
