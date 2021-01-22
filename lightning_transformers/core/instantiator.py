@@ -1,3 +1,4 @@
+from abc import ABC
 from dataclasses import dataclass
 from typing import Any, Dict, Optional, TYPE_CHECKING, Union
 
@@ -6,7 +7,7 @@ import torch
 from hydra.utils import get_class, instantiate
 from omegaconf import DictConfig, OmegaConf
 
-from lightning_transformers.core import TransformerDataModule
+from lightning_transformers.core import TaskTransformer, TransformerDataModule
 from lightning_transformers.core.config import (
     BaseConfig,
     OptimizerConfig,
@@ -16,15 +17,29 @@ from lightning_transformers.core.config import (
     TransformerDataConfig,
 )
 from lightning_transformers.core.data import TransformerTokenizerDataModule
-from lightning_transformers.core.model import TaskTransformer
 
 if TYPE_CHECKING:
     # avoid circular imports
     from lightning_transformers.core.nlp.huggingface.config import HFTokenizerConfig
 
 
-class Instantiator:
-    def __getattr__(self, _):
+class Instantiator(ABC):
+    def model(self, *args, **kwargs):
+        raise NotImplementedError
+
+    def optimizer(self, *args, **kwargs):
+        raise NotImplementedError
+
+    def scheduler(self, *args, **kwargs):
+        raise NotImplementedError
+
+    def data_module(self, *args, **kwargs):
+        raise NotImplementedError
+
+    def logger(self, *args, **kwargs):
+        raise NotImplementedError
+
+    def trainer(self, *args, **kwargs):
         raise NotImplementedError
 
 
