@@ -23,9 +23,3 @@ class HFTransformerDataConfig(TransformerDataConfig):
 class HFBackboneConfig:
     downstream_model_type: str
     pretrained_model_name_or_path: str
-
-
-@dataclass
-class HFSchedulerConfig:
-    num_training_steps: int = -1
-    num_warmup_steps: float = 0.1
