@@ -23,10 +23,8 @@ class TextClassificationDataModule(HFTransformerDataModule):
             if x in dataset["train"].features
         ]
         dataset.set_format("torch", columns=cols_to_keep)
+        self.labels = dataset["train"].features["labels"]
         return dataset
-
-    def prepare_labels(self, dataset: Dataset) -> Any:
-        return dataset["train"].features["labels"]
 
     @property
     def num_classes(self) -> int:

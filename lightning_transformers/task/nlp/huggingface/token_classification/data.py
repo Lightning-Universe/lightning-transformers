@@ -58,11 +58,8 @@ class TokenClassificationDataModule(HFTransformerDataModule):
             # Create unique label set from train dataset.
             label_list = sorted(set(label for column in dataset["train"][label_column_name] for label in column))
             label_to_id = {l: i for i, l in enumerate(label_list)}
-        self._labels = label_list
+        self.labels = label_list
         self.label_to_id = label_to_id
-
-    def prepare_labels(self, dataset: Dataset) -> Optional[Any]:
-        return self._labels
 
     @property
     def num_classes(self) -> int:
