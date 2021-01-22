@@ -1,4 +1,5 @@
 from typing import Any, Dict, Optional
+
 from hydra.utils import get_class
 from transformers import pipeline
 
