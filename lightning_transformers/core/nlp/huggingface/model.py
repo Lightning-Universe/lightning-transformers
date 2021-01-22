@@ -1,3 +1,5 @@
+from typing import Optional
+
 from hydra.utils import get_class
 
 from lightning_transformers.core.config import OptimizerConfig, SchedulerConfig
@@ -16,18 +18,18 @@ class HFTransformer(TaskTransformer):
 
     def __init__(
         self,
-        instantiator: Instantiator,
         downstream_model_type: str,
         backbone: HFBackboneConfig,
         optimizer: OptimizerConfig,
         scheduler: SchedulerConfig,
+        instantiator: Optional[Instantiator] = None,
         **config_data_args,
     ):
+        self.save_hyperparameters()
         model = get_class(downstream_model_type).from_pretrained(
             backbone.pretrained_model_name_or_path, **config_data_args
         )
         super().__init__(model=model, optimizer=optimizer, scheduler=scheduler, instantiator=instantiator)
-        self.instantiator = instantiator
 
     @property
     def tokenizer(self):
