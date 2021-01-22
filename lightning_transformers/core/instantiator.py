@@ -7,7 +7,7 @@ import torch
 from hydra.utils import get_class, instantiate
 from omegaconf import DictConfig, OmegaConf
 
-from lightning_transformers.core import TaskTransformer, TransformerDataModule
+from lightning_transformers.core import TransformerDataModule
 from lightning_transformers.core.config import (
     BaseConfig,
     OptimizerConfig,
@@ -20,6 +20,7 @@ from lightning_transformers.core.data import TransformerTokenizerDataModule
 
 if TYPE_CHECKING:
     # avoid circular imports
+    from lightning_transformers.core import TaskTransformer
     from lightning_transformers.core.nlp.huggingface.config import HFTokenizerConfig
 
 
@@ -36,15 +37,15 @@ class Instantiator(ABC):
     def data_module(self, *args, **kwargs):
         raise NotImplementedError
 
-    def logger(self, *args, **kwargs):
-        raise NotImplementedError
+    # def logger(self, *args, **kwargs):
+    #    raise NotImplementedError
 
     def trainer(self, *args, **kwargs):
         raise NotImplementedError
 
 
 class HydraInstantiator(Instantiator):
-    def model(self, cfg: TaskConfig, model_data_args: Dict[str, Any]) -> TaskTransformer:
+    def model(self, cfg: TaskConfig, model_data_args: Dict[str, Any]) -> "TaskTransformer":
         return instantiate(cfg, self, **model_data_args)
 
     def optimizer(self, model: torch.nn.Module, cfg: OptimizerConfig) -> torch.optim.Optimizer:
