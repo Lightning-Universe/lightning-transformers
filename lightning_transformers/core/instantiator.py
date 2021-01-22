@@ -1,4 +1,5 @@
 import logging
+from abc import ABC
 from typing import Optional, Union
 
 import pytorch_lightning as pl
@@ -8,16 +9,33 @@ from omegaconf import DictConfig
 
 from lightning_transformers.core import TransformerDataModule
 from lightning_transformers.core.data import TransformerTokenizerDataModule
-from lightning_transformers.core.model import TaskTransformer
+
+# todo: fix cyclic import
+# from lightning_transformers.core.model import TaskTransformer
 
 
-class Instantiator:
-    def __getattr__(self, _):
+class Instantiator(ABC):
+    def model(self, *args, **kwargs):
+        raise NotImplementedError
+
+    def optimizer(self, *args, **kwargs):
+        raise NotImplementedError
+
+    def scheduler(self, *args, **kwargs):
+        raise NotImplementedError
+
+    def data_module(self, *args, **kwargs):
+        raise NotImplementedError
+
+    def logger(self, *args, **kwargs):
+        raise NotImplementedError
+
+    def trainer(self, *args, **kwargs):
         raise NotImplementedError
 
 
 class HydraInstantiator(Instantiator):
-    def model(self, cfg: DictConfig, model_data_args) -> TaskTransformer:
+    def model(self, cfg: DictConfig, model_data_args):  # -> "TaskTransformer":
         return instantiate(cfg, self, **model_data_args)
 
     def optimizer(self, model: torch.nn.Module, cfg: DictConfig) -> torch.optim.Optimizer:
