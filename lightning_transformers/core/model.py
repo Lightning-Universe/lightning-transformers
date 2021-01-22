@@ -98,7 +98,7 @@ class TaskTransformer(LitTransformer):
     def configure_optimizers(self) -> Dict:
         if self.instantiator is None:
             raise MisconfigurationException(
-                "To train you must provide an instantiator to instantiate the optimizer and scheduler"
+                "To train you must provide an instantiator to instantiate the optimizer and scheduler "
                 "or override `configure_optimizers` in the `LightningModule`."
             )
         self.optimizer = self.instantiator.optimizer(self.model, self.optimizer_cfg)
