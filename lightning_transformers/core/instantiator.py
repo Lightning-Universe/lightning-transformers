@@ -1,4 +1,5 @@
 import logging
+from abc import ABC
 from typing import Optional, Union
 
 import pytorch_lightning as pl
@@ -13,8 +14,23 @@ from lightning_transformers.core.data import TransformerTokenizerDataModule
 # from lightning_transformers.core.model import TaskTransformer
 
 
-class Instantiator:
-    def __getattr__(self, _):
+class Instantiator(ABC):
+    def model(self, *args, **kwargs):
+        raise NotImplementedError
+
+    def optimizer(self, *args, **kwargs):
+        raise NotImplementedError
+
+    def scheduler(self, *args, **kwargs):
+        raise NotImplementedError
+
+    def data_module(self, *args, **kwargs):
+        raise NotImplementedError
+
+    def logger(self, *args, **kwargs):
+        raise NotImplementedError
+
+    def trainer(self, *args, **kwargs):
         raise NotImplementedError
 
 
