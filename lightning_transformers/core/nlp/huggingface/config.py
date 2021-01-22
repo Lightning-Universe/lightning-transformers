@@ -33,13 +33,7 @@ class HFBackboneConfig(HydraConfig):
 
 
 @dataclass
-class HFSchedulerConfig(SchedulerConfig):
-    num_training_steps: int = -1
-    num_warmup_steps: float = 0.1
-
-
-@dataclass
 class HFTaskConfig(TaskConfig):
     backbone: HFBackboneConfig = HFBackboneConfig()
     optimizer: OptimizerConfig = OptimizerConfig()
-    scheduler: HFSchedulerConfig = HFSchedulerConfig()
+    scheduler: SchedulerConfig = SchedulerConfig()

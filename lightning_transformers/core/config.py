@@ -51,7 +51,8 @@ class OptimizerConfig(HydraConfig):
 
 @dataclass
 class SchedulerConfig(HydraConfig):
-    ...
+    num_training_steps: int = -1
+    num_warmup_steps: float = 0.1
 
 
 @dataclass

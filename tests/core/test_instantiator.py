@@ -1,5 +1,4 @@
 import pytest
-from dacite import UnexpectedDataError
 from omegaconf import DictConfig
 
 from lightning_transformers.core.config import TransformerDataConfig
@@ -55,5 +54,7 @@ def test_hydrainstantiator_dictconfig_to_dataclass(x, expected):
 def test_hydrainstantiator_dictconfig_to_dataclass_raises(x):
     instantiator = HydraInstantiator()
     cfg = DictConfig(x)
-    with pytest.raises(UnexpectedDataError):
-        instantiator.dictconfig_to_dataclass(cfg, strict=True)
+    with pytest.raises(
+        KeyError, match="unexpected key 'non_existent_key' in the config file for target config TransformerDataConfig"
+    ):
+        instantiator.dictconfig_to_dataclass(cfg)

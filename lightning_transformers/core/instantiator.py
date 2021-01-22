@@ -73,7 +73,14 @@ class HydraInstantiator(Instantiator):
                 if isinstance(v, dict):
                     cfg[k] = _recursive_convert(v)
             data_class = get_class(cfg["_target_config_"]) if "_target_config_" in cfg else BaseConfig
-            return data_class(**cfg)
+            try:
+                return data_class(**cfg)
+            except TypeError as e:
+                unexpected_key = str(e).split(" ")[-1]
+                raise KeyError(
+                    f"Found an unexpected key {unexpected_key} in the config "
+                    f"file for target config {data_class.__name__}"
+                )
 
         converted = _recursive_convert(cfg)
         return converted
