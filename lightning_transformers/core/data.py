@@ -11,15 +11,12 @@ class TransformerDataModule(pl.LightningDataModule):
         super().__init__()
         self.cfg = cfg
         self.ds = None
-        self.labels = None
 
     def setup(self, stage: Optional[str] = None):
         dataset = self.load_dataset()
         dataset = self.split_dataset(dataset)
-        dataset = self.process_data(dataset, stage)
-        self.labels = self.prepare_labels(dataset)
+        dataset = self.process_data(dataset, stage=stage)
         self.ds = dataset
-        self.load_and_prepare_metrics()
 
     def load_dataset(self) -> Dataset:
         raise NotImplementedError
@@ -29,12 +26,6 @@ class TransformerDataModule(pl.LightningDataModule):
 
     def process_data(self, dataset: Dataset, stage: Optional[str] = None) -> Dataset:
         return dataset
-
-    def prepare_labels(self, dataset: Dataset) -> Optional[Any]:
-        return
-
-    def load_and_prepare_metrics(self):
-        pass
 
     def train_dataloader(self) -> DataLoader:
         return DataLoader(

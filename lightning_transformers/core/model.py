@@ -49,7 +49,7 @@ class LitTransformer(pl.LightningModule):
         if self.trainer.tpu_cores:
             num_devices = max(num_devices, self.trainer.tpu_cores)
 
-        effective_batch_size = self.trainer.datamodule.batch_size * self.trainer.accumulate_grad_batches * num_devices
+        effective_batch_size = self.trainer.accumulate_grad_batches * num_devices
         return (dataset_size // effective_batch_size) * self.trainer.max_epochs
 
 
