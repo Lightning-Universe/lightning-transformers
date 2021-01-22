@@ -1,15 +1,14 @@
 from typing import Any, Dict, Optional
-
 from hydra.utils import get_class
-from pytorch_lightning import _logger as log
 from transformers import pipeline
 
-from lightning_transformers.core.config import OptimizerConfig
-from lightning_transformers.core.hydra_model import HydraTaskTransformer
-from lightning_transformers.core.nlp.huggingface.config import HFBackboneConfig, HFSchedulerConfig
+from lightning_transformers.core.config import OptimizerConfig, SchedulerConfig
+from lightning_transformers.core.instantiator import Instantiator
+from lightning_transformers.core.model import TaskTransformer
+from lightning_transformers.core.nlp.huggingface.config import HFBackboneConfig
 
 
-class HFTransformer(HydraTaskTransformer):
+class HFTransformer(TaskTransformer):
     """
     Base class for task specific transformers, wrapping pre-trained language models for downstream tasks.
     The API is built on top of AutoModel and AutoConfig, provided by HuggingFace.
@@ -19,30 +18,18 @@ class HFTransformer(HydraTaskTransformer):
 
     def __init__(
         self,
+        instantiator: Instantiator,
         downstream_model_type: str,
         backbone: HFBackboneConfig,
         optimizer: OptimizerConfig,
-        scheduler: HFSchedulerConfig,
+        scheduler: SchedulerConfig,
         **config_data_args,
     ):
-        super().__init__(optimizer, scheduler)
         model = get_class(downstream_model_type).from_pretrained(
             backbone.pretrained_model_name_or_path, **config_data_args
         )
-        self.model = model
-        self.pipeline = None
-        self._tokenizer = None
-
-    def prepare_warmup(self, cfg: HFSchedulerConfig):
-        if cfg.num_training_steps < 0:
-            # less than 0 specifies to infer number of training steps
-            cfg.num_training_steps = self.num_training_steps
-            log.info(f"Inferring number of training steps, set to {cfg.num_training_steps}")
-
-        if isinstance(cfg.num_warmup_steps, float):
-            # Convert float values to percentage of training steps to use as warmup
-            cfg.num_warmup_steps *= cfg.num_training_steps
-            log.info(f"Inferring number of warmup steps from ratio, set to {cfg.num_warmup_steps}")
+        super().__init__(model=model, optimizer=optimizer, scheduler=scheduler, instantiator=instantiator)
+        self.instantiator = instantiator
 
     @property
     def tokenizer(self):
