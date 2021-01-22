@@ -99,7 +99,7 @@ class TaskTransformer(LitTransformer):
         if self.instantiator is None:
             raise MisconfigurationException(
                 "To train you must provide an instantiator to instantiate the optimizer and scheduler"
-                "rr override `configure_optimizers` in the `LightningModule`."
+                "or override `configure_optimizers` in the `LightningModule`."
             )
         self.optimizer = self.instantiator.optimizer(self.model, self.optimizer_cfg)
         # compute_warmup needs the datamodule to be available when `self.num_training_steps`
