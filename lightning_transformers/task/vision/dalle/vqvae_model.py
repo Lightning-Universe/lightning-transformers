@@ -18,8 +18,8 @@ class VQVAE(TaskTransformer):
         **config_data_args,
     ):
         self.save_hyperparameters()
-        self.model = hydra.utils.instantiate(backbone, **config_data_args)
-        super().__init__(model=self.model, optimizer=optimizer, scheduler=scheduler, instantiator=instantiator)
+        model = hydra.utils.instantiate(backbone, **config_data_args)
+        super().__init__(model=model, optimizer=optimizer, scheduler=scheduler, instantiator=instantiator)
 
     def training_step(self, batch: Any, batch_idx: int) -> torch.Tensor:
         images, labels = batch

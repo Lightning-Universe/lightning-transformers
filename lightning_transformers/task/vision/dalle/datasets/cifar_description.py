@@ -1,4 +1,4 @@
-from lightning_transformers.task.vision.dalle.datasets import CIFARTransformerDataModule
+from lightning_transformers.task.vision.dalle.datasets.cifar import CIFARTransformerDataModule
 
 
 class CIFARDescriptionDataModule(CIFARTransformerDataModule):
