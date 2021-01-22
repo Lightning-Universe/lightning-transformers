@@ -1,0 +1,8 @@
+# @package backbone
+_target_: dalle_pytorch.DiscreteVAE
+num_layers: 3
+num_tokens: 8192
+codebook_dim: 1024
+hidden_dim: 64
+num_resnet_blocks: 1
+temperature: 0.9
