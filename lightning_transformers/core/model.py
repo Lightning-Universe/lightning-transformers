@@ -3,6 +3,7 @@ from typing import Any, Dict, Optional, Tuple, Union
 import pytorch_lightning as pl
 import torch
 from pytorch_lightning import _logger as log
+from pytorch_lightning.utilities.exceptions import MisconfigurationException
 
 from lightning_transformers.core.config import OptimizerConfig, SchedulerConfig
 from lightning_transformers.core.instantiator import Instantiator
@@ -83,7 +84,11 @@ class TaskTransformer(LitTransformer):
     """
 
     def __init__(
-        self, model: torch.nn.Module, instantiator: Instantiator, optimizer: OptimizerConfig, scheduler: SchedulerConfig
+        self,
+        model: torch.nn.Module,
+        optimizer: OptimizerConfig,
+        scheduler: SchedulerConfig,
+        instantiator: Optional[Instantiator] = None,
     ):
         super().__init__(model)
         self.instantiator = instantiator
@@ -91,6 +96,11 @@ class TaskTransformer(LitTransformer):
         self.scheduler_cfg = scheduler
 
     def configure_optimizers(self) -> Dict:
+        if self.instantiator is None:
+            raise MisconfigurationException(
+                "To train you must provide an instantiator to instantiate the optimizer and scheduler"
+                "or override `configure_optimizers` in the `LightningModule`."
+            )
         self.optimizer = self.instantiator.optimizer(self.model, self.optimizer_cfg)
         # compute_warmup needs the datamodule to be available when `self.num_training_steps`
         # is called that is why this is done here and not in the __init__
@@ -105,7 +115,8 @@ class TaskTransformer(LitTransformer):
 
     def on_save_checkpoint(self, checkpoint: Dict[str, Any]):
         # Save tokenizer from datamodule for predictions
-        checkpoint["instantiator"] = self.instantiator
+        if self.instantiator:
+            checkpoint["instantiator"] = self.instantiator
 
     def on_load_checkpoint(self, checkpoint: Dict[str, Any]) -> None:
-        self.instantiator = checkpoint["instantiator"]
+        self.instantiator = checkpoint.get("instantiator")

@@ -36,7 +36,7 @@ class Instantiator(ABC):
 
 class HydraInstantiator(Instantiator):
     def model(self, cfg: DictConfig, model_data_args):  # -> "TaskTransformer":
-        return instantiate(cfg, self, **model_data_args)
+        return instantiate(cfg, instantiator=self, **model_data_args)
 
     def optimizer(self, model: torch.nn.Module, cfg: DictConfig) -> torch.optim.Optimizer:
         no_decay = ["bias", "LayerNorm.weight"]
