@@ -4,26 +4,35 @@ import hydra
 import torch
 from dalle_pytorch import DALLE
 
-from lightning_transformers.core.hydra_model import HydraTaskTransformer
+from lightning_transformers.core import TaskTransformer
+from lightning_transformers.core.config import OptimizerConfig, SchedulerConfig
+from lightning_transformers.core.instantiator import Instantiator
 from lightning_transformers.task.vision.dalle import VQVAE
 from lightning_transformers.task.vision.dalle.clip import clip
 from lightning_transformers.task.vision.dalle.clip.clip import tokenize
 from lightning_transformers.task.vision.dalle.clip.simple_tokenizer import SimpleTokenizer
 
 
-class DALLETransformer(HydraTaskTransformer):
+class DALLETransformer(TaskTransformer):
     def __init__(
-        self, vae_path: str, tokenizer_path: str, backbone: Any, optimizer: Any, scheduler: Any, **config_data_args
+        self,
+        instantiator: Instantiator,
+        vae_path: str,
+        tokenizer_path: str,
+        backbone: Any,
+        optimizer: OptimizerConfig,
+        scheduler: SchedulerConfig,
     ):
-        super().__init__(optimizer, scheduler)
         self.save_hyperparameters()
-        self.vae = VQVAE.load_from_checkpoint(vae_path)
+        vae = VQVAE.load_from_checkpoint(vae_path)
+        self.model: DALLE = hydra.utils.instantiate(
+            backbone, vae=vae.model, num_text_tokens=len(self.tokenizer.encoder)
+        )
+        self.tokenizer = SimpleTokenizer(tokenizer_path)
+        super().__init__(model=self.model, optimizer=optimizer, scheduler=scheduler, instantiator=instantiator)
+        self.vae = vae
         for params in self.vae.parameters():
             params.requires_grad = False
-        self.tokenizer = SimpleTokenizer(tokenizer_path)
-        self.model: DALLE = hydra.utils.instantiate(
-            backbone, vae=self.vae.model, num_text_tokens=len(self.tokenizer.encoder)
-        )
         self.context_length = backbone.text_seq_len
 
     def training_step(self, batch: Any, batch_idx: int) -> torch.Tensor:

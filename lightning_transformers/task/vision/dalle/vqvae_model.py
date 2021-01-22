@@ -4,20 +4,22 @@ import hydra
 import torch
 
 from lightning_transformers.core import TaskTransformer
-from lightning_transformers.core.hydra_model import HydraTaskTransformer
+from lightning_transformers.core.config import OptimizerConfig, SchedulerConfig
+from lightning_transformers.core.instantiator import Instantiator
 
 
 class VQVAE(TaskTransformer):
     def __init__(
         self,
-        backbone,
-        optimizer: Any,
-        scheduler: Any,
+        instantiator: Instantiator,
+        backbone: Any,
+        optimizer: OptimizerConfig,
+        scheduler: SchedulerConfig,
         **config_data_args,
     ):
-        super().__init__(optimizer, scheduler)
         self.save_hyperparameters()
         self.model = hydra.utils.instantiate(backbone, **config_data_args)
+        super().__init__(model=self.model, optimizer=optimizer, scheduler=scheduler, instantiator=instantiator)
 
     def training_step(self, batch: Any, batch_idx: int) -> torch.Tensor:
         images, labels = batch
