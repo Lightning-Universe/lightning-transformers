@@ -1,13 +1,14 @@
 import os
+from typing import Optional
 
 import hydra
 from omegaconf import DictConfig, OmegaConf
 from pytorch_lightning.utilities.distributed import rank_zero_info
 
 from lightning_transformers.core import TaskTransformer, TransformerDataModule
-from lightning_transformers.core.config import TrainerConfig
-from lightning_transformers.core.huggingface.config import HFTaskConfig, HFTokenizerConfig, HFTransformerDataConfig
+from lightning_transformers.core.config import TaskConfig, TrainerConfig, TransformerDataConfig
 from lightning_transformers.core.instantiator import HydraInstantiator, Instantiator
+from lightning_transformers.core.nlp.huggingface.config import HFTokenizerConfig
 from lightning_transformers.core.utils import set_ignore_warnings
 
 
@@ -15,18 +16,20 @@ def run(
     instantiator: Instantiator,
     ignore_warnings: bool = True,
     do_train: bool = True,
-    # TODO: these should be non-HF
-    dataset: HFTransformerDataConfig = HFTransformerDataConfig(),
-    tokenizer: HFTokenizerConfig = HFTokenizerConfig(),
-    task: HFTaskConfig = HFTaskConfig(),
+    dataset: TransformerDataConfig = TransformerDataConfig(),
+    task: TaskConfig = TaskConfig(),
     trainer: TrainerConfig = TrainerConfig(),
+    tokenizer: Optional[HFTokenizerConfig] = None,
 ):
     if ignore_warnings:
         set_ignore_warnings()
 
-    os.environ["TOKENIZERS_PARALLELISM"] = "TRUE"
+    data_module_kwargs = {}
+    if tokenizer is not None:
+        os.environ["TOKENIZERS_PARALLELISM"] = "TRUE"
+        data_module_kwargs["tokenizer"] = tokenizer
 
-    data_module: TransformerDataModule = instantiator.data_module(dataset, tokenizer=tokenizer)
+    data_module: TransformerDataModule = instantiator.data_module(dataset, **data_module_kwargs)
     data_module.setup("fit")
 
     model: TaskTransformer = instantiator.model(task, model_data_args=data_module.model_data_args)

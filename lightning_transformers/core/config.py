@@ -57,3 +57,8 @@ class SchedulerConfig(HydraConfig):
 @dataclass
 class TrainerConfig(HydraConfig):
     ...
+
+
+@dataclass
+class TaskConfig(HydraConfig):
+    ...

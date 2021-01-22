@@ -11,6 +11,7 @@ from lightning_transformers.core.config import (
     BaseConfig,
     OptimizerConfig,
     SchedulerConfig,
+    TaskConfig,
     TrainerConfig,
     TransformerDataConfig,
 )
@@ -19,7 +20,7 @@ from lightning_transformers.core.model import TaskTransformer
 
 if TYPE_CHECKING:
     # avoid circular imports
-    from lightning_transformers.core.huggingface.config import HFTaskConfig, HFTokenizerConfig
+    from lightning_transformers.core.nlp.huggingface.config import HFTokenizerConfig
 
 
 class Instantiator:
@@ -28,8 +29,7 @@ class Instantiator:
 
 
 class HydraInstantiator(Instantiator):
-    # TODO: TaskConfig instead?
-    def model(self, cfg: "HFTaskConfig", model_data_args: Dict[str, Any]) -> TaskTransformer:
+    def model(self, cfg: TaskConfig, model_data_args: Dict[str, Any]) -> TaskTransformer:
         return instantiate(cfg, self, **model_data_args)
 
     def optimizer(self, model: torch.nn.Module, cfg: OptimizerConfig) -> torch.optim.Optimizer:
@@ -65,7 +65,7 @@ class HydraInstantiator(Instantiator):
     def trainer(self, cfg: TrainerConfig, **kwargs) -> pl.Trainer:
         return instantiate(cfg, **kwargs)
 
-    def dictconfig_to_dataclass(self, cfg: DictConfig, strict: bool = False) -> dataclass:
+    def dictconfig_to_dataclass(self, cfg: DictConfig) -> dataclass:
         cfg = OmegaConf.to_container(cfg, resolve=True)  # resolve interpolations
 
         def _recursive_convert(cfg: Dict) -> dataclass:

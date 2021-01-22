@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from typing import Optional, Union
 
-from lightning_transformers.core.config import HydraConfig, OptimizerConfig, SchedulerConfig
+from lightning_transformers.core.config import HydraConfig, OptimizerConfig, SchedulerConfig, TaskConfig
 from lightning_transformers.core.data import TransformerDataConfig
 
 
@@ -39,7 +39,7 @@ class HFSchedulerConfig(SchedulerConfig):
 
 
 @dataclass
-class HFTaskConfig(HydraConfig):
+class HFTaskConfig(TaskConfig):
     backbone: HFBackboneConfig = HFBackboneConfig()
     optimizer: OptimizerConfig = OptimizerConfig()
     scheduler: HFSchedulerConfig = HFSchedulerConfig()
