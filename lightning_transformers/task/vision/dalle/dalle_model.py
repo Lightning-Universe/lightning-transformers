@@ -1,4 +1,4 @@
-from typing import Any
+from typing import Any, Dict
 
 import hydra
 import torch
@@ -9,7 +9,6 @@ from lightning_transformers.core.config import OptimizerConfig, SchedulerConfig
 from lightning_transformers.core.instantiator import Instantiator
 from lightning_transformers.task.vision.dalle.clip import clip
 from lightning_transformers.task.vision.dalle.clip.clip import tokenize
-from lightning_transformers.task.vision.dalle.clip.simple_tokenizer import SimpleTokenizer
 from lightning_transformers.task.vision.dalle.vqvae_model import VQVAE
 
 
@@ -18,7 +17,6 @@ class DALLETransformer(TaskTransformer):
         self,
         instantiator: Instantiator,
         vae_path: str,
-        tokenizer_path: str,
         backbone: Any,
         optimizer: OptimizerConfig,
         scheduler: SchedulerConfig,
@@ -26,18 +24,38 @@ class DALLETransformer(TaskTransformer):
     ):
         self.save_hyperparameters()
         vae = VQVAE.load_from_checkpoint(vae_path)
-        tokenizer = SimpleTokenizer(tokenizer_path)
+
+        # todo: the tokenizer should be passed to the data module in training, and then we should save
+        # todo: the tokenizer within the model for inference.
+        # todo: this means no need to instantiate here, and we can instantiate via the data module.
+        tokenizer = None
         model: DALLE = hydra.utils.instantiate(backbone, vae=vae.model, num_text_tokens=len(tokenizer.encoder))
         super().__init__(model=model, optimizer=optimizer, scheduler=scheduler, instantiator=instantiator)
         self.vae = vae
-        self.tokenizer = tokenizer
         for params in self.vae.parameters():
             params.requires_grad = False
         self.context_length = backbone.text_seq_len
+        self._tokenizer = None
+
+    @property
+    def tokenizer(self):
+        if self._tokenizer:
+            return self._tokenizer
+        return self.trainer.datamodule.tokenizer
+
+    @tokenizer.setter
+    def tokenizer(self, tokenizer):
+        self._tokenizer = tokenizer
+
+    def on_save_checkpoint(self, checkpoint: Dict[str, Any]):
+        # Save tokenizer from datamodule for predict
+        checkpoint["tokenizer"] = self.tokenizer
+
+    def on_load_checkpoint(self, checkpoint: Dict[str, Any]) -> None:
+        self.tokenizer = checkpoint["tokenizer"]
 
     def training_step(self, batch: Any, batch_idx: int) -> torch.Tensor:
         image, text = batch
-        text = tokenize(text, self.tokenizer, self.context_length).to(self.device)
         mask = torch.ones_like(text).bool().to(self.device)
         loss = self.model(text, image, mask, return_loss=True)
         return loss

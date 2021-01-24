@@ -1,0 +1,2 @@
+_target_: lightning_transformers.task.vision.dalle.clip.simple_tokenizer.SimpleTokenizer
+bpe_path: /home/ubuntu/lightning-transformers/bpe_simple_vocab_16e6.txt.gz

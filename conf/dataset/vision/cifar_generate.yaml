@@ -1,4 +1,4 @@
-_target_: lightning_transformers.task.vision.dalle.datasets.CIFARTransformerDataModule
+_target_: lightning_transformers.task.vision.dalle.datasets.CIFARGenerateDataModule
 data_dir: ~/cifar/
 # torch data-loader specific arguments
 batch_size: ${training.batch_size}
