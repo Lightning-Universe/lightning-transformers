@@ -1,7 +1,15 @@
 pytorch-lightning>=1.0.0
 torch>=1.6
+
+# extras
+fairscale
+
+# huggingface
 transformers
 datasets
+
+# hydra
 hydra-core>=1.1.0.dev2 # todo: swap to 1.1 version once out
-fairscale
+
+# task-specific
 rouge-score
