@@ -13,7 +13,7 @@ references:
         # we need to use py3.7 ot higher becase of an issue with metaclass inheritence
         pyenv global 3.7.3
         python --version
-        pip install -r requirements/docs.txt
+        pip install -r docs/requirements.txt
         cd docs
         make clean
         make html --debug --jobs 2 SPHINXOPTS="-W"
