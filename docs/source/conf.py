@@ -335,11 +335,7 @@ if SPHINX_MOCK_REQUIREMENTS:
     MOCK_PACKAGES += package_list_from_file(os.path.join(PATH_ROOT, "requirements.txt"))
 
 MOCK_PACKAGES = [PACKAGE_MAPPING.get(pkg, pkg) for pkg in MOCK_PACKAGES]
-MOCK_MANUAL_PACKAGES = [
-    "pytorch_lightning",
-    "numpy",
-    "torch",
-]
+MOCK_MANUAL_PACKAGES = ["pytorch_lightning", "numpy", "torch", "omegaconf"]
 autodoc_mock_imports = MOCK_PACKAGES + MOCK_MANUAL_PACKAGES
 # for mod_name in MOCK_REQUIRE_PACKAGES:
 #     sys.modules[mod_name] = mock.Mock()
