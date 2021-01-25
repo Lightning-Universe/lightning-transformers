@@ -1,0 +1,17 @@
+_convert_: all
+defaults:
+  - default # add args from default trainer conf
+  - override /optimizer@_group_: deepspeed/adam # default to DeepSpeed compatible AdamW
+  - override /scheduler@_group_: deepspeed/warmuplr # default to DeepSpeed compatible warmup LR
+gpus: 1
+accelerator: deepspeed
+amp_backend: 'native'
+precision: 16
+deepspeed_config:
+  optimizer: ${optimizer}
+  scheduler: ${scheduler}
+  zero_optimization:
+    stage: 2
+    cpu_offload: True
+    contiguous_gradients: True
+    overlap_comm: True

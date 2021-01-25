@@ -1,0 +1,6 @@
+type: "WarmupLR"
+params:
+  last_batch_iteration: -1
+  warmup_min_lr: 0
+  warmup_max_lr: 3e-5
+  warmup_num_steps: 100
