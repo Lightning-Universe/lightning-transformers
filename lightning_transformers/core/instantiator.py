@@ -45,6 +45,11 @@ class Instantiator(ABC):
 
 
 class HydraInstantiator(Instantiator):
+    def maybe_asdict(self, cfg: Any) -> Any:
+        if isinstance(cfg, BaseConfig):
+            return cfg.asdict()
+        return cfg
+
     def model(self, cfg: TaskConfig, model_data_args: Dict[str, Any]) -> "TaskTransformer":
         return instantiate(cfg, self, **model_data_args)
 
@@ -70,8 +75,10 @@ class HydraInstantiator(Instantiator):
     def data_module(
         self, cfg: TransformerDataConfig, tokenizer: Optional["HFTokenizerConfig"]
     ) -> Union[TransformerDataModule, TransformerTokenizerDataModule]:
+        cfg = self.maybe_asdict(cfg)
         if tokenizer:
-            return instantiate(cfg, tokenizer=instantiate(tokenizer))
+            tokenizer = self.maybe_asdict(tokenizer)
+            return instantiate(cfg, tokenizer=tokenizer)
         return instantiate(cfg)
 
     # def logger(self, cfg: DictConfig) -> logging.Logger:
@@ -83,6 +90,9 @@ class HydraInstantiator(Instantiator):
 
     def dictconfig_to_dataclass(self, cfg: DictConfig) -> dataclass:
         cfg = OmegaConf.to_container(cfg, resolve=True)  # resolve interpolations
+        # DictConfig converts any of its value to a DictConfig. This is a design
+        # limitation. We are forced to convert all undefined configs (without _target_config_)
+        # to a BaseConfig which allows any attribute. https://github.com/omry/omegaconf/issues/480
 
         def _recursive_convert(cfg: Dict) -> dataclass:
             for k, v in cfg.items():

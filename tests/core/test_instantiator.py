@@ -34,7 +34,7 @@ def test_hydrainstantiator_dictconfig_to_dataclass(x, expected):
     assert actual == expected
 
 
-def test_hydrainstantiator_dictconfig_to_dataclass_raises(x):
+def test_hydrainstantiator_dictconfig_to_dataclass_raises():
     instantiator = HydraInstantiator()
     cfg = DictConfig(
         {

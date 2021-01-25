@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import Optional
+from typing import Dict, Optional
 
 
 @dataclass
@@ -26,9 +26,21 @@ class BaseConfig:
             new._repr_extras.append(k)
         return new
 
-    def __repr__(self):
-        attrs = {f"{k}={getattr(self, k)}" for k in self._repr_extras}
+    def __repr__(self) -> str:
+        attrs = [f"{k}={getattr(self, k)!r}" for k in self._repr_extras]
         return f"{self.__class__.__name__}({', '.join(attrs)})"
+
+    def asdict(self) -> Dict:
+        def blocklist(s: str) -> bool:
+            s = str(s)
+            return s.startswith("_") and s not in ("_target_", "_recursive_")
+
+        return {k: v for k, v in self.__dict__.items() if not blocklist(k)}
+
+    def __eq__(self, other) -> bool:
+        if not isinstance(other, BaseConfig):
+            return False
+        return self.asdict() == other.asdict()
 
 
 @dataclass

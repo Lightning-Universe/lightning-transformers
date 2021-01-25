@@ -1,7 +1,8 @@
 # @package dataset
 _target_: lightning_transformers.task.nlp.huggingface.text_classification.TextClassificationDataModule
+_recursive_: False
 cfg:
-  _target_config_: lightning_transformers.core.huggingface.config.HFTransformerDataConfig
+  _target_config_: lightning_transformers.core.nlp.huggingface.config.HFTransformerDataConfig
   dataset_name: emotion
   dataset_config_name: null
   train_file: ''

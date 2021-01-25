@@ -45,7 +45,6 @@ def main(cfg: DictConfig):
     rank_zero_info(OmegaConf.to_yaml(cfg))
     instantiator = HydraInstantiator()
     cfg = instantiator.dictconfig_to_dataclass(cfg)
-    print(cfg)
     run(
         instantiator,
         ignore_warnings=cfg.ignore_warnings,

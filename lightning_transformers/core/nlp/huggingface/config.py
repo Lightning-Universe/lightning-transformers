@@ -12,7 +12,7 @@ class HFTransformerDataConfig(TransformerDataConfig):
     train_val_split: Optional[int] = None
     train_file: Optional[str] = None
     validation_file: Optional[str] = None
-    padding: Union[str, bool] = "max_length"
+    padding: str = "max_length"  # type: Union[str, bool]
     truncation: str = "only_first"
     max_length: int = 128
     preprocessing_num_workers: int = 8
