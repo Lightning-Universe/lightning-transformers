@@ -1,6 +1,5 @@
 import logging
-from abc import ABC
-from typing import Any, Dict, Optional, TYPE_CHECKING, Union
+from typing import Optional, Union
 
 import pytorch_lightning as pl
 import torch
@@ -15,24 +14,24 @@ if TYPE_CHECKING:
     from lightning_transformers.core import TaskTransformer
 
 
-class Instantiator(ABC):
+class Instantiator:
     def model(self, *args, **kwargs):
-        raise NotImplementedError
+        raise NotImplementedError("Child class must implement method")
 
     def optimizer(self, *args, **kwargs):
-        raise NotImplementedError
+        raise NotImplementedError("Child class must implement method")
 
     def scheduler(self, *args, **kwargs):
-        raise NotImplementedError
+        raise NotImplementedError("Child class must implement method")
 
     def data_module(self, *args, **kwargs):
-        raise NotImplementedError
+        raise NotImplementedError("Child class must implement method")
 
     def logger(self, *args, **kwargs):
-        raise NotImplementedError
+        raise NotImplementedError("Child class must implement method")
 
     def trainer(self, *args, **kwargs):
-        raise NotImplementedError
+        raise NotImplementedError("Child class must implement method")
 
 
 class HydraInstantiator(Instantiator):
