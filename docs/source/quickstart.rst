@@ -23,7 +23,8 @@ Install all optional dependencies as well:
 Fine-tuning Bert for Text Classification
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Specify the task and the dataset from the command line.
+We support many NLP tasks that can be seen in :ref:`nlp-task`. In this example we will fine-tune BERT using the text classification task and the ``emotion`` dataset.
+
 See ``conf/task`` and ``conf/dataset`` in the repository for more information.
 
 Fine-tune `bert-based-cased <https://huggingface.co/bert-base-cased>`_ as default:
