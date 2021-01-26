@@ -20,13 +20,13 @@ Swap to use GPT:
 
     python train.py +task=nlp/huggingface/language_modeling +dataset=language_modeling/wikitext backbone.pretrained_model_name_or_path=gpt2
 
-To see all options available for the task, see ``conf/task/nlp/huggingface/language_modeling.yaml``.
+We report the Cross Entropy Loss for validation. To see all options available for the task, see ``conf/task/nlp/huggingface/language_modeling.yaml``.
 
 Using Custom Files
 ^^^^^^^^^^^^^^^^^^
 
-Custom text files need to just contain the text you'd like to train and validate on. Internally the text is flattened, and the model
-is trained on context windows (block size).
+To use custom text files, the files should contain the raw data you want to train and validate on. During data pre-processing the text is flattened, and the model
+is trained/validated on context windows (block size) made from the files.
 
 .. code-block:: bash
 
