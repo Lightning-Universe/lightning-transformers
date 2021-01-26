@@ -30,25 +30,33 @@ Fine-tune `bert-based-cased <https://huggingface.co/bert-base-cased>`_ as defaul
 
 .. code-block:: bash
 
-   python train.py +task=nlp/huggingface/text_classification +dataset=nlp/text_classification
+   python train.py +task=nlp/huggingface/text_classification +dataset=nlp/text_classification/emotion
 
 Swap to `RoBERTa <https://huggingface.co/roberta-base>`_:
 
 .. code-block:: bash
 
-   python train.py +task=nlp/huggingface/text_classification +dataset=nlp/text_classification backbone.pretrained_model_name_or_path=roberta-base
+   python train.py +task=nlp/huggingface/text_classification +dataset=nlp/text_classification/emotion backbone.pretrained_model_name_or_path=roberta-base
 
 Enable `Pytorch Lightning Native 16bit precision <https://pytorch-lightning.readthedocs.io/en/latest/amp.html#gpu-16-bit>`_:
 
 .. code-block:: bash
 
-   python train.py +task=nlp/huggingface/text_classification +dataset=nlp/text_classification backbone.pretrained_model_name_or_path=roberta-base trainer.precision=16
+   python train.py +task=nlp/huggingface/text_classification +dataset=nlp/text_classification/emotion trainer.precision=16
 
 Swap to using RMSProp optimizer (see ``conf/optimizers/`` for all supported optimizers):
 
 .. code-block:: bash
 
-   python train.py +task=nlp/huggingface/text_classification +dataset=nlp/text_classification backbone.pretrained_model_name_or_path=roberta-base optimizer=rmsprop
+   python train.py +task=nlp/huggingface/text_classification +dataset=nlp/text_classification/emotion optimizer=rmsprop
+
+Run inference once model trained (under construction):
+
+.. code-block:: bash
+
+   python predict.py +task=nlp/huggingface/text_classification +model=/path/to/model.ckpt +input="Classify this sentence."
+
+   # Returns {"label_0": 0.8, "label_1": 0.2}
 
 There are many other supported NLP tasks and datasets, see :ref:`nlp-task` and :ref:`nlp-datasets` to get started.
 
@@ -61,6 +69,13 @@ Train Image GPT ported from `Teddy Koker's implementation <https://github.com/te
 
    python train.py +task=vision/igpt +dataset=vision/cifar
 
+Run inference once model trained:
+
+.. code-block:: bash
+
+   python predict.py +task=vision/igpt +model=/path/to/model.ckpt +input=half_image.png +output=output.png
+
+   # Generates other half of the image, saves to output.png
 
 There are many other supported Vision tasks and datasets, see :ref:`vision-task` and :ref:`vision-datasets` to get started.
 
