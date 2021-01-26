@@ -6,12 +6,14 @@
 Lightning-Transformers documentation
 =======================================
 
-Lightning Transformers provides capabilities for high performance research using SOTA Transformers, backed by Pytorch Lightning.
+Lightning Transformers provides capabilities for high performance research using SOTA Transformers, backed by `Pytorch Lightning <https://www.pytorchlightning.ai/>`_ and `Hydra <http://hydra.cc/>`_.
 
 We provide an easy to use API across multiple modalities such as NLP and Vision whilst making it simple to add your own
 `LightningModules <https://pytorch-lightning.readthedocs.io/en/stable/lightning_module.html#lightning-module>`_ and `LightningDataModules <https://pytorch-lightning.readthedocs.io/en/latest/datamodules.html#lightningdatamodule>`_.
 
 We also provide flexible and easy to enable training optimizations, such as `DeepSpeed ZeRO <https://pytorch-lightning.readthedocs.io/en/latest/multi_gpu.html#deepspeed>`_ or `FairScale Sharded Training <https://pytorch-lightning.readthedocs.io/en/latest/multi_gpu.html#sharded-training>`_ + integrations with training optimization Callbacks.
+
+For a list of currently supported tasks, see :ref:`tasks`.
 
 .. include:: quickstart.rst
 
