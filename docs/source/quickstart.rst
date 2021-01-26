@@ -82,7 +82,7 @@ There are many other supported Vision tasks and datasets, see :ref:`vision-task`
 Trainer Options
 ^^^^^^^^^^^^^^^
 
-We expose all `Pytorch Lightning Trainer <https://pytorch-lightning.readthedocs.io/en/latest/trainer.html>`_ parameters via the config files. This makes it easy to configure without touching the code.
+We expose all `Pytorch Lightning Trainer <https://pytorch-lightning.readthedocs.io/en/latest/trainer.html>`_ parameters via config files. This makes it easy to configure without touching the code.
 
 Setting maximum epochs:
 
@@ -97,26 +97,3 @@ Using TPUs:
     python train.py +task=vision/igpt +dataset=vision/cifar trainer.tpu_cores=8
 
 See the `Pytorch Lightning Trainer <https://pytorch-lightning.readthedocs.io/en/latest/trainer.html>`_  or ``conf/trainer/default`` for all parameters.
-
-Enable Training Optimizations
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-Training optimizations provide ways to improve speed and memory efficiency when training. These techniques are compatible with single GPU and multi-GPU setups.
-
-Enable `Sharded Training <https://pytorch-lightning.readthedocs.io/en/latest/multi_gpu.html#sharded-training>`_:
-
-.. code-block:: bash
-
-   python train.py +task=vision/igpt +dataset=vision/cifar trainer=sharded
-
-Enable `DeepSpeed ZeRO Offload <https://pytorch-lightning.readthedocs.io/en/latest/multi_gpu.html#deepspeed>`_ (under construction):
-
-.. code-block:: bash
-
-   python train.py +task=vision/igpt +dataset=vision/cifar trainer=zero_offload
-
-With multiple machines `(Command has to be run on all machines either manually, or using an orchestration system such as SLURM or TorchElastic)`:
-
-.. code-block:: bash
-
-   deepspeed --num_nodes 2 --num_gpus 1 train.py +task=vision/igpt +dataset=vision/cifar trainer=zero_offload
