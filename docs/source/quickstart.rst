@@ -23,7 +23,7 @@ Install all optional dependencies as well:
 Fine-tuning Bert for Text Classification
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-We support many NLP tasks that can be seen in :ref:`nlp-task`. In this example we will fine-tune BERT using the text classification task and the ``emotion`` dataset.
+We support many NLP tasks that can be seen in :ref:`nlp-tasks`. In this example we will fine-tune BERT using the text classification task and the ``emotion`` dataset.
 
 See ``conf/task`` and ``conf/dataset`` in the repository for more information.
 
@@ -59,7 +59,7 @@ Run inference once model trained (under construction):
 
    # Returns {"label_0": 0.8, "label_1": 0.2}
 
-There are many other supported NLP tasks and datasets, see :ref:`nlp-task` and :ref:`nlp-datasets` to get started.
+There are many other supported NLP tasks and datasets, see :ref:`nlp-tasks` to get started.
 
 Fine-tuning Image GPT (under construction)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -78,7 +78,7 @@ Run inference once model trained:
 
    # Generates other half of the image, saves to output.png
 
-There are many other supported Vision tasks and datasets, see :ref:`vision-task` and :ref:`vision-datasets` to get started.
+There are many other supported vision tasks and datasets, see :ref:`vision-tasks` and to get started.
 
 Trainer Options
 ^^^^^^^^^^^^^^^
@@ -90,6 +90,12 @@ Setting maximum epochs:
 .. code-block:: bash
 
     python train.py +task=vision/igpt +dataset=vision/cifar trainer.max_epochs=4
+
+Using multiple GPUs:
+
+.. code-block:: bash
+
+    python train.py +task=vision/igpt +dataset=vision/cifar trainer.gpus=4
 
 Using TPUs:
 

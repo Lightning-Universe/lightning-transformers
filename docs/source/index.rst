@@ -34,15 +34,6 @@ For a list of currently supported tasks, see :ref:`tasks`.
 
 .. toctree::
    :maxdepth: 2
-   :name: datasets
-   :caption: Datasets
-
-   datasets/nlp
-   datasets/vision
-   datasets/custom
-
-.. toctree::
-   :maxdepth: 2
    :name: optimization
    :caption: Training Optimizations
 

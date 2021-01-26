@@ -1,4 +1,10 @@
-.. _vision-task:
+.. _vision-tasks:
 
-Vision
-======
+Vision Tasks
+************
+
+Generative Pretraining from Pixels
+==================================
+
+Text to Image
+=============
