@@ -45,8 +45,8 @@ is trained/validated on context windows (block size) made from the files.
 
     python train.py +task=nlp/huggingface/language_modeling +dataset=nlp/language_modeling/wikitext dataset.train_file=train.txt dataset.validation_file=valid.txt
 
-Inference (under construction)
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Inference Pipeline (under construction)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 By default we use the text generation pipeline, which requires a conditional input string and generates an output string.
 
@@ -88,6 +88,7 @@ By default we use the text generation pipeline, which requires a conditional inp
 .. code-block:: bash
 
     python predict.py +task=nlp/huggingface/language_modeling +model=/path/to/model.ckpt +input="Condition sentence for the language model"
+
 Question Answering
 ------------------
 
