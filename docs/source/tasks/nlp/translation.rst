@@ -1,8 +1,8 @@
-Question Answering
-------------------
-Fine-tune Transformers using the Question Answering Task. Currently supports the `SQuAD <https://huggingface.co/datasets/squad>`_ dataset and custom input text files.
+Translation
+-----------
+Fine-tune Transformers using the Translation Task. Currently supports the `WMT16 <https://huggingface.co/datasets/wmt16>`_ dataset and custom input text files.
 
-The Question Answering task requires the model to determine the start and end of a span within the given context, that answers a given question.
+The Translation task requires the model to determine the start and end of a span within the given context, that answers a given question.
 This allows the model to pre-condition on contextual information to determine an answer.
 
 .. code-block:: none
@@ -25,22 +25,26 @@ Swap to GPT backbone:
 
     python train.py +task=nlp/huggingface/question_answering +dataset=nlp/question_answering/squad backbone.pretrained_model_name_or_path=gpt2
 
-Question Answering Using Custom Files (under construction)
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Translation Using Custom Files (under construction)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-To use custom text files, the files should contain new line delimited json objects within the text files, in the same format as `SQuAD format <https://huggingface.co/datasets/squad#data-instances>`_:
+To use custom text files, the files should contain data in the same format as the `SQuAD format <https://huggingface.co/datasets/squad#data-instances>`_:
 
 .. code-block:: json
 
     {
-        "answers": {
-            "answer_start": [1],
-            "text": ["This is a test text"]
-        },
-        "context": "This is a test context.",
-        "id": "1",
-        "question": "Is this a test?",
-        "title": "train test"
+       "answers":{
+          "answer_start":[
+             1
+          ],
+          "text":[
+             "This is a test text"
+          ]
+       },
+       "context":"This is a test context.",
+       "id":"1",
+       "question":"Is this a test?",
+       "title":"train test"
     }
 
 We override the dataset files, allowing us to still use the data transforms defined with this dataset.
@@ -49,8 +53,8 @@ We override the dataset files, allowing us to still use the data transforms defi
 
     python train.py +task=nlp/huggingface/question_answering +dataset=nlp/question_answering/squad dataset.train_file=train.txt dataset.validation_file=valid.txt
 
-Question Answering Inference Pipeline (under construction)
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Translation Inference Pipeline (under construction)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 By default we use the question answering pipeline, which requires a context and a question as input.
 

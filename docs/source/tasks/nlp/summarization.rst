@@ -20,9 +20,9 @@ To use this task, we must select a Seq2Seq Encoder/Decoder based model, such as 
 Summarization Using Custom Files (under construction)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-To use custom text files, the files should contain data entries in the same format as the `XSUM dataset <https://huggingface.co/datasets/xsum#data-instances>`_:
+To use custom text files, the files should contain new line delimited json objects within the text files, in the same format as `XSUM dataset <https://huggingface.co/datasets/xsum#data-instances>`_:
 
-.. code-block:: none
+.. code-block:: json
 
     {
         "document": "some-body",

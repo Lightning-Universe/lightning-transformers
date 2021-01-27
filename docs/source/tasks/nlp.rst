@@ -19,11 +19,8 @@ Using Lightning also allows us to support custom fine-tuning strategies which ca
 
 .. include:: nlp/summarization.rst
 
-Text Classification
--------------------
+.. include:: nlp/text_classification.rst
 
-Token Classification
---------------------
+.. include:: nlp/token_classification.rst
 
-Translation
------------
+.. include:: nlp/translation.rst
