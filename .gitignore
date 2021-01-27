@@ -112,6 +112,9 @@ dmypy.json
 # PyCharm
 .idea/
 
+# VS Code
+.vscode/
+
 # Lightning logs
 lightning_logs
 *.gz
