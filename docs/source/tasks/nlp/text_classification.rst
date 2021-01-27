@@ -1,8 +1,6 @@
 Text Classification
 -------------------
-Fine-tune Transformers using the Text Classification Task. Currently supports the `XLNI <https://huggingface.co/datasets/xlni>`_, `GLUE <https://huggingface.co/datasets/glue>`_ and `emotion <https://huggingface.co/datasets/emotion>`_ datasets, or custom input files.
-
-Text Classification fine-tunes the model to predict probabilities across a set of labels given input text.
+The Text Classification Task fine-tunes the model to predict probabilities across a set of labels given input text.. Currently supports the `XLNI <https://huggingface.co/datasets/xlni>`_, `GLUE <https://huggingface.co/datasets/glue>`_ and `emotion <https://huggingface.co/datasets/emotion>`_ datasets, or custom input files.
 
 .. code-block:: none
 

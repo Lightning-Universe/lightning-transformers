@@ -1,9 +1,7 @@
 Question Answering
 ------------------
-Fine-tune Transformers using the Question Answering Task. Currently supports the `SQuAD <https://huggingface.co/datasets/squad>`_ dataset and custom input text files.
-
 The Question Answering task requires the model to determine the start and end of a span within the given context, that answers a given question.
-This allows the model to pre-condition on contextual information to determine an answer.
+This allows the model to pre-condition on contextual information to determine an answer. Currently supports the `SQuAD <https://huggingface.co/datasets/squad>`_ dataset or custom input text files.
 
 .. code-block:: none
 

@@ -1,8 +1,6 @@
 Multiple Choice
 ---------------
-Fine-tune Transformers using the Multiple Choice Task. Currently supports the `RACE <https://huggingface.co/datasets/race>`_ and `SWAG <https://huggingface.co/datasets/swag>`_ datasets, or custom input files.
-
-The Multiple Choice task requires the model to decide on a set of options, given a question with optional context, for example:
+The Multiple Choice task requires the model to decide on a set of options, given a question with optional context. Currently supports the `RACE <https://huggingface.co/datasets/race>`_ and `SWAG <https://huggingface.co/datasets/swag>`_ datasets, or custom input files.
 
 .. code-block:: none
 

@@ -1,9 +1,9 @@
 Summarization
 -------------
-Fine-tune Transformers using the Summarization Task.
+The Summarization task requires the model to summarize a document into a shorter sentence.
 Currently supports the `CNN/DailyMail <https://huggingface.co/datasets/cnn_dailymail>`_ and `XSUM <https://huggingface.co/datasets/xsum>`_ dataset or custom input text files.
 
-The Summarization task requires the model to summarize a document into a shorter sentence. In the CNN/Daily Mail dataset, this involves taking long articles and summarizing them.
+In the CNN/Daily Mail dataset, this involves taking long articles and summarizing them.
 
 .. code-block:: none
 

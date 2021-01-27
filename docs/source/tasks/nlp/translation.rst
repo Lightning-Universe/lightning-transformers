@@ -1,34 +1,30 @@
 Translation
 -----------
-Fine-tune Transformers using the Translation Task. Currently supports the `WMT16 <https://huggingface.co/datasets/wmt16>`_ dataset and custom input text files.
-
-The Translation task requires the model to determine the start and end of a span within the given context, that answers a given question.
-This allows the model to pre-condition on contextual information to determine an answer.
+The Translation task fine-tunes the model to translate text from one language to another. Currently supports the `WMT16 <https://huggingface.co/datasets/wmt16>`_ dataset or custom input text files.
 
 .. code-block:: none
 
-    Context: The ground is black, the sky is blue and the car is red.
-    Question: What color is the sky?
+    Input Text: <TODO>
+    Model Output: <TODO>
 
-    Model answer: {"answer": "the sky is blue", "start": 21, "end": 35}
-
-Use this task when you would like to fine-tune onto data where an answer can be extracted from context information.
-Since this is an extraction task, you can rely on most Transformer models as your backbone.
+To use this task, we must select a Seq2Seq Encoder/Decoder based model, such as multi-lingual T5 or BART. Conventional models like GPT/BERT will not work as they are encoder only.
+In addition, we also need a tokenizer that has been created on multi-lingual text. This is true for `mt5 <https://huggingface.co/google/mt5-base>`_ and `mbart <https://huggingface.co/facebook/mbart-large-cc25>`_.
 
 .. code-block:: bash
 
-    python train.py +task=nlp/huggingface/question_answering +dataset=nlp/question_answering/squad
+    python train.py +task=nlp/huggingface/translation +dataset=nlp/translation/wmt16 backbone.pretrained_model_name_or_path=google/mt5-base
 
-Swap to GPT backbone:
+By default we fine-tune to translate from English to Romanian. This can be changed by specifying the source/target languages (see more in ``conf/dataset/nlp/translation/wmt16.yaml``):
 
 .. code-block:: bash
 
-    python train.py +task=nlp/huggingface/question_answering +dataset=nlp/question_answering/squad backbone.pretrained_model_name_or_path=gpt2
+    python train.py +task=nlp/huggingface/translation +dataset=nlp/translation/wmt16 backbone.pretrained_model_name_or_path=google/mt5-base dataset.dataset_config_name=de-en dataset.src_lang=de dataset.tgt_lang=en
+
 
 Translation Using Custom Files (under construction)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-To use custom text files, the files should contain data in the same format as the `SQuAD format <https://huggingface.co/datasets/squad#data-instances>`_:
+To use custom text files, the files should contain data in the same format as the `WMT16 format <https://huggingface.co/datasets/wmt16#data-instances>`_:
 
 .. code-block:: json
 
@@ -51,13 +47,13 @@ We override the dataset files, allowing us to still use the data transforms defi
 
 .. code-block:: bash
 
-    python train.py +task=nlp/huggingface/question_answering +dataset=nlp/question_answering/squad dataset.train_file=train.txt dataset.validation_file=valid.txt
+    python train.py +task=nlp/huggingface/translation +dataset=nlp/translation/wmt16 backbone.pretrained_model_name_or_path=google/mt5-base dataset.train_file=train.txt dataset.validation_file=valid.txt
 
 Translation Inference Pipeline (under construction)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-By default we use the question answering pipeline, which requires a context and a question as input.
+By default we use the translation pipeline, which requires a source text string.
 
 .. code-block:: bash
 
-    python predict.py +task=nlp/huggingface/question_Answering +model=/path/to/model.ckpt input.context="The ground is black, the sky is blue and the car is red." input.question="What color is the sky?"
+    python predict.py +task=nlp/huggingface/translation +model=/path/to/model.ckpt input="The ground is black, the sky is blue and the car is red."

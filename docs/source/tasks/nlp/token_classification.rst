@@ -1,9 +1,8 @@
 Token Classification
 --------------------
-Fine-tune Transformers using the Token Classification Task. Currently supports the `conll <https://huggingface.co/datasets/conll2003>`_ dataset, or custom input files.
-
-Token classification is similar to text classification, except each token within the text receives a prediction.
+The Token classification Task is similar to text classification, except each token within the text receives a prediction.
 A common use of this task is Named Entity Recognition (NER). Use this task if you require your data to be classified at the token level.
+Currently supports the `conll <https://huggingface.co/datasets/conll2003>`_ dataset, or custom input files.
 
 .. code-block:: bash
 
