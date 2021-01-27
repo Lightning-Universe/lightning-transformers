@@ -15,7 +15,7 @@ Language Modeling
 Fine-tune Transformers using the Causal Language Modeling Task (e.g GPT-3/CTRL). Currently supports the `wikitext2 <https://huggingface.co/datasets/wikitext>`_ dataset, or custom input files.
 
 Causal Language Modeling is the vanilla autoregressive pre-training method common to most language models
-(Excluding BERT and some other language models, which pre-trained using the Masked Language Modeling training method).
+(Excluding BERT-like models, which were pre-trained using the Masked Language Modeling training method).
 During training, we minimize the maximum likelihood during training across spans of text data (usually in some context window/block size).
 When trained on large quantities of text data, this gives us strong language models such as GPT-3 to use for downstream tasks.
 
