@@ -21,7 +21,6 @@ def main(cfg: DictConfig):
     instantiator = HydraInstantiator()
 
     data_module: TransformerDataModule = instantiator.data_module(cfg=cfg.dataset, tokenizer=cfg.tokenizer)
-    data_module.setup("fit")
 
     model: TaskTransformer = instantiator.model(cfg=cfg.task, model_data_args=data_module.model_data_args)
     trainer = instantiator.trainer(cfg.trainer, logger=instantiator.logger(cfg))

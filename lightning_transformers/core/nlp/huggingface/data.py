@@ -12,6 +12,11 @@ class HFTransformerDataModule(TransformerTokenizerDataModule):
     cfg: HFTransformerDataConfig
     tokenizer: PreTrainedTokenizerBase
 
+    def __init__(self, cfg: HFTransformerDataConfig, tokenizer: PreTrainedTokenizerBase):
+        super().__init__(cfg, tokenizer)
+        # call fit to setup any metadata required for the model initialization
+        self.setup("fit")
+
     def load_dataset(self) -> Dataset:
         if self.cfg.dataset_name is not None:
             # Downloading and loading a dataset from the hub.

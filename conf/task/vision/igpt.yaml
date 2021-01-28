@@ -1,0 +1,5 @@
+# @package task
+_target_: lightning_transformers.task.vision.igpt.GenerativePixelsTransformer
+backbone: ${backbone}
+optimizer: ${optimizer}
+scheduler: ${scheduler}
