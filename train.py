@@ -20,7 +20,10 @@ def main(cfg: DictConfig):
 
     instantiator = HydraInstantiator()
 
-    data_module: TransformerDataModule = instantiator.data_module(cfg=cfg.dataset, tokenizer=getattr(cfg, "tokenizer"))
+    if hasattr(cfg, "tokenizer"):
+        data_module: TransformerDataModule = instantiator.data_module(cfg=cfg.dataset, tokenizer=cfg.tokenizer)
+    else:
+        data_module: TransformerDataModule = instantiator.data_module(cfg=cfg.dataset)
     data_module.setup("fit")
 
     model: TaskTransformer = instantiator.model(cfg=cfg.task, model_data_args=data_module.model_data_args)

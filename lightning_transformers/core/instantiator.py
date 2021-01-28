@@ -55,7 +55,7 @@ class HydraInstantiator(Instantiator):
         return instantiate(cfg, optimizer=optimizer)
 
     def data_module(
-        self, cfg: DictConfig, tokenizer: Optional[DictConfig]
+        self, cfg: DictConfig, tokenizer: Optional[DictConfig] = None
     ) -> Union[TransformerDataModule, TransformerTokenizerDataModule]:
         if tokenizer:
             return instantiate(cfg, tokenizer=instantiate(tokenizer))
