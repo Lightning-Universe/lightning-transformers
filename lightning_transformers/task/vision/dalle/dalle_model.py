@@ -20,16 +20,12 @@ class DALLETransformer(TaskTransformer):
         backbone: Any,
         optimizer: OptimizerConfig,
         scheduler: SchedulerConfig,
-        **config_data_args,
+        num_text_tokens: int,
     ):
         self.save_hyperparameters()
         vae = VQVAE.load_from_checkpoint(vae_path)
 
-        # todo: the tokenizer should be passed to the data module in training, and then we should save
-        # todo: the tokenizer within the model for inference.
-        # todo: this means no need to instantiate here, and we can instantiate via the data module.
-        tokenizer = None
-        model: DALLE = hydra.utils.instantiate(backbone, vae=vae.model, num_text_tokens=len(tokenizer.encoder))
+        model: DALLE = hydra.utils.instantiate(backbone, vae=vae.model, num_text_tokens=num_text_tokens)
         super().__init__(model=model, optimizer=optimizer, scheduler=scheduler, instantiator=instantiator)
         self.vae = vae
         for params in self.vae.parameters():
@@ -68,7 +64,6 @@ class DALLETransformer(TaskTransformer):
 
     def common_step(self, batch: Any, prefix) -> torch.Tensor:
         image, text = batch
-        text = tokenize(text, self.tokenizer, self.context_length).to(self.device)
         mask = torch.ones_like(text).bool().to(self.device)
         loss = self.model(text, image, mask, return_loss=True)
         self.log(f"{prefix}_loss", loss, prog_bar=True, on_epoch=True, on_step=False)

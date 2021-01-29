@@ -1,9 +1,9 @@
 # @package task
 defaults:
+  - /tokenizer@_group_: clip/default # default to CLIP simple tokenizer
   - override /backbone@_group_: vision/dalle/default # default to DALLE backbone
-  - override /tokenizer@_group_: clip/default # default to CLIP simple tokenizer
 _target_: lightning_transformers.task.vision.dalle.DALLETransformer
-vae_path: /home/ubuntu/lightning-transformers/vae.pt
+vae_path: /data/lightning-transformers/vae.pt
 backbone: ${backbone}
 optimizer: ${optimizer}
 scheduler: ${scheduler}

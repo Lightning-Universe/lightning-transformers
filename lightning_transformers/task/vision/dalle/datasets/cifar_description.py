@@ -1,3 +1,5 @@
+from typing import Dict
+
 from lightning_transformers.task.vision.dalle.clip.clip import tokenize
 from lightning_transformers.task.vision.dalle.clip.simple_tokenizer import SimpleTokenizer
 from lightning_transformers.task.vision.dalle.datasets.cifar_generate import CIFARGenerateDataModule
@@ -20,6 +22,11 @@ class CIFARDescriptionDataModule(CIFARGenerateDataModule):
             if label.startswith("a"):
                 prefix += "n"  # todo: may be overkill for grammar sake...
             text = f"{prefix} {label}"
-            return tokenize(text, tokenizer, context_length)
+            text = tokenize(text, tokenizer, context_length)
+            return text[0]
 
         self.extra_args = {"target_transform": target_transform}
+
+    @property
+    def model_data_args(self) -> Dict:
+        return {"num_text_tokens": len(self.tokenizer.encoder)}
