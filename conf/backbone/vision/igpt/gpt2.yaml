@@ -3,6 +3,5 @@ _target_: lightning_transformers.task.vision.igpt.GPT2
 embed_dim: 16
 num_heads: 2
 num_layers: 8
-num_pixels: 28
 num_vocab: 16
 num_classes: 10

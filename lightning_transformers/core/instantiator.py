@@ -58,7 +58,9 @@ class HydraInstantiator(Instantiator):
         return hydra.utils.instantiate(cfg, optimizer=optimizer)
 
     def data_module(
-        self, cfg: DictConfig, tokenizer: Optional[DictConfig]
+        self,
+        cfg: DictConfig,
+        tokenizer: Optional[DictConfig] = None,
     ) -> Union[TransformerDataModule, TransformerTokenizerDataModule]:
         if tokenizer:
             return hydra.utils.instantiate(cfg, tokenizer=hydra.utils.instantiate(tokenizer))

@@ -57,6 +57,8 @@ class ImageGPTDataModule(TransformerDataModule):
         super().__init__(cfg)
         self.dataset_cls = DATASETS[cfg.dataset]
         self.centroids = None
+        # call fit to setup any metadata required for the model initialization
+        self.setup("fit")
 
     def prepare_data(self, *args: Any, **kwargs: Any) -> None:
         """
@@ -146,10 +148,9 @@ class ImageGPTDataModule(TransformerDataModule):
         )
 
     def test_dataloader(self) -> Optional[DataLoader]:
-        if "test" in self.ds:
-            return DataLoader(
-                self.dataset_test,
-                batch_size=self.batch_size,
-                num_workers=self.cfg.num_workers,
-                collate_fn=self.collate_fn,
-            )
+        return DataLoader(
+            self.dataset_test,
+            batch_size=self.batch_size,
+            num_workers=self.cfg.num_workers,
+            collate_fn=self.collate_fn,
+        )

@@ -34,14 +34,15 @@ def _to_sequence(x):
 class GenerativePixelsTransformer(TaskTransformer):
     def __init__(
         self,
+        num_pixels: int,
         backbone: Any,
         optimizer: OptimizerConfig,
         scheduler: SchedulerConfig,
         instantiator: Optional[Instantiator] = None,
         classify: bool = False,
     ):
-        backbone = instantiator.instantiate(backbone)
-        super().__init__(backbone, optimizer, scheduler)
+        backbone = instantiator.instantiate(backbone, num_positions=num_pixels * num_pixels)
+        super().__init__(backbone, optimizer, scheduler, instantiator)
         self.save_hyperparameters()
         self.classify = classify
 
@@ -50,7 +51,7 @@ class GenerativePixelsTransformer(TaskTransformer):
     def on_fit_start(self) -> None:
 
         datamodule: ImageGPTDataModule = self.trainer.datamodule
-        self.centroids = nn.Parameter(datamodule.centroids, requires_grad=False)
+        self.centroids = nn.Parameter(torch.from_numpy(datamodule.centroids), requires_grad=False)
 
     def forward(self, x):
         return self.model(x)
@@ -111,6 +112,6 @@ class GenerativePixelsTransformer(TaskTransformer):
         # replace valid stats with test stats because we are reusing function
         result["log"]["test_loss"] = result["log"].pop("val_loss")
         result["test_loss"] = result.pop("val_loss")
-        if self.cfg.classify:
+        if self.classify:
             result["log"]["test_acc"] = result["log"].pop("val_acc")
         return result
