@@ -77,8 +77,8 @@ class ImageGPTDataModule(TransformerDataModule):
             train_transforms = self.train_transforms
             val_transforms = self.test_transforms
 
-            dataset_train = self.dataset_cls(self.data_dir, train=True, transform=train_transforms)
-            dataset_val = self.dataset_cls(self.data_dir, train=True, transform=val_transforms)
+            dataset_train = self.dataset_cls(self.cfg.data_dir, train=True, transform=train_transforms)
+            dataset_val = self.dataset_cls(self.cfg.data_dir, train=True, transform=val_transforms)
 
             # TODO paper uses 90/10 split for every dataset besides ImageNet (96/4)
             train_size = int(0.9 * len(dataset_train))
