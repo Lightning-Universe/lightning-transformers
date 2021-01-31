@@ -1,14 +1,13 @@
-from typing import Any, Dict
+from typing import Any, Dict, List, Union
 
 import hydra
 import torch
+from clip import clip, tokenize
 from dalle_pytorch import DALLE
 
 from lightning_transformers.core import TaskTransformer
 from lightning_transformers.core.config import OptimizerConfig, SchedulerConfig
 from lightning_transformers.core.instantiator import Instantiator
-from lightning_transformers.task.vision.dalle.clip import clip
-from lightning_transformers.task.vision.dalle.clip.clip import tokenize
 from lightning_transformers.task.vision.dalle.vqvae_model import VQVAE
 
 
@@ -70,10 +69,22 @@ class DALLETransformer(TaskTransformer):
         return loss
 
     def init(self):
-        self.clip, self.preprocess = clip.load("ViT-B/32", device="cpu")
+        self.clip, self.preprocess = clip.load("ViT-B/32", device=self.device)
+
+    def tokenize(self, texts: Union[str, List[str]], context_length: int = 77):
+        clip._tokenizer = self.tokenizer
+        return tokenize(texts, context_length)
 
     def generate_image(self, raw_text, num_samples=512):
-        text = tokenize(raw_text, self.tokenizer, self.context_length).to(self.device)
+        text = self.tokenize(raw_text, self.context_length).to(self.device)
         mask = torch.ones_like(text).bool().to(self.device)
         raw_image = self.model.generate_images(text, mask=mask)
+        # text = clip.tokenize(["a diagram", "a dog", "a cat"]).to(device)
+        #
+        # with torch.no_grad():
+        #     image_features = model.encode_image(image)
+        #     text_features = model.encode_text(text)
+        #
+        #     logits_per_image, logits_per_text = model(image, text)
+        #     probs = logits_per_image.softmax(dim=-1).cpu().numpy()
         return raw_image
