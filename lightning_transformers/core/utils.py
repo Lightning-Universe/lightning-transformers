@@ -1,4 +1,4 @@
-import inspect
+from inspect import signature, Parameter
 import os
 import shutil
 import subprocess
@@ -8,8 +8,9 @@ from pytorch_lightning.loggers import WandbLogger
 
 
 def initialize_wandb_logger(*_, **kwargs):
-    keys = [k for k in inspect.signature(WandbLogger.__init__).parameters.keys()][1:-1]
-    wandb_dict = {k: kwargs.get(k) for k in keys}
+    all_parameters = signature(WandbLogger).parameters
+    keys = [param.name for param in all_parameters.values() if param.kind == Parameter.POSITIONAL_OR_KEYWORD]
+    wandb_dict = {k: kwargs.get(k) for k in keys if k in kwargs}
 
     try:
         commit_sha = subprocess.check_output(["git", "rev-parse", "HEAD"]).decode("ascii").strip()
