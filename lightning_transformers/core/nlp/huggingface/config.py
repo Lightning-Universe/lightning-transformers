@@ -3,6 +3,7 @@ from typing import Optional, Union
 
 from lightning_transformers.core.config import OptimizerConfig, SchedulerConfig, TaskConfig
 from lightning_transformers.core.data import TransformerDataConfig
+from lightning_transformers.core.nlp.config import TokenizerConfig
 
 
 @dataclass
@@ -21,7 +22,7 @@ class HFTransformerDataConfig(TransformerDataConfig):
 
 
 @dataclass
-class HFTokenizerConfig:
+class HFTokenizerConfig(TokenizerConfig):
     downstream_model_type: Optional[str] = None
     pretrained_model_name_or_path: Optional[str] = None
     use_fast: bool = True
