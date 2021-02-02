@@ -32,7 +32,7 @@ repos:
     rev: v0.30.0
     hooks:
       - id: yapf
-      - args: [--parallel]
+        args: [--parallel]
 
   - repo: https://gitlab.com/pycqa/flake8.git
     rev: 3.8.4
