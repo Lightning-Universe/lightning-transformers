@@ -16,7 +16,7 @@ def load_requirements(path_dir=PATH_ROOT, comment_char="#"):
     return reqs
 
 
-def load_long_describtion():
+def load_long_description():
     url = os.path.join(
         lightning_transformers.__homepage__,
         "raw",
@@ -41,7 +41,7 @@ setup(
     download_url="https://github.com/PyTorchLightning/lightning-transformers",
     license=lightning_transformers.__license__,
     packages=find_packages(exclude=["tests", "docs"]),
-    long_description=load_long_describtion(),
+    long_description=load_long_description(),
     long_description_content_type="text/markdown",
     include_package_data=True,
     zip_safe=False,

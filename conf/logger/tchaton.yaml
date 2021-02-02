@@ -4,6 +4,6 @@ save_dir: ''
 offline: False
 id: ${now:%Y-%m-%d}_${now:%H-%M-%S}
 anonymous: False
-project: ${dataset.dataset_name}
+project: ${dataset.cfg.dataset_name}
 experiment:
 entity: 'tchaton'
