@@ -49,7 +49,6 @@ class GenerativePixelsTransformer(TaskTransformer):
         self.criterion = nn.CrossEntropyLoss()
 
     def on_fit_start(self) -> None:
-
         datamodule: ImageGPTDataModule = self.trainer.datamodule
         self.centroids = nn.Parameter(torch.from_numpy(datamodule.centroids), requires_grad=False)
 
