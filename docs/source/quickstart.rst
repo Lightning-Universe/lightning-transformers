@@ -1,28 +1,6 @@
 Quick Start Guide
 *****************
 
-Installation
-^^^^^^^^^^^^
-
-.. code-block:: bash
-
-   pip install lightning-transformers
-
-Install bleeding-edge:
-
-.. code-block:: bash
-
-   pip install git+https://github.com/PytorchLightning/lightning-transformers.git@master --upgrade
-
-Install all optional dependencies as well:
-
-.. code-block:: bash
-
-   pip install lightning-transformers["extra"]
-
-Fine-tuning Bert for Text Classification
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
 We support many NLP tasks that can be seen in :ref:`nlp-tasks`. In this example we will fine-tune BERT using the text classification task and the ``emotion`` dataset.
 
 See ``conf/task`` and ``conf/dataset`` in the repository for more information.
