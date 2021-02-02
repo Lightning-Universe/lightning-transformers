@@ -1,5 +1,5 @@
 import logging
-from typing import Optional, Union
+from typing import Any, Dict, Optional, TYPE_CHECKING, Union
 
 import pytorch_lightning as pl
 import torch
@@ -36,6 +36,7 @@ class Instantiator:
 
 
 class HydraInstantiator(Instantiator):
+
     def model(self, cfg: DictConfig, model_data_args: Dict[str, Any]) -> "TaskTransformer":
         return instantiate(cfg, instantiator=self, **model_data_args)
 
@@ -57,7 +58,9 @@ class HydraInstantiator(Instantiator):
         return instantiate(cfg, optimizer=optimizer)
 
     def data_module(
-        self, cfg: DictConfig, tokenizer: Optional[DictConfig] = None
+        self,
+        cfg: DictConfig,
+        tokenizer: Optional[DictConfig] = None
     ) -> Union[TransformerDataModule, TransformerTokenizerDataModule]:
         if tokenizer:
             return instantiate(cfg, tokenizer=instantiate(tokenizer))

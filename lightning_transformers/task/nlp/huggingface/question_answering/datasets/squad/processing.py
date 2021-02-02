@@ -18,7 +18,7 @@
 
 # Disable formatting for easier diffs with upstream
 # yapf: disable
-
+# flake8: noqa
 
 import collections
 import json
@@ -32,15 +32,8 @@ from transformers import EvalPrediction, PreTrainedTokenizerBase
 
 
 def prepare_train_features(
-    examples: Any,
-    tokenizer: PreTrainedTokenizerBase,
-    pad_on_right: bool,
-    question_column_name: str,
-    context_column_name: str,
-    answer_column_name: str,
-    max_length: int,
-    doc_stride: int,
-    padding: str
+    examples: Any, tokenizer: PreTrainedTokenizerBase, pad_on_right: bool, question_column_name: str,
+    context_column_name: str, answer_column_name: str, max_length: int, doc_stride: int, padding: str
 ):
     # Tokenize our examples with truncation and maybe padding, but keep the overflows using a stride. This results
     # in one example possible giving several features when a context is long, each of those features having a
@@ -115,14 +108,8 @@ def prepare_train_features(
 
 
 def prepare_validation_features(
-    examples: Any,
-    tokenizer: PreTrainedTokenizerBase,
-    pad_on_right: bool,
-    question_column_name: str,
-    context_column_name: str,
-    max_length: int,
-    doc_stride: int,
-    padding: str
+    examples: Any, tokenizer: PreTrainedTokenizerBase, pad_on_right: bool, question_column_name: str,
+    context_column_name: str, max_length: int, doc_stride: int, padding: str
 ):
     # Tokenize our examples with truncation and maybe padding, but keep the overflows using a stride. This results
     # in one example possible giving several features when a context is long, each of those features having a
@@ -171,9 +158,11 @@ def post_processing_function(
     )
     # Format the result to the format the metric expects.
     if version_2_with_negative:
-        formatted_predictions = [
-            {"id": k, "prediction_text": v, "no_answer_probability": 0.0} for k, v in predictions.items()
-        ]
+        formatted_predictions = [{
+            "id": k,
+            "prediction_text": v,
+            "no_answer_probability": 0.0
+        } for k, v in predictions.items()]
     else:
         formatted_predictions = [{"id": k, "prediction_text": v} for k, v in predictions.items()]
     references = [{"id": ex["id"], "answers": ex[answer_column_name]} for ex in datasets["validation"]]
@@ -273,17 +262,15 @@ def postprocess_qa_predictions(
                 }
 
             # Go through all possibilities for the `n_best_size` greater start and end logits.
-            start_indexes = np.argsort(start_logits)[-1 : -n_best_size - 1 : -1].tolist()
-            end_indexes = np.argsort(end_logits)[-1 : -n_best_size - 1 : -1].tolist()
+            start_indexes = np.argsort(start_logits)[-1:-n_best_size - 1:-1].tolist()
+            end_indexes = np.argsort(end_logits)[-1:-n_best_size - 1:-1].tolist()
             for start_index in start_indexes:
                 for end_index in end_indexes:
                     # Don't consider out-of-scope answers, either because the indices are out of bounds or correspond
                     # to part of the input_ids that are not in the context.
                     if (
-                        start_index >= len(offset_mapping)
-                        or end_index >= len(offset_mapping)
-                        or offset_mapping[start_index] == -1
-                        or offset_mapping[end_index] == -1
+                        start_index >= len(offset_mapping) or end_index >= len(offset_mapping)
+                        or offset_mapping[start_index] == -1 or offset_mapping[end_index] == -1
                     ):
                         continue
                     # Don't consider answers with a length that is either < 0 or > max_answer_length.
@@ -293,14 +280,12 @@ def postprocess_qa_predictions(
                     # provided).
                     if token_is_max_context is not None and not token_is_max_context.get(str(start_index), False):
                         continue
-                    prelim_predictions.append(
-                        {
-                            "offsets": (offset_mapping[start_index][0], offset_mapping[end_index][1]),
-                            "score": start_logits[start_index] + end_logits[end_index],
-                            "start_logit": start_logits[start_index],
-                            "end_logit": end_logits[end_index],
-                        }
-                    )
+                    prelim_predictions.append({
+                        "offsets": (offset_mapping[start_index][0], offset_mapping[end_index][1]),
+                        "score": start_logits[start_index] + end_logits[end_index],
+                        "start_logit": start_logits[start_index],
+                        "end_logit": end_logits[end_index],
+                    })
         if version_2_with_negative:
             # Add the minimum null prediction
             prelim_predictions.append(min_null_prediction)
@@ -317,7 +302,7 @@ def postprocess_qa_predictions(
         context = example["context"]
         for pred in predictions:
             offsets = pred.pop("offsets")
-            pred["text"] = context[offsets[0] : offsets[1]]
+            pred["text"] = context[offsets[0]:offsets[1]]
 
         # In the very rare edge case we have not a single non-null prediction, we create a fake prediction to avoid
         # failure.
@@ -353,10 +338,10 @@ def postprocess_qa_predictions(
                 all_predictions[example["id"]] = best_non_null_pred["text"]
 
         # Make `predictions` JSON-serializable by casting np.float back to float.
-        all_nbest_json[example["id"]] = [
-            {k: (float(v) if isinstance(v, (np.float16, np.float32, np.float64)) else v) for k, v in pred.items()}
-            for pred in predictions
-        ]
+        all_nbest_json[example["id"]] = [{
+            k: (float(v) if isinstance(v, (np.float16, np.float32, np.float64)) else v)
+            for k, v in pred.items()
+        } for pred in predictions]
 
     # If we have an output_dir, let's save all those dicts.
     if output_dir is not None:

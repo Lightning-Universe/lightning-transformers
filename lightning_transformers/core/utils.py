@@ -1,8 +1,8 @@
-from inspect import signature, Parameter
 import os
 import shutil
 import subprocess
 import warnings
+from inspect import Parameter, signature
 
 from pytorch_lightning.loggers import WandbLogger
 
