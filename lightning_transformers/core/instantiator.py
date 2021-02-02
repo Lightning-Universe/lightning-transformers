@@ -9,8 +9,9 @@ from omegaconf import DictConfig
 from lightning_transformers.core import TransformerDataModule
 from lightning_transformers.core.data import TransformerTokenizerDataModule
 
-# todo: fix cyclic import
-# from lightning_transformers.core.model import TaskTransformer
+if TYPE_CHECKING:
+    # avoid circular imports
+    from lightning_transformers.core import TaskTransformer
 
 
 class Instantiator:
@@ -34,7 +35,7 @@ class Instantiator:
 
 
 class HydraInstantiator(Instantiator):
-    def model(self, cfg: DictConfig, model_data_args):  # -> "TaskTransformer":
+    def model(self, cfg: DictConfig, model_data_args: Dict[str, Any]) -> "TaskTransformer":
         return instantiate(cfg, instantiator=self, **model_data_args)
 
     def optimizer(self, model: torch.nn.Module, cfg: DictConfig) -> torch.optim.Optimizer:
@@ -55,13 +56,13 @@ class HydraInstantiator(Instantiator):
         return instantiate(cfg, optimizer=optimizer)
 
     def data_module(
-        self, cfg: DictConfig, tokenizer: Optional[DictConfig]
+        self, cfg: DictConfig, tokenizer: Optional[DictConfig] = None
     ) -> Union[TransformerDataModule, TransformerTokenizerDataModule]:
         if tokenizer:
             return instantiate(cfg, tokenizer=instantiate(tokenizer))
         return instantiate(cfg)
 
-    def logger(self, cfg: DictConfig) -> logging.Logger:
+    def logger(self, cfg: DictConfig) -> Optional[logging.Logger]:
         if cfg.log:
             return instantiate(cfg.logger)
 
