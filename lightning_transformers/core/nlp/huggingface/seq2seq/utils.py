@@ -12,5 +12,5 @@ def _pad_tensors_to_max_len(model_cfg, tensor, max_length):
         )
 
     padded_tensor = pad_token_id * torch.ones((tensor.shape[0], max_length), dtype=tensor.dtype, device=tensor.device)
-    padded_tensor[:, : tensor.shape[-1]] = tensor
+    padded_tensor[:, :tensor.shape[-1]] = tensor
     return padded_tensor

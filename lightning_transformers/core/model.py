@@ -32,7 +32,11 @@ class LitTransformer(pl.LightningModule):
         """Prepare optimizer and scheduler"""
         return {
             "optimizer": self.optimizer,
-            "lr_scheduler": {"scheduler": self.scheduler, "interval": "step", "frequency": 1},
+            "lr_scheduler": {
+                "scheduler": self.scheduler,
+                "interval": "step",
+                "frequency": 1
+            },
         }
 
     @property

@@ -7,6 +7,7 @@ from lightning_transformers.core.nlp.huggingface import HFTransformerDataModule
 
 
 class TextClassificationDataModule(HFTransformerDataModule):
+
     def process_data(self, dataset: Dataset, stage: Optional[str] = None) -> Dataset:
         input_feature_fields = [k for k, v in dataset["train"].features.items() if k not in ["label", "idx"]]
         dataset = TextClassificationDataModule.preprocess(
@@ -18,8 +19,7 @@ class TextClassificationDataModule(HFTransformerDataModule):
             max_length=self.cfg.max_length,
         )
         cols_to_keep = [
-            x
-            for x in ["input_ids", "attention_mask", "token_type_ids", "labels", "idx"]
+            x for x in ["input_ids", "attention_mask", "token_type_ids", "labels", "idx"]
             if x in dataset["train"].features
         ]
         dataset.set_format("torch", columns=cols_to_keep)

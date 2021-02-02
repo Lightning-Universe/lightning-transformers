@@ -1,8 +1,8 @@
-from inspect import signature, Parameter
 import os
 import shutil
 import subprocess
 import warnings
+from inspect import Parameter, signature
 
 from pytorch_lightning.loggers import WandbLogger
 
@@ -13,25 +13,20 @@ def initialize_wandb_logger(*_, **kwargs):
     wandb_dict = {k: kwargs.get(k) for k in keys if k in kwargs}
 
     try:
-        commit_sha = subprocess.check_output(["git", "rev-parse", "HEAD"]).decode("ascii").strip()
-    except:
+        commit_sha = subprocess.check_output(["git", "rev-parse", "HEAD"]).decode().strip()
+        gitdiff = subprocess.check_output(["git", "diff"]).decode().strip()
+    except subprocess.SubprocessError:
         commit_sha = "n/a"
-
-    try:
-        gitdiff = subprocess.check_output(["git", "diff"]).decode()
-    except:
         gitdiff = ""
 
     wandb_dict["config"] = {}
     # wandb_dict["config"].update(kwargs["model_config"])
     # wandb_dict["config"].update(kwargs["dataset_config"])
-    wandb_dict["config"].update(
-        {
-            "run_path": os.getcwd(),
-            "commit": commit_sha,
-            "notes": wandb_dict.get("notes"),
-        }
-    )
+    wandb_dict["config"].update({
+        "run_path": os.getcwd(),
+        "commit": commit_sha,
+        "notes": wandb_dict.get("notes"),
+    })
 
     wandbLogger = WandbLogger(**wandb_dict)
 
