@@ -14,8 +14,7 @@
 
 # Adapted from:
 # https://github.com/huggingface/transformers/blob/master/examples/question-answering/run_qa.py
-# fmt: off
-
+# yapf: off
 
 from dataclasses import dataclass, field
 
@@ -32,7 +31,7 @@ class QuestionAnsweringTransformerDataConfig(HFTransformerDataConfig):
         default=384,
         metadata={
             "help": "The maximum total input sequence length after tokenization. Sequences longer "
-                    "than this will be truncated, sequences shorter will be padded."
+            "than this will be truncated, sequences shorter will be padded."
         },
     )
     version_2_with_negative: bool = field(
@@ -42,8 +41,8 @@ class QuestionAnsweringTransformerDataConfig(HFTransformerDataConfig):
         default=0.0,
         metadata={
             "help": "The threshold used to select the null answer: if the best answer has a score that is less than "
-                    "the score of the null answer minus this threshold, the null answer is selected for this example. "
-                    "Only useful when `version_2_with_negative=True`."
+            "the score of the null answer minus this threshold, the null answer is selected for this example. "
+            "Only useful when `version_2_with_negative=True`."
         },
     )
     doc_stride: int = field(
@@ -58,7 +57,7 @@ class QuestionAnsweringTransformerDataConfig(HFTransformerDataConfig):
         default=30,
         metadata={
             "help": "The maximum length of an answer that can be generated. This is needed because the start "
-                    "and end predictions are not conditioned on one another."
+            "and end predictions are not conditioned on one another."
         },
     )
 

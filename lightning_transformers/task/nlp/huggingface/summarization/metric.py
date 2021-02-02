@@ -10,6 +10,7 @@ from lightning_transformers.task.nlp.huggingface.summarization.utils import add_
 
 
 class RougeMetric(Metric):
+
     def __init__(
         self,
         rouge_newline_sep: bool,
@@ -45,6 +46,7 @@ class RougeMetric(Metric):
 
 
 class RougeBatchAggregator(scoring.BootstrapAggregator):
+
     def aggregate(self):
         """
         Override function to wrap the final results in `Score` objects.

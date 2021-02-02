@@ -6,6 +6,7 @@ from lightning_transformers.task.nlp.huggingface.question_answering.datasets.squ
 
 
 class SquadTransformerDataModule(QuestionAnsweringTransformerDataModule):
+
     @staticmethod
     def convert_to_train_features(*args, **kwargs):
         return prepare_train_features(*args, **kwargs)

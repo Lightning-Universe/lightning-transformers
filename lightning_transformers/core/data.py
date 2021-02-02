@@ -7,6 +7,7 @@ from lightning_transformers.core.config import TransformerDataConfig
 
 
 class TransformerDataModule(pl.LightningDataModule):
+
     def __init__(self, cfg: TransformerDataConfig):
         super().__init__()
         self.cfg = cfg
@@ -71,6 +72,7 @@ class TransformerDataModule(pl.LightningDataModule):
 
 
 class TransformerTokenizerDataModule(TransformerDataModule):
+
     def __init__(self, cfg: TransformerDataConfig, tokenizer: Any):
         super().__init__(cfg)
         self.tokenizer = tokenizer

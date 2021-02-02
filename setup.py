@@ -11,12 +11,12 @@ PATH_ROOT = os.path.dirname(__file__)
 def load_requirements(path_dir=PATH_ROOT, comment_char="#"):
     with open(os.path.join(path_dir, "requirements.txt"), "r") as file:
         lines = [ln.strip() for ln in file.readlines()]
-    reqs = [ln[: ln.index(comment_char)] if comment_char in ln else ln for ln in lines]
+    reqs = [ln[:ln.index(comment_char)] if comment_char in ln else ln for ln in lines]
     reqs = [ln for ln in reqs if ln]
     return reqs
 
 
-def load_long_describtion():
+def load_long_description():
     url = os.path.join(
         lightning_transformers.__homepage__,
         "raw",
@@ -41,7 +41,7 @@ setup(
     download_url="https://github.com/PyTorchLightning/lightning-transformers",
     license=lightning_transformers.__license__,
     packages=find_packages(exclude=["tests", "docs"]),
-    long_description=load_long_describtion(),
+    long_description=load_long_description(),
     long_description_content_type="text/markdown",
     include_package_data=True,
     zip_safe=False,

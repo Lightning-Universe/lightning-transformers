@@ -5,6 +5,7 @@ from lightning_transformers.task.nlp.huggingface.multiple_choice.utils import Da
 
 
 class MultipleChoiceTransformerDataModule(HFTransformerDataModule):
+
     @property
     def pad_to_max_length(self):
         return self.cfg.padding == "max_length"
@@ -12,7 +13,8 @@ class MultipleChoiceTransformerDataModule(HFTransformerDataModule):
     @property
     def collate_fn(self):
         return (
-            default_data_collator if self.pad_to_max_length else DataCollatorForMultipleChoice(tokenizer=self.tokenizer)
+            default_data_collator
+            if self.pad_to_max_length else DataCollatorForMultipleChoice(tokenizer=self.tokenizer)
         )
 
     @property
