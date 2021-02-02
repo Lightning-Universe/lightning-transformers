@@ -32,8 +32,7 @@ class TokenClassificationDataModule(HFTransformerDataModule):
             load_from_cache_file=self.cfg.load_from_cache_file,
         )
         cols_to_keep = [
-            x
-            for x in ["input_ids", "attention_mask", "token_type_ids", "labels", "idx"]
+            x for x in ["input_ids", "attention_mask", "token_type_ids", "labels", "idx"]
             if x in dataset["train"].features
         ]
         dataset.set_format(columns=cols_to_keep)

@@ -17,7 +17,7 @@
 # https://github.com/huggingface/transformers/blob/master/examples/question-answering/utils_qa.py
 
 # Disable formatting for easier diffs with upstream
-# fmt: off
+# yapf: disable
 
 
 import collections

@@ -1,10 +1,11 @@
+# TODO: fix versions
+coverage>=5.0
 codecov>=2.1
 pytest>=5.0
 check-manifest
 twine==1.13.0
 isort
-black
+yapf
 flake8
-flake8-black
 pre-commit
-#mypy
+mypy

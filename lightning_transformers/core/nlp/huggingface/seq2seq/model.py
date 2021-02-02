@@ -9,6 +9,7 @@ from lightning_transformers.core.nlp.huggingface.seq2seq.utils import _pad_tenso
 
 
 class HFSeq2SeqTransformer(HFTransformer):
+
     def __init__(self, *args, cfg: HFSeq2SeqTransformerConfig, **kwargs):
         super().__init__(*args, **kwargs)
         self.cfg = cfg

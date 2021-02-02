@@ -14,6 +14,7 @@ from lightning_transformers.core.data import TransformerTokenizerDataModule
 
 
 class Instantiator:
+
     def model(self, *args, **kwargs):
         raise NotImplementedError("Child class must implement method")
 
@@ -34,6 +35,7 @@ class Instantiator:
 
 
 class HydraInstantiator(Instantiator):
+
     def model(self, cfg: DictConfig, model_data_args):  # -> "TaskTransformer":
         return instantiate(cfg, instantiator=self, **model_data_args)
 
@@ -54,9 +56,8 @@ class HydraInstantiator(Instantiator):
     def scheduler(self, cfg: DictConfig, optimizer: torch.optim.Optimizer) -> torch.optim.lr_scheduler._LRScheduler:
         return instantiate(cfg, optimizer=optimizer)
 
-    def data_module(
-        self, cfg: DictConfig, tokenizer: Optional[DictConfig]
-    ) -> Union[TransformerDataModule, TransformerTokenizerDataModule]:
+    def data_module(self, cfg: DictConfig,
+                    tokenizer: Optional[DictConfig]) -> Union[TransformerDataModule, TransformerTokenizerDataModule]:
         if tokenizer:
             return instantiate(cfg, tokenizer=instantiate(tokenizer))
         return instantiate(cfg)
