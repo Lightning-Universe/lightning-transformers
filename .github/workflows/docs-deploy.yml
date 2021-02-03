@@ -44,7 +44,7 @@ jobs:
           # First run the same pipeline as Read-The-Docs
           cd docs
           make clean
-          make html --jobs 2
+          make html --jobs 2 SPHINXOPTS="-W"
 
       - name: Deploy 🚀
         uses: JamesIves/github-pages-deploy-action@3.7.1
