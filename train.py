@@ -1,4 +1,3 @@
-import os
 from typing import Any, Optional
 
 import hydra
@@ -27,7 +26,6 @@ def run(
 
     data_module_kwargs = {}
     if tokenizer is not None:
-        os.environ["TOKENIZERS_PARALLELISM"] = "TRUE"
         data_module_kwargs["tokenizer"] = tokenizer
 
     data_module: TransformerDataModule = instantiator.data_module(dataset, **data_module_kwargs)
@@ -51,7 +49,7 @@ def main(cfg: DictConfig):
         ignore_warnings=cfg.ignore_warnings,
         do_train=cfg.training.do_train,
         dataset=cfg.dataset,
-        tokenizer=cfg.tokenizer,
+        tokenizer=cfg.tokenizer if "tokenizer" in cfg else None,
         task=cfg.task,
         trainer=cfg.trainer,
         logger=logger,

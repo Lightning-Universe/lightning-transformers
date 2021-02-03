@@ -1,6 +1,5 @@
 # @package task
+defaults:
+  - nlp/huggingface/default
 _target_: lightning_transformers.task.nlp.huggingface.multiple_choice.MultipleChoiceTransformer
 downstream_model_type: transformers.AutoModelForMultipleChoice
-backbone: ${backbone}
-optimizer: ${optimizer}
-scheduler: ${scheduler}
