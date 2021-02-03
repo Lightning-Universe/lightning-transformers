@@ -1,5 +1,5 @@
 # @package task
 defaults:
-  - /task/nlp/huggingface/default
+  - nlp/huggingface/default
 _target_: lightning_transformers.task.nlp.huggingface.question_answering.QuestionAnsweringTransformer
 downstream_model_type: transformers.AutoModelForQuestionAnswering

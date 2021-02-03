@@ -1,6 +1,6 @@
 # @package task
 defaults:
-  - /task/nlp/huggingface/default
+  - nlp/huggingface/default
 _target_: lightning_transformers.task.nlp.huggingface.summarization.HFSummarizationTransformer
 downstream_model_type: transformers.AutoModelForSeq2SeqLM
 cfg:

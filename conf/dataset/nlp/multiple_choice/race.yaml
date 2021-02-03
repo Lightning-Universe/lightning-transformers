@@ -1,6 +1,6 @@
 # @package dataset
 defaults:
-  - /dataset/nlp/default
+  - default
 _target_: lightning_transformers.task.nlp.huggingface.multiple_choice.RaceMultipleChoiceTransformerDataModule
 cfg:
   dataset_name: race

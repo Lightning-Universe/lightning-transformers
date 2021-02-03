@@ -24,7 +24,11 @@ def run(
     if ignore_warnings:
         set_ignore_warnings()
 
-    data_module: TransformerDataModule = instantiator.data_module(dataset, tokenizer)
+    data_module_kwargs = {}
+    if tokenizer is not None:
+        data_module_kwargs["tokenizer"] = tokenizer
+
+    data_module: TransformerDataModule = instantiator.data_module(dataset, **data_module_kwargs)
     data_module.setup("fit")
 
     model: TaskTransformer = instantiator.model(task, model_data_args=data_module.model_data_args)

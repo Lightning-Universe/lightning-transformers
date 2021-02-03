@@ -1,6 +1,6 @@
 # @package dataset
 defaults:
-  - /dataset/nlp/default
+  - default
 _target_: lightning_transformers.task.nlp.huggingface.token_classification.TokenClassificationDataModule
 cfg:
   task_name: ner

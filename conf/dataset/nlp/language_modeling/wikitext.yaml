@@ -1,6 +1,6 @@
 # @package dataset
 defaults:
-  - /dataset/nlp/default
+  - default
 _target_: lightning_transformers.task.nlp.huggingface.language_modeling.LanguageModelingTransformerDataModule
 cfg:
   dataset_name: wikitext

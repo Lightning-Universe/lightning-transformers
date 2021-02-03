@@ -1,6 +1,6 @@
 # @package dataset
 defaults:
-  - /dataset/nlp/default
+  - default
 _target_: lightning_transformers.task.nlp.huggingface.text_classification.TextClassificationDataModule
 cfg:
   dataset_name: emotion

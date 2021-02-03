@@ -1,6 +1,6 @@
 # @package dataset
 defaults:
-  - /dataset/nlp/default
+  - default
 _target_: lightning_transformers.task.nlp.huggingface.summarization.CNNDailyMailSummarizationDataModule
 cfg:
   dataset_name: cnn_dailymail
