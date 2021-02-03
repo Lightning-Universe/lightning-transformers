@@ -1,0 +1,6 @@
+# @package task
+defaults:
+  - /backbone@_group_: nlp/huggingface/default # use AutoModel backbone by default
+backbone: ${backbone}
+optimizer: ${optimizer}
+scheduler: ${scheduler}

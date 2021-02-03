@@ -1,3 +1,4 @@
+import os
 from typing import Any, Dict
 
 from datasets import Dataset, load_dataset
@@ -11,6 +12,10 @@ from lightning_transformers.core.nlp.huggingface.config import HFTransformerData
 class HFTransformerDataModule(TransformerTokenizerDataModule):
     cfg: HFTransformerDataConfig
     tokenizer: PreTrainedTokenizerBase
+
+    def __init__(self, cfg: HFTransformerDataConfig, tokenizer: PreTrainedTokenizerBase):
+        super().__init__(cfg, tokenizer)
+        os.environ["TOKENIZERS_PARALLELISM"] = "TRUE"  # todo: smarter handling of this env variable
 
     def load_dataset(self) -> Dataset:
         if self.cfg.dataset_name is not None:
