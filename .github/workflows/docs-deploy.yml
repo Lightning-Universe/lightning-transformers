@@ -1,8 +1,8 @@
 name: "Deploy Docs"
 
 on:
-  push: {}  # fixme
-    # branches: [master]
+  push:
+    branches: [master]
 
 jobs:
   # https://github.com/marketplace/actions/deploy-to-github-pages
