@@ -1,17 +1,15 @@
 # @package dataset
 defaults:
-  - nlp/hf_default
-_target_: lightning_transformers.task.nlp.huggingface.summarization.XsumSummarizationDataModule
+  - default
 cfg:
-  dataset_name: xsum
+  dataset_name: null
   dataset_config_name: null
   train_file: ''
   validation_file: ''
-  cache_dir: null
   split: null
+  cache_dir: null
   padding: 'max_length'
   truncation: 'only_first'
   preprocessing_num_workers: 1
   load_from_cache_file: True
-  max_source_length: 1024
-  max_target_length: 128
+  max_length: 128

@@ -21,7 +21,10 @@ class HFTransformerDataModule(TransformerTokenizerDataModule):
         if self.cfg.dataset_name is not None:
             # Downloading and loading a dataset from the hub.
             return load_dataset(
-                path=self.cfg.dataset_name, name=self.cfg.dataset_config_name, cache_dir=self.cfg.cache_dir
+                path=self.cfg.dataset_name,
+                name=self.cfg.dataset_config_name,
+                cache_dir=self.cfg.cache_dir,
+                split=self.cfg.split
             )
         data_files = {}
         if self.cfg.train_file is not None:

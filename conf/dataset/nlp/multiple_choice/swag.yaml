@@ -1,16 +1,9 @@
 # @package dataset
 defaults:
-  - default
+  - nlp/hf_default
 _target_: lightning_transformers.task.nlp.huggingface.multiple_choice.SwagMultipleChoiceTransformerDataModule
 cfg:
   dataset_name: swag
-  train_file: ''
-  validation_file: ''
   dataset_config_name: 'regular'
   padding: False
   truncation: 'only_first'
-  max_seq_length: 128
-  max_length: 128
-  preprocessing_num_workers: 1
-  load_from_cache_file: True
-  cache_dir: null

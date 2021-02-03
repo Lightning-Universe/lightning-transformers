@@ -1,18 +1,11 @@
 # @package dataset
 defaults:
-  - default
+  - nlp/hf_default
 _target_: lightning_transformers.task.nlp.huggingface.question_answering.datasets.SquadTransformerDataModule
 cfg:
   dataset_name: squad
-  train_file: null
-  validation_file: null
-  cache_dir: null
   dataset_config_name: 'plain_text'
-  padding: 'max_length'
-  truncation: 'only_first'
   max_length: 384
-  preprocessing_num_workers: 8
-  load_from_cache_file: True
   version_2_with_negative: False
   null_score_diff_threshold: .0
   doc_stride: 128
