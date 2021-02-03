@@ -1,4 +1,6 @@
 # @package dataset
+defaults:
+  - /dataset/nlp/default
 _target_: lightning_transformers.task.nlp.huggingface.summarization.XsumSummarizationDataModule
 cfg:
   dataset_name: xsum
@@ -12,7 +14,3 @@ cfg:
   load_from_cache_file: True
   max_source_length: 1024
   max_target_length: 128
-
-  # torch data-loader specific arguments
-  batch_size: ${training.batch_size}
-  num_workers: ${training.num_workers}
