@@ -8,7 +8,6 @@ cfg:
   train_file: ''
   validation_file: ''
   cache_dir: null
-  split: null
   padding: 'max_length'
   truncation: 'only_first'
   preprocessing_num_workers: 1

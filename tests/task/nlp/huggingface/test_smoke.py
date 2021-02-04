@@ -1,46 +1,39 @@
+def run_hf_hydra_runner(hydra_runner, task, dataset, model, max_samples=64):
+    suffix = f'backbone.pretrained_model_name_or_path={model} dataset.cfg.max_samples={max_samples}'
+    hydra_runner(task=f'nlp/huggingface/{task}', dataset=f'nlp/{task}/{dataset}', suffix=suffix)
+
+
 def test_language_model(hydra_runner):
-    task = 'nlp/huggingface/language_modeling'
-    dataset = 'nlp/language_modeling/wikitext'
-    suffix = 'backbone.pretrained_model_name_or_path=prajjwal1/bert-tiny'
-    hydra_runner(task, dataset, suffix)
+    run_hf_hydra_runner(
+        hydra_runner=hydra_runner, task='language_modeling', dataset='wikitext', model='prajjwal1/bert-tiny'
+    )
+
+
+def test_question_answering(hydra_runner):
+    run_hf_hydra_runner(
+        hydra_runner=hydra_runner, task='question_answering', dataset='squad', model='prajjwal1/bert-tiny'
+    )
+
+
+def test_summarization(hydra_runner):
+    run_hf_hydra_runner(hydra_runner=hydra_runner, task='summarization', dataset='xsum', model='sshleifer/tiny-mbart')
 
 
 def test_multiple_choice(hydra_runner):
-    task = 'nlp/huggingface/multiple_choice'
-    dataset = 'nlp/multiple_choice/race'
-    suffix = 'backbone.pretrained_model_name_or_path=prajjwal1/bert-tiny'
-    hydra_runner(task, dataset, suffix)
-
-
-# def test_question_answering(hydra_runner):
-#     task = 'nlp/huggingface/question_answering'
-#     dataset = 'nlp/question_answering/squad'
-#     suffix = 'backbone.pretrained_model_name_or_path=prajjwal1/bert-tiny'
-#     hydra_runner(task, dataset, suffix)
-
-# def test_summarization(hydra_runner):
-#     task = 'nlp/huggingface/summarization'
-#     dataset = 'nlp/summarization/xsum'
-#     suffix = 'backbone.pretrained_model_name_or_path=sshleifer/tiny-mbart'
-#     hydra_runner(task, dataset, suffix)
+    run_hf_hydra_runner(hydra_runner=hydra_runner, task='multiple_choice', dataset='race', model='prajjwal1/bert-tiny')
 
 
 def test_token_classification(hydra_runner):
-    task = 'nlp/huggingface/token_classification'
-    dataset = 'nlp/token_classification/conll'
-    suffix = 'backbone.pretrained_model_name_or_path=prajjwal1/bert-tiny'
-    hydra_runner(task, dataset, suffix)
+    run_hf_hydra_runner(
+        hydra_runner=hydra_runner, task='token_classification', dataset='conll', model='prajjwal1/bert-tiny'
+    )
 
 
 def test_text_classification(hydra_runner):
-    task = 'nlp/huggingface/text_classification'
-    dataset = 'nlp/text_classification/emotion'
-    suffix = 'backbone.pretrained_model_name_or_path=prajjwal1/bert-tiny'
-    hydra_runner(task, dataset, suffix)
+    run_hf_hydra_runner(
+        hydra_runner=hydra_runner, task='text_classification', dataset='emotion', model='prajjwal1/bert-tiny'
+    )
 
 
 def translation(hydra_runner):
-    task = 'nlp/huggingface/translation'
-    dataset = 'nlp/translation/wmt16'
-    suffix = 'backbone.pretrained_model_name_or_path=sshleifer/tiny-mbart'
-    hydra_runner(task, dataset, suffix)
+    run_hf_hydra_runner(hydra_runner=hydra_runner, task='translation', dataset='wmt16', model='sshleifer/tiny-mbart')

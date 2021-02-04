@@ -24,7 +24,6 @@ class HFTransformerDataModule(TransformerTokenizerDataModule):
                 path=self.cfg.dataset_name,
                 name=self.cfg.dataset_config_name,
                 cache_dir=self.cfg.cache_dir,
-                split=self.cfg.split
             )
         data_files = {}
         if self.cfg.train_file is not None:
@@ -39,10 +38,15 @@ class HFTransformerDataModule(TransformerTokenizerDataModule):
         return load_dataset(extension, data_files=data_files, field="data")
 
     def split_dataset(self, dataset: Dataset) -> Dataset:
-        if getattr(self.cfg, "train_val_split", None) is not None:
+        if self.cfg.train_val_split is not None:
             split = dataset["train"].train_test_split(self.cfg.train_val_split)
             dataset["train"] = split["train"]
             dataset["validation"] = split["test"]
+        if self.cfg.max_samples is not None:
+            dataset["train"] = dataset["train"].select(range(min(len(dataset["train"]), self.cfg.max_samples)))
+            dataset["validation"] = dataset["validation"].select(
+                range(min(len(dataset["validation"]), self.cfg.max_samples))
+            )
         return dataset
 
     def on_save_checkpoint(self, checkpoint: Dict[str, Any]):

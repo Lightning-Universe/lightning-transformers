@@ -27,7 +27,7 @@ def hydra_runner():
     def run(task: str, dataset: str, suffix: str = ""):
         cmd_line = f"+task={task} +dataset={dataset} trainer.fast_dev_run=True " + suffix
         relative_conf_dir = find_hydra_conf_dir()
-        with initialize(config_path=f"{relative_conf_dir}", job_name="test_app"):
+        with initialize(config_path=relative_conf_dir, job_name="test_app"):
             cfg = compose(config_name="config", overrides=cmd_line.split(" "))
             main(cfg)
 

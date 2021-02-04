@@ -6,7 +6,8 @@ cfg:
   dataset_config_name: null
   train_file: ''
   validation_file: ''
-  split: null
+  train_val_split: null
+  max_samples: null
   cache_dir: null
   padding: 'max_length'
   truncation: 'only_first'
