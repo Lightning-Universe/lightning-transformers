@@ -1,6 +1,6 @@
 # @package dataset
 defaults:
-  - default
+  - /dataset/default
 cfg:
   dataset_name: null
   dataset_config_name: null
