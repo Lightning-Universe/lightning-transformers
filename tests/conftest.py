@@ -4,7 +4,7 @@ import pytest
 from hydra.experimental import compose, initialize
 from hydra.test_utils.test_utils import find_parent_dir_containing
 
-from lit_transformers_cli import main
+from cli import main
 
 
 def find_hydra_conf_dir(config_dir="conf"):
@@ -30,5 +30,15 @@ def hydra_runner():
         with initialize(config_path=relative_conf_dir, job_name="test_app"):
             cfg = compose(config_name="config", overrides=cmd_line.split(" "))
             main(cfg)
+
+    return run
+
+
+@pytest.fixture()
+def hf_runner(hydra_runner):
+
+    def run(task: str, dataset: str, model: str, max_samples: int = 64):
+        suffix = f'backbone.pretrained_model_name_or_path={model} dataset.cfg.max_samples={max_samples}'
+        hydra_runner(task=f'nlp/huggingface/{task}', dataset=f'nlp/{task}/{dataset}', suffix=suffix)
 
     return run
