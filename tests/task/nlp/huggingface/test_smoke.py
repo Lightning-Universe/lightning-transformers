@@ -16,7 +16,9 @@ def test_question_answering(hydra_runner):
 
 
 def test_summarization(hydra_runner):
-    run_hf_hydra_runner(hydra_runner=hydra_runner, task='summarization', dataset='xsum', model='sshleifer/tiny-mbart')
+    run_hf_hydra_runner(
+        hydra_runner=hydra_runner, task='summarization', dataset='xsum', model='patrickvonplaten/t5-tiny-random'
+    )
 
 
 def test_multiple_choice(hydra_runner):
@@ -36,4 +38,6 @@ def test_text_classification(hydra_runner):
 
 
 def test_translation(hydra_runner):
-    run_hf_hydra_runner(hydra_runner=hydra_runner, task='translation', dataset='wmt16', model='sshleifer/tiny-mbart')
+    run_hf_hydra_runner(
+        hydra_runner=hydra_runner, task='translation', dataset='wmt16', model='patrickvonplaten/t5-tiny-random'
+    )
