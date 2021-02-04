@@ -35,5 +35,5 @@ def test_text_classification(hydra_runner):
     )
 
 
-def translation(hydra_runner):
+def test_translation(hydra_runner):
     run_hf_hydra_runner(hydra_runner=hydra_runner, task='translation', dataset='wmt16', model='sshleifer/tiny-mbart')
