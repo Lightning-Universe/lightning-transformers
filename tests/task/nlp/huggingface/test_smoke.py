@@ -31,7 +31,7 @@ def test_summarization(hydra_runner):
 
 @pytest.mark.skipif(sys.platform == "win32", reason="Currently Windows is not supported")
 def test_multiple_choice(hydra_runner):
-    run_hf_hydra_runner(hydra_runner=hydra_runner, task='multiple_choice', dataset='race', model='prajjwal1/bert-tiny')
+    run_hf_hydra_runner(hydra_runner=hydra_runner, task='multiple_choice', dataset='swag', model='prajjwal1/bert-tiny')
 
 
 @pytest.mark.skipif(sys.platform == "win32", reason="Currently Windows is not supported")

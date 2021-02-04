@@ -6,4 +6,3 @@ cfg:
   dataset_name: swag
   dataset_config_name: 'regular'
   padding: False
-  truncation: 'only_first'
