@@ -61,12 +61,9 @@ class HFTransformerDataModule(TransformerTokenizerDataModule):
                    ("test", self.cfg.limit_test_samples))
         for column_name, n_samples in samples:
             if n_samples is not None:
-                dataset[column_name] = self._select_range(dataset[column_name], n_samples)
+                indices = range(min(len(dataset), n_samples))
+                dataset[column_name] = dataset.select(indices)
         return dataset
-
-    def _select_range(self, dataset: [Dataset, DatasetDict], max_samples: int) -> Union[Dataset, DatasetDict]:
-        indices = range(min(len(dataset), max_samples))
-        return dataset.select(indices)
 
     def on_save_checkpoint(self, checkpoint: Dict[str, Any]):
         # Save tokenizer from datamodule for predictions
