@@ -11,7 +11,6 @@ class HFTransformerDataConfig(TransformerDataConfig):
     dataset_name: Optional[str] = None
     dataset_config_name: Optional[str] = None
     train_val_split: Optional[int] = None
-    max_samples: Optional[int] = None
     train_file: Optional[str] = None
     validation_file: Optional[str] = None
     padding: Union[str, bool] = "max_length"
@@ -20,6 +19,9 @@ class HFTransformerDataConfig(TransformerDataConfig):
     preprocessing_num_workers: int = 8
     load_from_cache_file: bool = True
     cache_dir: Optional[str] = None
+    limit_train_samples: Optional[int] = None
+    limit_val_samples: Optional[int] = None
+    limit_test_samples: Optional[int] = None
 
 
 @dataclass

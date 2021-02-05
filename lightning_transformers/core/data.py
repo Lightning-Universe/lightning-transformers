@@ -1,7 +1,7 @@
 from typing import Any, Callable, Dict, Optional
 
 import pytorch_lightning as pl
-from torch.utils.data import DataLoader, Dataset
+from torch.utils.data import DataLoader
 
 from lightning_transformers.core.config import TransformerDataConfig
 
@@ -12,21 +12,6 @@ class TransformerDataModule(pl.LightningDataModule):
         super().__init__()
         self.cfg = cfg
         self.ds = None
-
-    def setup(self, stage: Optional[str] = None):
-        dataset = self.load_dataset()
-        dataset = self.split_dataset(dataset)
-        dataset = self.process_data(dataset, stage=stage)
-        self.ds = dataset
-
-    def load_dataset(self) -> Dataset:
-        raise NotImplementedError
-
-    def split_dataset(self, dataset: Dataset) -> Dataset:
-        return dataset
-
-    def process_data(self, dataset: Dataset, stage: Optional[str] = None) -> Dataset:
-        return dataset
 
     def train_dataloader(self) -> DataLoader:
         return DataLoader(

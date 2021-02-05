@@ -1,7 +1,7 @@
 import os
-from typing import Any, Dict
+from typing import Any, Dict, Optional, Union
 
-from datasets import Dataset, load_dataset
+from datasets import Dataset, DatasetDict, load_dataset
 from pytorch_lightning.utilities.exceptions import MisconfigurationException
 from transformers import PreTrainedTokenizerBase
 
@@ -16,6 +16,17 @@ class HFTransformerDataModule(TransformerTokenizerDataModule):
     def __init__(self, cfg: HFTransformerDataConfig, tokenizer: PreTrainedTokenizerBase):
         super().__init__(cfg, tokenizer)
         os.environ["TOKENIZERS_PARALLELISM"] = "TRUE"  # todo: smarter handling of this env variable
+
+    def setup(self, stage: Optional[str] = None):
+        dataset = self.load_dataset()
+        dataset = self.split_dataset(dataset)
+        dataset = self.process_data(dataset, stage=stage)
+        self.ds = dataset
+
+    def process_data(self,
+                     dataset: Union[Dataset, DatasetDict],
+                     stage: Optional[str] = None) -> Union[Dataset, DatasetDict]:
+        return dataset
 
     def load_dataset(self) -> Dataset:
         if self.cfg.dataset_name is not None:
@@ -37,17 +48,25 @@ class HFTransformerDataModule(TransformerTokenizerDataModule):
         extension = self.cfg.train_file.split(".")[-1]
         return load_dataset(extension, data_files=data_files, field="data")
 
-    def split_dataset(self, dataset: Dataset) -> Dataset:
+    def split_dataset(self, dataset: Union[Dataset, DatasetDict]) -> Union[Dataset, DatasetDict]:
         if self.cfg.train_val_split is not None:
             split = dataset["train"].train_test_split(self.cfg.train_val_split)
             dataset["train"] = split["train"]
             dataset["validation"] = split["test"]
-        if self.cfg.max_samples is not None:
-            dataset["train"] = dataset["train"].select(range(min(len(dataset["train"]), self.cfg.max_samples)))
-            dataset["validation"] = dataset["validation"].select(
-                range(min(len(dataset["validation"]), self.cfg.max_samples))
-            )
+        dataset = self._select_samples(dataset)
         return dataset
+
+    def _select_samples(self, dataset: Union[Dataset, DatasetDict]) -> Union[Dataset, DatasetDict]:
+        samples = (("train", self.cfg.limit_train_samples), ("validation", self.cfg.limit_val_samples),
+                   ("test", self.cfg.limit_test_samples))
+        for column_name, n_samples in samples:
+            if n_samples is not None:
+                dataset[column_name] = self._select_range(dataset[column_name], n_samples)
+        return dataset
+
+    def _select_range(self, dataset: [Dataset, DatasetDict], max_samples: int) -> Union[Dataset, DatasetDict]:
+        indices = range(min(len(dataset), max_samples))
+        return dataset.select(indices)
 
     def on_save_checkpoint(self, checkpoint: Dict[str, Any]):
         # Save tokenizer from datamodule for predictions
