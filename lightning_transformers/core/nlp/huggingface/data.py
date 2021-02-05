@@ -60,9 +60,9 @@ class HFTransformerDataModule(TransformerTokenizerDataModule):
         samples = (("train", self.cfg.limit_train_samples), ("validation", self.cfg.limit_val_samples),
                    ("test", self.cfg.limit_test_samples))
         for column_name, n_samples in samples:
-            if n_samples is not None:
-                indices = range(min(len(dataset), n_samples))
-                dataset[column_name] = dataset.select(indices)
+            if n_samples is not None and column_name in dataset:
+                indices = range(min(len(dataset[column_name]), n_samples))
+                dataset[column_name] = dataset[column_name].select(indices)
         return dataset
 
     def on_save_checkpoint(self, checkpoint: Dict[str, Any]):

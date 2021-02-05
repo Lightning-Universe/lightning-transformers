@@ -1,10 +1,22 @@
 import os
+from pathlib import Path
 
 import pytest
 from hydra.experimental import compose, initialize
 from hydra.test_utils.test_utils import find_parent_dir_containing
 
 from cli import main
+
+# GitHub Actions use this path to cache datasets.
+# Use `datadir` fixture where possible and use `DATASETS_PATH` in
+# `pytest.mark.parametrize()` where you cannot use `datadir`.
+# https://github.com/pytest-dev/pytest/issues/349
+from tests import CACHE_PATH
+
+
+@pytest.fixture(scope="session")
+def datadir():
+    return Path(CACHE_PATH)
 
 
 def find_hydra_conf_dir(config_dir="conf"):
@@ -35,10 +47,15 @@ def hydra_runner():
 
 
 @pytest.fixture()
-def hf_runner(hydra_runner):
+def hf_runner(hydra_runner, datadir):
+    cache_dir: Path = datadir / "huggingface"
 
     def run(task: str, dataset: str, model: str, max_samples: int = 64):
-        suffix = f'backbone.pretrained_model_name_or_path={model} dataset.cfg.max_samples={max_samples}'
+        suffix = f'backbone.pretrained_model_name_or_path={model} ' \
+                 f'dataset.cfg.limit_train_samples={max_samples} ' \
+                 f'dataset.cfg.limit_val_samples={max_samples} ' \
+                 f'dataset.cfg.limit_test_samples={max_samples} ' \
+                 f'dataset.cfg.cache_dir={cache_dir}'
         hydra_runner(task=f'nlp/huggingface/{task}', dataset=f'nlp/{task}/{dataset}', suffix=suffix)
 
     return run

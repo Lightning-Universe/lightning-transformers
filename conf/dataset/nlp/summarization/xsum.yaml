@@ -4,13 +4,5 @@ defaults:
 _target_: lightning_transformers.task.nlp.huggingface.summarization.XsumSummarizationDataModule
 cfg:
   dataset_name: xsum
-  dataset_config_name: null
-  train_file: ''
-  validation_file: ''
-  cache_dir: null
-  padding: 'max_length'
-  truncation: 'only_first'
-  preprocessing_num_workers: 1
-  load_from_cache_file: True
   max_source_length: 1024
   max_target_length: 128

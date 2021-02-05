@@ -63,6 +63,12 @@ jobs:
         pip list
       shell: bash
 
+    - name: Cache datasets
+      uses: actions/cache@v2
+      with:
+        path: ~/.cache
+        key: pl-datasets-${{ hashFiles('tests/conftest.py') }}
+
     - name: Tests
       run: |
         coverage run --source lightning_transformers -m py.test lightning_transformers tests -v --junitxml=junit/test-results-${{ runner.os }}-${{ matrix.python-version }}-${{ matrix.requires }}.xml
