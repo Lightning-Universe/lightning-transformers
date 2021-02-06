@@ -67,7 +67,7 @@ jobs:
       uses: actions/cache@v2
       with:
         path: ~/.cache
-        key: pl-datasets-${{ hashFiles('tests/conftest.py') }}
+        key: pl-transformers-cache-${{ hashFiles('tests/conftest.py') }}
 
     - name: Tests
       run: |
