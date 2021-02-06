@@ -2,6 +2,7 @@ from functools import partial
 from typing import Any, Dict, Optional
 
 from datasets import Dataset
+from torch.utils.data import DataLoader
 from transformers import PreTrainedTokenizerBase
 
 from lightning_transformers.task.nlp.huggingface.multiple_choice.data import MultipleChoiceTransformerDataModule
@@ -79,3 +80,9 @@ class SwagMultipleChoiceTransformerDataModule(MultipleChoiceTransformerDataModul
         )
         # Un-flatten
         return {k: [v[i:i + num_choices] for i in range(0, len(v), num_choices)] for k, v in tokenized_examples.items()}
+
+    def test_dataloader(self) -> Optional[DataLoader]:
+        """
+        SWAG does not offer labels within the test set (blind).
+        """
+        pass

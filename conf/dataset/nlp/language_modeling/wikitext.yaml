@@ -1,13 +1,8 @@
 # @package dataset
 defaults:
-  - default
+  - nlp/hf_default
 _target_: lightning_transformers.task.nlp.huggingface.language_modeling.LanguageModelingTransformerDataModule
 cfg:
   dataset_name: wikitext
   dataset_config_name: wikitext-2-raw-v1
-  train_file: null
-  validation_file: null
-  cache_dir: null
-  block_size: null
-  preprocessing_num_workers: 1
-  load_from_cache_file: True
+  block_size: 512
