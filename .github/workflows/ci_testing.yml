@@ -1,7 +1,6 @@
 name: CI testing
 
-# see: https://help.github.com/en/actions/reference/events-that-trigger-workflows
-on:  # Trigger the workflow on push or pull request, but only for the master branch
+on:
   push:
     branches: [master]
   pull_request:
@@ -38,7 +37,7 @@ jobs:
       if: matrix.requires == 'minimal'
       run: |
         python -c "fpath = 'requirements.txt' ; req = open(fpath).read().replace('>=', '==') ; open(fpath, 'w').write(req)"
-        python -c "fpath = 'tests/requirements.txt' ; req = open(fpath).read().replace('>=', '==') ; open(fpath, 'w').write(req)"
+        python -c "fpath = 'requirements/test.txt' ; req = open(fpath).read().replace('>=', '==') ; open(fpath, 'w').write(req)"
 
     # Note: This uses an internal pip API and may not always work
     # https://github.com/actions/cache/blob/master/examples.md#multiple-oss-in-a-workflow
@@ -57,19 +56,18 @@ jobs:
 
     - name: Install dependencies
       run: |
-        pip install --requirement requirements.txt --upgrade --quiet --find-links https://download.pytorch.org/whl/cpu/torch_stable.html --use-feature=2020-resolver
-        pip install --requirement tests/requirements.txt --quiet --use-feature=2020-resolver
+        pip install --requirement requirements.txt --upgrade --quiet --find-links https://download.pytorch.org/whl/cpu/torch_stable.html
+        pip install --requirement requirements/test.txt --quiet
         python --version
         pip --version
         pip list
       shell: bash
 
-    #- name: Cache datasets
-    #  uses: actions/cache@v2
-    #  with:
-    #    path: Datasets # This path is specific to Ubuntu
-    #    # Look to see if there is a cache hit for the corresponding requirements file
-    #    key: pl-datasets
+    - name: Cache datasets
+      uses: actions/cache@v2
+      with:
+        path: ~/.cache
+        key: pl-transformers-cache-${{ hashFiles('tests/conftest.py') }}
 
     - name: Tests
       run: |

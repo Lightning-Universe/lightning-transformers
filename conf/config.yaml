@@ -1,11 +1,9 @@
-defaults: # for loading the default config
-  - optimizer: adamw
-  - scheduler: linear_schedule_with_warmup
-  - tokenizer: huggingface/default
-  - backbone: nlp/huggingface/default
-  - logger: tchaton # todo: change this eventually
+defaults: # loads default configs
   - training: default
   - trainer: default
+  - optimizer: adamw
+  - scheduler: linear_schedule_with_warmup
+  - logger: tchaton # todo: change this eventually
 
 task: ???
 dataset: ???

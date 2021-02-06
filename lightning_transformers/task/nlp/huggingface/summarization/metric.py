@@ -10,6 +10,7 @@ from lightning_transformers.task.nlp.huggingface.summarization.utils import add_
 
 
 class RougeMetric(Metric):
+
     def __init__(
         self,
         rouge_newline_sep: bool,
@@ -43,8 +44,22 @@ class RougeMetric(Metric):
         result = self.aggregator.aggregate()
         return format_rouge_results(result)
 
+    def __hash__(self):
+        # override to hash list objects.
+        # this is a bug in the upstream pytorch release.
+        hash_vals = [self.__class__.__name__]
+
+        for key in self._defaults.keys():
+            value = getattr(self, key)
+            if isinstance(value, list):
+                value = tuple(value)
+            hash_vals.append(value)
+
+        return hash(tuple(hash_vals))
+
 
 class RougeBatchAggregator(scoring.BootstrapAggregator):
+
     def aggregate(self):
         """
         Override function to wrap the final results in `Score` objects.

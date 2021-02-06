@@ -1,6 +1,5 @@
 # @package task
+defaults:
+  - nlp/huggingface/default
 _target_: lightning_transformers.task.nlp.huggingface.language_modeling.LanguageModelingTransformer
 downstream_model_type: transformers.AutoModelForCausalLM
-backbone: ${backbone}
-optimizer: ${optimizer}
-scheduler: ${scheduler}

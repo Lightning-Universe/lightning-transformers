@@ -1,21 +1,11 @@
 # @package dataset
+defaults:
+  - nlp/hf_default
 _target_: lightning_transformers.task.nlp.huggingface.translation.WMT16TranslationDataModule
 cfg:
   dataset_name: wmt16
   dataset_config_name: 'ro-en' # WMT translation datasets: ['cs-en', 'de-en', 'fi-en', 'ro-en', 'ru-en', 'tr-en']
   src_lang: 'en'
   tgt_lang: 'ro'
-  train_file: ''
-  validation_file: ''
-  cache_dir: null
-  padding: 'max_length'
-  truncation: 'only_first'
-  preprocessing_num_workers: 1
-  load_from_cache_file: True
   max_source_length: 1024
   max_target_length: 128
-
-
-  # torch data-loader specific arguments
-  batch_size: ${training.batch_size}
-  num_workers: ${training.num_workers}

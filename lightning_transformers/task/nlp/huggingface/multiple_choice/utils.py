@@ -1,5 +1,16 @@
-# todo: Add proper HF licence
-# Copyright 2020 The HuggingFace Team. All rights reserved.
+# Copyright 2020 The PyTorch Lightning team and The HuggingFace Team. All rights reserved.
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
 
 from dataclasses import dataclass
 from typing import Optional, Union
@@ -46,9 +57,8 @@ class DataCollatorForMultipleChoice:
         labels = [feature.pop(label_name) for feature in features]
         batch_size = len(features)
         num_choices = len(features[0]["input_ids"])
-        flattened_features = [
-            [{k: v[i] for k, v in feature.items()} for i in range(num_choices)] for feature in features
-        ]
+        flattened_features = [[{k: v[i]
+                                for k, v in feature.items()} for i in range(num_choices)] for feature in features]
         flattened_features = sum(flattened_features, [])
 
         batch = self.tokenizer.pad(

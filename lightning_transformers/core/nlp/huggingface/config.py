@@ -1,7 +1,9 @@
 from dataclasses import dataclass
 from typing import Optional, Union
 
+from lightning_transformers.core.config import OptimizerConfig, SchedulerConfig, TaskConfig
 from lightning_transformers.core.data import TransformerDataConfig
+from lightning_transformers.core.nlp.config import TokenizerConfig
 
 
 @dataclass
@@ -17,9 +19,26 @@ class HFTransformerDataConfig(TransformerDataConfig):
     preprocessing_num_workers: int = 8
     load_from_cache_file: bool = True
     cache_dir: Optional[str] = None
+    limit_train_samples: Optional[int] = None
+    limit_val_samples: Optional[int] = None
+    limit_test_samples: Optional[int] = None
+
+
+@dataclass
+class HFTokenizerConfig(TokenizerConfig):
+    downstream_model_type: Optional[str] = None
+    pretrained_model_name_or_path: Optional[str] = None
+    use_fast: bool = True
 
 
 @dataclass
 class HFBackboneConfig:
-    downstream_model_type: str
-    pretrained_model_name_or_path: str
+    downstream_model_type: Optional[str] = None
+    pretrained_model_name_or_path: Optional[str] = None
+
+
+@dataclass
+class HFTaskConfig(TaskConfig):
+    backbone: HFBackboneConfig = HFBackboneConfig()
+    optimizer: OptimizerConfig = OptimizerConfig()
+    scheduler: SchedulerConfig = SchedulerConfig()

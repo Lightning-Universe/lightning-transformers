@@ -1,0 +1,4 @@
+.. _conf:
+
+Config Structure
+================
