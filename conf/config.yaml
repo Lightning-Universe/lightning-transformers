@@ -1,9 +1,8 @@
-defaults: # for loading the default config
+defaults: # loads default configs
   - training: default
   - trainer: default
   - optimizer: adamw
   - scheduler: linear_schedule_with_warmup
-  - backbone: nlp/huggingface/default
   - logger: tchaton # todo: change this eventually
 
 task: ???

@@ -7,6 +7,7 @@ from lightning_transformers.core.nlp.huggingface import HFTransformer
 
 
 class TokenClassificationTransformer(HFTransformer):
+
     def __init__(self, *args, labels: List[str], **kwargs):
         super().__init__(*args, **kwargs, num_labels=len(labels))
         self.labels = labels

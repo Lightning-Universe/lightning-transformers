@@ -37,7 +37,7 @@ def _count_ngram(ngram_input_list: List[str], n_gram: int) -> Counter:
 
     for i in range(1, n_gram + 1):
         for j in range(len(ngram_input_list) - i + 1):
-            ngram_key = tuple(ngram_input_list[j : (i + j)])
+            ngram_key = tuple(ngram_input_list[j:(i + j)])
             ngram_counter[ngram_key] += 1
 
     return ngram_counter
@@ -78,15 +78,14 @@ class BLEUScore(Metric):
             return torch.tensor(0.0, device=self.r.device)
 
         if self.smooth:
-            precision_scores = torch.add(self.numerator, torch.ones(self.n_gram)) / torch.add(
-                self.denominator, torch.ones(self.n_gram)
-            )
+            precision_scores = torch.add(self.numerator, torch.ones(
+                self.n_gram
+            )) / torch.add(self.denominator, torch.ones(self.n_gram))
         else:
             precision_scores = self.numerator / self.denominator
 
-        log_precision_scores = torch.tensor([1.0 / self.n_gram] * self.n_gram, device=self.r.device) * torch.log(
-            precision_scores
-        )
+        log_precision_scores = torch.tensor([1.0 / self.n_gram] * self.n_gram,
+                                            device=self.r.device) * torch.log(precision_scores)
         geometric_mean = torch.exp(torch.sum(log_precision_scores))
         brevity_penalty = (
             torch.tensor(1.0, device=self.r.device) if self.c > self.r else torch.exp(1 - (ref_len / trans_len))

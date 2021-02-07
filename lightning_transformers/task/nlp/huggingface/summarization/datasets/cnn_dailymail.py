@@ -4,6 +4,7 @@ from lightning_transformers.task.nlp.huggingface.summarization import Summarizat
 
 
 class CNNDailyMailSummarizationDataModule(SummarizationDataModule):
+
     @property
     def source_target_column_names(self) -> Tuple[str, str]:
         return "article", "highlights"

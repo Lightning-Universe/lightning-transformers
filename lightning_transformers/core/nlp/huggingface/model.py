@@ -26,9 +26,8 @@ class HFTransformer(TaskTransformer):
         **config_data_args,
     ):
         self.save_hyperparameters()
-        model = get_class(downstream_model_type).from_pretrained(
-            backbone.pretrained_model_name_or_path, **config_data_args
-        )
+        model = get_class(downstream_model_type
+                          ).from_pretrained(backbone.pretrained_model_name_or_path, **config_data_args)
         super().__init__(model=model, optimizer=optimizer, scheduler=scheduler, instantiator=instantiator)
 
     @property

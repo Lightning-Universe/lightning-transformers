@@ -1,20 +1,10 @@
 # @package dataset
+defaults:
+  - nlp/hf_default
 _target_: lightning_transformers.task.nlp.huggingface.token_classification.TokenClassificationDataModule
 cfg:
   task_name: ner
   dataset_name: conll2003
-  dataset_config_name: null
-  train_file: ''
-  validation_file: ''
-  cache_dir: null
-  padding: 'max_length'
-  truncation: 'only_first'
-  preprocessing_num_workers: 8
-  load_from_cache_file: True
+  preprocessing_num_workers: 1
   label_all_tokens: False
   pad_to_max_length: False
-  max_length: 128
-
-  # torch data-loader specific arguments
-  batch_size: ${training.batch_size}
-  num_workers: ${training.num_workers}
