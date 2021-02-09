@@ -1,5 +1,3 @@
 defaults:
-  - default # add args from default trainer conf
-gpus: 2
-accelerator: ddp
+  - ddp
 plugins: "ddp_sharded"

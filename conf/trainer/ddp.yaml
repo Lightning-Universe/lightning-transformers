@@ -1,0 +1,4 @@
+defaults:
+  - default # add args from default trainer conf
+gpus: 1
+accelerator: ddp
