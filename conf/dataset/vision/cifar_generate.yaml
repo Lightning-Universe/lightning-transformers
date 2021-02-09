@@ -1,3 +1,4 @@
+# @package dataset
 _target_: lightning_transformers.task.vision.dalle.datasets.CIFARGenerateDataModule
 data_dir: ~/cifar/
 # torch data-loader specific arguments

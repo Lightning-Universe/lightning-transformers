@@ -14,3 +14,11 @@ hydra-core>=1.1.0.dev2 # todo: swap to 1.1 version once out
 # task-specific
 rouge-score
 sentencepiece
+
+# DALLE
+ftfy
+regex
+tqdm
+dalle-pytorch
+git+https://github.com/openai/CLIP.git
+pytorch-lightning-bolts

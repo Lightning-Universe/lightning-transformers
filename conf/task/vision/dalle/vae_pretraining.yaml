@@ -1,7 +1,5 @@
 # @package task
 defaults:
-  - override /backbone@_group_: vision/dalle/vqvae # default to DALLE VQVAE backbone
+  - default
+  - /backbone@_group_: vision/dalle/vqvae # default to DALLE VQVAE backbone
 _target_: lightning_transformers.task.vision.dalle.VQVAE
-backbone: ${backbone}
-optimizer: ${optimizer}
-scheduler: ${scheduler}

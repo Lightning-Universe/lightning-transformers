@@ -1,0 +1,4 @@
+# @package task
+backbone: ${backbone}
+optimizer: ${optimizer}
+scheduler: ${scheduler}

@@ -1,3 +1,4 @@
+# @package dataset
 _target_: lightning_transformers.task.vision.dalle.datasets.CIFARDescriptionDataModule
 data_dir: ~/cifar/
 context_length: ${backbone.text_seq_len}
