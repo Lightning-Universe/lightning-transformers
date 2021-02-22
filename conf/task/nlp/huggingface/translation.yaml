@@ -1,9 +1,8 @@
 # @package task
+defaults:
+  - nlp/huggingface/default
 _target_: lightning_transformers.task.nlp.huggingface.translation.HFTranslationTransformer
 downstream_model_type: transformers.AutoModelForSeq2SeqLM
-backbone: ${backbone}
-optimizer: ${optimizer}
-scheduler: ${scheduler}
 cfg:
   n_gram: 4
   smooth: False

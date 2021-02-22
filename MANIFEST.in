@@ -12,4 +12,5 @@ prune tests
 # Exclude the documentation files
 prune docs
 # Exclude build configs
+prune .circleci
 prune .github

@@ -19,6 +19,9 @@ class HFTransformerDataConfig(TransformerDataConfig):
     preprocessing_num_workers: int = 8
     load_from_cache_file: bool = True
     cache_dir: Optional[str] = None
+    limit_train_samples: Optional[int] = None
+    limit_val_samples: Optional[int] = None
+    limit_test_samples: Optional[int] = None
 
 
 @dataclass

@@ -1,18 +1,8 @@
 # @package dataset
+defaults:
+  - nlp/hf_default
 _target_: lightning_transformers.task.nlp.huggingface.multiple_choice.RaceMultipleChoiceTransformerDataModule
 cfg:
   dataset_name: race
-  train_file: ''
-  validation_file: ''
   dataset_config_name: 'all'
   padding: False
-  truncation: 'only_first'
-  max_seq_length: 128
-  max_length: 128
-  preprocessing_num_workers: 1
-  load_from_cache_file: True
-  cache_dir: null
-
-  # torch data-loader specific arguments
-  batch_size: ${training.batch_size}
-  num_workers: ${training.num_workers}

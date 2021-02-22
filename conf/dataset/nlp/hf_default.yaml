@@ -1,0 +1,19 @@
+# @package dataset
+defaults:
+  - /dataset/default
+cfg:
+  dataset_name: null
+  dataset_config_name: null
+  train_file: ''
+  validation_file: ''
+  train_val_split: null
+  max_samples: null
+  cache_dir: null
+  padding: 'max_length'
+  truncation: 'only_first'
+  preprocessing_num_workers: 1
+  load_from_cache_file: True
+  max_length: 128
+  limit_train_samples: null
+  limit_val_samples: null
+  limit_test_samples: null

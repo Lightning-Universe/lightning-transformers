@@ -132,6 +132,7 @@ PACKAGE_MAPPING = {
     'scikit-learn': 'sklearn',
     'Pillow': 'PIL',
     'PyYAML': 'yaml',
+    "hydra-core": "hydra",
 }
 MOCK_PACKAGES = []
 if SPHINX_MOCK_REQUIREMENTS:
