@@ -50,9 +50,9 @@ setup(
     setup_requires=[],
     install_requires=load_requirements(PATH_ROOT),
     project_urls={
-        "Bug Tracker": "TODO",
-        "Documentation": "TODO",
-        "Source Code": "TODO",
+        "Bug Tracker": "https://github.com/PyTorchLightning/lightning-transformers/issues",
+        # "Documentation": "TODO",
+        "Source Code": "https://github.com/PyTorchLightning/lightning-transformers",
     },
     classifiers=[
         "Environment :: Console",
