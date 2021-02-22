@@ -14,8 +14,7 @@
 # todo: this was ported from Flash, and eventually should be reduced into one shared file
 # todo: https://github.com/PyTorchLightning/lightning-flash/blob/master/flash/core/finetuning.py
 
-from ctypes import Union
-from typing import List
+from typing import List, Union
 
 import pytorch_lightning as pl
 import torch
