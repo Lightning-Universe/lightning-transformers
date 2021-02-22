@@ -7,5 +7,5 @@ cfg:
   dataset_config_name: 'ro-en' # WMT translation datasets: ['cs-en', 'de-en', 'fi-en', 'ro-en', 'ru-en', 'tr-en']
   src_lang: 'en'
   tgt_lang: 'ro'
-  max_source_length: 1024
+  max_source_length: 128
   max_target_length: 128
