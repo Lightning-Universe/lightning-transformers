@@ -1,7 +1,7 @@
 import shutil
 import subprocess
 from unittest import mock
-from unittest.mock import MagicMock
+from unittest.mock import ANY, MagicMock
 
 from omegaconf import DictConfig
 
@@ -15,15 +15,17 @@ def test_train_run():
 
     cli.run(instantiator)
 
-    assert trainer_mock.fit.called
-    assert trainer_mock.test.called
+    trainer_mock.fit.assert_called()
+    trainer_mock.test.assert_called()
 
 
 @mock.patch("lightning_transformers.cli.train.run")
 def test_train_main(run_mock):
     cfg = DictConfig({"training": {"do_train": True}})
     cli.main(cfg)
-    assert run_mock.called_with(do_train=False, tokenizer=None)
+    run_mock.assert_called_with(
+        ANY, ignore_warnings=ANY, do_train=True, dataset=ANY, task=ANY, trainer=ANY, logger=None, tokenizer=ANY
+    )
 
 
 def test_train_entry_point():
