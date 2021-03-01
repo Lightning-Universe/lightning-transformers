@@ -1,5 +1,6 @@
 from typing import Any, Optional
 
+import hydra
 from omegaconf import DictConfig, OmegaConf
 from pytorch_lightning.utilities.distributed import rank_zero_info
 
@@ -52,3 +53,12 @@ def main(cfg: DictConfig):
         trainer=cfg.trainer,
         logger=logger,
     )
+
+
+@hydra.main(config_path="../../conf", config_name="config")
+def hydra_entry(cfg: DictConfig):
+    main(cfg)
+
+
+if __name__ == "__main__":
+    hydra_entry()
