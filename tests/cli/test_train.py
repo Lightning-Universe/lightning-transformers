@@ -3,7 +3,7 @@ import subprocess
 from unittest import mock
 from unittest.mock import ANY, MagicMock
 
-from omegaconf import DictConfig
+from omegaconf import OmegaConf
 
 import lightning_transformers.cli.train as cli
 
@@ -21,7 +21,7 @@ def test_train_run():
 
 @mock.patch("lightning_transformers.cli.train.run")
 def test_train_main(run_mock):
-    cfg = DictConfig({"training": {"do_train": True}})
+    cfg = OmegaConf.create({"training": {"do_train": True}})
     cli.main(cfg)
     run_mock.assert_called_with(
         ANY, ignore_warnings=ANY, do_train=True, dataset=ANY, task=ANY, trainer=ANY, logger=None, tokenizer=ANY

@@ -10,6 +10,7 @@ datasets
 
 # hydra
 hydra-core>=1.1.0.dev2 # todo: swap to 1.1 version once out
+omegaconf==2.1.0.dev18 # issues with `throw_on_missing_key`
 
 # task-specific
 rouge-score
