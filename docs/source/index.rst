@@ -3,15 +3,45 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-PyTorch-Lightning-Sandbox documentation
-=======================================
+Lightning Transformers
+======================
+
+.. include:: introduction.rst
+
 .. toctree::
    :maxdepth: 1
    :name: start
-   :caption: Start here
+   :caption: Get started
 
-   api/lightning_transformers.sample_module
+   introduction
+   installation
+   quickstart
+   structure/conf
 
+.. toctree::
+   :maxdepth: 2
+   :name: tasks
+   :caption: Tasks
+
+   tasks/nlp
+   tasks/vision
+   tasks/custom
+
+.. toctree::
+   :maxdepth: 2
+   :name: optimization
+   :caption: Training Optimizations
+
+   optimizations/deepspeed
+   optimizations/sharded
+
+
+.. toctree::
+   :maxdepth: 1
+   :name: api
+   :caption: API Reference
+
+   structure/code
 
 Indices and tables
 ==================
@@ -19,9 +49,3 @@ Indices and tables
 * :ref:`genindex`
 * :ref:`modindex`
 * :ref:`search`
-
-.. This is here to make sphinx aware of the modules but not throw an error/warning
-.. toctree::
-   :hidden:
-
-   readme

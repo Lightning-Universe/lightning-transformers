@@ -1,0 +1,8 @@
+# @package dataset
+defaults:
+  - nlp/hf_default
+_target_: lightning_transformers.task.nlp.huggingface.multiple_choice.RaceMultipleChoiceTransformerDataModule
+cfg:
+  dataset_name: race
+  dataset_config_name: 'all'
+  padding: False
