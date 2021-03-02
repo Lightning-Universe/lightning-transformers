@@ -20,7 +20,7 @@ def run(
     trainer: TrainerConfig = TrainerConfig(),
     tokenizer: Optional[TokenizerConfig] = None,
     logger: Optional[Any] = None,
-):
+) -> None:
     if ignore_warnings:
         set_ignore_warnings()
 
@@ -39,7 +39,7 @@ def run(
     trainer.test(model, datamodule=data_module)
 
 
-def main(cfg: DictConfig):
+def main(cfg: DictConfig) -> None:
     rank_zero_info(OmegaConf.to_yaml(cfg))
     instantiator = HydraInstantiator()
     logger = instantiator.logger(cfg)
@@ -48,7 +48,7 @@ def main(cfg: DictConfig):
         ignore_warnings=cfg.ignore_warnings,
         do_train=cfg.training.do_train,
         dataset=cfg.dataset,
-        tokenizer=cfg.tokenizer if "tokenizer" in cfg else None,
+        tokenizer=cfg.get("tokenizer", None),
         task=cfg.task,
         trainer=cfg.trainer,
         logger=logger,
@@ -56,7 +56,7 @@ def main(cfg: DictConfig):
 
 
 @hydra.main(config_path="../../conf", config_name="config")
-def hydra_entry(cfg: DictConfig):
+def hydra_entry(cfg: DictConfig) -> None:
     main(cfg)
 
 
