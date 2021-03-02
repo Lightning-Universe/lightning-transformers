@@ -29,9 +29,6 @@ def test_train_main(run_mock):
 
 
 def test_train_entry_point():
-    proc = subprocess.run(
-        [shutil.which("pl-transformers-train"), "--help"],
-        stdout=subprocess.PIPE,
-    )
+    proc = subprocess.run([shutil.which("pl-transformers-train"), "--help"], stdout=subprocess.PIPE)
     help = proc.stdout.decode().strip()
     assert help.startswith("train is powered by Hydra")
