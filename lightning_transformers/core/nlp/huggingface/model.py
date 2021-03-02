@@ -36,13 +36,16 @@ class HFTransformer(TaskTransformer):
             **config_data_args,
         )
         super().__init__(model=model, optimizer=optimizer, scheduler=scheduler, instantiator=instantiator)
-        self.tokenizer = tokenizer  # necessary for hf_pipeline
-        self.hf_pipeline = None
+        self._tokenizer = tokenizer  # necessary for hf_pipeline
+        self._hf_pipeline = None
 
     @property
     def tokenizer(self) -> Optional["PreTrainedTokenizerBase"]:
-        if self._tokenizer is None:
-            self._tokenizer = getattr(self, "trainer.datamodule.tokenizer", None)
+        if (
+            self._tokenizer is None and hasattr(self, "trainer") and hasattr(self.trainer, "datamodule")
+            and hasattr(self.trainer.datamodule, "tokenizer")  # noqa: W503
+        ):
+            self._tokenizer = self.trainer.datamodule.tokenizer
         return self._tokenizer
 
     @tokenizer.setter

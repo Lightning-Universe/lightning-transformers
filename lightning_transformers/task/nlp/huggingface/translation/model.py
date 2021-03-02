@@ -41,5 +41,5 @@ class HFTranslationTransformer(HFSeq2SeqTransformer):
                 self.model.config.decoder_start_token_id = self.tokenizer.lang_code_to_id[tgt_lang]
 
     @property
-    def pipeline_task(self) -> str:
+    def hf_pipeline_task(self) -> str:
         return "translation_xx_to_yy"

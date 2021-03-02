@@ -50,7 +50,7 @@ class ScriptRunner:
             return predict_main(cfg)
 
     def hf_train(
-        self, task: str, dataset: str, model: str, cmd_args: Optional[List[str]] = None, max_samples: int = 64
+        self, task: str, dataset: str, model: str, cmd_args: Optional[List[str]] = None, max_samples: int = 16
     ) -> None:
         if cmd_args is None:
             cmd_args = []
@@ -74,5 +74,5 @@ class ScriptRunner:
 
 
 @pytest.fixture(scope="session")
-def script_runner():
+def script_runner() -> ScriptRunner:
     return ScriptRunner()

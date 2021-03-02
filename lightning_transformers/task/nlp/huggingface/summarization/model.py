@@ -27,5 +27,5 @@ class HFSummarizationTransformer(HFSeq2SeqTransformer):
         )
 
     @property
-    def pipeline_task(self) -> str:
+    def hf_pipeline_task(self) -> str:
         return "summarization"

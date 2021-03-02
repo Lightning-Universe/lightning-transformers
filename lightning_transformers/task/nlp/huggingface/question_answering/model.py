@@ -14,5 +14,5 @@ class QuestionAnsweringTransformer(HFTransformer):
         return loss
 
     @property
-    def pipeline_task(self) -> str:
+    def hf_pipeline_task(self) -> str:
         return "question-answering"
