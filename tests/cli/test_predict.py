@@ -22,7 +22,7 @@ def test_predict_run():
 def test_predict_main(run_mock):
     cfg = OmegaConf.create({"x": "foo", "task": "bar"})
     cli.main(cfg)
-    run_mock.assert_called_with("foo", ANY, task="bar", tokenizer=None)
+    run_mock.assert_called_with("foo", ANY, checkpoint_path=None, task="bar", tokenizer=None)
 
 
 def test_predict_entry_point():
