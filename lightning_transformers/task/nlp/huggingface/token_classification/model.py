@@ -1,4 +1,4 @@
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List
 
 import pytorch_lightning as pl
 import torch
@@ -53,5 +53,5 @@ class TokenClassificationTransformer(HFTransformer):
         return {f"{mode}_{k}": metric(predictions, labels) for k, metric in self.metrics.items()}
 
     @property
-    def pipeline_task(self) -> Optional[str]:
+    def pipeline_task(self) -> str:
         return "ner"

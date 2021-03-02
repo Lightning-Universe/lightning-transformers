@@ -49,6 +49,7 @@ class HFSeq2SeqTransformer(HFTransformer):
 
     @property
     def task(self) -> str:
+        # TODO: what is this for?
         raise NotImplementedError
 
     def generate(self, input_ids: torch.Tensor, attention_mask: torch.Tensor) -> List[str]:

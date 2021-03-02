@@ -1,4 +1,4 @@
-from typing import Any, Dict, Optional
+from typing import Any, Dict
 
 import pytorch_lightning as pl
 import torch
@@ -10,7 +10,6 @@ class TextClassificationTransformer(HFTransformer):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.save_hyperparameters()
         self.metrics = {}
 
     def training_step(self, batch: Any, batch_idx: int) -> torch.Tensor:
@@ -49,5 +48,5 @@ class TextClassificationTransformer(HFTransformer):
         return {f"{mode}_{k}": metric(preds, labels) for k, metric in self.metrics.items()}
 
     @property
-    def pipeline_task(self) -> Optional[str]:
+    def hf_pipeline_task(self) -> str:
         return "sentiment-analysis"

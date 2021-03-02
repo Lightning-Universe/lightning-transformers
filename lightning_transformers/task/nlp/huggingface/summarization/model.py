@@ -1,5 +1,3 @@
-from typing import Optional
-
 from lightning_transformers.core.nlp.huggingface.seq2seq.model import HFSeq2SeqTransformer
 from lightning_transformers.task.nlp.huggingface.summarization.config import HFSummarizationTransformerConfig
 from lightning_transformers.task.nlp.huggingface.summarization.metric import RougeMetric
@@ -29,5 +27,5 @@ class HFSummarizationTransformer(HFSeq2SeqTransformer):
         )
 
     @property
-    def pipeline_task(self) -> Optional[str]:
+    def pipeline_task(self) -> str:
         return "summarization"
