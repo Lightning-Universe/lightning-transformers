@@ -1,5 +1,5 @@
 include requirements.txt
-recursive-include requirements *.txt
+recursive-exclude requirements *.txt
 include *.md
 include *.py
 include *.yaml

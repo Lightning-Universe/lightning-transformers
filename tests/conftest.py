@@ -5,7 +5,7 @@ import pytest
 from hydra.experimental import compose, initialize
 from hydra.test_utils.test_utils import find_parent_dir_containing
 
-from cli import main
+from lightning_transformers.cli.train import main as train_main
 
 # GitHub Actions use this path to cache datasets.
 # Use `datadir` fixture where possible and use `DATASETS_PATH` in
@@ -41,7 +41,7 @@ def hydra_runner():
         relative_conf_dir = find_hydra_conf_dir()
         with initialize(config_path=relative_conf_dir, job_name="test_app"):
             cfg = compose(config_name="config", overrides=cmd_line.split(" "))
-            main(cfg)
+            train_main(cfg)
 
     return run
 

@@ -53,7 +53,7 @@ We can also modify the parameters in the config object from the commandline.
     python train.py optimizer=sgd optimizer.momentum=0.99
 
 
-We use Hydras' powerful `instantiation <https://hydra.cc/docs/next/patterns/instantiate_objects/overview>`_ to abstract the optimizer from the code, meaning it is very simple to plug in your own custom optimizers or schedulers.
+We use Hydras' `instantiation <https://hydra.cc/docs/next/patterns/instantiate_objects/overview>`_ to abstract the optimizer from the code, meaning it is very simple to plug in your own custom optimizers or schedulers via configs rather than code.
 
 .. code-block:: yaml
 
@@ -68,7 +68,7 @@ We use Hydras' powerful `instantiation <https://hydra.cc/docs/next/patterns/inst
 Config Inheritance
 ******************
 
-Just like code, you can also inherit from configs.
+Just like code, configs inherit from other configs.
 
 For example, when defining a task, there is a default config object at ``task/nlp/huggingface/default.yaml`` that contains a set of default configurations for all tasks.
 This is useful, as our task configs do not need to define these parameters and instead can import them, like below.
