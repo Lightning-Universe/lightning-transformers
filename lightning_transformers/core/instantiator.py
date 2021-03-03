@@ -67,7 +67,7 @@ class HydraInstantiator(Instantiator):
         return instantiate(cfg)
 
     def logger(self, cfg: DictConfig) -> Optional[logging.Logger]:
-        if cfg.log:
+        if cfg.get("log"):
             return instantiate(cfg.logger)
 
     def trainer(self, cfg: DictConfig, **kwargs) -> pl.Trainer:
