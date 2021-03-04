@@ -16,8 +16,6 @@ class HFTransformerDataModule(TransformerTokenizerDataModule):
     def __init__(self, cfg: HFTransformerDataConfig, tokenizer: PreTrainedTokenizerBase):
         super().__init__(cfg, tokenizer)
         os.environ["TOKENIZERS_PARALLELISM"] = "TRUE"  # todo: smarter handling of this env variable
-        # call fit to setup any metadata required for the model initialization
-        self.setup("fit")
 
     def setup(self, stage: Optional[str] = None):
         dataset = self.load_dataset()

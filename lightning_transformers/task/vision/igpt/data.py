@@ -12,10 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # Originally from: https://github.com/teddykoker/image-gpt
-import os
-from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, Optional, Union
+from typing import Any, Optional
 
 import numpy as np
 import torch
@@ -24,7 +22,7 @@ from sklearn.cluster import KMeans, MiniBatchKMeans
 from torch.utils.data import DataLoader, random_split
 
 from lightning_transformers.core import TransformerDataModule
-from lightning_transformers.core.config import TransformerDataConfig
+from lightning_transformers.task.vision.igpt.config import ImageGPTDataConfig
 
 if _module_available("torchvision"):
     import torchvision.transforms as T
@@ -36,12 +34,6 @@ if _module_available("torchvision"):
         "fmnist": datasets.FashionMNIST,
         "cifar10": datasets.CIFAR10,
     }
-
-
-@dataclass
-class ImageGPTDataConfig(TransformerDataConfig):
-    dataset: str = "cifar10"
-    data_dir: Optional[Union[str, Path]] = None
 
 
 def find_centroids(train_x, num_clusters=16, batch_size=1024):
@@ -60,8 +52,6 @@ class ImageGPTDataModule(TransformerDataModule):
         super().__init__(cfg)
         self.dataset_cls = DATASETS[cfg.dataset]
         self.centroids = None
-        # call fit to setup any metadata required for the model initialization
-        self.setup("fit")
 
     def prepare_data(self, *args: Any, **kwargs: Any) -> None:
         """
