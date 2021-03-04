@@ -19,20 +19,23 @@ from typing import Any, Optional, Union
 
 import numpy as np
 import torch
-import torchvision.transforms as T
+from pytorch_lightning.utilities import _module_available
 from sklearn.cluster import KMeans, MiniBatchKMeans
 from torch.utils.data import DataLoader, random_split
-from torchvision import datasets
-from torchvision.transforms import ToTensor
 
 from lightning_transformers.core import TransformerDataModule
 from lightning_transformers.core.config import TransformerDataConfig
 
-DATASETS = {
-    "mnist": datasets.MNIST,
-    "fmnist": datasets.FashionMNIST,
-    "cifar10": datasets.CIFAR10,
-}
+if _module_available("torchvision"):
+    import torchvision.transforms as T
+    from torchvision import datasets
+    from torchvision.transforms import ToTensor
+
+    DATASETS = {
+        "mnist": datasets.MNIST,
+        "fmnist": datasets.FashionMNIST,
+        "cifar10": datasets.CIFAR10,
+    }
 
 
 @dataclass
@@ -116,13 +119,11 @@ class ImageGPTDataModule(TransformerDataModule):
             # we use the augmentation popularized by Wide Residual
             # Networks: 4 pixels are reflection padded on each side, and
             # a 32 × 32 crop is randomly sampled from the padded image or its horizontal flip
-            return T.Compose(
-                [
-                    T.RandomCrop(32, padding=4, padding_mode="reflect"),
-                    T.RandomHorizontalFlip(),
-                    T.ToTensor(),
-                ]
-            )
+            return T.Compose([
+                T.RandomCrop(32, padding=4, padding_mode="reflect"),
+                T.RandomHorizontalFlip(),
+                T.ToTensor(),
+            ])
 
         elif self.cfg.dataset == "mnist" or self.cfg.dataset == "fmnist":
             return T.ToTensor()
