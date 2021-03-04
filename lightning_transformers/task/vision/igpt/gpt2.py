@@ -18,6 +18,7 @@ import torch.nn as nn
 
 
 class Block(nn.Module):
+
     def __init__(self, embed_dim, num_heads):
         super(Block, self).__init__()
         self.ln_1 = nn.LayerNorm(embed_dim)
@@ -42,6 +43,7 @@ class Block(nn.Module):
 
 
 class GPT2(nn.Module):
+
     def __init__(self, embed_dim, num_heads, num_layers, num_positions, num_vocab, num_classes):
         super(GPT2, self).__init__()
 

@@ -32,6 +32,7 @@ def _to_sequence(x):
 
 
 class GenerativePixelsTransformer(TaskTransformer):
+
     def __init__(
         self,
         num_pixels: int,
