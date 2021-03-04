@@ -19,8 +19,7 @@ class TextClassificationDataModule(HFTransformerDataModule):
             max_length=self.cfg.max_length,
         )
         cols_to_keep = [
-            x for x in ["input_ids", "attention_mask", "token_type_ids", "labels", "idx"]
-            if x in dataset["train"].features
+            x for x in ["input_ids", "attention_mask", "token_type_ids", "labels"] if x in dataset["train"].features
         ]
         dataset.set_format("torch", columns=cols_to_keep)
         self.labels = dataset["train"].features["labels"]

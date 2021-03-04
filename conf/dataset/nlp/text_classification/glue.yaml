@@ -1,0 +1,8 @@
+# @package dataset
+defaults:
+  - nlp/hf_default
+_target_: lightning_transformers.task.nlp.huggingface.text_classification.TextClassificationDataModule
+cfg:
+  dataset_name: glue
+  # ['cola', 'sst2', 'mrpc', 'qqp', 'stsb', 'mnli', 'mnli_mismatched', 'mnli_matched', 'qnli', 'rte', 'wnli', 'ax']
+  dataset_config_name: sst2
