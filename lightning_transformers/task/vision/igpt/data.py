@@ -75,21 +75,16 @@ class ImageGPTDataModule(TransformerDataModule):
             dataset_train = self.dataset_cls(self.cfg.data_dir, train=True, transform=train_transforms)
             dataset_val = self.dataset_cls(self.cfg.data_dir, train=True, transform=val_transforms)
 
+            n = len(dataset_train)
             # TODO paper uses 90/10 split for every dataset besides ImageNet (96/4)
-            train_size = int(0.9 * len(dataset_train))
+            train_size = int(0.9 * n)
+            lengths = [train_size, n - train_size]
+            generator = torch.Generator()
 
             # Split
             # NOTE: splitting is done twice as datasets have different transforms attributes
-            self.dataset_train, _ = random_split(
-                dataset_train,
-                [train_size, len(dataset_train) - train_size],
-                generator=torch.Generator().manual_seed(0),
-            )
-            _, self.dataset_val = random_split(
-                dataset_val,
-                [train_size, len(dataset_val) - train_size],
-                generator=torch.Generator().manual_seed(0),
-            )
+            self.dataset_train, _ = random_split(dataset_train, lengths, generator=generator.manual_seed(0))
+            _, self.dataset_val = random_split(dataset_val, lengths, generator=generator.manual_seed(0))
 
         if stage == "test" or stage is None:
             self.dataset_test = self.dataset_cls(self.cfg.data_dir, train=False, transform=self.test_transforms)
