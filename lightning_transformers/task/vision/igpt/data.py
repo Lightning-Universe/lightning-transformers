@@ -74,7 +74,7 @@ class ImageGPTDataModule(TransformerDataModule):
         self.cfg.data_dir = Path(self.cfg.data_dir)
 
         centroid_path = self.cfg.data_dir / f"{self.cfg.dataset}_centroids.npy"
-        if not os.path.exists(centroid_path):
+        if not centroid_path.exists():
             self._create_centroids(centroid_path)
         self.centroids = np.load(centroid_path)
 
