@@ -25,7 +25,7 @@ Lightning Transformers
 
    tasks/nlp
    tasks/vision
-   tasks/custom
+   tasks/new
 
 .. toctree::
    :maxdepth: 2

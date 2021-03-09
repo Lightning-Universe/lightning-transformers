@@ -1,9 +1,7 @@
 # @package dataset
+defaults:
+  - default
 _target_: lightning_transformers.task.vision.igpt.data.ImageGPTDataModule
 cfg:
   dataset: cifar10
   data_dir: ./
-
-  # torch data-loader specific arguments
-  batch_size: ${training.batch_size}
-  num_workers: ${training.num_workers}

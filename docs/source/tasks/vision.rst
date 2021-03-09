@@ -3,8 +3,4 @@
 Vision Tasks
 ============
 
-Generative Pretraining from Pixels
-----------------------------------
-
-Text to Image
--------------
+.. include:: vision/generative_pretraining_from_pixels.rst
