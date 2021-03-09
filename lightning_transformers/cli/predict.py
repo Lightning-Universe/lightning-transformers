@@ -38,10 +38,10 @@ def main(cfg: DictConfig) -> Any:
     y = run(
         cfg.x,
         instantiator,
-        checkpoint_path=cfg.get("checkpoint_path", None),
+        checkpoint_path=cfg.get("checkpoint_path"),
         task=cfg.task,
-        model_data_args=cfg.get("model_data_args", None),
-        tokenizer=cfg.get("tokenizer", None),
+        model_data_args=cfg.get("model_data_args"),
+        tokenizer=cfg.get("tokenizer"),
         **cfg.get("predict_kwargs", {})
     )
     rank_zero_info(y)
