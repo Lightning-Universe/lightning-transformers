@@ -22,7 +22,8 @@ def run(
     model: HFTransformer = instantiator.model(task, model_data_args=model_data_args, tokenizer=tokenizer)
     if checkpoint_path:
         model.load_from_checkpoint(checkpoint_path)
-    return model.hf_predict(**x if isinstance(x, dict) else x, **predict_kwargs)
+    # TODO: fix dict input
+    return model.hf_predict(x, **predict_kwargs)
 
 
 def main(cfg: DictConfig) -> Any:
