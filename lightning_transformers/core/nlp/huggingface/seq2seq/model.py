@@ -1,7 +1,6 @@
 from typing import Any, List
 
 import torch
-from pytorch_lightning import _logger as log
 
 from lightning_transformers.core.nlp.huggingface import HFTransformer
 from lightning_transformers.core.nlp.huggingface.seq2seq.config import HFSeq2SeqTransformerConfig
@@ -34,22 +33,6 @@ class HFSeq2SeqTransformer(HFTransformer):
         return self.common_step("test", batch)
 
     def compute_generate_metrics(self, batch, prefix):
-        raise NotImplementedError
-
-    def on_fit_start(self):
-        self.initialize_model_specific_parameters()
-
-    def initialize_model_specific_parameters(self):
-        task_specific_params = self.model.config.task_specific_params
-
-        if task_specific_params is not None:
-            pars = task_specific_params.get(self.task, {})
-            log.info(f"Setting model params for {self.task}:\n {pars}")
-            self.model.config.update(pars)
-
-    @property
-    def task(self) -> str:
-        # TODO: what is this for?
         raise NotImplementedError
 
     def generate(self, input_ids: torch.Tensor, attention_mask: torch.Tensor) -> List[str]:

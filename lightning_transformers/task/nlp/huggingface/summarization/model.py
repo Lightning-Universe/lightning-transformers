@@ -10,10 +10,6 @@ class HFSummarizationTransformer(HFSeq2SeqTransformer):
         super().__init__(*args, **kwargs)
         self.bleu = None
 
-    @property
-    def task(self) -> str:
-        return "summarization"
-
     def compute_generate_metrics(self, batch, prefix):
         tgt_lns = self.tokenize_labels(batch["labels"])
         pred_lns = self.generate(batch["input_ids"], batch["attention_mask"])
