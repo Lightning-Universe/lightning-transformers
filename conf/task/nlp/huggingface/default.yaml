@@ -1,4 +1,5 @@
 # @package task
+_recursive_: false
 defaults:
   - /backbone@_group_: nlp/huggingface/default # use AutoModel backbone by default
 backbone: ${backbone}

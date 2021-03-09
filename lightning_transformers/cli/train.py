@@ -45,12 +45,12 @@ def main(cfg: DictConfig) -> None:
     logger = instantiator.logger(cfg)
     run(
         instantiator,
-        ignore_warnings=cfg.ignore_warnings,
-        do_train=cfg.training.do_train,
-        dataset=cfg.dataset,
-        tokenizer=cfg.get("tokenizer", None),
-        task=cfg.task,
-        trainer=cfg.trainer,
+        ignore_warnings=cfg.get("ignore_warnings"),
+        do_train=cfg.get("training").get("do_train"),
+        dataset=cfg.get("dataset"),
+        tokenizer=cfg.get("tokenizer"),
+        task=cfg.get("task"),
+        trainer=cfg.get("trainer"),
         logger=logger,
     )
 
