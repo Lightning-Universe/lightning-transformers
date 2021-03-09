@@ -1,4 +1,4 @@
-from typing import Any, Optional
+from typing import Any, Dict, Optional
 
 import hydra
 from omegaconf import DictConfig, OmegaConf
@@ -15,13 +15,14 @@ def run(
     instantiator: Instantiator,
     checkpoint_path: Optional[str] = None,
     task: TaskConfig = TaskConfig(),
+    model_data_args: Optional[Dict[str, Any]] = None,
     tokenizer: Optional[TokenizerConfig] = None,
+    **predict_kwargs: Any
 ) -> Any:
-    # TODO: num classes?
-    model: HFTransformer = instantiator.model(task, tokenizer=tokenizer)
+    model: HFTransformer = instantiator.model(task, model_data_args=model_data_args, tokenizer=tokenizer)
     if checkpoint_path:
         model.load_from_checkpoint(checkpoint_path)
-    return model.hf_predict(x)
+    return model.hf_predict(x, **predict_kwargs)
 
 
 def main(cfg: DictConfig) -> Any:
@@ -32,7 +33,9 @@ def main(cfg: DictConfig) -> Any:
         instantiator,
         checkpoint_path=cfg.get("checkpoint_path", None),
         task=cfg.task,
+        model_data_args=cfg.get("model_data_args", None),
         tokenizer=cfg.get("tokenizer", None),
+        **cfg.get("predict_kwargs", {})
     )
     rank_zero_info(y)
     return y
