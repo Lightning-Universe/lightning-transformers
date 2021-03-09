@@ -1,5 +1,3 @@
-.. _igpt:
-
 Generative Pre-Training From Pixels iGPT
 ----------------------------------------
 
