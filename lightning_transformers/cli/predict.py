@@ -1,6 +1,7 @@
-from typing import Any, Dict, Optional
+from typing import Any, Dict, List, Mapping, Optional
 
 import hydra
+from hydra.utils import get_class
 from omegaconf import DictConfig, OmegaConf
 from pytorch_lightning.utilities.distributed import rank_zero_info
 
@@ -18,12 +19,17 @@ def run(
     model_data_args: Optional[Dict[str, Any]] = None,
     tokenizer: Optional[TokenizerConfig] = None,
     **predict_kwargs: Any
-) -> Any:
-    model: HFTransformer = instantiator.model(task, model_data_args=model_data_args, tokenizer=tokenizer)
+) -> List[Dict[str, Any]]:
+    model: HFTransformer
     if checkpoint_path:
-        model.load_from_checkpoint(checkpoint_path)
-    # TODO: fix dict input
-    return model.hf_predict(x, **predict_kwargs)
+        model = get_class(task._target_).load_from_checkpoint(checkpoint_path)
+    else:
+        model = instantiator.model(task, model_data_args=model_data_args, tokenizer=tokenizer)
+
+    if isinstance(x, Mapping):
+        return model.hf_predict(**x, **predict_kwargs)
+    else:
+        return model.hf_predict(x, **predict_kwargs)
 
 
 def main(cfg: DictConfig) -> Any:

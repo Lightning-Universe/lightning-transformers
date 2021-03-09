@@ -37,20 +37,27 @@ class ScriptRunner:
         return os.path.join(relative_conf_dir, config_dir)
 
     def train(self, cmd_args: List[str]) -> None:
-        cmd_args.append("trainer.fast_dev_run=True")
+        print(f"pl-transformers-train {' '.join(cmd_args)}")
         relative_conf_dir = self.find_hydra_conf_dir()
         with initialize(config_path=relative_conf_dir, job_name="test_app"):
             cfg = compose(config_name="config", overrides=cmd_args)
             train_main(cfg)
 
     def predict(self, cmd_args: List[str]) -> Any:
+        print(f"pl-transformers-predict {' '.join(cmd_args)}")
         relative_conf_dir = self.find_hydra_conf_dir()
         with initialize(config_path=relative_conf_dir, job_name="test_app"):
             cfg = compose(config_name="config", overrides=cmd_args)
             return predict_main(cfg)
 
     def hf_train(
-        self, task: str, dataset: str, model: str, cmd_args: Optional[List[str]] = None, max_samples: int = 16
+        self,
+        task: str,
+        dataset: str,
+        model: str,
+        cmd_args: Optional[List[str]] = None,
+        max_samples: int = 16,
+        fast_dev_run: int = 1,
     ) -> None:
         if cmd_args is None:
             cmd_args = []
@@ -63,6 +70,8 @@ class ScriptRunner:
             f'dataset.cfg.limit_test_samples={max_samples}',
             f'dataset.cfg.cache_dir={self.cache_dir}',
         ])
+        if fast_dev_run:
+            cmd_args.append(f"trainer.fast_dev_run={fast_dev_run}")
         self.train(cmd_args)
 
     def hf_predict(self, cmd_args: List[str], task: str, model: str) -> Any:
