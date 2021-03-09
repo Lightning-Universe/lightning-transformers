@@ -49,8 +49,8 @@ class HydraInstantiator(Instantiator):
         if model_data_args is None:
             model_data_args = {}
         if tokenizer is not None:
-            tokenizer = instantiate(tokenizer)
-        return instantiate(cfg, instantiator=self, tokenizer=tokenizer, **model_data_args)
+            tokenizer = self.instantiate(tokenizer)
+        return self.instantiate(cfg, instantiator=self, tokenizer=tokenizer, **model_data_args)
 
     def optimizer(self, model: torch.nn.Module, cfg: DictConfig) -> torch.optim.Optimizer:
         no_decay = ["bias", "LayerNorm.weight"]
