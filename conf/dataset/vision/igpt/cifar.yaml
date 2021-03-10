@@ -1,6 +1,6 @@
 # @package dataset
 defaults:
-  - default
+  - /dataset/default
 _target_: lightning_transformers.task.vision.igpt.data.ImageGPTDataModule
 cfg:
   dataset: cifar10
