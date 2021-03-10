@@ -33,6 +33,3 @@ class FreezeEmbeddings(TransformersBaseFinetuning):
             self.freeze(layer.embed_tokens)
             if not is_t5:
                 self.freeze(layer.embed_positions)
-
-    def finetune_function(self, pl_module, epoch, optimizer, opt_idx):
-        pass
