@@ -114,7 +114,7 @@ At runtime we also need to define a config. You can find the config for iGPT CIF
 
     # @package dataset
     defaults:
-      - default
+      - /dataset/default
     _target_: lightning_transformers.task.vision.igpt.data.ImageGPTDataModule
     cfg:
       dataset: cifar10
@@ -266,7 +266,7 @@ Finally we define the config. This can be found in ``conf/task/vision/igpt.yaml`
 
     # @package task
     defaults:
-      - default # Use the defaults from the default task config
+      - /task/default # Use the defaults from the default task config
       - /backbone@_group_: vision/igpt/gpt2 # default to vision gpt2
     _target_: lightning_transformers.task.vision.igpt.GenerativePixelsTransformer
     num_pixels: 32
