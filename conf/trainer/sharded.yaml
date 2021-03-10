@@ -1,3 +1,5 @@
 defaults:
   - ddp
 plugins: "ddp_sharded"
+precision: 16
+amp_backend: 'native'
