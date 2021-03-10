@@ -13,6 +13,7 @@ def test_smoke_train_e2e(script_runner):
         "+task='vision/igpt'",
         "+dataset='vision/igpt/cifar'",
         'backbone.num_layers=1',
+        'training.num_workers=0',
         f'dataset.cfg.data_dir={script_runner.cache_dir}',
         'trainer.fast_dev_run=1',
     ])

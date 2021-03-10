@@ -57,6 +57,7 @@ class ScriptRunner:
         model: str,
         cmd_args: Optional[List[str]] = None,
         max_samples: int = 16,
+        num_workers: int = 0,
         fast_dev_run: int = 1,
     ) -> None:
         if cmd_args is None:
@@ -69,6 +70,7 @@ class ScriptRunner:
             f'dataset.cfg.limit_val_samples={max_samples}',
             f'dataset.cfg.limit_test_samples={max_samples}',
             f'dataset.cfg.cache_dir={self.cache_dir}',
+            f'training.num_workers={num_workers}',
         ])
         if fast_dev_run:
             cmd_args.append(f"trainer.fast_dev_run={fast_dev_run}")
