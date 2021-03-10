@@ -69,6 +69,34 @@ Here is a simplified example of the iGPT DataModule.
             """
             return {}
 
+In our case, most of our logic fits within the ``prepare_data`` and ``setup`` function. Here is a simplistic view of the logic.
+
+.. code-block:: python
+
+    ...
+    def prepare_data(self, *args: Any, **kwargs: Any) -> None:
+        # Saves files to directory
+        self.dataset_cls(self.cfg.data_dir, train=True, download=True)
+        self.dataset_cls(self.cfg.data_dir, train=False, download=True)
+
+    def setup(self, stage: Optional[str] = None):
+        ...
+        if stage == "fit" or stage is None:
+            # Setup image dataset using data transforms
+            train_transforms = self.train_transforms
+            val_transforms = self.test_transforms
+
+            dataset_train = self.dataset_cls(self.cfg.data_dir, train=True, transform=train_transforms)
+            dataset_val = self.dataset_cls(self.cfg.data_dir, train=True, transform=val_transforms)
+
+            ...
+            # Split dataset into train/val
+            self.dataset_train, _ = random_split(dataset_train, lengths, generator=generator.manual_seed(0))
+            _, self.dataset_val = random_split(dataset_val, lengths, generator=generator.manual_seed(0))
+        # Optionally process the test dataset
+        if stage == "test" or stage is None:
+            self.dataset_test = self.dataset_cls(self.cfg.data_dir, train=False, transform=self.test_transforms)
+
 We also define a dataclass to define the input config to the class. This makes it easier to pass options around.
 
 .. code-block:: python
