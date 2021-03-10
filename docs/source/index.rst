@@ -16,6 +16,7 @@ Lightning Transformers
    introduction
    installation
    quickstart
+   structure/conf
 
 .. toctree::
    :maxdepth: 2
@@ -40,7 +41,6 @@ Lightning Transformers
    :name: api
    :caption: API Reference
 
-   structure/conf
    structure/code
 
 Indices and tables

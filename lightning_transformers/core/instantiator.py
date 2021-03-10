@@ -1,9 +1,9 @@
 import logging
 from typing import Any, Dict, Optional, TYPE_CHECKING, Union
 
+import hydra
 import pytorch_lightning as pl
 import torch
-from hydra.utils import instantiate
 from omegaconf import DictConfig
 
 from lightning_transformers.core import TransformerDataModule
@@ -34,11 +34,14 @@ class Instantiator:
     def trainer(self, *args, **kwargs):
         raise NotImplementedError("Child class must implement method")
 
+    def instantiate(self, *args, **kwargs):
+        raise NotImplementedError("Child class must implement method")
+
 
 class HydraInstantiator(Instantiator):
 
     def model(self, cfg: DictConfig, model_data_args: Dict[str, Any]) -> "TaskTransformer":
-        return instantiate(cfg, instantiator=self, **model_data_args)
+        return self.instantiate(cfg, instantiator=self, **model_data_args)
 
     def optimizer(self, model: torch.nn.Module, cfg: DictConfig) -> torch.optim.Optimizer:
         no_decay = ["bias", "LayerNorm.weight"]
@@ -52,10 +55,10 @@ class HydraInstantiator(Instantiator):
                 "weight_decay": 0.0,
             },
         ]
-        return instantiate(cfg, grouped_parameters)
+        return self.instantiate(cfg, grouped_parameters)
 
     def scheduler(self, cfg: DictConfig, optimizer: torch.optim.Optimizer) -> torch.optim.lr_scheduler._LRScheduler:
-        return instantiate(cfg, optimizer=optimizer)
+        return self.instantiate(cfg, optimizer=optimizer)
 
     def data_module(
         self,
@@ -63,12 +66,15 @@ class HydraInstantiator(Instantiator):
         tokenizer: Optional[DictConfig] = None
     ) -> Union[TransformerDataModule, TransformerTokenizerDataModule]:
         if tokenizer:
-            return instantiate(cfg, tokenizer=instantiate(tokenizer))
-        return instantiate(cfg)
+            return self.instantiate(cfg, tokenizer=self.instantiate(tokenizer))
+        return self.instantiate(cfg)
 
     def logger(self, cfg: DictConfig) -> Optional[logging.Logger]:
-        if cfg.log:
-            return instantiate(cfg.logger)
+        if cfg.get("log"):
+            return self.instantiate(cfg.logger)
 
     def trainer(self, cfg: DictConfig, **kwargs) -> pl.Trainer:
-        return instantiate(cfg, **kwargs)
+        return self.instantiate(cfg, **kwargs)
+
+    def instantiate(self, *args, **kwargs):
+        return hydra.utils.instantiate(*args, **kwargs)

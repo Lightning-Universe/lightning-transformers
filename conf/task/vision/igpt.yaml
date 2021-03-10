@@ -1,0 +1,9 @@
+# @package task
+_recursive_: false
+defaults:
+  - /backbone@_group_: vision/igpt/gpt2 # default to vision gpt2
+_target_: lightning_transformers.task.vision.igpt.GenerativePixelsTransformer
+num_pixels: 32
+backbone: ${backbone}
+optimizer: ${optimizer}
+scheduler: ${scheduler}
