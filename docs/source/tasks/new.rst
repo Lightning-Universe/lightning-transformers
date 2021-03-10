@@ -4,14 +4,15 @@ Building New Tasks
 ==================
 
 Below we demonstrate how to build a custom task within Lightning Transformers.
-When building a custom task in Lightning Transformers, there are three key pieces.
+When building a custom task in Lightning Transformers, there are four key pieces.
 
-* Implement the Dataset
-* Implement the Backbone
-* Implement the Task
+* Implement a Dataset
+* Implement a Backbone
+* (Optional) Implement a Tokenizer
+* Implement a Task
 
-In some cases you'll need to implement all three, and in most cases you will need to implement a subset of them. There is also interconnection between
-sections; for example when your model requires knowing how many classes are within your dataset. We cover all these details below.
+In most cases you will need to implement a subset of them. There is also interconnection between
+the pieces; for example when your model requires knowing how many classes are within your dataset. We cover all these details below.
 
 Since datasets and backbones are mostly specific to tasks, the code is organized into tasks. You can create your own folder and add all the necessary logic within a new task folder for organization.
 
@@ -27,13 +28,13 @@ Since datasets and backbones are mostly specific to tasks, the code is organized
 
 In addition, make sure you are familiar with the config structure as this will be how you can modify your parameters via the cmdline. See :ref:`conf`.
 
-The Dataset
------------
+Implementing a Dataset
+----------------------
 
 The dataset defines the data transforms, plus the data you'd like to train, validate and test on. In our example we build the CIFAR10 dataset for iGPT, more details at :ref:`igpt`.
 
 The base class for Lightning Transformer datasets is the ``TransformerDataModule`` class, which is a thin layer on top of the LightningDataModule class, exposing all the Lightning Data Hooks as standard. See `LightningDataModule <https://pytorch-lightning.readthedocs.io/en/latest/extensions/datamodules.html>`_ for more details.
-Additional, the base class provides a few helper functions, plus allows us to define any data specific arguments we'd like the task to be aware of at initialize time.
+Additional, the base class provides a few helper functions, such as ``model_data_args`` which allows us to define any data specific arguments we'd like the task to be aware of at initialize time.
 
 In some cases you do not need to define a module, and could use a pre-set LightningDataModule out the box.
 
@@ -95,10 +96,10 @@ At runtime we also need to define a config. You can find the config for iGPT CIF
 Here we define the ``_target_`` class we'll like to instantiate (our DataModule that we just implemented) as well as any specific arguments.
 We also inherit from a default config which can be found in ``dataset/default.yaml``.
 
-.. _the-backbone:
+.. _implement-backbone:
 
-The Backbone
-------------
+Implementing a Backbone
+-----------------------
 
 In most cases, the backbone represents the transformer model you'd like to use when fine-tuning or pre-training on downstream tasks.
 In the case of iGPT, this is a GPT model, but can be swapped out with other implementations hence the importance to define this as a separate entity.
@@ -146,12 +147,32 @@ To instantiate the object, we have to define a config. This config can be seen i
     num_vocab: 16
     num_classes: 10
 
-We define the ``_target_`` class we'd like to instantiate, and parameters for our backbone model. For setting the backbone, we can do this via the cmdline or via hydra defaults. See :ref:`the-task`.
+We define the ``_target_`` class we'd like to instantiate, and parameters for our backbone model. For setting the backbone, we can do this via the cmdline or via hydra defaults. See :ref:`implement-task`.
 
-.. _the-task:
+.. _implement-tokenizer:
 
-The Task
---------
+(Optional) Implement a Tokenizer
+--------------------------------
+
+For many NLP models, a tokenizer will need to be defined. In many cases you can use pre-built tokenizers which saves having to train your own model.
+
+For example here is the config for HF tokenizers found in ``conf/tokenizer/huggingface/default.yaml``.
+
+.. code-block:: yaml
+
+    # @package tokenizer
+    _target_: transformers.AutoTokenizer.from_pretrained
+    pretrained_model_name_or_path: ${backbone.pretrained_model_name_or_path}
+    use_fast: true
+
+Here we instantiate the ``_target_`` function, and pass in the necessary arguments. One of them is a shared parameter with the backbone; the model name (i.e bert-base-cased).
+
+In the case of iGPT, no tokenizer this is purely pixel based training.
+
+.. _implement-task:
+
+Implement a Task
+----------------
 
 The task contains the logic required to train, validation and test the model. The base class for this in most cases is ``TaskTransformer``, which contains a few helper functions on top of the standard ``pl.LightningModule`` class.
 
@@ -208,7 +229,7 @@ Below is a simplified version of the file found at ``lightning_transformers/task
 
 The ``TaskTransformer`` class requires as input an optimizer config, scheduler config, and the backbone.
 
-In the above case, the backbone is a config object as defined in :ref:`the-backbone`, and we use the ``instantiator`` which is a helper object for us to instantiate the object via the config.
+In the above case, the backbone is a config object as defined in :ref:`implement-backbone`, and we use the ``instantiator`` which is a helper object for us to instantiate the object via the config.
 This allows us to remain agnostic to the backbone. Specifically, if we wanted to implement another backbone such as BERT, the task would not need change.
 
 Finally we define the config. This can be found in ``conf/task/vision/igpt.yaml``
