@@ -46,3 +46,7 @@ class TextClassificationTransformer(HFTransformer):
     def compute_metrics(self, preds, labels, mode="val") -> Dict[str, torch.Tensor]:
         # Not required by all models. Only required for classification
         return {f"{mode}_{k}": metric(preds, labels) for k, metric in self.metrics.items()}
+
+    @property
+    def hf_pipeline_task(self) -> str:
+        return "sentiment-analysis"

@@ -40,7 +40,17 @@ class Instantiator:
 
 class HydraInstantiator(Instantiator):
 
-    def model(self, cfg: DictConfig, model_data_args: Dict[str, Any]) -> "TaskTransformer":
+    def model(
+        self,
+        cfg: DictConfig,
+        model_data_args: Dict[str, Any] = None,
+        tokenizer: Optional[DictConfig] = None,
+    ) -> "TaskTransformer":
+        if model_data_args is None:
+            model_data_args = {}
+        if tokenizer is not None:
+            model_data_args = dict(model_data_args)  # avoid ConfigKeyError: Key 'tokenizer' is not in struct`
+            model_data_args["tokenizer"] = self.instantiate(tokenizer)
         return self.instantiate(cfg, instantiator=self, **model_data_args)
 
     def optimizer(self, model: torch.nn.Module, cfg: DictConfig) -> torch.optim.Optimizer:
