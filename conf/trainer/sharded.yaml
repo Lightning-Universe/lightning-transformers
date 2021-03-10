@@ -3,4 +3,5 @@ defaults:
 gpus: 2
 accelerator: ddp
 plugins: "ddp_sharded"
+precision: 16
 amp_backend: 'native'
