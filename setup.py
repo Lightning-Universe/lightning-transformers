@@ -52,6 +52,7 @@ setup(
     entry_points={
         "console_scripts": [
             "pl-transformers-train=lightning_transformers.cli.train:hydra_entry",
+            "pl-transformers-predict=lightning_transformers.cli.predict:hydra_entry",
         ],
     },
     project_urls={
