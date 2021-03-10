@@ -29,14 +29,14 @@ pip install lightning-transformers["extra"]
 
 Train bert-base-cased on CARER emotion dataset using text classification task.
 ```bash
-python pl-transformers-train \
+pl-transformers-train \
     +task=nlp/huggingface/text_classification \
     +dataset=nlp/text_classification/emotion
 ```
 
 Train roberta-base backbone, on SWAG dataset multiple choice task.
 ```bash
-python pl-transformers-train \
+pl-transformers-train \
     +task=nlp/huggingface/multiple_choice \
     +dataset=nlp/multiple_choice/swag \
     backbone.pretrained_model_name_or_path=roberta-base
@@ -44,7 +44,7 @@ python pl-transformers-train \
 
 Inference with pre-trained bert-base-cased on SQuAD using question-answering task with 2 GPUs.
 ```bash
-python pl-transformers-train \
+pl-transformers-train \
     +task=nlp/huggingface/question_answering \
     +dataset=nlp/question_answering/squad \
     trainer.gpus=2 \
@@ -53,7 +53,7 @@ python pl-transformers-train \
 
 Enable Sharded Training.
 ```bash
-python pl-transformers-train \
+pl-transformers-train \
     +task=nlp/huggingface/text_classification \
     +dataset=nlp/text_classification/emotion \
     trainer=sharded
@@ -61,7 +61,7 @@ python pl-transformers-train \
 
 Enable DeepSpeed ZeRO-Offload Training.
 ```bash
-python pl-transformers-train \
+pl-transformers-train \
     +task=nlp/huggingface/text_classification \
     +dataset=nlp/text_classification/emotion \
     trainer=zero_offload
