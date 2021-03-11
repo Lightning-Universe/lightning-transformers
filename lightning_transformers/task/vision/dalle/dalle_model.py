@@ -3,28 +3,26 @@ from typing import Any, Dict, List, Union
 import hydra
 import torch
 from clip import clip, tokenize
-from dalle_pytorch import DALLE
+from dalle_pytorch import DALLE, OpenAIDiscreteVAE
 
 from lightning_transformers.core import TaskTransformer
 from lightning_transformers.core.config import OptimizerConfig, SchedulerConfig
 from lightning_transformers.core.instantiator import Instantiator
-from lightning_transformers.task.vision.dalle.vqvae_model import VQVAE
 
 
 class DALLETransformer(TaskTransformer):
+
     def __init__(
         self,
         instantiator: Instantiator,
-        vae_path: str,
         backbone: Any,
         optimizer: OptimizerConfig,
         scheduler: SchedulerConfig,
-        num_text_tokens: int,
     ):
         self.save_hyperparameters()
-        vae = VQVAE.load_from_checkpoint(vae_path)
+        vae = OpenAIDiscreteVAE()
 
-        model: DALLE = hydra.utils.instantiate(backbone, vae=vae.model, num_text_tokens=num_text_tokens)
+        model: DALLE = hydra.utils.instantiate(backbone, vae=vae, num_text_tokens=vae.num_tokens)
         super().__init__(model=model, optimizer=optimizer, scheduler=scheduler, instantiator=instantiator)
         self.vae = vae
         for params in self.vae.parameters():

@@ -1,12 +1,24 @@
 from typing import Dict
+from warnings import warn
 
 from clip import clip, tokenize
 from clip.simple_tokenizer import SimpleTokenizer
+from PIL import Image
+from pl_bolts.datamodules import CIFAR10DataModule
 
-from lightning_transformers.task.vision.dalle.datasets.cifar_generate import CIFARGenerateDataModule
+try:
+    from torchvision import transforms as transform_lib
+except ImportError:
+    warn(
+        "You want to use `torchvision` which is not installed yet,"  # pragma: no-cover
+        " install it with `pip install torchvision`."
+    )
+    _TORCHVISION_AVAILABLE = False
+else:
+    _TORCHVISION_AVAILABLE = True
 
 
-class CIFARDescriptionDataModule(CIFARGenerateDataModule):
+class CIFARDescriptionDataModule(CIFAR10DataModule):
     labels = ["airplane", "automobile", "bird", "cat", "deer", "dog", "frog", "horse", "ship", "truck"]
     """
     Adds a description to each image based on the label to use as a toy dataset for text/image pairs
@@ -32,3 +44,9 @@ class CIFARDescriptionDataModule(CIFARGenerateDataModule):
     @property
     def model_data_args(self) -> Dict:
         return {"num_text_tokens": len(self.tokenizer.encoder)}
+
+    def default_transforms(self):
+        return transform_lib.Compose([
+            transform_lib.Resize(256, interpolation=Image.BICUBIC),
+            transform_lib.ToTensor(),
+        ])

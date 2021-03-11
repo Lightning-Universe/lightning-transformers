@@ -1,7 +1,6 @@
 # @package backbone
 _target_: dalle_pytorch.DALLE
 dim: 1024
-num_text_tokens: 10000    # vocab size for text
 text_seq_len: 77          # text sequence length
 depth: 12                 # should aim to be 64
 heads: 16                 # attention heads
