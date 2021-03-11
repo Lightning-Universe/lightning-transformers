@@ -1,4 +1,4 @@
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Union
 
 import pytorch_lightning as pl
 import torch
@@ -8,9 +8,10 @@ from lightning_transformers.core.nlp.huggingface import HFTransformer
 
 class TokenClassificationTransformer(HFTransformer):
 
-    def __init__(self, *args, labels: List[str], **kwargs):
-        super().__init__(*args, **kwargs, num_labels=len(labels))
-        self.labels = labels
+    def __init__(self, *args, labels: Union[int, List[str]], **kwargs):
+        num_labels = labels if isinstance(labels, int) else len(labels)
+        super().__init__(*args, **kwargs, num_labels=num_labels)
+        self._num_labels = num_labels
         self.metrics = {}
 
     def training_step(self, batch: Any, batch_idx: int) -> torch.Tensor:
@@ -43,7 +44,7 @@ class TokenClassificationTransformer(HFTransformer):
 
     @property
     def num_labels(self) -> int:
-        return len(self.labels)
+        return self._num_labels
 
     def compute_metrics(self, predictions, labels, mode="val") -> Dict[str, torch.Tensor]:
         # Remove ignored index (special tokens)
@@ -51,3 +52,7 @@ class TokenClassificationTransformer(HFTransformer):
         labels = labels[labels != -100]
         # Not required by all models. Only required for classification
         return {f"{mode}_{k}": metric(predictions, labels) for k, metric in self.metrics.items()}
+
+    @property
+    def hf_pipeline_task(self) -> str:
+        return "ner"

@@ -1,0 +1,8 @@
+# @package dataset
+defaults:
+  - nlp/hf_default
+_target_: lightning_transformers.task.nlp.huggingface.text_classification.TextClassificationDataModule
+cfg:
+  dataset_name: xnli
+   # ['ar', 'bg', 'de', 'el', 'en', 'es', 'fr', 'hi', 'ru', 'sw', 'th', 'tr', 'ur', 'vi', 'zh', 'all_languages']
+  dataset_config_name: en

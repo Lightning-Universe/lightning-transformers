@@ -67,8 +67,7 @@ class HFTransformerDataModule(TransformerTokenizerDataModule):
                 dataset[column_name] = dataset[column_name].select(indices)
         return dataset
 
-    def on_save_checkpoint(self, checkpoint: Dict[str, Any]):
-        # Save tokenizer from datamodule for predictions
+    def on_save_checkpoint(self, checkpoint: Dict[str, Any]) -> None:
         checkpoint["tokenizer"] = self.tokenizer
 
     def on_load_checkpoint(self, checkpoint: Dict[str, Any]) -> None:

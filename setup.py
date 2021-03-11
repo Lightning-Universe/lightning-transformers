@@ -49,10 +49,16 @@ setup(
     python_requires=">=3.6",
     setup_requires=[],
     install_requires=load_requirements(PATH_ROOT),
+    entry_points={
+        "console_scripts": [
+            "pl-transformers-train=lightning_transformers.cli.train:hydra_entry",
+            "pl-transformers-predict=lightning_transformers.cli.predict:hydra_entry",
+        ],
+    },
     project_urls={
-        "Bug Tracker": "TODO",
-        "Documentation": "TODO",
-        "Source Code": "TODO",
+        "Bug Tracker": "https://github.com/PyTorchLightning/lightning-transformers/issues",
+        # "Documentation": "TODO",
+        "Source Code": "https://github.com/PyTorchLightning/lightning-transformers",
     },
     classifiers=[
         "Environment :: Console",

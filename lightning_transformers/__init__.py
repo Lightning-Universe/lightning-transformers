@@ -3,7 +3,7 @@ import os
 __ROOT_DIR__ = os.path.dirname(os.path.dirname(__file__))
 """Root package info."""
 
-__version__ = "0.0.1"
+__version__ = "0.1.0rc"
 __author__ = "PyTorchLightning et al."
 __author_email__ = "name@pytorchlightning.ai"
 __license__ = "TBD"  # TODO

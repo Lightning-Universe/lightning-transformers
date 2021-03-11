@@ -1,4 +1,8 @@
 # @package task
+
+# By default we turn off recursive instantiation, allowing the user to instantiate themselves at the appropriate times.
+_recursive_: false
+
 backbone: ${backbone}
 optimizer: ${optimizer}
 scheduler: ${scheduler}

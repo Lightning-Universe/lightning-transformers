@@ -47,7 +47,4 @@ prepare_data_per_node: True
 plugins: null
 amp_backend: 'native'
 amp_level: 'O2'
-distributed_backend: null
-automatic_optimization: null
 move_metrics_to_cpu: False
-enable_pl_optimizer: True

@@ -1,0 +1,6 @@
+# @package task
+defaults:
+  - default # Use the defaults from the default task config
+  - /backbone@_group_: vision/igpt/gpt2 # default to vision gpt2
+_target_: lightning_transformers.task.vision.igpt.GenerativePixelsTransformer
+num_pixels: 32

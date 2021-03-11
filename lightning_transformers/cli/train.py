@@ -1,5 +1,6 @@
 from typing import Any, Optional
 
+import hydra
 from omegaconf import DictConfig, OmegaConf
 from pytorch_lightning.utilities.distributed import rank_zero_info
 
@@ -19,7 +20,7 @@ def run(
     trainer: TrainerConfig = TrainerConfig(),
     tokenizer: Optional[TokenizerConfig] = None,
     logger: Optional[Any] = None,
-):
+) -> None:
     if ignore_warnings:
         set_ignore_warnings()
 
@@ -37,17 +38,26 @@ def run(
     trainer.test(model, datamodule=data_module)
 
 
-def main(cfg: DictConfig):
+def main(cfg: DictConfig) -> None:
     rank_zero_info(OmegaConf.to_yaml(cfg))
     instantiator = HydraInstantiator()
     logger = instantiator.logger(cfg)
     run(
         instantiator,
-        ignore_warnings=cfg.ignore_warnings,
-        do_train=cfg.training.do_train,
-        dataset=cfg.dataset,
-        tokenizer=cfg.tokenizer if "tokenizer" in cfg else None,
-        task=cfg.task,
-        trainer=cfg.trainer,
+        ignore_warnings=cfg.get("ignore_warnings"),
+        do_train=cfg.get("training").get("do_train"),
+        dataset=cfg.get("dataset"),
+        tokenizer=cfg.get("tokenizer"),
+        task=cfg.get("task"),
+        trainer=cfg.get("trainer"),
         logger=logger,
     )
+
+
+@hydra.main(config_path="../../conf", config_name="config")
+def hydra_entry(cfg: DictConfig) -> None:
+    main(cfg)
+
+
+if __name__ == "__main__":
+    hydra_entry()
