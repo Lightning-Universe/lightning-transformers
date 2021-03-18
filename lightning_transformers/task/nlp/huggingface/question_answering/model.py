@@ -12,3 +12,7 @@ class QuestionAnsweringTransformer(HFTransformer):
         loss = outputs[0]
         self.log("train_loss", loss)
         return loss
+
+    @property
+    def hf_pipeline_task(self) -> str:
+        return "question-answering"

@@ -39,8 +39,8 @@ Run inference once model trained (under construction):
 
 There are many other supported NLP tasks and datasets, see :ref:`nlp-tasks` to get started.
 
-Fine-tuning Image GPT (under construction)
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Pre-training Image GPT
+^^^^^^^^^^^^^^^^^^^^^^
 
 Train Image GPT ported from `Teddy Koker's implementation <https://github.com/teddykoker/image-gpt>`_ on CIFAR10.
 
@@ -48,15 +48,6 @@ Train Image GPT ported from `Teddy Koker's implementation <https://github.com/te
 
    python train.py +task=vision/igpt +dataset=vision/cifar
 
-Run inference once model trained:
-
-.. code-block:: bash
-
-   python predict.py +task=vision/igpt +model=/path/to/model.ckpt +input=half_image.png +output=output.png
-
-   # Generates other half of the image, saves to output.png
-
-There are many other supported vision tasks and datasets, see :ref:`vision-tasks` and to get started.
 
 Trainer Options
 ^^^^^^^^^^^^^^^

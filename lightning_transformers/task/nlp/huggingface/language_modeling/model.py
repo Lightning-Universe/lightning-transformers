@@ -24,3 +24,7 @@ class LanguageModelingTransformer(HFTransformer):
     def test_step(self, batch, batch_idx, dataloader_idx=0):
         loss = self._step(batch, batch_idx)
         self.log("test_loss", loss, sync_dist=True)
+
+    @property
+    def hf_pipeline_task(self) -> str:
+        return "text-generation"

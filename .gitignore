@@ -123,3 +123,6 @@ lightning_logs
 checkpoints
 outputs
 data
+
+# HF
+.lock
