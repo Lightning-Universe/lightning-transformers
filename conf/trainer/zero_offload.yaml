@@ -1,28 +1,10 @@
 defaults:
   - default # add args from default trainer conf
-  - override /optimizer@_group_: deepspeed/adam # default to DeepSpeed compatible Adam
-  - override /scheduler@_group_: deepspeed/warmuplr # default to DeepSpeed compatible warmup LR
+  - override /optimizer@_group_: deepspeed/cpu_adam # default to DeepSpeed CPU Adam
 gpus: 1
 accelerator: deepspeed
+precision: 16
 plugins:
   _target_: pytorch_lightning.plugins.DeepSpeedPlugin
-  _convert_: all  # ensures we pass a dict structure to plugin
-  config:
-    optimizer: ${optimizer}
-    scheduler: ${scheduler}
-    zero_allow_untested_optimizer: True
-    zero_optimization:
-      stage: 2
-      allgather_partitions: True
-      allgather_bucket_size: 2e8
-      overlap_comm: True
-      reduce_scatter: True
-      reduce_bucket_size: 2e8
-      contiguous_gradients: True
-      cpu_offload: True
-    fp16:
-      enabled: True
-      loss_scale: 0
-      loss_scale_window: 1000
-      hysteresis: 2
-      min_loss_scale: 1
+  stage: 2
+  cpu_offload: True
