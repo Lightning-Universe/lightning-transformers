@@ -17,7 +17,7 @@ class LitTransformer(pl.LightningModule):
 
     def __init__(
         self,
-        model: Optional[torch.nn.Module] = None,
+        model: torch.nn.Module,
         optimizer: Optional[torch.optim.Optimizer] = None,
         scheduler: Optional[torch.optim.lr_scheduler._LRScheduler] = None,
     ):
@@ -91,8 +91,8 @@ class TaskTransformer(LitTransformer):
     def __init__(
         self,
         model: torch.nn.Module,
-        optimizer: Optional[OptimizerConfig] = None,
-        scheduler: Optional[SchedulerConfig] = None,
+        optimizer: OptimizerConfig,
+        scheduler: SchedulerConfig,
         instantiator: Optional[Instantiator] = None,
     ):
         super().__init__(model)

@@ -1,4 +1,4 @@
-from typing import Any, Callable, Dict, Optional, TYPE_CHECKING, Union
+from typing import Any, Dict, Optional, TYPE_CHECKING
 
 from hydra.utils import get_class
 from transformers import pipeline as hf_transformers_pipeline
@@ -22,18 +22,16 @@ class HFTransformer(TaskTransformer):
 
     def __init__(
         self,
-        downstream_model_type: Union[str, Callable],
+        downstream_model_type: str,
         backbone: HFBackboneConfig,
-        optimizer: Optional[OptimizerConfig] = None,
-        scheduler: Optional[SchedulerConfig] = None,
+        optimizer: OptimizerConfig,
+        scheduler: SchedulerConfig,
         instantiator: Optional[Instantiator] = None,
         tokenizer: Optional["PreTrainedTokenizerBase"] = None,
         **config_data_args,
     ) -> None:
         self.save_hyperparameters()
-        downstream_model_cls = downstream_model_type if isinstance(downstream_model_type,
-                                                                   Callable) else get_class(downstream_model_type)
-        model = downstream_model_cls.from_pretrained(
+        model = get_class(downstream_model_type).from_pretrained(
             backbone.pretrained_model_name_or_path,
             **config_data_args,
         )

@@ -33,6 +33,7 @@ class HFTokenizerConfig(TokenizerConfig):
 
 @dataclass
 class HFBackboneConfig:
+    downstream_model_type: Optional[str] = None
     pretrained_model_name_or_path: Optional[str] = None
 
 
