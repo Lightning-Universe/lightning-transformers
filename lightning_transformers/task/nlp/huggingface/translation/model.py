@@ -11,8 +11,14 @@ from lightning_transformers.task.nlp.huggingface.translation.metric import BLEUS
 class HFTranslationTransformer(HFSeq2SeqTransformer):
     cfg: HFTranslationTransformerConfig
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+    def __init__(
+        self,
+        downstream_model_type='transformers.AutoModelForSeq2SeqLM',
+        cfg: HFTranslationTransformerConfig = HFTranslationTransformerConfig(),
+        *args,
+        **kwargs
+    ):
+        super().__init__(*args, downstream_model_type=downstream_model_type, cfg=cfg, **kwargs)
         self.bleu = None
 
     def compute_generate_metrics(self, batch, prefix):
