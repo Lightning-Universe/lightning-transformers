@@ -3,7 +3,6 @@ defaults:
 gpus: 1
 accelerator: ddp
 precision: 16
-amp_backend: 'native'
 checkpoint_callback: False
 limit_val_batches: 0
 limit_test_batches: 0

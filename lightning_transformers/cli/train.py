@@ -32,7 +32,10 @@ def run(
     data_module.setup("fit")
 
     model: TaskTransformer = instantiator.model(task, model_data_args=data_module.model_data_args)
-    trainer = instantiator.trainer(trainer, logger=logger)
+    trainer = instantiator.trainer(
+        trainer,
+        logger=logger,
+    )
 
     if do_train:
         trainer.fit(model, datamodule=data_module)

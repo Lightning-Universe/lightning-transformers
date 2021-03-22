@@ -1,0 +1,3 @@
+_target_: pytorch_lightning.callbacks.ModelPruning
+pruning_fn: 'l1_unstructured'
+use_lottery_ticket_hypothesis: True

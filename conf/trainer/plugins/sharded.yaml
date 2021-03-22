@@ -1,0 +1,1 @@
+_target_: pytorch_lightning.plugins.DDPShardedPlugin
