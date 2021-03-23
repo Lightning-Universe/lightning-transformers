@@ -24,11 +24,6 @@ To see the configuration settings see ``conf/trainer/zero_offload.yaml`` and ``c
 
 .. code-block:: yaml
 
-    deepspeed_config:
-      optimizer: ${optimizer}
-      scheduler: ${scheduler}
-      zero_optimization: # Add your custom parameters here
-        stage: 2
-        cpu_offload: True
-        contiguous_gradients: True
-        overlap_comm: True
+    _target_: pytorch_lightning.plugins.DeepSpeedPlugin
+    stage: 2
+    cpu_offload: True
