@@ -5,7 +5,7 @@ from datasets import Dataset
 from torch.utils.data import DataLoader
 from transformers import PreTrainedTokenizerBase
 
-from lightning_transformers.task.nlp.huggingface.multiple_choice.data import MultipleChoiceTransformerDataModule
+from lightning_transformers.task.nlp.multiple_choice.data import MultipleChoiceTransformerDataModule
 
 
 class SwagMultipleChoiceTransformerDataModule(MultipleChoiceTransformerDataModule):

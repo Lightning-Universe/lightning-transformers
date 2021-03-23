@@ -79,7 +79,7 @@ This is useful, as our task configs do not need to define these parameters and i
 
     defaults:
       - nlp/default # Import our default configurations
-    _target_: lightning_transformers.task.nlp.huggingface.language_modeling.LanguageModelingTransformer
+    _target_: lightning_transformers.task.nlp.language_modeling.LanguageModelingTransformer
     downstream_model_type: transformers.AutoModelForCausalLM
 
 These are just a subset of Hydras' features. We offer full Hydra support to provide a robust and flexible API, thus we suggest reading the `Hydra tutorials <https://hydra.cc/docs/next/tutorials/intro>`_ for advanced use cases.
