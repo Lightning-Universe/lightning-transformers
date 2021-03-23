@@ -18,7 +18,7 @@
 
 from dataclasses import dataclass, field
 
-from lightning_transformers.core.nlp import HFTransformerDataConfig
+from lightning_transformers.core.nlp.huggingface import HFTransformerDataConfig
 
 
 @dataclass

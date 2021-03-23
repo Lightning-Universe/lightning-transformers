@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 
-from lightning_transformers.core.nlp.huggingface import HFSeq2SeqTransformerConfig, Seq2SeqDataConfig
+from lightning_transformers.core.nlp.huggingface import HFSeq2SeqDataConfig, HFSeq2SeqTransformerConfig
 
 
 @dataclass
@@ -10,6 +10,6 @@ class HFTranslationTransformerConfig(HFSeq2SeqTransformerConfig):
 
 
 @dataclass
-class TranslationDataConfig(Seq2SeqDataConfig):
+class TranslationDataConfig(HFSeq2SeqDataConfig):
     src_lang: str = ""
     tgt_lang: str = ""
