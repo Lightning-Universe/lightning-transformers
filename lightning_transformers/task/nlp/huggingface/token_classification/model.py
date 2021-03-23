@@ -1,7 +1,7 @@
 from typing import Any, Dict, List, Union
 
-import pytorch_lightning as pl
 import torch
+from torchmetrics import Accuracy, F1, Precision, Recall
 
 from lightning_transformers.core.nlp.huggingface import HFTransformer
 
@@ -36,10 +36,10 @@ class TokenClassificationTransformer(HFTransformer):
         return self.common_step("test", batch)
 
     def configure_metrics(self, _) -> None:
-        self.prec = pl.metrics.Precision(num_classes=self.num_labels)
-        self.recall = pl.metrics.Recall(num_classes=self.num_labels)
-        self.f1 = pl.metrics.F1(num_classes=self.num_labels)
-        self.acc = pl.metrics.Accuracy()
+        self.prec = Precision(num_classes=self.num_labels)
+        self.recall = Recall(num_classes=self.num_labels)
+        self.f1 = F1(num_classes=self.num_labels)
+        self.acc = Accuracy()
         self.metrics = {"precision": self.prec, "recall": self.recall, "accuracy": self.acc, "f1": self.f1}
 
     @property
