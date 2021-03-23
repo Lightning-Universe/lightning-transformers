@@ -3,7 +3,6 @@ defaults: # loads default configs
   - scheduler: linear_schedule_with_warmup
   - training: default
   - trainer: default
-  - logger: tchaton # todo: change this eventually
 
 task: ???
 dataset: ???

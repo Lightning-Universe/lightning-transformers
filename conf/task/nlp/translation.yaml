@@ -1,0 +1,12 @@
+# @package task
+defaults:
+  - nlp/default
+  - override /backbone@_group_: nlp/seq2seq # Swap to a default seq2seq compatible backbone
+_target_: lightning_transformers.task.nlp.translation.TranslationTransformer
+downstream_model_type: transformers.AutoModelForSeq2SeqLM
+cfg:
+  n_gram: 4
+  smooth: False
+  val_target_max_length: 142
+  num_beams: null
+  compute_generate_metrics: True

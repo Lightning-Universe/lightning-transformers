@@ -30,10 +30,10 @@ Task and Dataset have been marked as required within the ``config.yaml``, thus h
 
 .. code-block:: bash
 
-    python train.py +task=nlp/huggingface/text_classification +dataset=nlp/text_classification/emotion
+    python train.py +task=nlp/text_classification +dataset=nlp/text_classification/emotion
 
 
-``+task`` and ``+dataset`` allow us to append configs from the conf folder to our training config. These config files can be found in ``task/nlp/huggingface/text_classification`` and ``dataset/nlp/text_classification/emotion`` respectively.
+``+task`` and ``+dataset`` allow us to append configs from the conf folder to our training config. These config files can be found in ``task/nlp/text_classification`` and ``dataset/nlp/text_classification/emotion`` respectively.
 
 Overriding Configs
 ******************
@@ -70,16 +70,16 @@ Config Inheritance
 
 Just like code, configs inherit from other configs.
 
-For example, when defining a task, there is a default config object at ``task/nlp/huggingface/default.yaml`` that contains a set of default configurations for all tasks.
+For example, when defining a task, there is a default config object at ``task/nlp/default.yaml`` that contains a set of default configurations for all tasks.
 This is useful, as our task configs do not need to define these parameters and instead can import them, like below.
 
 .. code-block:: yaml
 
-    # Contents of conf/task/nlp/huggingface/language_modeling
+    # Contents of conf/task/nlp/language_modeling
 
     defaults:
-      - nlp/huggingface/default # Import our default configurations
-    _target_: lightning_transformers.task.nlp.huggingface.language_modeling.LanguageModelingTransformer
+      - nlp/default # Import our default configurations
+    _target_: lightning_transformers.task.nlp.language_modeling.LanguageModelingTransformer
     downstream_model_type: transformers.AutoModelForCausalLM
 
 These are just a subset of Hydras' features. We offer full Hydra support to provide a robust and flexible API, thus we suggest reading the `Hydra tutorials <https://hydra.cc/docs/next/tutorials/intro>`_ for advanced use cases.

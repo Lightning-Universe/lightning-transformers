@@ -1,5 +1,0 @@
-# @package task
-defaults:
-  - nlp/huggingface/default
-_target_: lightning_transformers.task.nlp.huggingface.token_classification.TokenClassificationTransformer
-downstream_model_type: transformers.AutoModelForTokenClassification

@@ -31,7 +31,7 @@ In addition, make sure you are familiar with the config structure as this will b
 Implementing a Dataset
 ----------------------
 
-The dataset defines the data transforms, plus the data you'd like to train, validate and test on. In our example we build the CIFAR10 dataset for iGPT, more details at :ref:`igpt`.
+The dataset defines the data transforms, plus the data you'd like to train, validate and test on. In our example we build the CIFAR10 dataset for iGPT.
 
 The base class for Lightning Transformer datasets is the ``TransformerDataModule`` class, which is a thin layer on top of the LightningDataModule class, exposing all the Lightning Data Hooks as standard. See `LightningDataModule <https://pytorch-lightning.readthedocs.io/en/latest/extensions/datamodules.html>`_ for more details.
 Additional, the base class provides a few helper functions, such as ``model_data_args`` which allows us to define any data specific arguments we'd like the task to be aware of at initialize time.
@@ -184,7 +184,7 @@ We define the ``_target_`` class we'd like to instantiate, and parameters for ou
 
 For many NLP models, a tokenizer will need to be defined. In many cases you can use pre-built tokenizers which saves having to train your own model.
 
-For example here is the config for HF tokenizers found in ``conf/tokenizer/huggingface/default.yaml``.
+For example here is the config for HF tokenizers found in ``conf/tokenizer/autotokenizer.yaml``.
 
 .. code-block:: yaml
 

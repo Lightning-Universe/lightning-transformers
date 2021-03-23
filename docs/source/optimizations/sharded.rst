@@ -9,6 +9,6 @@ Enable `Sharded Training <https://pytorch-lightning.readthedocs.io/en/latest/mul
 
 .. code-block:: bash
 
-   python train.py +task=vision/igpt +dataset=vision/cifar trainer=sharded
+   python train.py +task=nlp/translation +dataset=nlp/translation/wmt16 trainer=sharded
 
 TODO: Description of what the sharded.yaml file enables

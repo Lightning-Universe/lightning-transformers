@@ -12,13 +12,13 @@ In addition, we also need a tokenizer that has been created on multi-lingual tex
 
 .. code-block:: bash
 
-    python train.py +task=nlp/huggingface/translation +dataset=nlp/translation/wmt16 backbone.pretrained_model_name_or_path=google/mt5-base
+    python train.py +task=nlp/translation +dataset=nlp/translation/wmt16 backbone.pretrained_model_name_or_path=google/mt5-base
 
 By default we fine-tune to translate from English to Romanian. This can be changed by specifying the source/target languages (see more in ``conf/dataset/nlp/translation/wmt16.yaml``):
 
 .. code-block:: bash
 
-    python train.py +task=nlp/huggingface/translation +dataset=nlp/translation/wmt16 backbone.pretrained_model_name_or_path=google/mt5-base dataset.dataset_config_name=de-en dataset.src_lang=de dataset.tgt_lang=en
+    python train.py +task=nlp/translation +dataset=nlp/translation/wmt16 backbone.pretrained_model_name_or_path=google/mt5-base dataset.dataset_config_name=de-en dataset.src_lang=de dataset.tgt_lang=en
 
 
 Translation Using Custom Files (under construction)
@@ -47,7 +47,7 @@ We override the dataset files, allowing us to still use the data transforms defi
 
 .. code-block:: bash
 
-    python train.py +task=nlp/huggingface/translation +dataset=nlp/translation/wmt16 backbone.pretrained_model_name_or_path=google/mt5-base dataset.train_file=train.txt dataset.validation_file=valid.txt
+    python train.py +task=nlp/translation +dataset=nlp/translation/wmt16 backbone.pretrained_model_name_or_path=google/mt5-base dataset.train_file=train.txt dataset.validation_file=valid.txt
 
 Translation Inference Pipeline (under construction)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -56,4 +56,4 @@ By default we use the translation pipeline, which requires a source text string.
 
 .. code-block:: bash
 
-    python predict.py +task=nlp/huggingface/translation +model=/path/to/model.ckpt input="The ground is black, the sky is blue and the car is red."
+    python predict.py +task=nlp/translation +model=/path/to/model.ckpt input="The ground is black, the sky is blue and the car is red."

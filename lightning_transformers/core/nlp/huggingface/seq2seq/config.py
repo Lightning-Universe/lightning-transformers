@@ -12,7 +12,7 @@ class HFSeq2SeqTransformerConfig:
 
 
 @dataclass
-class Seq2SeqDataConfig(HFTransformerDataConfig):
+class HFSeq2SeqDataConfig(HFTransformerDataConfig):
     max_target_length: int = 128
     max_source_length: int = 1024
     padding: str = "longest"

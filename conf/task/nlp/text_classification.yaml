@@ -1,0 +1,5 @@
+# @package task
+defaults:
+  - nlp/default
+_target_: lightning_transformers.task.nlp..text_classification.TextClassificationTransformer
+downstream_model_type: transformers.AutoModelForSequenceClassification

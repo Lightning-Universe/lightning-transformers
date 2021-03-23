@@ -5,11 +5,11 @@ from datasets import Dataset
 from transformers import default_data_collator, PreTrainedTokenizerBase
 
 from lightning_transformers.core.nlp.huggingface import HFTransformerDataModule
-from lightning_transformers.core.nlp.huggingface.seq2seq.config import Seq2SeqDataConfig
+from lightning_transformers.core.nlp.huggingface.seq2seq.config import HFSeq2SeqDataConfig
 
 
 class Seq2SeqDataModule(HFTransformerDataModule):
-    cfg: Seq2SeqDataConfig
+    cfg: HFSeq2SeqDataConfig
 
     def process_data(self, dataset: Dataset, stage: Optional[str] = None) -> Dataset:
         src_text_column_name, tgt_text_column_name = self.source_target_column_names

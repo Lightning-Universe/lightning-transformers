@@ -63,7 +63,7 @@ class ScriptRunner:
         if cmd_args is None:
             cmd_args = []
         cmd_args.extend([
-            f'+task=nlp/huggingface/{task}',
+            f'+task=nlp/{task}',
             f'+dataset=nlp/{task}/{dataset}',
             f'backbone.pretrained_model_name_or_path={model}',
             f'dataset.cfg.limit_train_samples={max_samples}',
@@ -78,7 +78,7 @@ class ScriptRunner:
 
     def hf_predict(self, cmd_args: List[str], task: str, model: str) -> Any:
         cmd_args.extend([
-            f'+task=nlp/huggingface/{task}',
+            f'+task=nlp/{task}',
             f'backbone.pretrained_model_name_or_path={model}',
         ])
         return self.predict(cmd_args)

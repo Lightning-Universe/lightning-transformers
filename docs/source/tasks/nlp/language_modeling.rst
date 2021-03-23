@@ -14,15 +14,15 @@ Language Models pre-trained or fine-tuned to the Causal Language Modeling task c
 
 .. code-block:: bash
 
-    python train.py +task=nlp/huggingface/language_modeling +dataset=nlp/language_modeling/wikitext
+    python train.py +task=nlp/language_modeling +dataset=nlp/language_modeling/wikitext
 
 Swap to GPT backbone:
 
 .. code-block:: bash
 
-    python train.py +task=nlp/huggingface/language_modeling +dataset=nlp/language_modeling/wikitext backbone.pretrained_model_name_or_path=gpt2
+    python train.py +task=nlp/language_modeling +dataset=nlp/language_modeling/wikitext backbone.pretrained_model_name_or_path=gpt2
 
-We report the Cross Entropy Loss for validation. To see all options available for the task, see ``conf/task/nlp/huggingface/language_modeling.yaml``.
+We report the Cross Entropy Loss for validation. To see all options available for the task, see ``conf/task/nlp/language_modeling.yaml``.
 
 Language Modeling Using Custom Files
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -32,7 +32,7 @@ is trained/validated on context windows (block size) made from the files. We ove
 
 .. code-block:: bash
 
-    python train.py +task=nlp/huggingface/language_modeling +dataset=nlp/language_modeling/wikitext dataset.train_file=train.txt dataset.validation_file=valid.txt
+    python train.py +task=nlp/language_modeling +dataset=nlp/language_modeling/wikitext dataset.train_file=train.txt dataset.validation_file=valid.txt
 
 Language Modeling Inference Pipeline (under construction)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -41,4 +41,4 @@ By default we use the text generation pipeline, which requires a conditional inp
 
 .. code-block:: bash
 
-    python predict.py +task=nlp/huggingface/language_modeling +model=/path/to/model.ckpt +input="Condition sentence for the language model"
+    python predict.py +task=nlp/language_modeling +model=/path/to/model.ckpt +input="Condition sentence for the language model"
