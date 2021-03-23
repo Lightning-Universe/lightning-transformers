@@ -18,15 +18,15 @@ In contrast, use the text classification task if the answers remain static and a
 
 .. code-block:: bash
 
-    python train.py +task=nlp/huggingface/multiple_choice +dataset=nlp/multiple_choice/race # can use swag instead
+    python train.py +task=nlp/multiple_choice +dataset=nlp/multiple_choice/race # can use swag instead
 
 Swap to GPT backbone:
 
 .. code-block:: bash
 
-    python train.py +task=nlp/huggingface/multiple_choice +dataset=nlp/multiple_choice/race backbone.pretrained_model_name_or_path=gpt2
+    python train.py +task=nlp/multiple_choice +dataset=nlp/multiple_choice/race backbone.pretrained_model_name_or_path=gpt2
 
-We report Cross Entropy Loss, Precision, Recall and Accuracy for validation. To see all options available for the task, see ``conf/task/nlp/huggingface/multiple_choice.yaml``.
+We report Cross Entropy Loss, Precision, Recall and Accuracy for validation. To see all options available for the task, see ``conf/task/nlp/multiple_choice.yaml``.
 
 Multiple Choice Using Custom Files (under construction)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -36,7 +36,7 @@ We override the dataset files, allowing us to still use the data transforms defi
 
 .. code-block:: bash
 
-    python train.py +task=nlp/huggingface/multiple_choice +dataset=language_modeling/race dataset.train_file=train.txt dataset.validation_file=valid.txt
+    python train.py +task=nlp/multiple_choice +dataset=language_modeling/race dataset.train_file=train.txt dataset.validation_file=valid.txt
 
 Multiple Choice Inference
 ^^^^^^^^^^^^^^^^^^^^^^^^^

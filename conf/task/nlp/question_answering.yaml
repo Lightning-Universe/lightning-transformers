@@ -1,0 +1,5 @@
+# @package task
+defaults:
+  - nlp/default
+_target_: lightning_transformers.task.nlp.question_answering.QuestionAnsweringTransformer
+downstream_model_type: transformers.AutoModelForQuestionAnswering

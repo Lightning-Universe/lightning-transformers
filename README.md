@@ -21,7 +21,6 @@ Docs are still currently in progress, including this README. However to get star
 1. [Understanding the Config Structure](https://fuzzy-disco-b18c78db.pages.github.io/structure/conf.html)
 2. [Creating your own Task, Backbone and Dataset](https://fuzzy-disco-b18c78db.pages.github.io/tasks/new.html)
 3. [Out of the box NLP Tasks](https://fuzzy-disco-b18c78db.pages.github.io/tasks/nlp.html)
-4. [Out of the box Vision Tasks](https://fuzzy-disco-b18c78db.pages.github.io/tasks/vision.html)
 
 ## Installation
 
@@ -71,14 +70,14 @@ Lightning Transformers tasks allow you to train models using HuggingFace Transfo
 Train bert-base-cased on CARER emotion dataset using text classification task.
 ```bash
 python train.py \
-    +task=nlp/huggingface/text_classification \
+    +task=nlp/text_classification \
     +dataset=nlp/text_classification/emotion
 ```
 
 Train roberta-base backbone, on SWAG dataset multiple choice task.
 ```bash
 python train.py \
-    +task=nlp/huggingface/multiple_choice \
+    +task=nlp/multiple_choice \
     +dataset=nlp/multiple_choice/swag \
     backbone.pretrained_model_name_or_path=roberta-base
 ```
@@ -86,7 +85,7 @@ python train.py \
 Inference with pre-trained bert-base-cased on SQuAD using question-answering task with 2 GPUs.
 ```bash
 python train.py \
-    +task=nlp/huggingface/question_answering \
+    +task=nlp/question_answering \
     +dataset=nlp/question_answering/squad \
     trainer.gpus=2 \
     training.do_train=False
@@ -95,7 +94,7 @@ python train.py \
 Enable Sharded Training.
 ```bash
 python train.py \
-    +task=nlp/huggingface/text_classification \
+    +task=nlp/text_classification \
     +dataset=nlp/text_classification/emotion \
     trainer=sharded
 ```
@@ -103,7 +102,7 @@ python train.py \
 Enable DeepSpeed ZeRO-Offload Training.
 ```bash
 python train.py \
-    +task=nlp/huggingface/text_classification \
+    +task=nlp/text_classification \
     +dataset=nlp/text_classification/emotion \
     trainer=zero_offload
 ```

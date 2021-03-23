@@ -24,7 +24,6 @@ Lightning Transformers
    :caption: Tasks
 
    tasks/nlp
-   tasks/vision
    tasks/new
 
 .. toctree::

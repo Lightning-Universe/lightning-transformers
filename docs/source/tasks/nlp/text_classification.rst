@@ -13,15 +13,15 @@ For this task, you can rely on most Transformer models as your backbone.
 
 .. code-block:: bash
 
-    python train.py +task=nlp/huggingface/text_classification +dataset=nlp/text_classification/emotion # can be swapped to xlni or glue
+    python train.py +task=nlp/text_classification +dataset=nlp/text_classification/emotion # can be swapped to xlni or glue
 
 Swap to GPT backbone:
 
 .. code-block:: bash
 
-    python train.py +task=nlp/huggingface/text_classification +dataset=nlp/text_classification/emotion backbone.pretrained_model_name_or_path=gpt2
+    python train.py +task=nlp/text_classification +dataset=nlp/text_classification/emotion backbone.pretrained_model_name_or_path=gpt2
 
-We report the Precision, Recall, Accuracy and Cross Entropy Loss for validation. To see all options available for the task, see ``conf/task/nlp/huggingface/text_classification.yaml``.
+We report the Precision, Recall, Accuracy and Cross Entropy Loss for validation. To see all options available for the task, see ``conf/task/nlp/text_classification.yaml``.
 
 Text Classification Using Custom Files
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -37,7 +37,7 @@ To use custom text files, the files should contain new line delimited json objec
 
 .. code-block:: bash
 
-    python train.py +task=nlp/huggingface/text_classification +dataset=nlp/text_classification/emotion dataset.train_file=train.txt dataset.validation_file=valid.txt
+    python train.py +task=nlp/text_classification +dataset=nlp/text_classification/emotion dataset.train_file=train.txt dataset.validation_file=valid.txt
 
 Text Classification Inference Pipeline (under construction)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -46,4 +46,4 @@ By default we use the sentiment-analysis pipeline, which requires an input strin
 
 .. code-block:: bash
 
-    python predict.py +task=nlp/huggingface/text_classification +model=/path/to/model.ckpt +input="I don't like this at all!"
+    python predict.py +task=nlp/text_classification +model=/path/to/model.ckpt +input="I don't like this at all!"

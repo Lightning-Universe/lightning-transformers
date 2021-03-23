@@ -1,0 +1,4 @@
+# @package task
+defaults:
+  - /task/default
+  - /backbone@_group_: nlp/default # use AutoModel backbone by default

@@ -15,7 +15,7 @@ To use this task, we must select a Seq2Seq Encoder/Decoder based model, such as 
 
 .. code-block:: bash
 
-    python train.py +task=nlp/huggingface/summarization +dataset=nlp/summarization/cnn_dailymail backbone.pretrained_model_name_or_path=t5-base # dataset can be swapped to xsum
+    python train.py +task=nlp/summarization +dataset=nlp/summarization/cnn_dailymail backbone.pretrained_model_name_or_path=t5-base # dataset can be swapped to xsum
 
 Summarization Using Custom Files (under construction)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -34,7 +34,7 @@ We override the dataset files, allowing us to still use the data transforms defi
 
 .. code-block:: bash
 
-    python train.py +task=nlp/huggingface/summarization +dataset=nlp/summarization/xsum backbone.pretrained_model_name_or_path=t5-base dataset.train_file=train.txt dataset.validation_file=valid.txt
+    python train.py +task=nlp/summarization +dataset=nlp/summarization/xsum backbone.pretrained_model_name_or_path=t5-base dataset.train_file=train.txt dataset.validation_file=valid.txt
 
 Summarization Inference Pipeline (under construction)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -43,4 +43,4 @@ By default we use the summarization pipeline, which requires an input document a
 
 .. code-block:: bash
 
-    python predict.py +task=nlp/huggingface/question_Answering +model=/path/to/model.ckpt input="The car was racing towards the tunnel, whilst blue lights were flashing behind it. The car entered the tunnel and vanished..."
+    python predict.py +task=nlp/question_Answering +model=/path/to/model.ckpt input="The car was racing towards the tunnel, whilst blue lights were flashing behind it. The car entered the tunnel and vanished..."

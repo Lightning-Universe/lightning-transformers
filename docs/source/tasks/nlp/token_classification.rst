@@ -6,15 +6,15 @@ Currently supports the `conll <https://huggingface.co/datasets/conll2003>`_ data
 
 .. code-block:: bash
 
-    python train.py +task=nlp/huggingface/token_classification +dataset=nlp/token_classification/conll
+    python train.py +task=nlp/token_classification +dataset=nlp/token_classification/conll
 
 Swap to GPT backbone:
 
 .. code-block:: bash
 
-    python train.py +task=nlp/huggingface/token_classification +dataset=nlp/token_classification/conll backbone.pretrained_model_name_or_path=gpt2
+    python train.py +task=nlp/token_classification +dataset=nlp/token_classification/conll backbone.pretrained_model_name_or_path=gpt2
 
-We report the Precision, Recall, Accuracy and Cross Entropy Loss for validation. To see all options available for the task, see ``conf/task/nlp/huggingface/token_classification.yaml``.
+We report the Precision, Recall, Accuracy and Cross Entropy Loss for validation. To see all options available for the task, see ``conf/task/nlp/token_classification.yaml``.
 
 Token Classification Using Custom Files
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -47,7 +47,7 @@ To use custom text files, the files should contain new line delimited json objec
 
 .. code-block:: bash
 
-    python train.py +task=nlp/huggingface/token_classification +dataset=nlp/token_classification/conll dataset.train_file=train.txt dataset.validation_file=valid.txt
+    python train.py +task=nlp/token_classification +dataset=nlp/token_classification/conll dataset.train_file=train.txt dataset.validation_file=valid.txt
 
 Token Classification Inference Pipeline (under construction)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -56,4 +56,4 @@ By default we use the NER pipeline, which requires a an input sequence string.
 
 .. code-block:: bash
 
-    python predict.py +task=nlp/huggingface/token_classification +model=/path/to/model.ckpt +input="London is the capital of the United Kingdom."
+    python predict.py +task=nlp/token_classification +model=/path/to/model.ckpt +input="London is the capital of the United Kingdom."

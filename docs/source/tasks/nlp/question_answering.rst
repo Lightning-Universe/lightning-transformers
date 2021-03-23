@@ -15,13 +15,13 @@ Since this is an extraction task, you can rely on most Transformer models as you
 
 .. code-block:: bash
 
-    python train.py +task=nlp/huggingface/question_answering +dataset=nlp/question_answering/squad
+    python train.py +task=nlp/question_answering +dataset=nlp/question_answering/squad
 
 Swap to GPT backbone:
 
 .. code-block:: bash
 
-    python train.py +task=nlp/huggingface/question_answering +dataset=nlp/question_answering/squad backbone.pretrained_model_name_or_path=gpt2
+    python train.py +task=nlp/question_answering +dataset=nlp/question_answering/squad backbone.pretrained_model_name_or_path=gpt2
 
 Question Answering Using Custom Files (under construction)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -45,7 +45,7 @@ We override the dataset files, allowing us to still use the data transforms defi
 
 .. code-block:: bash
 
-    python train.py +task=nlp/huggingface/question_answering +dataset=nlp/question_answering/squad dataset.train_file=train.txt dataset.validation_file=valid.txt
+    python train.py +task=nlp/question_answering +dataset=nlp/question_answering/squad dataset.train_file=train.txt dataset.validation_file=valid.txt
 
 Question Answering Inference Pipeline (under construction)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -54,4 +54,4 @@ By default we use the question answering pipeline, which requires a context and 
 
 .. code-block:: bash
 
-    python predict.py +task=nlp/huggingface/question_Answering +model=/path/to/model.ckpt input.context="The ground is black, the sky is blue and the car is red." input.question="What color is the sky?"
+    python predict.py +task=nlp/question_Answering +model=/path/to/model.ckpt input.context="The ground is black, the sky is blue and the car is red." input.question="What color is the sky?"

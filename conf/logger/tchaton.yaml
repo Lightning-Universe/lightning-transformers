@@ -1,9 +1,0 @@
-_target_: lightning_transformers.core.utils.initialize_wandb_logger
-experiment_name: ${experiment_name}
-save_dir: ''
-offline: False
-id: ${now:%Y-%m-%d}_${now:%H-%M-%S}
-anonymous: False
-project: ${dataset.cfg.dataset_name}
-experiment:
-entity: 'tchaton'
