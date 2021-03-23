@@ -4,7 +4,7 @@ from lightning_transformers.core.nlp.huggingface import HFSeq2SeqDataConfig, HFS
 
 
 @dataclass
-class HFTranslationTransformerConfig(HFSeq2SeqTransformerConfig):
+class TranslationTransformerConfig(HFSeq2SeqTransformerConfig):
     n_gram: int = 4
     smooth: bool = False
 

@@ -2,7 +2,7 @@
 defaults:
   - nlp/default
   - override /backbone@_group_: nlp/seq2seq # Swap to a default seq2seq compatible backbone
-_target_: lightning_transformers.task.nlp.translation.HFTranslationTransformer
+_target_: lightning_transformers.task.nlp.translation.TranslationTransformer
 downstream_model_type: transformers.AutoModelForSeq2SeqLM
 cfg:
   n_gram: 4
