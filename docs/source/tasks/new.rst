@@ -184,7 +184,7 @@ We define the ``_target_`` class we'd like to instantiate, and parameters for ou
 
 For many NLP models, a tokenizer will need to be defined. In many cases you can use pre-built tokenizers which saves having to train your own model.
 
-For example here is the config for HF tokenizers found in ``conf/tokenizer/default.yaml``.
+For example here is the config for HF tokenizers found in ``conf/tokenizer/autotokenizer.yaml``.
 
 .. code-block:: yaml
 
