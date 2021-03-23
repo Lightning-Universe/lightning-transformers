@@ -1,6 +1,5 @@
 from typing import Any, Dict
 
-import pytorch_lightning as pl
 import torch
 from torchmetrics import Accuracy, Precision, Recall
 
