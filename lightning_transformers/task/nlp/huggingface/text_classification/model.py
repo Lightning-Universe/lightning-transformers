@@ -2,6 +2,7 @@ from typing import Any, Dict
 
 import pytorch_lightning as pl
 import torch
+from torchmetrics import Accuracy, Precision, Recall
 
 from lightning_transformers.core.nlp.huggingface import HFTransformer
 
@@ -34,9 +35,9 @@ class TextClassificationTransformer(HFTransformer):
         return self.common_step("test", batch)
 
     def configure_metrics(self, _) -> None:
-        self.prec = pl.metrics.Precision(num_classes=self.num_classes)
-        self.recall = pl.metrics.Recall(num_classes=self.num_classes)
-        self.acc = pl.metrics.Accuracy()
+        self.prec = Precision(num_classes=self.num_classes)
+        self.recall = Recall(num_classes=self.num_classes)
+        self.acc = Accuracy()
         self.metrics = {"precision": self.prec, "recall": self.recall, "accuracy": self.acc}
 
     @property
