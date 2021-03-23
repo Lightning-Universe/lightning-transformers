@@ -2,9 +2,9 @@ from typing import Dict, List
 
 import numpy as np
 import torch
-from pytorch_lightning.metrics import Metric
 from rouge_score import rouge_scorer, scoring
 from rouge_score.scoring import AggregateScore, Score
+from torchmetrics import Metric
 
 from lightning_transformers.task.nlp.summarization.utils import add_newline_to_end_of_each_sentence
 
