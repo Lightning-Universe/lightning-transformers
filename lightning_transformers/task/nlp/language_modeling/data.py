@@ -27,7 +27,7 @@ class LanguageModelingTransformerDataModule(HFTransformerDataModule):
             load_from_cache_file=self.cfg.load_from_cache_file,
         )
 
-        group_texts = partial(self.group_texts, block_size=self.effective_block_size)
+        group_texts = partial(self.convert_to_features, block_size=self.effective_block_size)
 
         dataset = dataset.map(
             group_texts,
@@ -67,7 +67,7 @@ class LanguageModelingTransformerDataModule(HFTransformerDataModule):
         return tokenizer(examples[text_column_name])
 
     @staticmethod
-    def group_texts(examples, block_size: int = None):
+    def convert_to_features(examples, block_size: int = None):
         # Concatenate all texts.
         concatenated_examples = {k: sum(examples[k], []) for k in examples.keys()}
         total_length = len(concatenated_examples[list(examples.keys())[0]])

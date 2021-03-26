@@ -23,32 +23,10 @@ Swap to GPT backbone:
 
     python train.py +task=nlp/question_answering +dataset=nlp/question_answering/squad backbone.pretrained_model_name_or_path=gpt2
 
-Question Answering Using Custom Files (under construction)
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.. include:: /datasets/nlp/question_answering_data.rst
 
-To use custom text files, the files should contain new line delimited json objects within the text files, in the same format as `SQuAD format <https://huggingface.co/datasets/squad#data-instances>`_:
-
-.. code-block:: json
-
-    {
-        "answers": {
-            "answer_start": [1],
-            "text": ["This is a test text"]
-        },
-        "context": "This is a test context.",
-        "id": "1",
-        "question": "Is this a test?",
-        "title": "train test"
-    }
-
-We override the dataset files, allowing us to still use the data transforms defined with this dataset.
-
-.. code-block:: bash
-
-    python train.py +task=nlp/question_answering +dataset=nlp/question_answering/squad dataset.train_file=train.txt dataset.validation_file=valid.txt
-
-Question Answering Inference Pipeline (under construction)
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Question Answering Inference Pipeline
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 By default we use the question answering pipeline, which requires a context and a question as input.
 

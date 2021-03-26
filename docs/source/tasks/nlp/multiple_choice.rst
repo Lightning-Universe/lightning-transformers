@@ -28,15 +28,7 @@ Swap to GPT backbone:
 
 We report Cross Entropy Loss, Precision, Recall and Accuracy for validation. To see all options available for the task, see ``conf/task/nlp/multiple_choice.yaml``.
 
-Multiple Choice Using Custom Files (under construction)
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-To use custom text files, the files should contain the raw data you want to train and validate on.
-We override the dataset files, allowing us to still use the data transforms defined with this dataset.
-
-.. code-block:: bash
-
-    python train.py +task=nlp/multiple_choice +dataset=language_modeling/race dataset.train_file=train.txt dataset.validation_file=valid.txt
+.. include:: /datasets/nlp/multiple_choice_data.rst
 
 Multiple Choice Inference
 ^^^^^^^^^^^^^^^^^^^^^^^^^

@@ -20,34 +20,7 @@ By default we fine-tune to translate from English to Romanian. This can be chang
 
     python train.py +task=nlp/translation +dataset=nlp/translation/wmt16 backbone.pretrained_model_name_or_path=google/mt5-base dataset.dataset_config_name=de-en dataset.src_lang=de dataset.tgt_lang=en
 
-
-Translation Using Custom Files (under construction)
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-To use custom text files, the files should contain data in the same format as the `WMT16 format <https://huggingface.co/datasets/wmt16#data-instances>`_:
-
-.. code-block:: json
-
-    {
-       "answers":{
-          "answer_start":[
-             1
-          ],
-          "text":[
-             "This is a test text"
-          ]
-       },
-       "context":"This is a test context.",
-       "id":"1",
-       "question":"Is this a test?",
-       "title":"train test"
-    }
-
-We override the dataset files, allowing us to still use the data transforms defined with this dataset.
-
-.. code-block:: bash
-
-    python train.py +task=nlp/translation +dataset=nlp/translation/wmt16 backbone.pretrained_model_name_or_path=google/mt5-base dataset.train_file=train.txt dataset.validation_file=valid.txt
+.. include:: /datasets/nlp/translation_data.rst
 
 Translation Inference Pipeline (under construction)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^

@@ -7,7 +7,7 @@ from lightning_transformers.core.nlp.huggingface.seq2seq.config import HFSeq2Seq
 from lightning_transformers.core.nlp.huggingface.seq2seq.utils import _pad_tensors_to_max_len
 
 
-class HFSeq2SeqTransformer(HFTransformer):
+class Seq2SeqTransformer(HFTransformer):
 
     def __init__(self, *args, cfg: HFSeq2SeqTransformerConfig, **kwargs):
         super().__init__(*args, **kwargs)
