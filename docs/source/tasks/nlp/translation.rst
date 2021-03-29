@@ -18,7 +18,7 @@ By default we fine-tune to translate from English to Romanian. This can be chang
 
 .. code-block:: bash
 
-    python train.py +task=nlp/translation +dataset=nlp/translation/wmt16 backbone.pretrained_model_name_or_path=google/mt5-base dataset.dataset_config_name=de-en dataset.src_lang=de dataset.tgt_lang=en
+    python train.py +task=nlp/translation +dataset=nlp/translation/wmt16 backbone.pretrained_model_name_or_path=google/mt5-base dataset.dataset_config_name=de-en dataset.source_language=de dataset.target_language=en
 
 .. include:: /datasets/nlp/translation_data.rst
 

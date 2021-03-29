@@ -6,6 +6,6 @@ cfg:
   dataset_name: wmt16
   dataset_config_name: 'ro-en' # WMT translation datasets: ['cs-en', 'de-en', 'fi-en', 'ro-en', 'ru-en', 'tr-en']
   source_language: 'en'
-  tgt_lang: 'ro'
+  target_language: 'ro'
   max_source_length: 128
   max_target_length: 128

@@ -30,7 +30,7 @@ class TranslationTransformer(Seq2SeqTransformer):
             tgt_lang = cfg.target_language
             # set decoder_start_token_id for MBart
             if self.model.config.decoder_start_token_id is None:
-                assert tgt_lang is not None, "mBart requires --tgt_lang"
+                assert tgt_lang is not None, "mBart requires --target_language"
                 self.model.config.decoder_start_token_id = self.tokenizer.lang_code_to_id[tgt_lang]
 
     @property
