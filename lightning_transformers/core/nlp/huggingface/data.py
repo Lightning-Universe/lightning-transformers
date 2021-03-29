@@ -43,7 +43,7 @@ class HFTransformerDataModule(TransformerTokenizerDataModule):
                 path=self.cfg.dataset_name,
                 name=self.cfg.dataset_config_name,
                 cache_dir=self.cfg.cache_dir,
-                data_files=data_files
+                data_files=data_files if data_files else None
             )
 
         # Load straight from data files
