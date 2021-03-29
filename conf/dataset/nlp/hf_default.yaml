@@ -4,9 +4,9 @@ defaults:
 cfg:
   dataset_name: null
   dataset_config_name: null
-  train_file: ''
-  validation_file: ''
-  test_file: ''
+  train_file: null
+  validation_file: null
+  test_file: null
   train_val_split: null
   max_samples: null
   cache_dir: null

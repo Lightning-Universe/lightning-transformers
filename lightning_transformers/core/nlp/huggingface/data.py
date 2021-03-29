@@ -37,13 +37,15 @@ class HFTransformerDataModule(TransformerTokenizerDataModule):
             data_files["validation"] = self.cfg.validation_file
         if self.cfg.test_file is not None:
             data_files["test_file"] = self.cfg.test_file
+
+        data_files = data_files if data_files else None
         if self.cfg.dataset_name is not None:
-            # Downloading and loading a dataset from the hub.
+            # Download and load the Huggingface dataset.
             return load_dataset(
                 path=self.cfg.dataset_name,
                 name=self.cfg.dataset_config_name,
                 cache_dir=self.cfg.cache_dir,
-                data_files=data_files if data_files else None
+                data_files=data_files
             )
 
         # Load straight from data files
