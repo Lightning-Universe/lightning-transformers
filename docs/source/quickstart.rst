@@ -35,7 +35,7 @@ Run inference once model trained (experimental):
 
    python predict.py +task=nlp/text_classification +checkpoint_path=/path/to/model.ckpt +x="Classify this sentence."
 
-   # Returns {"label_0": 0.8, "label_1": 0.2}
+   # Returns [{'label': 'LABEL_0', 'score': 0.545...}]
 
 There are many other supported NLP tasks and datasets, see :ref:`nlp-tasks` to get started.
 
