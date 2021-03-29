@@ -37,6 +37,18 @@ Run inference once model trained (experimental):
 
    # Returns [{'label': 'LABEL_0', 'score': 0.545...}]
 
+You can also do prediction without a checkpoint:
+
+.. code-block:: bash
+
+   python predict.py +task=nlp/text_classification +x="Classify this sentence."
+
+And/or specify any backbone:
+
+.. code-block:: bash
+
+   python predict.py +task=nlp/text_classification backbone.pretrained_model_name_or_path=bert-base-cased +x="Classify this sentence."
+
 There are many other supported NLP tasks and datasets, see :ref:`nlp-tasks` to get started.
 
 
