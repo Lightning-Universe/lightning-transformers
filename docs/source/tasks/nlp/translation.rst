@@ -22,11 +22,11 @@ By default we fine-tune to translate from English to Romanian. This can be chang
 
 .. include:: /datasets/nlp/translation_data.rst
 
-Translation Inference Pipeline (under construction)
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Translation Inference Pipeline (experimental)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 By default we use the translation pipeline, which requires a source text string.
 
 .. code-block:: bash
 
-    python predict.py +task=nlp/translation +model=/path/to/model.ckpt input="The ground is black, the sky is blue and the car is red."
+    python predict.py +task=nlp/translation +checkpoint_path=/path/to/model.ckpt '+x="The ground is black, the sky is blue and the car is red."'

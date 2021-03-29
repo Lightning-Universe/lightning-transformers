@@ -26,11 +26,11 @@ We report the Cross Entropy Loss for validation. To see all options available fo
 
 .. include:: /datasets/nlp/language_modeling_data.rst
 
-Language Modeling Inference Pipeline (under construction)
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Language Modeling Inference Pipeline (experimental)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 By default we use the text generation pipeline, which requires a conditional input string and generates an output string.
 
 .. code-block:: bash
 
-    python predict.py +task=nlp/language_modeling +model=/path/to/model.ckpt +input="Condition sentence for the language model"
+    python predict.py +task=nlp/language_modeling +checkpoint_path=/path/to/model.ckpt backbone.pretrained_model_name_or_path='sshleifer/tiny-gpt2' +x="Condition sentence for the language model"

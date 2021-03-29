@@ -18,11 +18,11 @@ We report the Precision, Recall, Accuracy and Cross Entropy Loss for validation.
 
 .. include:: /datasets/nlp/token_classification_data.rst
 
-Token Classification Inference Pipeline (under construction)
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Token Classification Inference Pipeline (experimental)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-By default we use the NER pipeline, which requires a an input sequence string.
+By default we use the NER pipeline, which requires a an input sequence string and the number of labels.
 
 .. code-block:: bash
 
-    python predict.py +task=nlp/token_classification +model=/path/to/model.ckpt +input="London is the capital of the United Kingdom."
+    python predict.py +task=nlp/token_classification +checkpoint_path=/path/to/model.ckpt +x="London is the capital of the United Kingdom." +model_data_args='{labels: 2}'

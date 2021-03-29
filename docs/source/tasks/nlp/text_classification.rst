@@ -1,6 +1,7 @@
 Text Classification
 -------------------
-The Text Classification Task fine-tunes the model to predict probabilities across a set of labels given input text.. Currently supports the `XLNI <https://huggingface.co/datasets/xlni>`_, `GLUE <https://huggingface.co/datasets/glue>`_ and `emotion <https://huggingface.co/datasets/emotion>`_ datasets, or custom input files.
+The Text Classification Task fine-tunes the model to predict probabilities across a set of labels given input text.
+Currently supports the `XLNI <https://huggingface.co/datasets/xlni>`_, `GLUE <https://huggingface.co/datasets/glue>`_ and `emotion <https://huggingface.co/datasets/emotion>`_ datasets, or custom input files.
 
 .. code-block:: none
 
@@ -25,11 +26,11 @@ We report the Precision, Recall, Accuracy and Cross Entropy Loss for validation.
 
 .. include:: /datasets/nlp/text_classification_data.rst
 
-Text Classification Inference Pipeline (under construction)
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Text Classification Inference Pipeline (experimental)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 By default we use the sentiment-analysis pipeline, which requires an input string.
 
 .. code-block:: bash
 
-    python predict.py +task=nlp/text_classification +model=/path/to/model.ckpt +input="I don't like this at all!"
+    python predict.py +task=nlp/text_classification +checkpoint_path=/path/to/model.ckpt '+x="I dont like this at all!"'

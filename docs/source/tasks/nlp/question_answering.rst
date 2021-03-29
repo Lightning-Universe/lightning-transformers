@@ -25,11 +25,11 @@ Swap to GPT backbone:
 
 .. include:: /datasets/nlp/question_answering_data.rst
 
-Question Answering Inference Pipeline
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Question Answering Inference Pipeline (experimental)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 By default we use the question answering pipeline, which requires a context and a question as input.
 
 .. code-block:: bash
 
-    python predict.py +task=nlp/question_Answering +model=/path/to/model.ckpt input.context="The ground is black, the sky is blue and the car is red." input.question="What color is the sky?"
+    python predict.py +task=nlp/question_Answering +checkpoint_path=/path/to/model.ckpt '+x={context: "The ground is black, the sky is blue and the car is red.", question: "What color is the sky?"}'
