@@ -1,0 +1,3 @@
+defaults:
+  - default # add args from default trainer conf
+tpu_cores: 8
