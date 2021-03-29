@@ -25,6 +25,7 @@ Lightning Transformers
 
    tasks/nlp
    tasks/new
+   datasets/custom_data
 
 .. toctree::
    :maxdepth: 2

@@ -17,24 +17,7 @@ To use this task, we must select a Seq2Seq Encoder/Decoder based model, such as 
 
     python train.py +task=nlp/summarization +dataset=nlp/summarization/cnn_dailymail backbone.pretrained_model_name_or_path=t5-base # dataset can be swapped to xsum
 
-Summarization Using Custom Files (under construction)
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-To use custom text files, the files should contain new line delimited json objects within the text files, in the same format as `XSUM dataset <https://huggingface.co/datasets/xsum#data-instances>`_:
-
-.. code-block:: json
-
-    {
-        "document": "some-body",
-        "id": "29750031",
-        "summary": "some-sentence"
-    }
-
-We override the dataset files, allowing us to still use the data transforms defined with this dataset.
-
-.. code-block:: bash
-
-    python train.py +task=nlp/summarization +dataset=nlp/summarization/xsum backbone.pretrained_model_name_or_path=t5-base dataset.train_file=train.txt dataset.validation_file=valid.txt
+.. include:: /datasets/nlp/summarization_data.rst
 
 Summarization Inference Pipeline (under construction)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^

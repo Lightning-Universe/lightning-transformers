@@ -1,11 +1,11 @@
 from transformers import MBartTokenizer
 
-from lightning_transformers.core.nlp.huggingface.seq2seq.model import HFSeq2SeqTransformer
+from lightning_transformers.core.nlp.huggingface.seq2seq.model import Seq2SeqTransformer
 from lightning_transformers.task.nlp.translation.config import TranslationDataConfig, TranslationTransformerConfig
 from lightning_transformers.task.nlp.translation.metric import BLEUScore
 
 
-class TranslationTransformer(HFSeq2SeqTransformer):
+class TranslationTransformer(Seq2SeqTransformer):
     cfg: TranslationTransformerConfig
 
     def __init__(self, *args, **kwargs):

@@ -23,21 +23,7 @@ Swap to GPT backbone:
 
 We report the Precision, Recall, Accuracy and Cross Entropy Loss for validation. To see all options available for the task, see ``conf/task/nlp/text_classification.yaml``.
 
-Text Classification Using Custom Files
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-To use custom text files, the files should contain new line delimited json objects within the text files, in the same format as  `emotion dataset <https://huggingface.co/datasets/emotion#data-instances>`_:
-
-.. code-block:: json
-
-    {
-        "label": 0,
-        "text": "im feeling quite sad and sorry for myself but ill snap out of it soon"
-    }
-
-.. code-block:: bash
-
-    python train.py +task=nlp/text_classification +dataset=nlp/text_classification/emotion dataset.train_file=train.txt dataset.validation_file=valid.txt
+.. include:: /datasets/nlp/text_classification_data.rst
 
 Text Classification Inference Pipeline (under construction)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^

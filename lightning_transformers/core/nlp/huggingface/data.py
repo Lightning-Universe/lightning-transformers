@@ -29,24 +29,32 @@ class HFTransformerDataModule(TransformerTokenizerDataModule):
         return dataset
 
     def load_dataset(self) -> Dataset:
-        if self.cfg.dataset_name is not None:
-            # Downloading and loading a dataset from the hub.
-            return load_dataset(
-                path=self.cfg.dataset_name,
-                name=self.cfg.dataset_config_name,
-                cache_dir=self.cfg.cache_dir,
-            )
+        # Allow custom data files when loading the dataset
         data_files = {}
         if self.cfg.train_file is not None:
             data_files["train"] = self.cfg.train_file
         if self.cfg.validation_file is not None:
             data_files["validation"] = self.cfg.validation_file
+        if self.cfg.test_file is not None:
+            data_files["test_file"] = self.cfg.test_file
+
+        data_files = data_files if data_files else None
+        if self.cfg.dataset_name is not None:
+            # Download and load the Huggingface dataset.
+            return load_dataset(
+                path=self.cfg.dataset_name,
+                name=self.cfg.dataset_config_name,
+                cache_dir=self.cfg.cache_dir,
+                data_files=data_files
+            )
+
+        # Load straight from data files
         if not data_files:
             raise MisconfigurationException(
                 "You have not specified a dataset name. A custom train and validation file is required"
             )
         extension = self.cfg.train_file.split(".")[-1]
-        return load_dataset(extension, data_files=data_files, field="data")
+        return load_dataset(extension, data_files=data_files)
 
     def split_dataset(self, dataset: Union[Dataset, DatasetDict]) -> Union[Dataset, DatasetDict]:
         if self.cfg.train_val_split is not None:

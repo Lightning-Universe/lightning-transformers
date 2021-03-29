@@ -24,15 +24,7 @@ Swap to GPT backbone:
 
 We report the Cross Entropy Loss for validation. To see all options available for the task, see ``conf/task/nlp/language_modeling.yaml``.
 
-Language Modeling Using Custom Files
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-To use custom text files, the files should contain the raw data you want to train and validate on. During data pre-processing the text is flattened, and the model
-is trained/validated on context windows (block size) made from the files. We override the dataset files, allowing us to still use the data transforms defined with this dataset.
-
-.. code-block:: bash
-
-    python train.py +task=nlp/language_modeling +dataset=nlp/language_modeling/wikitext dataset.train_file=train.txt dataset.validation_file=valid.txt
+.. include:: /datasets/nlp/language_modeling_data.rst
 
 Language Modeling Inference Pipeline (under construction)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
