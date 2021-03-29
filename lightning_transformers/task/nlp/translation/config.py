@@ -11,5 +11,5 @@ class TranslationTransformerConfig(HFSeq2SeqTransformerConfig):
 
 @dataclass
 class TranslationDataConfig(Seq2SeqDataConfig):
-    src_lang: str = ""
-    tgt_lang: str = ""
+    source_language: str = ""
+    target_language: str = ""

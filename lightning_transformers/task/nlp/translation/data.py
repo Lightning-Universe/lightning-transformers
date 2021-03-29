@@ -9,4 +9,4 @@ class TranslationDataModule(Seq2SeqDataModule):
 
     @property
     def source_target_column_names(self) -> Tuple[str, str]:
-        return self.cfg.src_lang, self.cfg.tgt_lang
+        return self.cfg.source_language, self.cfg.target_language
