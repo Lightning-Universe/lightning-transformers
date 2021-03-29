@@ -27,7 +27,7 @@ class TranslationTransformer(Seq2SeqTransformer):
         super().initialize_model_specific_parameters()
         if isinstance(self.tokenizer, MBartTokenizer):
             cfg: TranslationDataConfig = self.trainer.datamodule.cfg
-            tgt_lang = cfg.tgt_lang
+            tgt_lang = cfg.target_language
             # set decoder_start_token_id for MBart
             if self.model.config.decoder_start_token_id is None:
                 assert tgt_lang is not None, "mBart requires --tgt_lang"
