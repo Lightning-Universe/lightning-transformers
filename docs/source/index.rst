@@ -17,6 +17,7 @@ Lightning Transformers
    installation
    quickstart
    structure/conf
+   structure/code
 
 .. toctree::
    :maxdepth: 2
@@ -24,7 +25,6 @@ Lightning Transformers
    :caption: Tasks
 
    tasks/nlp
-   tasks/new
    datasets/custom_data
 
 .. toctree::
@@ -40,14 +40,14 @@ Lightning Transformers
    :name: advanced
    :caption: Advanced
 
-   advanced/extending_datasets
+   advanced/custom_datasets
+   advanced/new_task
 
 .. toctree::
    :maxdepth: 1
    :name: api
    :caption: API Reference
 
-   structure/code
 
 Indices and tables
 ==================

@@ -1,7 +1,7 @@
 .. _new-task:
 
-Building New Tasks
-==================
+Customizing Tasks
+=================
 
 Below we demonstrate how to build a custom task within Lightning Transformers.
 When building a custom task in Lightning Transformers, there are four key pieces.
