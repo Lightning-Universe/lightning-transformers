@@ -41,7 +41,7 @@ All default configs can be overridden with custom configs, or pre-built configs 
 
 For example, we can swap to different optimizers like below.
 
-.. code-block:: bash
+.. code-block:: python
 
     python train.py optimizer=sgd
 

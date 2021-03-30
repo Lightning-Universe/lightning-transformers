@@ -14,18 +14,21 @@ Lightning Transformers
    :caption: Get started
 
    introduction
-   installation
    quickstart
    structure/conf
-   structure/code
 
 .. toctree::
    :maxdepth: 2
    :name: tasks
    :caption: Tasks
 
-   tasks/nlp
-   datasets/custom_data
+   tasks/nlp/language_modeling
+   tasks/nlp/multiple_choice
+   tasks/nlp/question_answering
+   tasks/nlp/summarization
+   tasks/nlp/text_classification
+   tasks/nlp/token_classification
+   tasks/nlp/translation
 
 .. toctree::
    :maxdepth: 2
@@ -40,6 +43,7 @@ Lightning Transformers
    :name: advanced
    :caption: Advanced
 
+   datasets/custom_data
    advanced/custom_datasets
    advanced/new_task
 
