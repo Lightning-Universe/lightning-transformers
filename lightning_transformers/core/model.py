@@ -4,7 +4,7 @@ import pytorch_lightning as pl
 import torch
 from pytorch_lightning import _logger as log
 from pytorch_lightning.utilities.exceptions import MisconfigurationException
-
+from pytorch_lightning.utilities import rank_zero_info
 from lightning_transformers.core.config import OptimizerConfig, SchedulerConfig
 from lightning_transformers.core.instantiator import Instantiator
 
@@ -113,8 +113,8 @@ class TaskTransformer(LitTransformer):
             num_training_steps=self.scheduler_cfg.num_training_steps,
             num_warmup_steps=self.scheduler_cfg.num_warmup_steps,
         )
-        log.info(f"Inferring number of training steps, set to {self.scheduler_cfg.num_training_steps}")
-        log.info(f"Inferring number of warmup steps from ratio, set to {self.scheduler_cfg.num_warmup_steps}")
+        rank_zero_info(f"Inferring number of training steps, set to {self.scheduler_cfg.num_training_steps}")
+        rank_zero_info(f"Inferring number of warmup steps from ratio, set to {self.scheduler_cfg.num_warmup_steps}")
         self.scheduler = self.instantiator.scheduler(self.scheduler_cfg, self.optimizer)
         return super().configure_optimizers()
 
