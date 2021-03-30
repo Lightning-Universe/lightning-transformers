@@ -13,7 +13,6 @@ Lightning Transformers
    :name: start
    :caption: Get started
 
-   introduction
    quickstart
    structure/conf
 

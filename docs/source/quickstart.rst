@@ -1,7 +1,7 @@
 Quick Start
 ***********
 
-We support many NLP tasks that can be seen in :ref:`nlp-tasks`. In this example we will fine-tune BERT using the text classification task and the ``emotion`` dataset.
+We support many NLP tasks that can be seen in :ref:`tasks`. In this example we will fine-tune BERT using the text classification task and the ``emotion`` dataset.
 
 .. include:: installation.rst
 
@@ -51,7 +51,7 @@ Or run prediction on a specified HuggingFace pre-trained model:
 
    python predict.py +task=nlp/text_classification backbone.pretrained_model_name_or_path=bert-base-cased +x="Classify this sentence."
 
-There are many other supported NLP tasks and datasets, see :ref:`nlp-tasks` to get started.
+There are many other supported NLP tasks and datasets, see :ref:`tasks` to get started.
 
 
 Trainer Options
