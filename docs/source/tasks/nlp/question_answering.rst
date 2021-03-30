@@ -25,11 +25,25 @@ Swap to GPT backbone:
 
 .. include:: /datasets/nlp/question_answering_data.rst
 
-Question Answering Inference Pipeline
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Question Answering Inference Pipeline (experimental)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 By default we use the question answering pipeline, which requires a context and a question as input.
 
+For Hydra to correctly parse your input argument, if your input contains any special characters you must either wrap the entire call in single quotes like `'+x="my, sentence"'` or escape special characters. See `escaped characters in unquoted values <https://hydra.cc/docs/advanced/override_grammar/basic/#escaped-characters-in-unquoted-values>`_.
+
 .. code-block:: bash
 
-    python predict.py +task=nlp/question_Answering +model=/path/to/model.ckpt input.context="The ground is black, the sky is blue and the car is red." input.question="What color is the sky?"
+    python predict.py +task=nlp/question_answering +checkpoint_path=/path/to/model.ckpt +x='{context: "The ground is black, the sky is blue and the car is red.", question: "What color is the sky?"}'
+
+You can also run prediction using a default HuggingFace pre-trained model:
+
+.. code-block:: bash
+
+   python predict.py +task=nlp/question_answering +x='{context: "The ground is black, the sky is blue and the car is red.", question: "What color is the sky?"}'
+
+Or run prediction on a specified HuggingFace pre-trained model:
+
+.. code-block:: bash
+
+   python predict.py +task=nlp/question_answering backbone.pretrained_model_name_or_path=bert-base-cased +x='{context: "The ground is black, the sky is blue and the car is red.", question: "What color is the sky?"}'

@@ -29,13 +29,25 @@ Swap to using RMSProp optimizer (see ``conf/optimizers/`` for all supported opti
 
    python train.py +task=nlp/text_classification +dataset=nlp/text_classification/emotion optimizer=rmsprop
 
-Run inference once model trained (under construction):
+Run inference once model trained (experimental):
 
 .. code-block:: bash
 
-   python predict.py +task=nlp/text_classification +model=/path/to/model.ckpt +input="Classify this sentence."
+   python predict.py +task=nlp/text_classification +checkpoint_path=/path/to/model.ckpt +x="Classify this sentence."
 
-   # Returns {"label_0": 0.8, "label_1": 0.2}
+   # Returns [{'label': 'LABEL_0', 'score': 0.545...}]
+
+You can also run prediction using a default HuggingFace pre-trained model:
+
+.. code-block:: bash
+
+   python predict.py +task=nlp/text_classification +x="Classify this sentence."
+
+Or run prediction on a specified HuggingFace pre-trained model:
+
+.. code-block:: bash
+
+   python predict.py +task=nlp/text_classification backbone.pretrained_model_name_or_path=bert-base-cased +x="Classify this sentence."
 
 There are many other supported NLP tasks and datasets, see :ref:`nlp-tasks` to get started.
 

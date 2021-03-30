@@ -19,11 +19,25 @@ To use this task, we must select a Seq2Seq Encoder/Decoder based model, such as 
 
 .. include:: /datasets/nlp/summarization_data.rst
 
-Summarization Inference Pipeline (under construction)
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Summarization Inference Pipeline (experimental)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 By default we use the summarization pipeline, which requires an input document as text.
 
+For Hydra to correctly parse your input argument, if your input contains any special characters you must either wrap the entire call in single quotes like `'+x="my, sentence"'` or escape special characters. See `escaped characters in unquoted values <https://hydra.cc/docs/advanced/override_grammar/basic/#escaped-characters-in-unquoted-values>`_.
+
 .. code-block:: bash
 
-    python predict.py +task=nlp/question_Answering +model=/path/to/model.ckpt input="The car was racing towards the tunnel, whilst blue lights were flashing behind it. The car entered the tunnel and vanished..."
+    python predict.py +task=nlp/summarization +checkpoint_path=/path/to/model.ckpt '+x="The car was racing towards the tunnel, whilst blue lights were flashing behind it. The car entered the tunnel and vanished..."'
+
+You can also run prediction using a default HuggingFace pre-trained model:
+
+.. code-block:: bash
+
+   python predict.py +task=nlp/summarization '+x="The car was racing towards the tunnel, whilst blue lights were flashing behind it. The car entered the tunnel and vanished..."'
+
+Or run prediction on a specified HuggingFace pre-trained model:
+
+.. code-block:: bash
+
+   python predict.py +task=nlp/summarization backbone.pretrained_model_name_or_path=t5-base '+x="The car was racing towards the tunnel, whilst blue lights were flashing behind it. The car entered the tunnel and vanished..."'
