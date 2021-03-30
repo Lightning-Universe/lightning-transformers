@@ -1,7 +1,19 @@
+.. _question_answering:
+
 Question Answering
 ------------------
+
+The Task
+^^^^^^^^
 The Question Answering task requires the model to determine the start and end of a span within the given context, that answers a given question.
-This allows the model to pre-condition on contextual information to determine an answer. Currently supports the `SQuAD <https://huggingface.co/datasets/squad>`_ dataset or custom input text files.
+This allows the model to pre-condition on contextual information to determine an answer. 
+
+Use this task when you would like to fine-tune onto data where an answer can be extracted from context information.
+Since this is an extraction task, you can rely on most Transformer models as your backbone.
+
+Datasets
+^^^^^^^^
+Currently supports the `SQuAD <https://huggingface.co/datasets/squad>`_ dataset or custom input text files.
 
 .. code-block:: none
 
@@ -10,8 +22,8 @@ This allows the model to pre-condition on contextual information to determine an
 
     Model answer: {"answer": "the sky is blue", "start": 21, "end": 35}
 
-Use this task when you would like to fine-tune onto data where an answer can be extracted from context information.
-Since this is an extraction task, you can rely on most Transformer models as your backbone.
+Training
+^^^^^^^^
 
 .. code-block:: bash
 
