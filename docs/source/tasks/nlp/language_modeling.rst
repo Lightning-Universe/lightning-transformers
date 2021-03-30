@@ -31,6 +31,20 @@ Language Modeling Inference Pipeline (experimental)
 
 By default we use the text generation pipeline, which requires a conditional input string and generates an output string.
 
+For Hydra to correctly parse your input argument, if you're input contains any special characters you must either wrap the entire call in single quotes like `'+x="my, sentence"'` or escape special characters. See `Escaped characters in unquoted values <https://hydra.cc/docs/advanced/override_grammar/basic/#escaped-characters-in-unquoted-values>`_.
+
 .. code-block:: bash
 
-    python predict.py +task=nlp/language_modeling +checkpoint_path=/path/to/model.ckpt backbone.pretrained_model_name_or_path='sshleifer/tiny-gpt2' +x="Condition sentence for the language model"
+    python predict.py +task=nlp/language_modeling +checkpoint_path=/path/to/model.ckpt +x="Condition sentence for the language model"
+
+You can also run prediction using a default HuggingFace pre-trained model:
+
+.. code-block:: bash
+
+   python predict.py +task=nlp/language_modeling +x="Condition sentence for the language model"
+
+Or run prediction on a specified HuggingFace pre-trained model:
+
+.. code-block:: bash
+
+   python predict.py +task=nlp/language_modeling backbone.pretrained_model_name_or_path=bert-base-cased +x="Condition sentence for the language model"

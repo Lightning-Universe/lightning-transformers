@@ -37,13 +37,13 @@ Run inference once model trained (experimental):
 
    # Returns [{'label': 'LABEL_0', 'score': 0.545...}]
 
-You can also do prediction without a checkpoint:
+You can also run prediction using a default HuggingFace pre-trained model:
 
 .. code-block:: bash
 
    python predict.py +task=nlp/text_classification +x="Classify this sentence."
 
-And/or specify any backbone:
+Or run prediction on a specified HuggingFace pre-trained model:
 
 .. code-block:: bash
 
