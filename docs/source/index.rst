@@ -34,6 +34,7 @@ Lightning Transformers
    :name: optimization
    :caption: Training Optimizations
 
+   optimizations/lightning
    optimizations/deepspeed
    optimizations/sharded
 
