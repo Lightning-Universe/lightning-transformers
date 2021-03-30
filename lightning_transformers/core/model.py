@@ -2,9 +2,9 @@ from typing import Any, Dict, Optional, Tuple, Union
 
 import pytorch_lightning as pl
 import torch
-from pytorch_lightning import _logger as log
-from pytorch_lightning.utilities.exceptions import MisconfigurationException
 from pytorch_lightning.utilities import rank_zero_info
+from pytorch_lightning.utilities.exceptions import MisconfigurationException
+
 from lightning_transformers.core.config import OptimizerConfig, SchedulerConfig
 from lightning_transformers.core.instantiator import Instantiator
 
