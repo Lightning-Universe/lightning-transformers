@@ -3,8 +3,8 @@
 DeepSpeed
 =========
 
-`DeepSpeed <https://github.com/microsoft/DeepSpeed>`_ is a deep learning training optimization library, providing the means to train massive billion parameter models at scale.
-This allows us to train large transformer models optimizing for compute. For more details, see `the DeepSpeed PyTorch Lightning docs <https://pytorch-lightning.readthedocs.io/en/latest/advanced/multi_gpu.html#deepspeed>`_.
+`DeepSpeed <https://github.com/microsoft/DeepSpeed>`__ is a deep learning training optimization library, providing the means to train massive billion parameter models at scale.
+This allows us to train large transformer models optimizing for compute. For more details, see `the DeepSpeed PyTorch Lightning docs <https://pytorch-lightning.readthedocs.io/en/latest/advanced/multi_gpu.html#deepspeed>`__.
 
 With multiple machines, the command has to be run on all machines either manually, or using an orchestration system such as SLURM or TorchElastic. More information can be seen in the Pytorch Lightning `Computing Cluster <https://pytorch-lightning.readthedocs.io/en/latest/advanced/cluster.html#computing-cluster>`_.
 
@@ -17,7 +17,7 @@ We provide out of the box configs to use the DeepSpeed plugin. Below is an examp
 
    python train.py +task=nlp/translation +dataset=nlp/translation/wmt16 trainer=deepspeed
 
-All options can be found in ``conf/trainer/plugins/zero.yaml``. We suggest referring to `the DeepSpeed PyTorch Lightning docs <https://pytorch-lightning.readthedocs.io/en/latest/advanced/multi_gpu.html#deepspeed>`_ for more information on the parameters.
+All options can be found in ``conf/trainer/plugins/zero.yaml``. We suggest referring to `the DeepSpeed PyTorch Lightning docs <https://pytorch-lightning.readthedocs.io/en/latest/advanced/multi_gpu.html#deepspeed>`__ for more information on the parameters.
 
 DeepSpeed ZeRO Stage 2 Offload
 ------------------------------
@@ -30,7 +30,7 @@ We provide default trainer configurations to enable ZeRO-Offload:
 
    python train.py +task=nlp/translation +dataset=nlp/translation/wmt16 trainer=zero_offload
 
-To see the configuration settings see ``conf/trainer/zero_offload.yaml`` and ``conf/trainer/plugins/zero_offload.yaml`` for the parameters. Within the config file, you can modify the ZeRO parameters as described in `the DeepSpeed PyTorch Lightning docs <https://pytorch-lightning.readthedocs.io/en/latest/advanced/multi_gpu.html#deepspeed>`_.
+To see the configuration settings see ``conf/trainer/zero_offload.yaml`` and ``conf/trainer/plugins/zero_offload.yaml`` for the parameters. Within the config file, you can modify the ZeRO parameters as described in `the DeepSpeed PyTorch Lightning docs <https://pytorch-lightning.readthedocs.io/en/latest/advanced/multi_gpu.html#deepspeed>`__.
 
 .. code-block:: yaml
 

@@ -13,6 +13,7 @@ With multiple machines, the command has to be run on all machines either manuall
 Install FairScale
 
 .. code-block:: bash
+
     pip install fairscale
 
 Here we enable sharded training for the translation task.
