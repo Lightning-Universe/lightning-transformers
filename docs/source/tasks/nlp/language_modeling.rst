@@ -31,7 +31,7 @@ Language Modeling Inference Pipeline (experimental)
 
 By default we use the text generation pipeline, which requires a conditional input string and generates an output string.
 
-For Hydra to correctly parse your input argument, if you're input contains any special characters you must either wrap the entire call in single quotes like `'+x="my, sentence"'` or escape special characters. See `Escaped characters in unquoted values <https://hydra.cc/docs/advanced/override_grammar/basic/#escaped-characters-in-unquoted-values>`_.
+For Hydra to correctly parse your input argument, if your input contains any special characters you must either wrap the entire call in single quotes like `'+x="my, sentence"'` or escape special characters. See `Escaped characters in unquoted values <https://hydra.cc/docs/advanced/override_grammar/basic/#escaped-characters-in-unquoted-values>`_.
 
 .. code-block:: bash
 

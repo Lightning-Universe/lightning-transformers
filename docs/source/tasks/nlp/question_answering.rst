@@ -30,7 +30,7 @@ Question Answering Inference Pipeline (experimental)
 
 By default we use the question answering pipeline, which requires a context and a question as input.
 
-For Hydra to correctly parse your input argument, if you're input contains any special characters you must either wrap the entire call in single quotes like `'+x="my, sentence"'` or escape special characters. See `escaped characters in unquoted values <https://hydra.cc/docs/advanced/override_grammar/basic/#escaped-characters-in-unquoted-values>`_.
+For Hydra to correctly parse your input argument, if your input contains any special characters you must either wrap the entire call in single quotes like `'+x="my, sentence"'` or escape special characters. See `escaped characters in unquoted values <https://hydra.cc/docs/advanced/override_grammar/basic/#escaped-characters-in-unquoted-values>`_.
 
 .. code-block:: bash
 
