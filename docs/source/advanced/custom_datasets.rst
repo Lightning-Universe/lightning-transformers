@@ -1,5 +1,5 @@
-Extending Datasets
-==================
+Customizing Datasets
+====================
 
 Below we describe how to extend the base data module classes to implement your own data processing logic.
 

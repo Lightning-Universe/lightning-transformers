@@ -1,4 +1,0 @@
-.. _code:
-
-Code Structure
-==============

@@ -26,7 +26,7 @@ ZeRO-Offload enables large model training by being efficient with memory usage. 
 
 We provide default trainer configurations to enable ZeRO-Offload:
 
-.. code-block:: bash
+.. code-block:: python
 
    python train.py +task=nlp/translation +dataset=nlp/translation/wmt16 trainer=zero_offload
 
