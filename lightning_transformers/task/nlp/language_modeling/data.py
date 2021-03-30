@@ -10,7 +10,7 @@ from lightning_transformers.core.nlp.huggingface import HFTransformerDataModule
 from lightning_transformers.task.nlp.language_modeling.config import LanguageModelingDataConfig
 
 
-class LanguageModelingTransformerDataModule(HFTransformerDataModule):
+class LanguageModelingDataModule(HFTransformerDataModule):
     cfg: LanguageModelingDataConfig
 
     def process_data(self, dataset: Dataset, stage: Optional[str] = None) -> Dataset:

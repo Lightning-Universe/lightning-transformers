@@ -35,6 +35,12 @@ Lightning Transformers
    optimizations/deepspeed
    optimizations/sharded
 
+.. toctree::
+   :maxdepth: 2
+   :name: advanced
+   :caption: Advanced
+
+   advanced/extending_datasets
 
 .. toctree::
    :maxdepth: 1

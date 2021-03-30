@@ -11,6 +11,8 @@ recursive-include lightning_transformers *.py
 prune tests
 # Exclude the documentation files
 prune docs
+# Exclude the example files
+prune examples
 # Exclude build configs
 prune .circleci
 prune .github

@@ -1,11 +1,9 @@
 .. _custom-data:
 
-Custom Data and Datasets
-========================
+Custom Data Files
+=================
 
 In most cases when training/validating/testing on custom files, you’ll be able to do so without modifying any code, using the general data module classes directly.
-
-In some cases you would like to change pre-processing/loading of the data modules.
 
 Below we show per task how to fine-tune/validate/test on your own files per task or modify the logic within the data classes. Some tasks are more involved than others, as they may require more data processing.
 
