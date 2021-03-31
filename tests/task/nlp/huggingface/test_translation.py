@@ -3,6 +3,7 @@ from unittest.mock import MagicMock
 
 import pytest
 import pytorch_lightning as pl
+import torch
 from transformers import AutoTokenizer
 
 from lightning_transformers.core.nlp.huggingface import HFBackboneConfig
@@ -12,10 +13,14 @@ from lightning_transformers.task.nlp.translation.data import TranslationDataModu
 
 
 def test_smoke_train(hf_cache_path):
+
+    class TestModel(TranslationTransformer):
+
+        def configure_optimizers(self):
+            return torch.optim.AdamW(self.parameters(), lr=1e-5)
+
     tokenizer = AutoTokenizer.from_pretrained(pretrained_model_name_or_path='patrickvonplaten/t5-tiny-random')
-    model = TranslationTransformer(
-        backbone=HFBackboneConfig(pretrained_model_name_or_path='patrickvonplaten/t5-tiny-random')
-    )
+    model = TestModel(backbone=HFBackboneConfig(pretrained_model_name_or_path='patrickvonplaten/t5-tiny-random'))
     dm = WMT16TranslationDataModule(
         cfg=TranslationDataConfig(
             batch_size=1,
