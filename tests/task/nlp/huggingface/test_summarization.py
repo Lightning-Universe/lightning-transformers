@@ -1,6 +1,11 @@
 import sys
+from unittest.mock import MagicMock
 
 import pytest
+
+from lightning_transformers.core.nlp.huggingface import HFBackboneConfig, Seq2SeqDataConfig
+from lightning_transformers.task.nlp.summarization import SummarizationDataModule, SummarizationTransformer
+from lightning_transformers.task.nlp.summarization.config import SummarizationTransformerConfig
 
 
 @pytest.mark.skipif(sys.platform == "win32", reason="Currently Windows is not supported")
@@ -20,3 +25,19 @@ def test_smoke_predict_e2e(script_runner):
     assert len(y) == 1
     output = y[0]['summary_text']
     assert 2 <= len(output.split()) <= 12
+
+
+def test_model_has_correct_cfg():
+    model = SummarizationTransformer(
+        HFBackboneConfig(
+            downstream_model_type='transformers.AutoModelForSeq2SeqLM', pretrained_model_name_or_path='t5-base'
+        ),
+    )
+    assert type(model.cfg) is SummarizationTransformerConfig
+
+
+def test_datamodule_has_correct_cfg():
+    tokenizer = MagicMock()
+    dm = SummarizationDataModule(tokenizer)
+    assert type(dm.cfg) is Seq2SeqDataConfig
+    assert dm.tokenizer is tokenizer

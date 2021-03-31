@@ -13,6 +13,9 @@ from lightning_transformers.task.nlp.language_modeling.config import LanguageMod
 class LanguageModelingDataModule(HFTransformerDataModule):
     cfg: LanguageModelingDataConfig
 
+    def __init__(self, *args, cfg: LanguageModelingDataConfig = LanguageModelingDataConfig(), **kwargs) -> None:
+        super().__init__(*args, cfg=cfg, **kwargs)
+
     def process_data(self, dataset: Dataset, stage: Optional[str] = None) -> Dataset:
         column_names = dataset["train" if stage == "fit" else "validation"].column_names
         text_column_name = "text" if "text" in column_names else column_names[0]

@@ -13,8 +13,10 @@ class HFTransformerDataModule(TransformerTokenizerDataModule):
     cfg: HFTransformerDataConfig
     tokenizer: PreTrainedTokenizerBase
 
-    def __init__(self, cfg: HFTransformerDataConfig, tokenizer: PreTrainedTokenizerBase):
-        super().__init__(cfg, tokenizer)
+    def __init__(
+        self, tokenizer: PreTrainedTokenizerBase, cfg: HFTransformerDataConfig = HFTransformerDataConfig()
+    ) -> None:
+        super().__init__(tokenizer, cfg=cfg)
         os.environ["TOKENIZERS_PARALLELISM"] = "TRUE"  # todo: smarter handling of this env variable
 
     def setup(self, stage: Optional[str] = None):

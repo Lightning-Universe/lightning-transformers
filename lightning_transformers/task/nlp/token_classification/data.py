@@ -11,6 +11,9 @@ from lightning_transformers.task.nlp.token_classification.config import TokenCla
 class TokenClassificationDataModule(HFTransformerDataModule):
     cfg: TokenClassificationDataConfig
 
+    def __init__(self, *args, cfg: TokenClassificationDataConfig = TokenClassificationDataConfig(), **kwargs) -> None:
+        super().__init__(*args, cfg=cfg, **kwargs)
+
     def process_data(self, dataset: Dataset, stage: Optional[str] = None) -> Dataset:
         features, label_column_name, text_column_name = self._setup_input_fields(dataset, stage)
 
