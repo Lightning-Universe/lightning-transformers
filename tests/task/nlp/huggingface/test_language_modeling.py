@@ -3,6 +3,7 @@ from unittest.mock import MagicMock
 
 import pytest
 import pytorch_lightning as pl
+import torch
 from transformers import AutoTokenizer
 
 from lightning_transformers.core.nlp.huggingface import HFBackboneConfig
@@ -11,8 +12,14 @@ from lightning_transformers.task.nlp.language_modeling.config import LanguageMod
 
 
 def test_smoke_train(hf_cache_path):
+
+    class TestModel(LanguageModelingTransformer):
+
+        def configure_optimizers(self):
+            return torch.optim.AdamW(self.parameters(), lr=1e-5)
+
     tokenizer = AutoTokenizer.from_pretrained(pretrained_model_name_or_path='sshleifer/tiny-gpt2')
-    model = LanguageModelingTransformer(backbone=HFBackboneConfig(pretrained_model_name_or_path='sshleifer/tiny-gpt2'))
+    model = TestModel(backbone=HFBackboneConfig(pretrained_model_name_or_path='sshleifer/tiny-gpt2'))
     dm = LanguageModelingDataModule(
         cfg=LanguageModelingDataConfig(
             batch_size=1,
