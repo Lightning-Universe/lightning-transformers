@@ -1,6 +1,14 @@
+.. _summarization:
+
 Summarization
 -------------
+
+The Task
+^^^^^^^^
 The Summarization task requires the model to summarize a document into a shorter sentence.
+
+Datasets
+^^^^^^^^
 Currently supports the `CNN/DailyMail <https://huggingface.co/datasets/cnn_dailymail>`_ and `XSUM <https://huggingface.co/datasets/xsum>`_ dataset or custom input text files.
 
 In the CNN/Daily Mail dataset, this involves taking long articles and summarizing them.
@@ -11,7 +19,10 @@ In the CNN/Daily Mail dataset, this involves taking long articles and summarizin
 
     Model answer: "Police are chasing a car entering a tunnel."
 
-To use this task, we must select a Seq2Seq Encoder/Decoder based model, such as T5 or BART. Conventional models like GPT/BERT will not work as they are encoder only.
+Training
+^^^^^^^^
+
+To use this task, we must select a Seq2Seq Encoder/Decoder based model, such as `T5 <https://huggingface.co/transformers/model_doc/t5.html>`_ or `BART <https://huggingface.co/transformers/model_doc/bart.html>`_. Conventional models like `GPT <https://huggingface.co/transformers/model_doc/gpt.html>`_/`BERT <https://huggingface.co/transformers/model_doc/bert.html>`_ will not work as they are encoder only.
 
 .. code-block:: bash
 

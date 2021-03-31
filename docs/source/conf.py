@@ -21,8 +21,6 @@ sys.path.insert(0, os.path.abspath(_PATH_ROOT))
 
 import lightning_transformers  # noqa: E402
 
-html_favicon = '_images/logos/lightning_icon.svg'
-
 # -- Project information -----------------------------------------------------
 
 project = "Lightning Transformers"

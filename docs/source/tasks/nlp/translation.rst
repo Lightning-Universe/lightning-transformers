@@ -1,14 +1,27 @@
+.. _translation:
+
 Translation
 -----------
-The Translation task fine-tunes the model to translate text from one language to another. Currently supports the `WMT16 <https://huggingface.co/datasets/wmt16>`_ dataset or custom input text files.
+
+The Task
+^^^^^^^^
+The Translation task fine-tunes the model to translate text from one language to another.
+
+
+Datasets
+^^^^^^^^
+Currently supports the `WMT16 <https://huggingface.co/datasets/wmt16>`_ dataset or custom input text files.
 
 .. code-block:: none
 
     Input Text (English): "The ground is black, the sky is blue and the car is red."
     Model Output (German): "Der Boden ist schwarz, der Himmel ist blau und das Auto ist rot."
 
-To use this task, we must select a Seq2Seq Encoder/Decoder based model, such as multi-lingual T5 or BART. Conventional models like GPT/BERT will not work as they are encoder only.
-In addition, we also need a tokenizer that has been created on multi-lingual text. This is true for `mt5 <https://huggingface.co/google/mt5-base>`_ and `mbart <https://huggingface.co/facebook/mbart-large-cc25>`_.
+Training
+^^^^^^^^
+
+To use this task, select a Seq2Seq Encoder/Decoder based model, such as multi-lingual `T5 <https://huggingface.co/transformers/model_doc/t5.html>`_ or `BART <https://huggingface.co/transformers/model_doc/bart.html>`_. Conventional models like `GPT <https://huggingface.co/transformers/model_doc/gpt.html>`_/`BERT <https://huggingface.co/transformers/model_doc/bert.html>`_ will not work as they are encoder only.
+In addition, you also need a tokenizer that has been created on multi-lingual text. This is true for `mt5 <https://huggingface.co/google/mt5-base>`_ and `mbart <https://huggingface.co/facebook/mbart-large-cc25>`_.
 
 .. code-block:: bash
 
