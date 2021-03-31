@@ -300,7 +300,7 @@ python train.py \
 
 ### Custom tasks and datasets
 
-You can train Lightning transformers takss on your own data files, and you can even create your own datasets for custim processing and your own tasks. Read more in our docs.
+You can train Lightning transformers tasks on your own data files, and you can even create your own datasets for custim processing and your own tasks. Read more in our docs.
 
 ## Contribute
 
