@@ -3,7 +3,7 @@ Language Modeling using Custom Data Processing
 
 Below we show an example of how to override data processing logic. In this example, we add a prefix to each block of text used in the language modeling task.
 
-This reflects the idea of passing a conditional term that is used to give the language model context. Check :ref:`Language Modeling` for more information around the task.
+This reflects the idea of passing a conditional term that is used to give the language model context. Check :doc:`/tasks/nlp/language_modeling` for more information around the task.
 
 Ultimately to create your own custom data processing the flow is like this:
 
