@@ -21,8 +21,15 @@ def test_smoke_predict_e2e(script_runner):
 
 def test_model_can_be_created():
     LanguageModelingTransformer(
-        'transformers.AutoModelForCausalLM',
         HFBackboneConfig(pretrained_model_name_or_path='bert-base-cased'),
+        downstream_model_type='transformers.AutoModelForCausalLM',
+    )
+
+
+def test_model_can_be_created_using_default():
+    LanguageModelingTransformer(
+        HFBackboneConfig(pretrained_model_name_or_path='bert-base-cased'),
+        downstream_model_type='transformers.AutoModelForCausalLM',
     )
 
 

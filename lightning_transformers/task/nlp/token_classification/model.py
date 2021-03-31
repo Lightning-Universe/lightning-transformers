@@ -8,11 +8,17 @@ from lightning_transformers.core.nlp.huggingface import HFTransformer
 
 class TokenClassificationTransformer(HFTransformer):
 
-    def __init__(self, *args, labels: Union[int, List[str]], **kwargs):
+    def __init__(
+        self,
+        *args,
+        labels: Union[int, List[str]],
+        downstream_model_type: str = 'transformers.AutoModelForTokenClassification',
+        **kwargs
+    ) -> None:
         num_labels = labels if isinstance(labels, int) else len(labels)
-        super().__init__(*args, **kwargs, num_labels=num_labels)
-        self._num_labels = num_labels
+        super().__init__(*args, downstream_model_type=downstream_model_type, num_labels=num_labels, **kwargs)
         self.metrics = {}
+        self.bleu = None
 
     def training_step(self, batch: Any, batch_idx: int) -> torch.Tensor:
         outputs = self.model(**batch)

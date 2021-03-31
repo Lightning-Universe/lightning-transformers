@@ -5,8 +5,14 @@ from lightning_transformers.task.nlp.summarization.metric import RougeMetric
 
 class SummarizationTransformer(Seq2SeqTransformer):
 
-    def __init__(self, *args, cfg: SummarizationTransformerConfig = SummarizationTransformerConfig(), **kwargs) -> None:
-        super().__init__(*args, cfg=cfg, **kwargs)
+    def __init__(
+        self,
+        *args,
+        downstream_model_type: str = 'transformers.AutoModelForCausalLM',
+        cfg: SummarizationTransformerConfig = SummarizationTransformerConfig(),
+        **kwargs
+    ) -> None:
+        super().__init__(*args, downstream_model_type=downstream_model_type, cfg=cfg, **kwargs)
         self.bleu = None
 
     def compute_generate_metrics(self, batch, prefix):

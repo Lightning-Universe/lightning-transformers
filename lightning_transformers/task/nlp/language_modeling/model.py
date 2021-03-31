@@ -3,6 +3,9 @@ from lightning_transformers.core.nlp.huggingface import HFTransformer
 
 class LanguageModelingTransformer(HFTransformer):
 
+    def __init__(self, *args, downstream_model_type: str = 'transformers.AutoModelForCausalLM', **kwargs) -> None:
+        super().__init__(*args, downstream_model_type=downstream_model_type, **kwargs)
+
     def on_fit_start(self):
         tokenizer_length = len(self.tokenizer)
         self.model.resize_token_embeddings(tokenizer_length)
