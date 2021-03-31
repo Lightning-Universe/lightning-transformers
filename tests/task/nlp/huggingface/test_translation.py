@@ -6,6 +6,7 @@ import pytorch_lightning as pl
 import torch
 from transformers import AutoTokenizer
 
+from examples.custom.dataset.translation.custom_dataset import MyTranslationDataModule
 from lightning_transformers.core.nlp.huggingface import HFBackboneConfig
 from lightning_transformers.task.nlp.translation import TranslationTransformer, WMT16TranslationDataModule
 from lightning_transformers.task.nlp.translation.config import TranslationConfig, TranslationDataConfig
@@ -36,7 +37,8 @@ def test_datamodule_has_correct_cfg():
     assert dm.tokenizer is tokenizer
 
 
-def test_non_hydra_model(hf_cache_path):
+@pytest.mark.parametrize("cls", [WMT16TranslationDataModule, MyTranslationDataModule])
+def test_non_hydra_model(cls, hf_cache_path):
 
     class MyTranslationTransformer(TranslationTransformer):
 

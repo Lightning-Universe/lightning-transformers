@@ -6,6 +6,7 @@ import pytorch_lightning as pl
 import torch
 from transformers import AutoTokenizer
 
+from examples.custom.dataset.language_modeling.custom_dataset import MyLanguageModelingDataModule
 from lightning_transformers.core.nlp.huggingface import HFBackboneConfig
 from lightning_transformers.task.nlp.language_modeling import LanguageModelingDataModule, LanguageModelingTransformer
 from lightning_transformers.task.nlp.language_modeling.config import LanguageModelingDataConfig
@@ -34,7 +35,8 @@ def test_datamodule_has_correct_cfg():
     assert dm.tokenizer is tokenizer
 
 
-def test_non_hydra_model(hf_cache_path):
+@pytest.mark.parametrize("cls", [MyLanguageModelingDataModule, LanguageModelingDataModule])
+def test_non_hydra_model(cls, hf_cache_path):
 
     class MyTranslationTransformer(LanguageModelingTransformer):
 
@@ -45,7 +47,7 @@ def test_non_hydra_model(hf_cache_path):
 
     model = MyTranslationTransformer(backbone=HFBackboneConfig(pretrained_model_name_or_path='sshleifer/tiny-gpt2'))
 
-    dm = LanguageModelingDataModule(
+    dm = cls(
         cfg=LanguageModelingDataConfig(
             batch_size=1,
             dataset_name='wikitext',
