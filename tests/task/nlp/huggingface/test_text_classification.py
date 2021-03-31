@@ -41,11 +41,9 @@ def test_predict_from_ckpt_path(script_runner, tmpdir):
     assert isinstance(y[0]['score'], float)
 
 
-def test_model_can_be_created():
-    TextClassificationTransformer(
-        'transformers.AutoModelForSequenceClassification',
-        HFBackboneConfig(pretrained_model_name_or_path='bert-base-cased'),
-    )
+def test_model_has_correct_cfg():
+    model = TextClassificationTransformer(HFBackboneConfig(pretrained_model_name_or_path='bert-base-cased'))
+    assert model.hparams.downstream_model_type == 'transformers.AutoModelForSequenceClassification'
 
 
 def test_datamodule_has_correct_cfg():

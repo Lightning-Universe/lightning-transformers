@@ -16,7 +16,8 @@ class TokenClassificationTransformer(HFTransformer):
         **kwargs
     ) -> None:
         num_labels = labels if isinstance(labels, int) else len(labels)
-        super().__init__(*args, downstream_model_type=downstream_model_type, num_labels=num_labels, **kwargs)
+        super().__init__(downstream_model_type, *args, num_labels=num_labels, **kwargs)
+        self._num_labels = num_labels
         self.metrics = {}
         self.bleu = None
 

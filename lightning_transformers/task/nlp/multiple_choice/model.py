@@ -7,7 +7,7 @@ from lightning_transformers.core.nlp.huggingface import HFTransformer
 class MultipleChoiceTransformer(HFTransformer):
 
     def __init__(self, *args, downstream_model_type: str = 'transformers.AutoModelForMultipleChoice', **kwargs) -> None:
-        super().__init__(*args, downstream_model_type=downstream_model_type, **kwargs)
+        super().__init__(downstream_model_type, *args, **kwargs)
 
     def training_step(self, batch, batch_idx):
         loss = self._step(batch, batch_idx, "train")

@@ -19,11 +19,9 @@ def test_smoke_predict_e2e(script_runner):
     assert y[0]['generated_text'].startswith("The house:")
 
 
-def test_model_can_be_created():
-    LanguageModelingTransformer(
-        'transformers.AutoModelForCausalLM',
-        HFBackboneConfig(pretrained_model_name_or_path='bert-base-cased'),
-    )
+def test_model_has_correct_cfg():
+    model = LanguageModelingTransformer(HFBackboneConfig(pretrained_model_name_or_path='bert-base-cased'))
+    assert model.hparams.downstream_model_type == 'transformers.AutoModelForCausalLM'
 
 
 def test_datamodule_has_correct_cfg():
