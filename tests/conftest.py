@@ -10,9 +10,6 @@ from lightning_transformers.cli.predict import main as predict_main
 from lightning_transformers.cli.train import main as train_main
 
 # GitHub Actions use this path to cache datasets.
-# Use `datadir` fixture where possible and use `DATASETS_PATH` in
-# `pytest.mark.parametrize()` where you cannot use `datadir`.
-# https://github.com/pytest-dev/pytest/issues/349
 from tests import CACHE_PATH
 
 
@@ -25,7 +22,7 @@ def hf_cache_path():
 class ScriptRunner:
 
     def __init__(self) -> None:
-        self.cache_dir = hf_cache_path()
+        self.hf_cache_path = hf_cache_path()
 
     @staticmethod
     def find_hydra_conf_dir(config_dir: str = "conf") -> str:
@@ -74,7 +71,7 @@ class ScriptRunner:
             f'dataset.cfg.limit_train_samples={max_samples}',
             f'dataset.cfg.limit_val_samples={max_samples}',
             f'dataset.cfg.limit_test_samples={max_samples}',
-            f'dataset.cfg.cache_dir={self.cache_dir}',
+            f'dataset.cfg.cache_dir={self.hf_cache_path}',
             f'training.num_workers={num_workers}',
         ])
         if fast_dev_run:
