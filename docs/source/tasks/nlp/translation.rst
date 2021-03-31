@@ -5,7 +5,7 @@ Translation
 
 The Task
 ^^^^^^^^
-The Translation task fine-tunes the model to translate text from one language to another. 
+The Translation task fine-tunes the model to translate text from one language to another.
 
 
 Datasets

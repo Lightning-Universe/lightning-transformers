@@ -262,7 +262,7 @@ tokenizer:
  backbone:
    pretrained_model_name_or_path: bert-base-cased
 
-```   
+```
 </details>
 
 #### Enable [DeepSpeed ZeRO-Offload](https://pytorch-lightning.readthedocs.io/en/latest/advanced/multi_gpu.html#deepspeed) Training.
@@ -309,7 +309,7 @@ trainer:
    amp_level: O2
    move_metrics_to_cpu: false
 ...
-```   
+```
 </details>
 
 #### Train with a pre-trained [t5-base](https://huggingface.co/t5-base) backbone, on the [XSUM](https://huggingface.co/datasets/xsum) dataset using the Summarization task.

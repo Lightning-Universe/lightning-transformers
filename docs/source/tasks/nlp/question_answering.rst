@@ -6,7 +6,7 @@ Question Answering
 The Task
 ^^^^^^^^
 The Question Answering task requires the model to determine the start and end of a span within the given context, that answers a given question.
-This allows the model to pre-condition on contextual information to determine an answer. 
+This allows the model to pre-condition on contextual information to determine an answer.
 
 Use this task when you would like to fine-tune onto data where an answer can be extracted from context information.
 Since this is an extraction task, you can rely on most Transformer models as your backbone.
