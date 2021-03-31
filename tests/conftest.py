@@ -8,21 +8,13 @@ from hydra.test_utils.test_utils import find_parent_dir_containing
 
 from lightning_transformers.cli.predict import main as predict_main
 from lightning_transformers.cli.train import main as train_main
-
-# GitHub Actions use this path to cache datasets.
-from tests import CACHE_PATH
-
-
-@pytest.fixture
-def hf_cache_path():
-    datadir = Path(CACHE_PATH)
-    return datadir / "huggingface"
+from tests import CACHE_PATH  # GitHub Actions use this path to cache datasets.
 
 
 class ScriptRunner:
 
-    def __init__(self) -> None:
-        self.hf_cache_path = hf_cache_path()
+    def __init__(self, hf_cache_path: Path) -> None:
+        self.hf_cache_path = hf_cache_path
 
     @staticmethod
     def find_hydra_conf_dir(config_dir: str = "conf") -> str:
@@ -87,5 +79,11 @@ class ScriptRunner:
 
 
 @pytest.fixture(scope="session")
-def script_runner() -> ScriptRunner:
-    return ScriptRunner()
+def hf_cache_path() -> Path:
+    datadir = Path(CACHE_PATH)
+    return datadir / "huggingface"
+
+
+@pytest.fixture(scope="session")
+def script_runner(hf_cache_path: Path) -> ScriptRunner:
+    return ScriptRunner(hf_cache_path)
