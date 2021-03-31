@@ -68,7 +68,7 @@ python train.py \
 ```
 
 <details>
-  <summary>See the default config used</summary>
+  <summary>See the composed Hydra config used under-the-hood</summary>
 
 ```python
 optimizer:
@@ -188,7 +188,7 @@ python train.py \
 ```
 
 <details>
-  <summary>See the changed config under-the-hood</summary>
+  <summary>See the changed Hydra config under-the-hood</summary>
 
 ```diff
  optimizer:
@@ -218,7 +218,7 @@ python train.py \
 ```
 
 <details>
-  <summary>See the modified config</summary>
+  <summary>See the modified Hydra config</summary>
 Without the need to modify any code, the config updated automatically for sharded training:
 
 ```diff
@@ -274,7 +274,7 @@ python train.py \
 ```
 
 <details>
-  <summary>See the modified config</summary>
+  <summary>See the modified Hydra config</summary>
 Without the need to modify any code, the config updated automatically for DeepSpeed:
 
 ```diff
@@ -312,24 +312,24 @@ trainer:
 ```   
 </details>
 
-#### Train roberta-base backbone, on SWAG dataset multiple choice task.
+#### Train with a pre-trained [t5-base](https://huggingface.co/t5-base) backbone, on the [XSUM](https://huggingface.co/datasets/xsum) dataset using the Summarization task.
 ```bash
 python train.py \
-    +task=nlp/multiple_choice \
-    +dataset=nlp/multiple_choice/swag \
-    backbone.pretrained_model_name_or_path=roberta-base
+    +task=nlp/summarization \
+    +dataset=nlp/summarization/xsum \
+    backbone.pretrained_model_name_or_path=t5-base
 ```
 
-#### Inference with pre-trained bert-base-cased on SQuAD using question-answering task with 2 GPUs.
+#### Train with a pre-trained [mt5-base](https://huggingface.co/google/mt5-base) backbone, on the [WMT16](https://huggingface.co/datasets/wmt16) dataset using the Translation task with 2 GPUs.
 ```bash
 python train.py \
-    +task=nlp/question_answering \
-    +dataset=nlp/question_answering/squad \
-    trainer.gpus=2 \
-    training.do_train=False
+    +task=nlp/translation \
+    +dataset=nlp/translation/wmt16 \
+    backbone.pretrained_model_name_or_path=google/mt5-base \
+    trainer.gpus=2
 ```
 
-### Custom tasks and datasets
+### Custom Tasks and Customize Datasets
 
 You can train Lightning transformers tasks on your own data files, and you can even create your own datasets for custim processing and your own tasks. Read more in our docs.
 
