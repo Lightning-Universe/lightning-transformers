@@ -20,14 +20,6 @@
 
 </div>
 
-[![Temporary Docs](https://github.com/PyTorchLightning/lightning-transformers/actions/workflows/docs-deploy.yml/badge.svg)](https://fuzzy-disco-b18c78db.pages.github.io/)
-
-Docs are still currently in progress, including this README. However to get started it's useful to take a step by step look at the docs like below:
-
-1. [Understanding the Config Structure](https://fuzzy-disco-b18c78db.pages.github.io/structure/conf.html)
-2. [Creating your own Task, Backbone and Dataset](https://fuzzy-disco-b18c78db.pages.github.io/tasks/new.html)
-3. [Out of the box NLP Tasks](https://fuzzy-disco-b18c78db.pages.github.io/tasks/nlp.html)
-
 ## Installation
 
 ```bash
