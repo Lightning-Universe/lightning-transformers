@@ -6,10 +6,9 @@ from lightning_transformers.task.nlp.translation.metric import BLEUScore
 
 
 class TranslationTransformer(Seq2SeqTransformer):
-    cfg: TranslationTransformerConfig
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+    def __init__(self, *args, cfg: TranslationTransformerConfig = TranslationTransformerConfig(), **kwargs) -> None:
+        super().__init__(*args, cfg=cfg, **kwargs)
         self.bleu = None
 
     def compute_generate_metrics(self, batch, prefix):

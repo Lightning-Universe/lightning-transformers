@@ -26,4 +26,5 @@ class TrainerConfig:
 
 @dataclass
 class TaskConfig:
-    ...
+    optimizer: OptimizerConfig = OptimizerConfig()
+    scheduler: SchedulerConfig = SchedulerConfig()

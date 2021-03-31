@@ -11,6 +11,9 @@ from lightning_transformers.core.nlp.huggingface.seq2seq.config import Seq2SeqDa
 class Seq2SeqDataModule(HFTransformerDataModule):
     cfg: Seq2SeqDataConfig
 
+    def __init__(self, *args, cfg: Seq2SeqDataConfig = Seq2SeqDataConfig(), **kwargs) -> None:
+        super().__init__(*args, cfg=cfg, **kwargs)
+
     def process_data(self, dataset: Dataset, stage: Optional[str] = None) -> Dataset:
         src_text_column_name, tgt_text_column_name = self.source_target_column_names
 

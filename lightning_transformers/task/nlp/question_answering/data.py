@@ -11,6 +11,11 @@ from lightning_transformers.task.nlp.question_answering.config import QuestionAn
 class QuestionAnsweringTransformerDataModule(HFTransformerDataModule):
     cfg: QuestionAnsweringTransformerDataConfig
 
+    def __init__(
+        self, *args, cfg: QuestionAnsweringTransformerDataConfig = QuestionAnsweringTransformerDataConfig(), **kwargs
+    ) -> None:
+        super().__init__(*args, cfg=cfg, **kwargs)
+
     def process_data(self, dataset: Dataset, stage: Optional[str] = None) -> Dataset:
         train = stage == "fit"
         column_names = dataset["train" if train else "validation"].column_names
