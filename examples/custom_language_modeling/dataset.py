@@ -1,6 +1,7 @@
 from functools import partial
+from typing import Optional
 
-from datasets import Dataset, Optional
+from datasets import Dataset
 from transformers import PreTrainedTokenizerBase
 
 from lightning_transformers.core.nlp.huggingface import HFTransformerDataConfig
