@@ -2,9 +2,12 @@ import sys
 from unittest.mock import MagicMock
 
 import pytest
+import pytorch_lightning as pl
+import torch
+from transformers import AutoTokenizer
 
 from lightning_transformers.core.nlp.huggingface import HFBackboneConfig
-from lightning_transformers.task.nlp.translation import TranslationTransformer
+from lightning_transformers.task.nlp.translation import TranslationTransformer, WMT16TranslationDataModule
 from lightning_transformers.task.nlp.translation.config import TranslationConfig, TranslationDataConfig
 from lightning_transformers.task.nlp.translation.data import TranslationDataModule
 
@@ -21,7 +24,7 @@ def test_smoke_predict_e2e(script_runner):
 
 
 def test_model_has_correct_cfg():
-    model = TranslationTransformer(HFBackboneConfig(pretrained_model_name_or_path='t5-base'))
+    model = TranslationTransformer(HFBackboneConfig(pretrained_model_name_or_path='patrickvonplaten/t5-tiny-random'))
     assert model.hparams.downstream_model_type == 'transformers.AutoModelForSeq2SeqLM'
     assert type(model.cfg) is TranslationConfig
 
@@ -31,3 +34,37 @@ def test_datamodule_has_correct_cfg():
     dm = TranslationDataModule(tokenizer)
     assert type(dm.cfg) is TranslationDataConfig
     assert dm.tokenizer is tokenizer
+
+
+def test_non_hydra_model():
+
+    class MyTranslationTransformer(TranslationTransformer):
+
+        def configure_optimizers(self):
+            return torch.optim.AdamW(self.parameters(), lr=1e-5)
+
+    tokenizer = AutoTokenizer.from_pretrained(pretrained_model_name_or_path='patrickvonplaten/t5-tiny-random')
+
+    model = MyTranslationTransformer(
+        backbone=HFBackboneConfig(pretrained_model_name_or_path='patrickvonplaten/t5-tiny-random')
+    )
+
+    dm = WMT16TranslationDataModule(
+        cfg=TranslationDataConfig(
+            batch_size=1,
+            dataset_name='wmt16',
+            dataset_config_name='ro-en',
+            source_language='en',
+            target_language='ro',
+            limit_train_samples=16,
+            limit_val_samples=16,
+            limit_test_samples=16,
+            max_source_length=32,
+            max_target_length=32
+        ),
+        tokenizer=tokenizer
+    )
+
+    trainer = pl.Trainer(fast_dev_run=True)
+
+    trainer.fit(model, dm)
