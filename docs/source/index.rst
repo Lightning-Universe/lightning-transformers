@@ -52,6 +52,8 @@ Lightning Transformers
    :name: api
    :caption: API Reference
 
+   references/api
+
 
 Indices and tables
 ==================
