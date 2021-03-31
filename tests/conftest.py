@@ -16,11 +16,13 @@ from lightning_transformers.cli.train import main as train_main
 from tests import CACHE_PATH
 
 
-class ScriptRunner:
+@pytest.fixture
+def hf_cache_path():
+    datadir = Path(CACHE_PATH)
+    return datadir / "huggingface"
 
-    def __init__(self) -> None:
-        self.datadir = Path(CACHE_PATH)
-        self.cache_dir = self.datadir / "huggingface"
+
+class ScriptRunner:
 
     @staticmethod
     def find_hydra_conf_dir(config_dir: str = "conf") -> str:
@@ -69,7 +71,7 @@ class ScriptRunner:
             f'dataset.cfg.limit_train_samples={max_samples}',
             f'dataset.cfg.limit_val_samples={max_samples}',
             f'dataset.cfg.limit_test_samples={max_samples}',
-            f'dataset.cfg.cache_dir={self.cache_dir}',
+            f'dataset.cfg.cache_dir={hf_cache_path}',
             f'training.num_workers={num_workers}',
         ])
         if fast_dev_run:

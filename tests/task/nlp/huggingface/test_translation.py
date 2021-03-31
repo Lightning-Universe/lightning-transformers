@@ -36,7 +36,7 @@ def test_datamodule_has_correct_cfg():
     assert dm.tokenizer is tokenizer
 
 
-def test_non_hydra_model():
+def test_non_hydra_model(hf_cache_path):
 
     class MyTranslationTransformer(TranslationTransformer):
 
@@ -56,6 +56,7 @@ def test_non_hydra_model():
             dataset_config_name='ro-en',
             source_language='en',
             target_language='ro',
+            cache_dir=hf_cache_path,
             limit_train_samples=16,
             limit_val_samples=16,
             limit_test_samples=16,

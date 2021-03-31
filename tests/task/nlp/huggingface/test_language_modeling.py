@@ -2,6 +2,9 @@ import sys
 from unittest.mock import MagicMock
 
 import pytest
+import pytorch_lightning as pl
+import torch
+from transformers import AutoTokenizer
 
 from lightning_transformers.core.nlp.huggingface import HFBackboneConfig
 from lightning_transformers.task.nlp.language_modeling import LanguageModelingDataModule, LanguageModelingTransformer
@@ -20,7 +23,7 @@ def test_smoke_predict_e2e(script_runner):
 
 
 def test_model_has_correct_cfg():
-    model = LanguageModelingTransformer(HFBackboneConfig(pretrained_model_name_or_path='bert-base-cased'))
+    model = LanguageModelingTransformer(HFBackboneConfig(pretrained_model_name_or_path='sshleifer/tiny-gpt2'))
     assert model.hparams.downstream_model_type == 'transformers.AutoModelForCausalLM'
 
 
@@ -29,3 +32,29 @@ def test_datamodule_has_correct_cfg():
     dm = LanguageModelingDataModule(tokenizer)
     assert type(dm.cfg) is LanguageModelingDataConfig
     assert dm.tokenizer is tokenizer
+
+
+def test_non_hydra_model(hf_cache_path):
+
+    class MyTranslationTransformer(LanguageModelingTransformer):
+
+        def configure_optimizers(self):
+            return torch.optim.AdamW(self.parameters(), lr=1e-5)
+
+    tokenizer = AutoTokenizer.from_pretrained(pretrained_model_name_or_path='sshleifer/tiny-gpt2')
+
+    model = MyTranslationTransformer(backbone=HFBackboneConfig(pretrained_model_name_or_path='sshleifer/tiny-gpt2'))
+
+    dm = LanguageModelingDataModule(
+        cfg=LanguageModelingDataConfig(
+            batch_size=1,
+            dataset_name='wikitext',
+            dataset_config_name='wikitext-2-raw-v1',
+            cache_dir=hf_cache_path,
+        ),
+        tokenizer=tokenizer
+    )
+
+    trainer = pl.Trainer(fast_dev_run=True)
+
+    trainer.fit(model, dm)
