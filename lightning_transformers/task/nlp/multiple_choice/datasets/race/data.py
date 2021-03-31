@@ -4,10 +4,10 @@ from typing import Any, Dict, Optional
 from datasets import Dataset
 from transformers import PreTrainedTokenizerBase
 
-from lightning_transformers.task.nlp.multiple_choice import MultipleChoiceTransformerDataModule
+from lightning_transformers.task.nlp.multiple_choice import MultipleChoiceDataModule
 
 
-class RaceMultipleChoiceTransformerDataModule(MultipleChoiceTransformerDataModule):
+class RaceMultipleChoiceDataModule(MultipleChoiceDataModule):
 
     @property
     def choices(self) -> list:

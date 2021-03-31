@@ -1,13 +1,13 @@
 from transformers import MBartTokenizer
 
 from lightning_transformers.core.nlp.huggingface.seq2seq.model import Seq2SeqTransformer
-from lightning_transformers.task.nlp.translation.config import TranslationDataConfig, TranslationTransformerConfig
+from lightning_transformers.task.nlp.translation.config import TranslationConfig, TranslationDataConfig
 from lightning_transformers.task.nlp.translation.metric import BLEUScore
 
 
 class TranslationTransformer(Seq2SeqTransformer):
 
-    def __init__(self, *args, cfg: TranslationTransformerConfig = TranslationTransformerConfig(), **kwargs) -> None:
+    def __init__(self, *args, cfg: TranslationConfig = TranslationConfig(), **kwargs) -> None:
         super().__init__(*args, cfg=cfg, **kwargs)
         self.bleu = None
 

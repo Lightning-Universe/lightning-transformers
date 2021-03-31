@@ -4,10 +4,7 @@ from unittest.mock import MagicMock
 import pytest
 
 from lightning_transformers.core.nlp.huggingface import HFBackboneConfig, HFTransformerDataConfig
-from lightning_transformers.task.nlp.multiple_choice import (
-    MultipleChoiceTransformer,
-    MultipleChoiceTransformerDataModule,
-)
+from lightning_transformers.task.nlp.multiple_choice import MultipleChoiceDataModule, MultipleChoiceTransformer
 
 
 @pytest.mark.skipif(sys.platform == "win32", reason="Currently Windows is not supported")
@@ -24,6 +21,6 @@ def test_model_can_be_created():
 
 def test_datamodule_has_correct_cfg():
     tokenizer = MagicMock()
-    dm = MultipleChoiceTransformerDataModule(tokenizer)
+    dm = MultipleChoiceDataModule(tokenizer)
     assert type(dm.cfg) is HFTransformerDataConfig
     assert dm.tokenizer is tokenizer

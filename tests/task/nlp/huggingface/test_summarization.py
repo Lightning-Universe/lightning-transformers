@@ -5,7 +5,7 @@ import pytest
 
 from lightning_transformers.core.nlp.huggingface import HFBackboneConfig, Seq2SeqDataConfig
 from lightning_transformers.task.nlp.summarization import SummarizationDataModule, SummarizationTransformer
-from lightning_transformers.task.nlp.summarization.config import SummarizationTransformerConfig
+from lightning_transformers.task.nlp.summarization.config import SummarizationConfig
 
 
 @pytest.mark.skipif(sys.platform == "win32", reason="Currently Windows is not supported")
@@ -32,7 +32,7 @@ def test_model_has_correct_cfg():
         'transformers.AutoModelForSeq2SeqLM',
         HFBackboneConfig(pretrained_model_name_or_path='t5-base'),
     )
-    assert type(model.cfg) is SummarizationTransformerConfig
+    assert type(model.cfg) is SummarizationConfig
 
 
 def test_datamodule_has_correct_cfg():

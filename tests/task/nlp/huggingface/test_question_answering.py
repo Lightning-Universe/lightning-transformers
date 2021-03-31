@@ -5,11 +5,8 @@ import pytest
 from pytorch_lightning import seed_everything
 
 from lightning_transformers.core.nlp.huggingface import HFBackboneConfig
-from lightning_transformers.task.nlp.question_answering import (
-    QuestionAnsweringTransformer,
-    QuestionAnsweringTransformerDataModule,
-)
-from lightning_transformers.task.nlp.question_answering.config import QuestionAnsweringTransformerDataConfig
+from lightning_transformers.task.nlp.question_answering import QuestionAnsweringDataModule, QuestionAnsweringTransformer
+from lightning_transformers.task.nlp.question_answering.config import QuestionAnsweringDataConfig
 
 
 @pytest.mark.skipif(sys.platform == "win32", reason="Currently Windows is not supported")
@@ -37,6 +34,6 @@ def test_model_can_be_created():
 
 def test_datamodule_has_correct_cfg():
     tokenizer = MagicMock()
-    dm = QuestionAnsweringTransformerDataModule(tokenizer)
-    assert type(dm.cfg) is QuestionAnsweringTransformerDataConfig
+    dm = QuestionAnsweringDataModule(tokenizer)
+    assert type(dm.cfg) is QuestionAnsweringDataConfig
     assert dm.tokenizer is tokenizer

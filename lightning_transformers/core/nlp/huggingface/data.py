@@ -5,11 +5,11 @@ from datasets import Dataset, DatasetDict, load_dataset
 from pytorch_lightning.utilities.exceptions import MisconfigurationException
 from transformers import PreTrainedTokenizerBase
 
-from lightning_transformers.core.data import TransformerTokenizerDataModule
+from lightning_transformers.core.data import TokenizerDataModule
 from lightning_transformers.core.nlp.huggingface.config import HFTransformerDataConfig
 
 
-class HFTransformerDataModule(TransformerTokenizerDataModule):
+class HFDataModule(TokenizerDataModule):
     cfg: HFTransformerDataConfig
     tokenizer: PreTrainedTokenizerBase
 
