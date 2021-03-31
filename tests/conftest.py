@@ -24,6 +24,9 @@ def hf_cache_path():
 
 class ScriptRunner:
 
+    def __init__(self) -> None:
+        self.cache_dir = hf_cache_path()
+
     @staticmethod
     def find_hydra_conf_dir(config_dir: str = "conf") -> str:
         """
@@ -71,7 +74,7 @@ class ScriptRunner:
             f'dataset.cfg.limit_train_samples={max_samples}',
             f'dataset.cfg.limit_val_samples={max_samples}',
             f'dataset.cfg.limit_test_samples={max_samples}',
-            f'dataset.cfg.cache_dir={hf_cache_path}',
+            f'dataset.cfg.cache_dir={self.cache_dir}',
             f'training.num_workers={num_workers}',
         ])
         if fast_dev_run:
