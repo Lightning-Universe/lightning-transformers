@@ -1,8 +1,8 @@
 import pytorch_lightning as pl
 from transformers import AutoTokenizer
 
-from examples.custom.dataset.language_modeling.custom_dataset import MyLanguageModelingDataModule
-from examples.custom.dataset.language_modeling.custom_model import MyLanguageModelingTransformer
+from examples.custom_language_modeling.dataset import MyLanguageModelingDataModule
+from examples.custom_language_modeling.model import MyLanguageModelingTransformer
 from lightning_transformers.core.nlp.huggingface import HFBackboneConfig
 from lightning_transformers.task.nlp.language_modeling.config import LanguageModelingDataConfig
 
