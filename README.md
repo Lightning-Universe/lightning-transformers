@@ -329,9 +329,16 @@ python train.py \
     trainer.gpus=2
 ```
 
-### Custom Tasks and Customize Datasets
+### Custom Files & Datasets
 
-You can train Lightning transformers tasks on your own data files, and you can even create your own datasets for custim processing and your own tasks. Read more in our docs.
+You can train, validate and test Lightning transformers tasks on your own data files, and you can extend datasets for custom processing and your own tasks.
+
+#### [How to train, validate and test on custom files](TODO)
+#### [How to extend datasets](TODO)
+
+### Custom Tasks
+
+#### [Custom Language Modeling Task, using the Performer architecture](TODO)
 
 ## Contribute
 
