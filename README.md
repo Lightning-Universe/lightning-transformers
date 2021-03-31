@@ -1,12 +1,10 @@
+<div align="center">
 
-<img src="docs/source/_static/images/icon.png" width="80px">
-<h1> Lightning Transformers </h1>
+<img src="docs/source/_static/images/LightningTrasnformers-logo.png" width="500px">
 
 **Flexible interface for high performance research using SOTA Transformers leveraging [Pytorch Lightning](https://github.com/PyTorchLightning/pytorch-lightning), [Transformers](https://github.com/huggingface/transformers), and [Hydra](https://github.com/facebookresearch/hydra).**
 
-<div align="center">
-  <img src="https://pl-bolts-doc-images.s3.us-east-2.amazonaws.com/lit-tfmrs.gif">
-</div>
+<img src="https://pl-bolts-doc-images.s3.us-east-2.amazonaws.com/lit-tfmrs.gif">
 
 ---
 
@@ -19,6 +17,8 @@
 </p>
 
 ---
+
+</div>
 
 [![Temporary Docs](https://github.com/PyTorchLightning/lightning-transformers/actions/workflows/docs-deploy.yml/badge.svg)](https://fuzzy-disco-b18c78db.pages.github.io/)
 
