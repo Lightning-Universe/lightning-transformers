@@ -1,6 +1,10 @@
 Language Modeling using Custom Data Processing
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Below we show an example of how to override data processing logic. In this example, we add a prefix to each block of text used in the language modeling task.
+
+This reflects the idea of passing a conditional term that is used to give the language model context. Check :ref:`Language Modeling` for more information around the task.
+
 Ultimately to create your own custom data processing the flow is like this:
 
 1. Extend the ``LanguageModelingDataModule`` base class, Override hooks with your own logic
@@ -55,6 +59,51 @@ Extend ``LanguageModelingDataModule``, like this.
         ...
 
 Make any changes you'd like to the dataset processing via the hooks.
+
+Below we have the pseudo code version to show where most of the changes happened within the hooks:
+
+.. code-block:: python
+
+    from functools import partial
+
+    from datasets import Dataset, Optional
+    from transformers import PreTrainedTokenizerBase
+
+    from lightning_transformers.core.nlp.huggingface import HFTransformerDataConfig
+    from lightning_transformers.task.nlp.language_modeling import LanguageModelingDataModule
+
+
+    class MyLanguageModelingDataModule(LanguageModelingDataModule):
+
+        def __init__(self, cfg: HFTransformerDataConfig, tokenizer: PreTrainedTokenizerBase):
+            super().__init__(cfg, tokenizer)
+            self.tokenized_condition_term = tokenizer("This is a story: ")
+
+        def process_data(self, dataset: Dataset, stage: Optional[str] = None) -> Dataset:
+            ...
+            # Pass in our additional condition term when converting to features
+            convert_to_features = partial(
+                self.convert_to_features,
+                block_size=self.effective_block_size,
+                tokenized_condition_term=self.tokenized_condition_term
+            )
+            ...
+            return dataset
+
+        @staticmethod
+        def convert_to_features(examples, block_size: int, **kwargs):
+            # Our argument is passed in via kwargs
+            tokenized_condition_term = kwargs['tokenized_condition_term']
+
+            ...
+            # Add the term to the tokenized blocks of text
+            result = {
+                k: [tokenized_condition_term + t[i:i + block_size] for i in range(0, total_length, block_size)]
+                for k, t in concatenated_examples.items()
+            }
+            result["labels"] = result["input_ids"].copy()
+            return result
+
 
 To see the full example, see ``examples/custom/dataset/language_modeling/custom_dataset.py``
 
