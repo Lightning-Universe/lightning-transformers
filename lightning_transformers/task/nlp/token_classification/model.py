@@ -19,7 +19,6 @@ class TokenClassificationTransformer(HFTransformer):
         super().__init__(downstream_model_type, *args, num_labels=num_labels, **kwargs)
         self._num_labels = num_labels
         self.metrics = {}
-        self.bleu = None
 
     def training_step(self, batch: Any, batch_idx: int) -> torch.Tensor:
         outputs = self.model(**batch)
