@@ -209,7 +209,7 @@ tokenizer:
 ```
 </details>
 
-#### Enable Sharded Training.
+#### Enable [Sharded](https://pytorch-lightning.readthedocs.io/en/latest/advanced/multi_gpu.html#sharded-training) Training.
 ```bash
 python train.py \
     +task=nlp/text_classification \
@@ -265,7 +265,7 @@ tokenizer:
 ```   
 </details>
 
-#### Enable DeepSpeed ZeRO-Offload Training.
+#### Enable [DeepSpeed ZeRO-Offload](https://pytorch-lightning.readthedocs.io/en/latest/advanced/multi_gpu.html#deepspeed) Training.
 ```bash
 python train.py \
     +task=nlp/text_classification \
