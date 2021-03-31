@@ -27,7 +27,6 @@ The base data module can be used to modify this code, and follows a simple patte
 
     ...
 
-    # base class for the TranslationDataModule which contains most logic
     class Seq2SeqDataModule(HFDataModule):
 
         def __init__(self, cfg: Seq2SeqDataConfig = Seq2SeqDataConfig()):

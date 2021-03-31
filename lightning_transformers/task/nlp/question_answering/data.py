@@ -14,6 +14,11 @@ class QuestionAnsweringDataModule(HFDataModule):
     def __init__(self, *args, cfg: QuestionAnsweringDataConfig = QuestionAnsweringDataConfig(), **kwargs) -> None:
         super().__init__(*args, cfg=cfg, **kwargs)
 
+    def __init__(
+        self, *args, cfg: QuestionAnsweringTransformerDataConfig = QuestionAnsweringTransformerDataConfig(), **kwargs
+    ) -> None:
+        super().__init__(*args, cfg=cfg, **kwargs)
+
     def process_data(self, dataset: Dataset, stage: Optional[str] = None) -> Dataset:
         train = stage == "fit"
         column_names = dataset["train" if train else "validation"].column_names

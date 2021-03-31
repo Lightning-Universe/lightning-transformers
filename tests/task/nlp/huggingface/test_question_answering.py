@@ -27,7 +27,7 @@ def test_smoke_predict_e2e(script_runner):
 
 def test_model_can_be_created():
     QuestionAnsweringTransformer(
-        'transformers.AutoModelForTokenClassification',
+        'transformers.AutoModelForQuestionAnswering',
         HFBackboneConfig(pretrained_model_name_or_path='bert-base-cased'),
     )
 
