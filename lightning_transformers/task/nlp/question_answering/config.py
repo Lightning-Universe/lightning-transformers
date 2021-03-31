@@ -22,7 +22,7 @@ from lightning_transformers.core.nlp.huggingface import HFTransformerDataConfig
 
 
 @dataclass
-class QuestionAnsweringTransformerDataConfig(HFTransformerDataConfig):
+class QuestionAnsweringDataConfig(HFTransformerDataConfig):
     """
     Arguments pertaining to what data we are going to input our model for training and eval.
     """

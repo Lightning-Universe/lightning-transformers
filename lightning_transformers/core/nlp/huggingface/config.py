@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 from typing import Optional, Union
 
+from lightning_transformers.core.config import TaskConfig
 from lightning_transformers.core.data import TransformerDataConfig
 from lightning_transformers.core.nlp.config import TokenizerConfig
 
@@ -35,3 +36,9 @@ class HFTokenizerConfig(TokenizerConfig):
 @dataclass
 class HFBackboneConfig:
     pretrained_model_name_or_path: Optional[str] = None
+
+
+@dataclass
+class HFTaskConfig(TaskConfig):
+    downstream_model_type: Optional[str] = None
+    backbone: HFBackboneConfig = HFBackboneConfig()

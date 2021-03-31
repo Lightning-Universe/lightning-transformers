@@ -14,7 +14,7 @@ The base data module can be used to modify this code, and follows a simple patte
 
 .. code-block:: python
 
-    class LanguageModelingDataModule(HFTransformerDataModule):
+    class LanguageModelingDataModule(HFDataModule):
 
         def __init__(self, cfg: LanguageModelingDataConfig = LanguageModelingDataConfig()):
             super().__init__(cfg=cfg)

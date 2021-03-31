@@ -1,10 +1,10 @@
 from dataclasses import dataclass
 
-from lightning_transformers.core.nlp.huggingface import HFSeq2SeqTransformerConfig, Seq2SeqDataConfig
+from lightning_transformers.core.nlp.huggingface import HFSeq2SeqConfig, Seq2SeqDataConfig
 
 
 @dataclass
-class TranslationTransformerConfig(HFSeq2SeqTransformerConfig):
+class TranslationConfig(HFSeq2SeqConfig):
     n_gram: int = 4
     smooth: bool = False
 

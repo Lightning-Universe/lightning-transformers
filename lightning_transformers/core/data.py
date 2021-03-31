@@ -56,7 +56,7 @@ class TransformerDataModule(pl.LightningDataModule):
         return {}
 
 
-class TransformerTokenizerDataModule(TransformerDataModule):
+class TokenizerDataModule(TransformerDataModule):
 
     def __init__(self, tokenizer: Any, cfg: TransformerDataConfig = TransformerDataConfig()) -> None:
         super().__init__(cfg=cfg)

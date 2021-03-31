@@ -1,9 +1,9 @@
 from dataclasses import dataclass
 
-from lightning_transformers.core.nlp.huggingface.seq2seq.config import HFSeq2SeqTransformerConfig
+from lightning_transformers.core.nlp.huggingface.seq2seq.config import HFSeq2SeqConfig
 
 
 @dataclass
-class SummarizationTransformerConfig(HFSeq2SeqTransformerConfig):
+class SummarizationConfig(HFSeq2SeqConfig):
     use_stemmer: bool = True
     rouge_newline_sep: bool = True

@@ -3,20 +3,14 @@ from typing import Any, List
 import torch
 
 from lightning_transformers.core.nlp.huggingface import HFTransformer
-from lightning_transformers.core.nlp.huggingface.seq2seq.config import HFSeq2SeqTransformerConfig
+from lightning_transformers.core.nlp.huggingface.seq2seq.config import HFSeq2SeqConfig
 from lightning_transformers.core.nlp.huggingface.seq2seq.utils import _pad_tensors_to_max_len
 
 
 class Seq2SeqTransformer(HFTransformer):
 
-    def __init__(
-        self,
-        *args,
-        downstream_model_type='transformers.',
-        cfg: HFSeq2SeqTransformerConfig = HFSeq2SeqTransformerConfig(),
-        **kwargs
-    ) -> None:
-        super().__init__(*args, downstream_model_type=downstream_model_type, **kwargs)
+    def __init__(self, *args, cfg: HFSeq2SeqConfig = HFSeq2SeqConfig(), **kwargs) -> None:
+        super().__init__(*args, **kwargs)
         self.cfg = cfg
 
     def training_step(self, batch: Any, batch_idx: int) -> torch.Tensor:

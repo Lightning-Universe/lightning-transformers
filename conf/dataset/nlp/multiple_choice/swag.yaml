@@ -1,7 +1,7 @@
 # @package dataset
 defaults:
   - nlp/hf_default
-_target_: lightning_transformers.task.nlp.multiple_choice.SwagMultipleChoiceTransformerDataModule
+_target_: lightning_transformers.task.nlp.multiple_choice.SwagMultipleChoiceDataModule
 cfg:
   dataset_name: swag
   dataset_config_name: 'regular'

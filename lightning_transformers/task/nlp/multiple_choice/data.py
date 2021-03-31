@@ -1,10 +1,10 @@
 from transformers import default_data_collator
 
-from lightning_transformers.core.nlp.huggingface import HFTransformerDataModule
+from lightning_transformers.core.nlp.huggingface import HFDataModule
 from lightning_transformers.task.nlp.multiple_choice.utils import DataCollatorForMultipleChoice
 
 
-class MultipleChoiceTransformerDataModule(HFTransformerDataModule):
+class MultipleChoiceDataModule(HFDataModule):
 
     @property
     def pad_to_max_length(self):
