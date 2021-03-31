@@ -60,7 +60,7 @@ Lightning Transformers tasks allow you to train models using HuggingFace Transfo
 
 ### Quick recipes
 
-#### Train bert-base-cased on CARER emotion dataset using text classification task.
+#### Train [bert-base-cased](https://huggingface.co/bert-base-cased) on the [CARER](https://huggingface.co/datasets/emotion) emotion dataset using the Text Classification task.
 ```bash
 python train.py \
     +task=nlp/text_classification \
