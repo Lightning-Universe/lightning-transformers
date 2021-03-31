@@ -1,10 +1,12 @@
 
-<div align="center">
-  <img src="lightning-transformers/docs/source/_static/Copy of Symbol-Primary-_onTransparent-500.png">
-  <h1> Lightning Transformers </h1>
-</div>
+<img src="docs/source/_static/images/icon.png" width="80px">
+<h1> Lightning Transformers </h1>
 
 **Flexible interface for high performance research using SOTA Transformers leveraging [Pytorch Lightning](https://github.com/PyTorchLightning/pytorch-lightning), [Transformers](https://github.com/huggingface/transformers), and [Hydra](https://github.com/facebookresearch/hydra).**
+
+<div align="center">
+  <img src="https://pl-bolts-doc-images.s3.us-east-2.amazonaws.com/lit-tfmrs.gif">
+</div>
 
 ---
 
@@ -61,10 +63,6 @@ Lightning Transformers offers a flexible interface for training and fine-tuning 
 * **Transformer Task Abstraction for Rapid Research & Experimentation** - Built from the ground up to be task agnostic, the library supports creating transformer tasks across all modalities with little friction.
 
 Lightning Transformers tasks allow you to train models using HuggingFace Transformer models and datasets, use Hydra to hotswap models, optimizers or schedulers and leverage all the advances features that Lightning has to offer, inculding custom Callbacks, Loggers, Accelerators and high performance scaling with minimal changes.
-
-<div align="center">
-  <img src="https://pl-bolts-doc-images.s3.us-east-2.amazonaws.com/lit-tfmrs.gif">
-</div>
 
 ## Using Lightning-Transformers
 
