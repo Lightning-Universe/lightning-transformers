@@ -4,16 +4,14 @@ from typing import Any, Callable, Optional
 from datasets import Dataset
 from transformers import DataCollatorWithPadding, default_data_collator, PreTrainedTokenizerBase
 
-from lightning_transformers.core.nlp.huggingface import HFTransformerDataModule
-from lightning_transformers.task.nlp.question_answering.config import QuestionAnsweringTransformerDataConfig
+from lightning_transformers.core.nlp.huggingface import HFDataModule
+from lightning_transformers.task.nlp.question_answering.config import QuestionAnsweringDataConfig
 
 
-class QuestionAnsweringTransformerDataModule(HFTransformerDataModule):
-    cfg: QuestionAnsweringTransformerDataConfig
+class QuestionAnsweringDataModule(HFDataModule):
+    cfg: QuestionAnsweringDataConfig
 
-    def __init__(
-        self, *args, cfg: QuestionAnsweringTransformerDataConfig = QuestionAnsweringTransformerDataConfig(), **kwargs
-    ) -> None:
+    def __init__(self, *args, cfg: QuestionAnsweringDataConfig = QuestionAnsweringDataConfig(), **kwargs) -> None:
         super().__init__(*args, cfg=cfg, **kwargs)
 
     def process_data(self, dataset: Dataset, stage: Optional[str] = None) -> Dataset:

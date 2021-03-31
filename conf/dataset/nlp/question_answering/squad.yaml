@@ -1,7 +1,7 @@
 # @package dataset
 defaults:
   - nlp/hf_default
-_target_: lightning_transformers.task.nlp.question_answering.datasets.SquadTransformerDataModule
+_target_: lightning_transformers.task.nlp.question_answering.datasets.SquadDataModule
 cfg:
   dataset_name: squad
   dataset_config_name: 'plain_text'

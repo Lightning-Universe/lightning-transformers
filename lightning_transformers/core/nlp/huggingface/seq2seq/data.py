@@ -4,11 +4,11 @@ from typing import Any, Callable, Optional, Tuple
 from datasets import Dataset
 from transformers import default_data_collator, PreTrainedTokenizerBase
 
-from lightning_transformers.core.nlp.huggingface import HFTransformerDataModule
+from lightning_transformers.core.nlp.huggingface import HFDataModule
 from lightning_transformers.core.nlp.huggingface.seq2seq.config import Seq2SeqDataConfig
 
 
-class Seq2SeqDataModule(HFTransformerDataModule):
+class Seq2SeqDataModule(HFDataModule):
     cfg: Seq2SeqDataConfig
 
     def __init__(self, *args, cfg: Seq2SeqDataConfig = Seq2SeqDataConfig(), **kwargs) -> None:

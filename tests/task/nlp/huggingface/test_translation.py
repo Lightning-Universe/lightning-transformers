@@ -5,7 +5,7 @@ import pytest
 
 from lightning_transformers.core.nlp.huggingface import HFBackboneConfig
 from lightning_transformers.task.nlp.translation import TranslationTransformer
-from lightning_transformers.task.nlp.translation.config import TranslationDataConfig, TranslationTransformerConfig
+from lightning_transformers.task.nlp.translation.config import TranslationConfig, TranslationDataConfig
 from lightning_transformers.task.nlp.translation.data import TranslationDataModule
 
 
@@ -25,7 +25,7 @@ def test_model_has_correct_cfg():
         'transformers.AutoModelForSeq2SeqLM',
         HFBackboneConfig(pretrained_model_name_or_path='t5-base'),
     )
-    assert type(model.cfg) is TranslationTransformerConfig
+    assert type(model.cfg) is TranslationConfig
 
 
 def test_datamodule_has_correct_cfg():

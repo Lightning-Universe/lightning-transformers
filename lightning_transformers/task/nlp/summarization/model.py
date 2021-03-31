@@ -1,11 +1,11 @@
 from lightning_transformers.core.nlp.huggingface.seq2seq.model import Seq2SeqTransformer
-from lightning_transformers.task.nlp.summarization.config import SummarizationTransformerConfig
+from lightning_transformers.task.nlp.summarization.config import SummarizationConfig
 from lightning_transformers.task.nlp.summarization.metric import RougeMetric
 
 
 class SummarizationTransformer(Seq2SeqTransformer):
 
-    def __init__(self, *args, cfg: SummarizationTransformerConfig = SummarizationTransformerConfig(), **kwargs) -> None:
+    def __init__(self, *args, cfg: SummarizationConfig = SummarizationConfig(), **kwargs) -> None:
         super().__init__(*args, cfg=cfg, **kwargs)
         self.bleu = None
 

@@ -5,10 +5,10 @@ from datasets import Dataset
 from torch.utils.data import DataLoader
 from transformers import PreTrainedTokenizerBase
 
-from lightning_transformers.task.nlp.multiple_choice.data import MultipleChoiceTransformerDataModule
+from lightning_transformers.task.nlp.multiple_choice.data import MultipleChoiceDataModule
 
 
-class SwagMultipleChoiceTransformerDataModule(MultipleChoiceTransformerDataModule):
+class SwagMultipleChoiceDataModule(MultipleChoiceDataModule):
     num_choices: int = 4  # there are four different endings to select in the SWAG dataset
 
     @property
