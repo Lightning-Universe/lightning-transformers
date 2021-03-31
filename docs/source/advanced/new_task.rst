@@ -43,10 +43,9 @@ Here is a simplified example of the iGPT DataModule.
 .. code-block:: python
 
     class ImageGPTDataModule(TransformerDataModule):
-        cfg: ImageGPTDataConfig
 
-        def __init__(self, cfg: ImageGPTDataConfig):
-            ...
+        def __init__(self, cfg: ImageGPTDataConfig = ImageGPTDataConfig()):
+            super().__init__(cfg=cfg)
 
         def prepare_data(self, *args: Any, **kwargs: Any) -> None:
             """
