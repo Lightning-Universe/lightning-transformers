@@ -25,11 +25,9 @@ def test_smoke_predict_e2e(script_runner):
     assert 'Lightning' in y['answer']
 
 
-def test_model_can_be_created():
-    QuestionAnsweringTransformer(
-        'transformers.AutoModelForQuestionAnswering',
-        HFBackboneConfig(pretrained_model_name_or_path='bert-base-cased'),
-    )
+def test_model_has_correct_cfg():
+    model = QuestionAnsweringTransformer(HFBackboneConfig(pretrained_model_name_or_path='bert-base-cased'))
+    assert model.hparams.downstream_model_type == 'transformers.AutoModelForQuestionAnswering'
 
 
 def test_datamodule_has_correct_cfg():

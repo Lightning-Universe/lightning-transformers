@@ -12,11 +12,9 @@ def test_smoke_train_e2e(script_runner):
     script_runner.hf_train(task='multiple_choice', dataset='swag', model='prajjwal1/bert-tiny')
 
 
-def test_model_can_be_created():
-    MultipleChoiceTransformer(
-        'transformers.AutoModelForMultipleChoice',
-        HFBackboneConfig(pretrained_model_name_or_path='bert-base-cased'),
-    )
+def test_model_has_correct_cfg():
+    model = MultipleChoiceTransformer(HFBackboneConfig(pretrained_model_name_or_path='bert-base-cased'))
+    assert model.hparams.downstream_model_type == 'transformers.AutoModelForMultipleChoice'
 
 
 def test_datamodule_has_correct_cfg():

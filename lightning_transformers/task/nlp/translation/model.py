@@ -7,8 +7,14 @@ from lightning_transformers.task.nlp.translation.metric import BLEUScore
 
 class TranslationTransformer(Seq2SeqTransformer):
 
-    def __init__(self, *args, cfg: TranslationConfig = TranslationConfig(), **kwargs) -> None:
-        super().__init__(*args, cfg=cfg, **kwargs)
+    def __init__(
+        self,
+        *args,
+        downstream_model_type: str = 'transformers.AutoModelForSeq2SeqLM',
+        cfg: TranslationConfig = TranslationConfig(),
+        **kwargs
+    ) -> None:
+        super().__init__(downstream_model_type, *args, cfg=cfg, **kwargs)
         self.bleu = None
 
     def compute_generate_metrics(self, batch, prefix):

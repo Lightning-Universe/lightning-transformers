@@ -26,12 +26,12 @@ def test_smoke_predict_e2e(script_runner):
     assert [a['word'] for a in y] == ['have', 'a', 'good', 'day', '!']
 
 
-def test_model_can_be_created():
+def test_model_has_correct_cfg():
     model = TokenClassificationTransformer(
-        'transformers.AutoModelForTokenClassification',
         HFBackboneConfig(pretrained_model_name_or_path='bert-base-cased'),
         labels=2,
     )
+    assert model.hparams.downstream_model_type == 'transformers.AutoModelForTokenClassification'
     assert model.num_labels == 2
 
 

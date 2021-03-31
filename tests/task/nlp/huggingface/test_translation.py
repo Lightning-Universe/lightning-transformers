@@ -21,10 +21,8 @@ def test_smoke_predict_e2e(script_runner):
 
 
 def test_model_has_correct_cfg():
-    model = TranslationTransformer(
-        'transformers.AutoModelForSeq2SeqLM',
-        HFBackboneConfig(pretrained_model_name_or_path='t5-base'),
-    )
+    model = TranslationTransformer(HFBackboneConfig(pretrained_model_name_or_path='t5-base'))
+    assert model.hparams.downstream_model_type == 'transformers.AutoModelForSeq2SeqLM'
     assert type(model.cfg) is TranslationConfig
 
 
