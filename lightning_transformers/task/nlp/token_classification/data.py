@@ -4,12 +4,15 @@ from typing import Any, Callable, Dict, Optional
 from datasets import ClassLabel, Dataset
 from transformers import DataCollatorForTokenClassification, PreTrainedTokenizerBase
 
-from lightning_transformers.core.nlp.huggingface import HFTransformerDataModule
+from lightning_transformers.core.nlp.huggingface import HFDataModule
 from lightning_transformers.task.nlp.token_classification.config import TokenClassificationDataConfig
 
 
-class TokenClassificationDataModule(HFTransformerDataModule):
+class TokenClassificationDataModule(HFDataModule):
     cfg: TokenClassificationDataConfig
+
+    def __init__(self, *args, cfg: TokenClassificationDataConfig = TokenClassificationDataConfig(), **kwargs) -> None:
+        super().__init__(*args, cfg=cfg, **kwargs)
 
     def process_data(self, dataset: Dataset, stage: Optional[str] = None) -> Dataset:
         features, label_column_name, text_column_name = self._setup_input_fields(dataset, stage)

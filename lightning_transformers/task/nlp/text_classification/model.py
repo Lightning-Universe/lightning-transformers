@@ -8,8 +8,10 @@ from lightning_transformers.core.nlp.huggingface import HFTransformer
 
 class TextClassificationTransformer(HFTransformer):
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+    def __init__(
+        self, *args, downstream_model_type: str = 'transformers.AutoModelForSequenceClassification', **kwargs
+    ) -> None:
+        super().__init__(downstream_model_type, *args, **kwargs)
         self.metrics = {}
 
     def training_step(self, batch: Any, batch_idx: int) -> torch.Tensor:

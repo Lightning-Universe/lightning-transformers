@@ -1,8 +1,19 @@
+.. _token_classification:
+
 Token Classification
 --------------------
+
+The Task
+^^^^^^^^
 The Token classification Task is similar to text classification, except each token within the text receives a prediction.
 A common use of this task is Named Entity Recognition (NER). Use this task if you require your data to be classified at the token level.
+
+Datasets
+^^^^^^^^
 Currently supports the `conll <https://huggingface.co/datasets/conll2003>`_ dataset, or custom input files.
+
+Training
+^^^^^^^^
 
 .. code-block:: bash
 
@@ -14,7 +25,7 @@ Swap to GPT backbone:
 
     python train.py +task=nlp/token_classification +dataset=nlp/token_classification/conll backbone.pretrained_model_name_or_path=gpt2
 
-We report the Precision, Recall, Accuracy and Cross Entropy Loss for validation. To see all options available for the task, see ``conf/task/nlp/token_classification.yaml``.
+We report the Precision, Recall, Accuracy and Cross Entropy Loss for validation. To see all options available for the task, see `Find all options available for the task `here <https://github.com/PyTorchLightning/lightning-transformers/blob/master/conf/task/nlp/token_classification.yaml>`_.
 
 .. include:: /datasets/nlp/token_classification_data.rst
 

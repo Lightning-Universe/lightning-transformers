@@ -3,10 +3,10 @@ from typing import Any, Dict, List, Optional
 from datasets import Dataset
 from transformers import PreTrainedTokenizerBase
 
-from lightning_transformers.core.nlp.huggingface import HFTransformerDataModule
+from lightning_transformers.core.nlp.huggingface import HFDataModule
 
 
-class TextClassificationDataModule(HFTransformerDataModule):
+class TextClassificationDataModule(HFDataModule):
 
     def process_data(self, dataset: Dataset, stage: Optional[str] = None) -> Dataset:
         input_feature_fields = [k for k, v in dataset["train"].features.items() if k not in ["label", "idx"]]

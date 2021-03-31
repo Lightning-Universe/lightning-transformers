@@ -17,7 +17,7 @@ Lightning Transformers
    structure/conf
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
    :name: tasks
    :caption: Tasks
 
@@ -30,7 +30,7 @@ Lightning Transformers
    tasks/nlp/translation
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
    :name: optimization
    :caption: Training Optimizations
 
@@ -39,7 +39,7 @@ Lightning Transformers
    optimizations/sharded
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
    :name: advanced
    :caption: Advanced
 
@@ -51,6 +51,8 @@ Lightning Transformers
    :maxdepth: 1
    :name: api
    :caption: API Reference
+
+   references/api
 
 
 Indices and tables

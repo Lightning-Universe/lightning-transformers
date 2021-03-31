@@ -7,6 +7,7 @@ include *.yml
 recursive-include conf *.yaml
 recursive-include lightning_transformers *.py
 
+exclude Makefile
 # Exclude tests from package
 prune tests
 # Exclude the documentation files

@@ -1,16 +1,26 @@
+.. _language_modeling:
+
 Language Modeling
 -----------------
-Causal Language Modeling is the vanilla autoregressive pre-training method common to most language models such as GPT-3 or CTRL
+
+The Task
+^^^^^^^^
+Causal Language Modeling is the vanilla autoregressive pre-training method common to most language models such as `GPT-3 <https://arxiv.org/abs/2005.14165>`_ or `CTRL <https://arxiv.org/abs/1909.05858>`_
 (Excluding BERT-like models, which were pre-trained using the Masked Language Modeling training method).
-Currently supports the `wikitext2 <https://huggingface.co/datasets/wikitext>`_ dataset, or custom input files.
 
 During training, we minimize the maximum likelihood during training across spans of text data (usually in some context window/block size).
 The model is able to attend to the left context (left of the mask).
 When trained on large quantities of text data, this gives us strong language models such as GPT-3 to use for downstream tasks.
 
+Datasets
+^^^^^^^^
+Currently supports the `wikitext2 <https://huggingface.co/datasets/wikitext>`_ dataset, or custom input files.
 Since this task is usually the pre-training task for Transformers, it can be used to train new language models from scratch or to fine-tune a language model onto your own unlabeled text data.
 
-Language Models pre-trained or fine-tuned to the Causal Language Modeling task can then be used in generative predictions, see <TODO> for more.
+Usage
+^^^^^
+
+Language Models pre-trained or fine-tuned to the Causal Language Modeling task can then be used in generative predictions.
 
 .. code-block:: bash
 
@@ -22,7 +32,7 @@ Swap to GPT backbone:
 
     python train.py +task=nlp/language_modeling +dataset=nlp/language_modeling/wikitext backbone.pretrained_model_name_or_path=gpt2
 
-We report the Cross Entropy Loss for validation. To see all options available for the task, see ``conf/task/nlp/language_modeling.yaml``.
+We report the Cross Entropy Loss for validation. Find all options available for the task `here <https://github.com/PyTorchLightning/lightning-transformers/blob/master/conf/task/nlp/language_modeling.yaml>`_.
 
 .. include:: /datasets/nlp/language_modeling_data.rst
 

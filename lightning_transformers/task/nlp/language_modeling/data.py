@@ -6,12 +6,15 @@ from pytorch_lightning import _logger as log
 from tokenizers import Tokenizer
 from transformers import default_data_collator, PreTrainedTokenizer, PreTrainedTokenizerFast
 
-from lightning_transformers.core.nlp.huggingface import HFTransformerDataModule
+from lightning_transformers.core.nlp.huggingface import HFDataModule
 from lightning_transformers.task.nlp.language_modeling.config import LanguageModelingDataConfig
 
 
-class LanguageModelingDataModule(HFTransformerDataModule):
+class LanguageModelingDataModule(HFDataModule):
     cfg: LanguageModelingDataConfig
+
+    def __init__(self, *args, cfg: LanguageModelingDataConfig = LanguageModelingDataConfig(), **kwargs) -> None:
+        super().__init__(*args, cfg=cfg, **kwargs)
 
     def process_data(self, dataset: Dataset, stage: Optional[str] = None) -> Dataset:
         column_names = dataset["train" if stage == "fit" else "validation"].column_names

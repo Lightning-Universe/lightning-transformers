@@ -1,14 +1,20 @@
 from lightning_transformers.core.nlp.huggingface.seq2seq.model import Seq2SeqTransformer
-from lightning_transformers.task.nlp.summarization.config import SummarizationTransformerConfig
+from lightning_transformers.task.nlp.summarization.config import SummarizationConfig
 from lightning_transformers.task.nlp.summarization.metric import RougeMetric
 
 
 class SummarizationTransformer(Seq2SeqTransformer):
-    cfg: SummarizationTransformerConfig
+    cfg: SummarizationConfig
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.bleu = None
+    def __init__(
+        self,
+        *args,
+        downstream_model_type: str = 'transformers.AutoModelForSeq2SeqLM',
+        cfg: SummarizationConfig = SummarizationConfig(),
+        **kwargs
+    ) -> None:
+        super().__init__(downstream_model_type, *args, cfg=cfg, **kwargs)
+        self.rouge = None
 
     def compute_generate_metrics(self, batch, prefix):
         tgt_lns = self.tokenize_labels(batch["labels"])

@@ -3,13 +3,13 @@ from typing import Any, List
 import torch
 
 from lightning_transformers.core.nlp.huggingface import HFTransformer
-from lightning_transformers.core.nlp.huggingface.seq2seq.config import HFSeq2SeqTransformerConfig
+from lightning_transformers.core.nlp.huggingface.seq2seq.config import HFSeq2SeqConfig
 from lightning_transformers.core.nlp.huggingface.seq2seq.utils import _pad_tensors_to_max_len
 
 
 class Seq2SeqTransformer(HFTransformer):
 
-    def __init__(self, *args, cfg: HFSeq2SeqTransformerConfig, **kwargs):
+    def __init__(self, *args, cfg: HFSeq2SeqConfig = HFSeq2SeqConfig(), **kwargs) -> None:
         super().__init__(*args, **kwargs)
         self.cfg = cfg
 

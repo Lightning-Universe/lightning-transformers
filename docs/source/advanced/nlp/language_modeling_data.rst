@@ -18,34 +18,36 @@ The base data module can be used to modify this code, and follows a simple patte
 
 .. code-block:: python
 
-    class LanguageModelingDataModule(HFTransformerDataModule):
-    cfg: LanguageModelingDataConfig # The config options passed to the constructor
+    class LanguageModelingDataModule(HFDataModule):
 
-    def process_data(self, dataset: Dataset, stage: Optional[str] = None) -> Dataset:
-        # `process_data` converting the dataset into features.
-        # The dataset is pre-loaded using `load_dataset`.
-        ...
-        return dataset
+        def __init__(self, cfg: LanguageModelingDataConfig = LanguageModelingDataConfig()):
+            super().__init__(cfg=cfg)
 
-    @staticmethod
-    def tokenize_function(
-        examples,
-        tokenizer: Union[Tokenizer, PreTrainedTokenizer, PreTrainedTokenizerFast],
-        text_column_name: str = None,
-    ):
-        # tokenizes the data in a specific column using the AutoTokenizer,
-        # called by `process_data`
-        return tokenizer(examples[text_column_name])
+        def process_data(self, dataset: Dataset, stage: Optional[str] = None) -> Dataset:
+            # `process_data` converting the dataset into features.
+            # The dataset is pre-loaded using `load_dataset`.
+            ...
+            return dataset
 
-    @staticmethod
-    def convert_to_features(examples, block_size: int = None):
-        # `process_data` calls this function to convert samples in the dataset into features
-        ...
+        @staticmethod
+        def tokenize_function(
+            examples,
+            tokenizer: Union[Tokenizer, PreTrainedTokenizer, PreTrainedTokenizerFast],
+            text_column_name: str = None,
+        ):
+            # tokenizes the data in a specific column using the AutoTokenizer,
+            # called by `process_data`
+            return tokenizer(examples[text_column_name])
 
-    @property
-    def collate_fn(self) -> Callable:
-        # `Describes how to collate the samples for the batch given to the model`
-        return default_data_collator
+        @staticmethod
+        def convert_to_features(examples, block_size: int = None):
+            # `process_data` calls this function to convert samples in the dataset into features
+            ...
+
+        @property
+        def collate_fn(self) -> Callable:
+            # `Describes how to collate the samples for the batch given to the model`
+            return default_data_collator
 
 
 

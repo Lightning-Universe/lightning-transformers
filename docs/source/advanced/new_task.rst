@@ -3,8 +3,7 @@
 Customizing Tasks
 =================
 
-Below we demonstrate how to build a custom task within Lightning Transformers.
-When building a custom task in Lightning Transformers, there are four key pieces.
+You can build your own Lightning Transformers task for any custom use case. To create your own task you will need to:
 
 * Implement a Dataset
 * Implement a Backbone
@@ -33,7 +32,7 @@ Implementing a Dataset
 
 The dataset defines the data transforms, plus the data you'd like to train, validate and test on. In our example we build the CIFAR10 dataset for iGPT.
 
-The base class for Lightning Transformer datasets is the ``TransformerDataModule`` class, which is a thin layer on top of the LightningDataModule class, exposing all the Lightning Data Hooks as standard. See `LightningDataModule <https://pytorch-lightning.readthedocs.io/en/latest/extensions/datamodules.html>`_ for more details.
+The base class for Lightning Transformer datasets is the  ``TransformerDataModule`` class, which is a thin layer on top of the LightningDataModule class, exposing all the Lightning Data Hooks as standard. See `LightningDataModule <https://pytorch-lightning.readthedocs.io/en/latest/extensions/datamodules.html>`_ for more details.
 Additional, the base class provides a few helper functions, such as ``model_data_args`` which allows us to define any data specific arguments we'd like the task to be aware of at initialize time.
 
 In some cases you do not need to define a module, and could use a pre-set LightningDataModule out the box.
@@ -43,10 +42,9 @@ Here is a simplified example of the iGPT DataModule.
 .. code-block:: python
 
     class ImageGPTDataModule(TransformerDataModule):
-        cfg: ImageGPTDataConfig
 
-        def __init__(self, cfg: ImageGPTDataConfig):
-            ...
+        def __init__(self, cfg: ImageGPTDataConfig = ImageGPTDataConfig()):
+            super().__init__(cfg=cfg)
 
         def prepare_data(self, *args: Any, **kwargs: Any) -> None:
             """

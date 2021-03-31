@@ -1,6 +1,13 @@
 import sys
+from unittest.mock import MagicMock
 
 import pytest
+
+from lightning_transformers.core.nlp.huggingface import HFBackboneConfig, HFTransformerDataConfig
+from lightning_transformers.task.nlp.text_classification import (
+    TextClassificationDataModule,
+    TextClassificationTransformer,
+)
 
 
 @pytest.mark.skipif(sys.platform == "win32", reason="Currently Windows is not supported")
@@ -32,3 +39,15 @@ def test_predict_from_ckpt_path(script_runner, tmpdir):
     )
     assert len(y) == 1
     assert isinstance(y[0]['score'], float)
+
+
+def test_model_has_correct_cfg():
+    model = TextClassificationTransformer(HFBackboneConfig(pretrained_model_name_or_path='bert-base-cased'))
+    assert model.hparams.downstream_model_type == 'transformers.AutoModelForSequenceClassification'
+
+
+def test_datamodule_has_correct_cfg():
+    tokenizer = MagicMock()
+    dm = TextClassificationDataModule(tokenizer)
+    assert type(dm.cfg) is HFTransformerDataConfig
+    assert dm.tokenizer is tokenizer

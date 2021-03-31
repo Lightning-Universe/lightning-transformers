@@ -7,7 +7,7 @@ import torch
 from omegaconf import DictConfig
 
 from lightning_transformers.core import TransformerDataModule
-from lightning_transformers.core.data import TransformerTokenizerDataModule
+from lightning_transformers.core.data import TokenizerDataModule
 
 if TYPE_CHECKING:
     # avoid circular imports
@@ -73,8 +73,8 @@ class HydraInstantiator(Instantiator):
     def data_module(
         self,
         cfg: DictConfig,
-        tokenizer: Optional[DictConfig] = None
-    ) -> Union[TransformerDataModule, TransformerTokenizerDataModule]:
+        tokenizer: Optional[DictConfig] = None,
+    ) -> Union[TransformerDataModule, TokenizerDataModule]:
         if tokenizer:
             return self.instantiate(cfg, tokenizer=self.instantiate(tokenizer))
         return self.instantiate(cfg)
