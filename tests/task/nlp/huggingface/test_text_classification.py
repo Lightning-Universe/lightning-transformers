@@ -43,10 +43,8 @@ def test_predict_from_ckpt_path(script_runner, tmpdir):
 
 def test_model_can_be_created():
     TextClassificationTransformer(
-        HFBackboneConfig(
-            downstream_model_type='transformers.AutoModelForTokenClassification',
-            pretrained_model_name_or_path='bert-base-cased',
-        ),
+        'transformers.AutoModelForTokenClassification',
+        HFBackboneConfig(pretrained_model_name_or_path='bert-base-cased'),
     )
 
 

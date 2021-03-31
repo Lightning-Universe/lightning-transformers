@@ -17,10 +17,8 @@ def test_smoke_train_e2e(script_runner):
 
 def test_model_can_be_created():
     MultipleChoiceTransformer(
-        HFBackboneConfig(
-            downstream_model_type='transformers.AutoModelForTokenClassification',
-            pretrained_model_name_or_path='bert-base-cased',
-        ),
+        'transformers.AutoModelForTokenClassification',
+        HFBackboneConfig(pretrained_model_name_or_path='bert-base-cased'),
     )
 
 

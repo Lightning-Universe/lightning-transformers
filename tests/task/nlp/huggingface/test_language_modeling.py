@@ -21,10 +21,8 @@ def test_smoke_predict_e2e(script_runner):
 
 def test_model_can_be_created():
     LanguageModelingTransformer(
-        HFBackboneConfig(
-            downstream_model_type='transformers.AutoModelForTokenClassification',
-            pretrained_model_name_or_path='bert-base-cased',
-        ),
+        'transformers.AutoModelForTokenClassification',
+        HFBackboneConfig(pretrained_model_name_or_path='bert-base-cased'),
     )
 
 

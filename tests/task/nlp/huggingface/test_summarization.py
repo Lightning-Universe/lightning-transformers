@@ -29,9 +29,8 @@ def test_smoke_predict_e2e(script_runner):
 
 def test_model_has_correct_cfg():
     model = SummarizationTransformer(
-        HFBackboneConfig(
-            downstream_model_type='transformers.AutoModelForSeq2SeqLM', pretrained_model_name_or_path='t5-base'
-        ),
+        'transformers.AutoModelForSeq2SeqLM',
+        HFBackboneConfig(pretrained_model_name_or_path='t5-base'),
     )
     assert type(model.cfg) is SummarizationTransformerConfig
 
