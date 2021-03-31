@@ -278,8 +278,47 @@ tokenizer:
 python train.py \
     +task=nlp/text_classification \
     +dataset=nlp/text_classification/emotion \
-    trainer=zero_offload
+    trainer=deepspeed
 ```
+
+<details>
+  <summary>See the modified config</summary>
+Without the need to modify any code, the config updated automatically for DeepSpeed:
+
+```diff
+optimizer:
+   _target_: torch.optim.AdamW
+   lr: ${training.lr}
+trainer:
+   process_position: 0
+   num_nodes: 1
+   num_processes: 1
+-  gpus: null
++  gpus: 1
+   auto_select_gpus: false
+   tpu_cores: null
+   log_gpu_memory: null
+   ...
+   val_check_interval: 1.0
+   flush_logs_every_n_steps: 100
+   log_every_n_steps: 50
+-  accelerator: null
++  accelerator: ddp
+   sync_batchnorm: false
+-  precision: 32
++  precision: 16
+   ...
+-  plugins: null
++  plugins:
++    _target_: pytorch_lightning.plugins.DeepSpeedPlugin
++    stage: 2
++    cpu_offload: true
+   amp_backend: native
+   amp_level: O2
+   move_metrics_to_cpu: false
+...
+```   
+</details>
 
 #### Train roberta-base backbone, on SWAG dataset multiple choice task.
 ```bash
