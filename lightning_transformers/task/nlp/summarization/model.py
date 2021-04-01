@@ -1,4 +1,4 @@
-from lightning_transformers.core.nlp.huggingface.seq2seq.model import Seq2SeqTransformer
+from lightning_transformers.core.nlp.seq2seq import Seq2SeqTransformer
 from lightning_transformers.task.nlp.summarization.config import SummarizationConfig
 from lightning_transformers.task.nlp.summarization.metric import RougeMetric
 

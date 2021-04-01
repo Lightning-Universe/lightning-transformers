@@ -1,4 +1,4 @@
-from lightning_transformers.core.nlp.huggingface.seq2seq.data import Seq2SeqDataModule
+from lightning_transformers.core.nlp.seq2seq import Seq2SeqDataModule
 
 
 class SummarizationDataModule(Seq2SeqDataModule):

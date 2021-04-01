@@ -3,7 +3,7 @@ from transformers import AutoTokenizer
 
 from examples.custom_language_modeling.dataset import MyLanguageModelingDataModule
 from examples.custom_language_modeling.model import MyLanguageModelingTransformer
-from lightning_transformers.core.nlp.huggingface import HFBackboneConfig
+from lightning_transformers.core.nlp import HFBackboneConfig
 from lightning_transformers.task.nlp.language_modeling.config import LanguageModelingDataConfig
 
 

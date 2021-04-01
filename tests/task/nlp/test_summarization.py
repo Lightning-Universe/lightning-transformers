@@ -3,7 +3,8 @@ from unittest.mock import MagicMock
 
 import pytest
 
-from lightning_transformers.core.nlp.huggingface import HFBackboneConfig, Seq2SeqDataConfig
+from lightning_transformers.core.nlp import HFBackboneConfig
+from lightning_transformers.core.nlp.seq2seq import Seq2SeqDataConfig
 from lightning_transformers.task.nlp.summarization import SummarizationDataModule, SummarizationTransformer
 from lightning_transformers.task.nlp.summarization.config import SummarizationConfig
 

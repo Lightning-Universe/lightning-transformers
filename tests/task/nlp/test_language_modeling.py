@@ -6,7 +6,7 @@ import pytorch_lightning as pl
 import torch
 from transformers import AutoTokenizer
 
-from lightning_transformers.core.nlp.huggingface import HFBackboneConfig
+from lightning_transformers.core.nlp import HFBackboneConfig
 from lightning_transformers.task.nlp.language_modeling import LanguageModelingDataModule, LanguageModelingTransformer
 from lightning_transformers.task.nlp.language_modeling.config import LanguageModelingDataConfig
 

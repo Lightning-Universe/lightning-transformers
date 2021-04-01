@@ -7,7 +7,7 @@ from pytorch_lightning.utilities.distributed import rank_zero_info
 from lightning_transformers.core import TaskTransformer, TransformerDataModule
 from lightning_transformers.core.config import TaskConfig, TrainerConfig, TransformerDataConfig
 from lightning_transformers.core.instantiator import HydraInstantiator, Instantiator
-from lightning_transformers.core.nlp.config import TokenizerConfig
+from lightning_transformers.core.nlp.config import HFTokenizerConfig
 from lightning_transformers.core.utils import set_ignore_warnings
 
 
@@ -18,7 +18,7 @@ def run(
     dataset: TransformerDataConfig = TransformerDataConfig(),
     task: TaskConfig = TaskConfig(),
     trainer: TrainerConfig = TrainerConfig(),
-    tokenizer: Optional[TokenizerConfig] = None,
+    tokenizer: Optional[HFTokenizerConfig] = None,
     logger: Optional[Any] = None,
 ) -> None:
     if ignore_warnings:
@@ -31,7 +31,7 @@ def run(
     data_module: TransformerDataModule = instantiator.data_module(dataset, **data_module_kwargs)
     data_module.setup("fit")
 
-    model: TaskTransformer = instantiator.model(task, model_data_args=data_module.model_data_args)
+    model: TaskTransformer = instantiator.model(task, model_data_kwargs=data_module.model_data_kwargs)
     trainer = instantiator.trainer(
         trainer,
         logger=logger,

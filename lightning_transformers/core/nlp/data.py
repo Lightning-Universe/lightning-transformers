@@ -6,7 +6,7 @@ from pytorch_lightning.utilities.exceptions import MisconfigurationException
 from transformers import PreTrainedTokenizerBase
 
 from lightning_transformers.core.data import TokenizerDataModule
-from lightning_transformers.core.nlp.huggingface.config import HFTransformerDataConfig
+from lightning_transformers.core.nlp.config import HFTransformerDataConfig
 
 
 class HFDataModule(TokenizerDataModule):
