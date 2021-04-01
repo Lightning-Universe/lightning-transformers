@@ -16,16 +16,20 @@ def run(
     instantiator: Instantiator,
     checkpoint_path: Optional[str] = None,
     task: TaskConfig = TaskConfig(),
-    model_data_args: Optional[Dict[str, Any]] = None,
+    model_data_kwargs: Optional[Dict[str, Any]] = None,
     tokenizer: Optional[TokenizerConfig] = None,
-    **predict_kwargs: Any
+    pipeline_kwargs: Optional[dict] = None,  # mostly for the device
+    predict_kwargs: Optional[dict] = None,
 ) -> List[Dict[str, Any]]:
     model: HFTransformer
     if checkpoint_path:
         model = get_class(task._target_).load_from_checkpoint(checkpoint_path)
     else:
-        model = instantiator.model(task, model_data_args=model_data_args, tokenizer=tokenizer)
+        model = instantiator.model(
+            task, model_data_kwargs=model_data_kwargs, tokenizer=tokenizer, pipeline_kwargs=pipeline_kwargs
+        )
 
+    predict_kwargs = predict_kwargs or {}
     if isinstance(x, Mapping):
         return model.hf_predict(**x, **predict_kwargs)
     else:
@@ -40,9 +44,10 @@ def main(cfg: DictConfig) -> Any:
         instantiator,
         checkpoint_path=cfg.get("checkpoint_path"),
         task=cfg.task,
-        model_data_args=cfg.get("model_data_args"),
+        model_data_kwargs=cfg.get("model_data_kwargs"),
         tokenizer=cfg.get("tokenizer"),
-        **cfg.get("predict_kwargs", {})
+        pipeline_kwargs=cfg.get("pipeline_kwargs", {}),
+        predict_kwargs=cfg.get("predict_kwargs", {}),
     )
     rank_zero_info(y)
     return y

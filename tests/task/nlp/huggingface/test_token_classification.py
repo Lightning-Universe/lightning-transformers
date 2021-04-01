@@ -18,7 +18,7 @@ def test_smoke_train_e2e(script_runner):
 
 def test_smoke_predict_e2e(script_runner):
     y = script_runner.hf_predict(
-        ['+x="Have a good day!"', '+model_data_args={labels: 2}'],
+        ['+x="Have a good day!"', '+model_data_kwargs={labels: 2}'],
         task='token_classification',
         model='prajjwal1/bert-tiny',
     )

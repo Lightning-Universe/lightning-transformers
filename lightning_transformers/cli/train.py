@@ -31,7 +31,7 @@ def run(
     data_module: TransformerDataModule = instantiator.data_module(dataset, **data_module_kwargs)
     data_module.setup("fit")
 
-    model: TaskTransformer = instantiator.model(task, model_data_args=data_module.model_data_args)
+    model: TaskTransformer = instantiator.model(task, model_data_kwargs=data_module.model_data_kwargs)
     trainer = instantiator.trainer(
         trainer,
         logger=logger,

@@ -28,16 +28,18 @@ class HFTransformer(TaskTransformer):
         scheduler: SchedulerConfig = SchedulerConfig(),
         instantiator: Optional[Instantiator] = None,
         tokenizer: Optional["PreTrainedTokenizerBase"] = None,
-        **config_data_args,
+        pipeline_kwargs: Optional[dict] = None,
+        **model_data_kwargs,
     ) -> None:
         self.save_hyperparameters()
         model = get_class(downstream_model_type).from_pretrained(
             backbone.pretrained_model_name_or_path,
-            **config_data_args,
+            **model_data_kwargs,
         )
         super().__init__(model=model, optimizer=optimizer, scheduler=scheduler, instantiator=instantiator)
         self._tokenizer = tokenizer  # necessary for hf_pipeline
         self._hf_pipeline = None
+        self._hf_pipeline_kwargs = pipeline_kwargs or {}
 
     @property
     def tokenizer(self) -> Optional["PreTrainedTokenizerBase"]:
@@ -65,7 +67,7 @@ class HFTransformer(TaskTransformer):
         if self._hf_pipeline is None:
             if self.hf_pipeline_task is not None:
                 self._hf_pipeline = hf_transformers_pipeline(
-                    task=self.hf_pipeline_task, model=self.model, tokenizer=self.tokenizer
+                    task=self.hf_pipeline_task, model=self.model, tokenizer=self.tokenizer, **self._hf_pipeline_kwargs
                 )
             else:
                 raise RuntimeError("No task was defined for this model. Try overriding `hf_pipeline_task`")

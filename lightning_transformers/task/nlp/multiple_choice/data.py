@@ -1,3 +1,5 @@
+from typing import Dict
+
 from transformers import default_data_collator
 
 from lightning_transformers.core.nlp.huggingface import HFDataModule
@@ -11,7 +13,7 @@ class MultipleChoiceDataModule(HFDataModule):
         return self.cfg.padding == "max_length"
 
     @property
-    def collate_fn(self):
+    def collate_fn(self) -> callable:
         return (
             default_data_collator
             if self.pad_to_max_length else DataCollatorForMultipleChoice(tokenizer=self.tokenizer)
@@ -22,5 +24,5 @@ class MultipleChoiceDataModule(HFDataModule):
         raise NotImplementedError
 
     @property
-    def model_data_args(self):
+    def model_data_kwargs(self) -> Dict[str, int]:
         return {"num_labels": self.num_classes}

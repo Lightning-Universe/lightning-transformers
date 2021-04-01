@@ -30,7 +30,7 @@ class TextClassificationDataModule(HFDataModule):
         return self.labels.num_classes
 
     @property
-    def model_data_args(self) -> Dict[str, int]:
+    def model_data_kwargs(self) -> Dict[str, int]:
         return {"num_labels": self.num_classes}
 
     @staticmethod

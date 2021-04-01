@@ -70,7 +70,7 @@ class TokenClassificationDataModule(HFDataModule):
         return len(self.labels)
 
     @property
-    def model_data_args(self) -> Dict[str, Any]:
+    def model_data_kwargs(self) -> Dict[str, Any]:
         return {"labels": self.labels}
 
     @staticmethod
