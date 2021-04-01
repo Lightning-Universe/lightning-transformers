@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 
-from lightning_transformers.core.nlp.huggingface.config import HFTransformerDataConfig
+from lightning_transformers.core.nlp.config import HFTransformerDataConfig
 
 
 @dataclass

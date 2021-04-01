@@ -7,8 +7,7 @@ from pytorch_lightning.utilities.distributed import rank_zero_info
 
 from lightning_transformers.core.config import TaskConfig
 from lightning_transformers.core.instantiator import HydraInstantiator, Instantiator
-from lightning_transformers.core.nlp.config import TokenizerConfig
-from lightning_transformers.core.nlp.huggingface import HFTransformer
+from lightning_transformers.core.nlp import HFTokenizerConfig, HFTransformer
 
 
 def run(
@@ -17,7 +16,7 @@ def run(
     checkpoint_path: Optional[str] = None,
     task: TaskConfig = TaskConfig(),
     model_data_kwargs: Optional[Dict[str, Any]] = None,
-    tokenizer: Optional[TokenizerConfig] = None,
+    tokenizer: Optional[HFTokenizerConfig] = None,
     pipeline_kwargs: Optional[dict] = None,  # mostly for the device
     predict_kwargs: Optional[dict] = None,
 ) -> List[Dict[str, Any]]:

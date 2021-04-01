@@ -4,7 +4,7 @@ from unittest.mock import MagicMock
 import pytest
 from pytorch_lightning import seed_everything
 
-from lightning_transformers.core.nlp.huggingface import HFBackboneConfig
+from lightning_transformers.core.nlp import HFBackboneConfig
 from lightning_transformers.task.nlp.question_answering import QuestionAnsweringDataModule, QuestionAnsweringTransformer
 from lightning_transformers.task.nlp.question_answering.config import QuestionAnsweringDataConfig
 

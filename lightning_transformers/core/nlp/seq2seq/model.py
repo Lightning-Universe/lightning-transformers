@@ -2,9 +2,9 @@ from typing import Any, List
 
 import torch
 
-from lightning_transformers.core.nlp.huggingface import HFTransformer
-from lightning_transformers.core.nlp.huggingface.seq2seq.config import HFSeq2SeqConfig
-from lightning_transformers.core.nlp.huggingface.seq2seq.utils import _pad_tensors_to_max_len
+from lightning_transformers.core.nlp import HFTransformer
+from lightning_transformers.core.nlp.seq2seq import HFSeq2SeqConfig
+from lightning_transformers.core.nlp.seq2seq.utils import _pad_tensors_to_max_len
 
 
 class Seq2SeqTransformer(HFTransformer):

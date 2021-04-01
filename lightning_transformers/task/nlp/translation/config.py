@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 
-from lightning_transformers.core.nlp.huggingface import HFSeq2SeqConfig, Seq2SeqDataConfig
+from lightning_transformers.core.nlp.seq2seq import HFSeq2SeqConfig, Seq2SeqDataConfig
 
 
 @dataclass

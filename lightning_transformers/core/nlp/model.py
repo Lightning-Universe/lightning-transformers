@@ -6,7 +6,7 @@ from transformers import pipeline as hf_transformers_pipeline
 from lightning_transformers.core.config import OptimizerConfig, SchedulerConfig
 from lightning_transformers.core.instantiator import Instantiator
 from lightning_transformers.core.model import TaskTransformer
-from lightning_transformers.core.nlp.huggingface.config import HFBackboneConfig
+from lightning_transformers.core.nlp.config import HFBackboneConfig
 
 if TYPE_CHECKING:
     from transformers import Pipeline, PreTrainedTokenizerBase

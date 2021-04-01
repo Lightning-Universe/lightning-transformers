@@ -4,8 +4,8 @@ from typing import Any, Callable, Optional, Tuple
 from datasets import Dataset
 from transformers import default_data_collator, PreTrainedTokenizerBase
 
-from lightning_transformers.core.nlp.huggingface import HFDataModule
-from lightning_transformers.core.nlp.huggingface.seq2seq.config import Seq2SeqDataConfig
+from lightning_transformers.core.nlp import HFDataModule
+from lightning_transformers.core.nlp.seq2seq import Seq2SeqDataConfig
 
 
 class Seq2SeqDataModule(HFDataModule):

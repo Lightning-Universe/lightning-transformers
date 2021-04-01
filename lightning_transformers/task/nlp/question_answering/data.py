@@ -4,7 +4,7 @@ from typing import Any, Callable, Optional
 from datasets import Dataset
 from transformers import DataCollatorWithPadding, default_data_collator, PreTrainedTokenizerBase
 
-from lightning_transformers.core.nlp.huggingface import HFDataModule
+from lightning_transformers.core.nlp import HFDataModule
 from lightning_transformers.task.nlp.question_answering.config import QuestionAnsweringDataConfig
 
 

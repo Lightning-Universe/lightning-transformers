@@ -4,7 +4,7 @@ from typing import Any, Callable, Dict, Optional
 from datasets import ClassLabel, Dataset
 from transformers import DataCollatorForTokenClassification, PreTrainedTokenizerBase
 
-from lightning_transformers.core.nlp.huggingface import HFDataModule
+from lightning_transformers.core.nlp import HFDataModule
 from lightning_transformers.task.nlp.token_classification.config import TokenClassificationDataConfig
 
 

@@ -2,7 +2,7 @@ from typing import Dict
 
 from transformers import default_data_collator
 
-from lightning_transformers.core.nlp.huggingface import HFDataModule
+from lightning_transformers.core.nlp import HFDataModule
 from lightning_transformers.task.nlp.multiple_choice.utils import DataCollatorForMultipleChoice
 
 
