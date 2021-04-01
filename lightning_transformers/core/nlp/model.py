@@ -1,4 +1,4 @@
-from typing import Any, Dict, Optional, TYPE_CHECKING
+from typing import Any, Dict, Optional, Type, TYPE_CHECKING
 
 from hydra.utils import get_class
 from transformers import pipeline as hf_transformers_pipeline
@@ -9,7 +9,7 @@ from lightning_transformers.core.model import TaskTransformer
 from lightning_transformers.core.nlp.config import HFBackboneConfig
 
 if TYPE_CHECKING:
-    from transformers import Pipeline, PreTrainedTokenizerBase
+    from transformers import AutoModel, Pipeline, PreTrainedTokenizerBase
 
 
 class HFTransformer(TaskTransformer):
@@ -32,10 +32,8 @@ class HFTransformer(TaskTransformer):
         **model_data_kwargs,
     ) -> None:
         self.save_hyperparameters()
-        model = get_class(downstream_model_type).from_pretrained(
-            backbone.pretrained_model_name_or_path,
-            **model_data_kwargs,
-        )
+        model_cls: Type["AutoModel"] = get_class(downstream_model_type)
+        model = model_cls.from_pretrained(backbone.pretrained_model_name_or_path, **model_data_kwargs)
         super().__init__(model=model, optimizer=optimizer, scheduler=scheduler, instantiator=instantiator)
         self._tokenizer = tokenizer  # necessary for hf_pipeline
         self._hf_pipeline = None
