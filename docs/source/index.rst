@@ -45,7 +45,7 @@ Lightning Transformers
 
    datasets/custom_data
    advanced/custom_datasets
-   advanced/new_task
+   advanced/custom_task
 
 .. toctree::
    :maxdepth: 1

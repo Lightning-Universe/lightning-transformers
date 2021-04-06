@@ -214,7 +214,8 @@ tokenizer:
 python train.py \
     +task=nlp/text_classification \
     +dataset=nlp/text_classification/emotion \
-    trainer=sharded
+    trainer=ddp \
+    trainer/plugins=sharded
 ```
 
 <details>
@@ -270,7 +271,8 @@ tokenizer:
 python train.py \
     +task=nlp/text_classification \
     +dataset=nlp/text_classification/emotion \
-    trainer=deepspeed
+    trainer=ddp \
+    trainer/plugins=deepspeed
 ```
 
 <details>
