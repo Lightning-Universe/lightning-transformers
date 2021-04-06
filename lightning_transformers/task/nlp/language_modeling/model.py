@@ -2,6 +2,14 @@ from lightning_transformers.core.nlp import HFTransformer
 
 
 class LanguageModelingTransformer(HFTransformer):
+    """
+    Defines ``LightningModule`` for the Language Modeling Task.
+
+    Args:
+        *args: :class:`lightning_transformers.core.nlp.HFTransformer` arguments.
+        downstream_model_type: Downstream HuggingFace AutoModel to load. (default ``transformers.AutoModelForCausalLM``)
+        **kwargs: :class:`lightning_transformers.core.nlp.HFTransformer` arguments.
+    """
 
     def __init__(self, *args, downstream_model_type: str = 'transformers.AutoModelForCausalLM', **kwargs) -> None:
         super().__init__(downstream_model_type, *args, **kwargs)

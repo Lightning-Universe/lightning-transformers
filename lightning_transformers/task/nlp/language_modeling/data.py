@@ -11,6 +11,15 @@ from lightning_transformers.task.nlp.language_modeling.config import LanguageMod
 
 
 class LanguageModelingDataModule(HFDataModule):
+    """
+    Defines ``LightningDataModule`` for Language Modeling Datasets.
+
+    Args:
+        *args: ``HFDataModule`` specific arguments.
+        cfg: Contains data specific parameters when processing/loading the dataset
+            (Default ``LanguageModelingDataConfig``)
+        **kwargs: ``HFDataModule`` specific arguments.
+    """
     cfg: LanguageModelingDataConfig
 
     def __init__(self, *args, cfg: LanguageModelingDataConfig = LanguageModelingDataConfig(), **kwargs) -> None:

@@ -9,6 +9,15 @@ from lightning_transformers.task.nlp.question_answering.config import QuestionAn
 
 
 class QuestionAnsweringDataModule(HFDataModule):
+    """
+    Defines the ``LightningDataModule`` for Question Answering Datasets.
+
+    Args:
+        *args: ``HFDataModule`` specific arguments.
+        cfg: Contains data specific parameters when processing/loading the dataset
+            (Default ``QuestionAnsweringDataConfig``)
+        **kwargs: ``HFDataModule`` specific arguments.
+    """
     cfg: QuestionAnsweringDataConfig
 
     def __init__(self, *args, cfg: QuestionAnsweringDataConfig = QuestionAnsweringDataConfig(), **kwargs) -> None:

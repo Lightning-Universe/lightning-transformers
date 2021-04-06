@@ -7,6 +7,9 @@ from lightning_transformers.task.nlp.multiple_choice.utils import DataCollatorFo
 
 
 class MultipleChoiceDataModule(HFDataModule):
+    """
+    Defines the ``LightningDataModule`` for Multiple Choice Datasets.
+    """
 
     @property
     def pad_to_max_length(self):

@@ -52,7 +52,8 @@ Lightning Transformers
    :name: api
    :caption: API Reference
 
-   references/api
+   references/task_api
+   references/datamodule_api
 
 
 Indices and tables
