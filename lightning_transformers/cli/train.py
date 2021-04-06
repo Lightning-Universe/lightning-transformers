@@ -29,6 +29,8 @@ def run(
         data_module_kwargs["tokenizer"] = tokenizer
 
     data_module: TransformerDataModule = instantiator.data_module(dataset, **data_module_kwargs)
+    if data_module is None:
+        raise ValueError("No dataset found. HINT: Did you set `+dataset=...`?")
     data_module.setup("fit")
 
     model: TaskTransformer = instantiator.model(task, model_data_kwargs=data_module.model_data_kwargs)
