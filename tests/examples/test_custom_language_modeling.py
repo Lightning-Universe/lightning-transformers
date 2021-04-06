@@ -8,9 +8,9 @@ from lightning_transformers.task.nlp.language_modeling.config import LanguageMod
 
 
 def test_example(hf_cache_path):
-    tokenizer = AutoTokenizer.from_pretrained(pretrained_model_name_or_path='sshleifer/tiny-gpt2')
+    tokenizer = AutoTokenizer.from_pretrained(pretrained_model_name_or_path='prajjwal1/bert-tiny')
     model = MyLanguageModelingTransformer(
-        backbone=HFBackboneConfig(pretrained_model_name_or_path='sshleifer/tiny-gpt2')
+        backbone=HFBackboneConfig(pretrained_model_name_or_path='prajjwal1/bert-tiny')
     )
     dm = MyLanguageModelingDataModule(
         cfg=LanguageModelingDataConfig(
