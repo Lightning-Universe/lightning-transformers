@@ -6,6 +6,15 @@ from lightning_transformers.task.nlp.translation.metric import BLEUScore
 
 
 class TranslationTransformer(Seq2SeqTransformer):
+    """
+    Defines ``LightningModule`` for the Translation Task.
+
+    Args:
+        *args: :class:`lightning_transformers.core.nlp.seq2seq.Seq2SeqTransformer` arguments.
+        downstream_model_type: Downstream HuggingFace AutoModel to load.
+            (default ``transformers.AutoModelForSeq2SeqLM``)
+        **kwargs: :class:`lightning_transformers.core.nlp.seq2seq.Seq2SeqTransformer` arguments.
+    """
 
     def __init__(
         self,

@@ -10,6 +10,14 @@ from lightning_transformers.core.nlp.config import HFTransformerDataConfig
 
 
 class HFDataModule(TokenizerDataModule):
+    """
+    Base ``LightningDataModule`` for HuggingFace Datasets. Provides helper functions and boilerplate logic
+    to load/process datasets.
+
+    Args:
+        tokenizer: ``PreTrainedTokenizerBase`` for tokenizing data.
+        cfg: Contains data specific parameters when processing/loading the dataset (Default ``HFTransformerDataConfig``)
+    """
     cfg: HFTransformerDataConfig
     tokenizer: PreTrainedTokenizerBase
 

@@ -4,7 +4,15 @@ from lightning_transformers.task.nlp.summarization.metric import RougeMetric
 
 
 class SummarizationTransformer(Seq2SeqTransformer):
-    cfg: SummarizationConfig
+    """
+    Defines ``LightningModule`` for the Summarization Task.
+
+    Args:
+        *args: :class:`lightning_transformers.core.nlp.seq2seq.Seq2SeqTransformer` arguments.
+        downstream_model_type: Downstream HuggingFace AutoModel to load.
+            (default ``transformers.AutoModelForSeq2SeqLM``)
+        **kwargs: :class:`lightning_transformers.core.nlp.seq2seq.Seq2SeqTransformer` arguments.
+    """
 
     def __init__(
         self,

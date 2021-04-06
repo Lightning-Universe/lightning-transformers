@@ -9,6 +9,15 @@ from lightning_transformers.core.nlp.seq2seq import Seq2SeqDataConfig
 
 
 class Seq2SeqDataModule(HFDataModule):
+    """
+    Defines the ``LightningDataModule`` for Seq2Seq Datasets, such as Summarization and Translation.
+
+    Args:
+        *args: ``HFDataModule`` specific arguments.
+        cfg: Contains data specific parameters when processing/loading the dataset
+            (Default ``Seq2SeqDataConfig``)
+        **kwargs: ``HFDataModule`` specific arguments.
+    """
     cfg: Seq2SeqDataConfig
 
     def __init__(self, *args, cfg: Seq2SeqDataConfig = Seq2SeqDataConfig(), **kwargs) -> None:

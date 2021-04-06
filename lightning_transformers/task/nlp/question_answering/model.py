@@ -6,6 +6,15 @@ from lightning_transformers.core.nlp import HFTransformer
 
 
 class QuestionAnsweringTransformer(HFTransformer):
+    """
+    Defines ``LightningModule`` for the Question Answering Task.
+
+    Args:
+        *args: :class:`lightning_transformers.core.nlp.HFTransformer` arguments.
+        downstream_model_type: Downstream HuggingFace AutoModel to load.
+            (default ``transformers.AutoModelForQuestionAnswering``)
+        **kwargs: :class:`lightning_transformers.core.nlp.HFTransformer` arguments.
+    """
 
     def __init__(
         self, *args, downstream_model_type: str = 'transformers.AutoModelForQuestionAnswering', **kwargs

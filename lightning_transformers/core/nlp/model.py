@@ -2,6 +2,7 @@ from typing import Any, Dict, Optional, Type, TYPE_CHECKING
 
 from hydra.utils import get_class
 from transformers import pipeline as hf_transformers_pipeline
+from transformers import PreTrainedTokenizerBase
 
 from lightning_transformers.core.config import OptimizerConfig, SchedulerConfig
 from lightning_transformers.core.instantiator import Instantiator
@@ -9,7 +10,7 @@ from lightning_transformers.core.model import TaskTransformer
 from lightning_transformers.core.nlp.config import HFBackboneConfig
 
 if TYPE_CHECKING:
-    from transformers import AutoModel, Pipeline, PreTrainedTokenizerBase
+    from transformers import AutoModel, Pipeline
 
 
 class HFTransformer(TaskTransformer):
@@ -18,6 +19,19 @@ class HFTransformer(TaskTransformer):
     The API is built on top of AutoModel and AutoConfig, provided by HuggingFace.
 
     see: https://huggingface.co/transformers/model_doc/auto.html
+
+    Args:
+        downstream_model_type: The AutoModel downstream model type.
+            See https://huggingface.co/transformers/model_doc/auto.html
+        backbone: Config containing backbone specific arguments.
+        optimizer: Config containing optimizer specific arguments.
+        scheduler: Config containing scheduler specific arguments.
+        instantiator: Used to instantiate objects (when using Hydra).
+            If Hydra is not being used the instantiator is not required,
+            and functions that use instantiation such as ``configure_optimizers`` has been overridden.
+        tokenizer: The pre-trained tokenizer.
+        pipeline_kwargs: Arguments required for the HuggingFace inference pipeline class.
+        **model_data_kwargs: Arguments passed from the data module to the class.
     """
 
     def __init__(
@@ -27,7 +41,7 @@ class HFTransformer(TaskTransformer):
         optimizer: OptimizerConfig = OptimizerConfig(),
         scheduler: SchedulerConfig = SchedulerConfig(),
         instantiator: Optional[Instantiator] = None,
-        tokenizer: Optional["PreTrainedTokenizerBase"] = None,
+        tokenizer: Optional[PreTrainedTokenizerBase] = None,
         pipeline_kwargs: Optional[dict] = None,
         **model_data_kwargs,
     ) -> None:

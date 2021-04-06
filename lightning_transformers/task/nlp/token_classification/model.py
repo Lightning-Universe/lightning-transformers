@@ -7,6 +7,15 @@ from lightning_transformers.core.nlp import HFTransformer
 
 
 class TokenClassificationTransformer(HFTransformer):
+    """
+    Defines ``LightningModule`` for the Text Classification Task.
+
+    Args:
+        *args: :class:`lightning_transformers.core.nlp.HFTransformer` arguments.
+        downstream_model_type: Downstream HuggingFace AutoModel to load.
+            (default ``transformers.AutoModelForTokenClassification``)
+        **kwargs: :class:`lightning_transformers.core.nlp.HFTransformer` arguments.
+    """
 
     def __init__(
         self,

@@ -5,6 +5,15 @@ from lightning_transformers.core.nlp import HFTransformer
 
 
 class MultipleChoiceTransformer(HFTransformer):
+    """
+    Defines ``LightningModule`` for the Multiple Choice Task.
+
+    Args:
+        *args: :class:`lightning_transformers.core.nlp.HFTransformer` arguments.
+        downstream_model_type: Downstream HuggingFace AutoModel to load.
+            (default ``transformers.AutoModelForMultipleChoice``)
+        **kwargs: :class:`lightning_transformers.core.nlp.HFTransformer` arguments.
+    """
 
     def __init__(self, *args, downstream_model_type: str = 'transformers.AutoModelForMultipleChoice', **kwargs) -> None:
         super().__init__(downstream_model_type, *args, **kwargs)

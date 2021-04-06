@@ -9,6 +9,15 @@ from lightning_transformers.task.nlp.token_classification.config import TokenCla
 
 
 class TokenClassificationDataModule(HFDataModule):
+    """
+    Defines the ``LightningDataModule`` for Token Classification Datasets.
+
+    Args:
+        *args: ``HFDataModule`` specific arguments.
+        cfg: Contains data specific parameters when processing/loading the dataset
+            (Default ``TokenClassificationDataConfig``)
+        **kwargs: ``HFDataModule`` specific arguments.
+    """
     cfg: TokenClassificationDataConfig
 
     def __init__(self, *args, cfg: TokenClassificationDataConfig = TokenClassificationDataConfig(), **kwargs) -> None:
