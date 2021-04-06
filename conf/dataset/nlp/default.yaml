@@ -1,6 +1,7 @@
 # @package dataset
 defaults:
   - /dataset/default
+_target_: lightning_transformers.core.nlp.HFDataModule
 cfg:
   dataset_name: null
   dataset_config_name: null
