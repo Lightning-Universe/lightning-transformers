@@ -3,7 +3,7 @@ from unittest.mock import MagicMock
 
 import pytest
 
-from lightning_transformers.core.nlp.huggingface import HFBackboneConfig, HFTransformerDataConfig
+from lightning_transformers.core.nlp import HFBackboneConfig, HFTransformerDataConfig
 from lightning_transformers.task.nlp.multiple_choice import MultipleChoiceDataModule, MultipleChoiceTransformer
 
 

@@ -1,5 +1,5 @@
 import logging
-from typing import Any, Dict, Optional, TYPE_CHECKING, Union
+from typing import Optional, TYPE_CHECKING, Union
 
 import hydra
 import pytorch_lightning as pl
@@ -43,15 +43,22 @@ class HydraInstantiator(Instantiator):
     def model(
         self,
         cfg: DictConfig,
-        model_data_args: Dict[str, Any] = None,
+        model_data_kwargs: Optional[DictConfig] = None,
         tokenizer: Optional[DictConfig] = None,
+        pipeline_kwargs: Optional[DictConfig] = None
     ) -> "TaskTransformer":
-        if model_data_args is None:
-            model_data_args = {}
-        if tokenizer is not None:
-            model_data_args = dict(model_data_args)  # avoid ConfigKeyError: Key 'tokenizer' is not in struct`
-            model_data_args["tokenizer"] = self.instantiate(tokenizer)
-        return self.instantiate(cfg, instantiator=self, **model_data_args)
+        if model_data_kwargs is None:
+            model_data_kwargs = {}
+        model_data_kwargs = dict(model_data_kwargs)  # avoid ConfigKeyError: Key 'tokenizer' is not in struct`
+
+        # use `model_data_kwargs` to pass `tokenizer` and `pipeline_kwargs`
+        # as not all models might contain these parameters.
+        if tokenizer:
+            model_data_kwargs["tokenizer"] = self.instantiate(tokenizer)
+        if pipeline_kwargs:
+            model_data_kwargs["pipeline_kwargs"] = pipeline_kwargs
+
+        return self.instantiate(cfg, instantiator=self, **model_data_kwargs)
 
     def optimizer(self, model: torch.nn.Module, cfg: DictConfig) -> torch.optim.Optimizer:
         no_decay = ["bias", "LayerNorm.weight"]

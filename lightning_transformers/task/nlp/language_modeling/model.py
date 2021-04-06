@@ -1,4 +1,4 @@
-from lightning_transformers.core.nlp.huggingface import HFTransformer
+from lightning_transformers.core.nlp import HFTransformer
 
 
 class LanguageModelingTransformer(HFTransformer):

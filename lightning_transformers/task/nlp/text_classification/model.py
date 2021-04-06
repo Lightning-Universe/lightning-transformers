@@ -3,7 +3,7 @@ from typing import Any, Dict
 import torch
 from torchmetrics import Accuracy, Precision, Recall
 
-from lightning_transformers.core.nlp.huggingface import HFTransformer
+from lightning_transformers.core.nlp import HFTransformer
 
 
 class TextClassificationTransformer(HFTransformer):

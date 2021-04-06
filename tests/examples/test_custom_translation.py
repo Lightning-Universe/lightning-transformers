@@ -3,7 +3,7 @@ from transformers import AutoTokenizer
 
 from examples.custom_translation.dataset import MyTranslationDataModule
 from examples.custom_translation.model import MyTranslationTransformer
-from lightning_transformers.core.nlp.huggingface import HFBackboneConfig
+from lightning_transformers.core.nlp import HFBackboneConfig
 from lightning_transformers.task.nlp.translation.config import TranslationDataConfig
 
 

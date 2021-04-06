@@ -3,7 +3,7 @@ from typing import Any, Dict, List, Optional
 from datasets import Dataset
 from transformers import PreTrainedTokenizerBase
 
-from lightning_transformers.core.nlp.huggingface import HFDataModule
+from lightning_transformers.core.nlp import HFDataModule
 
 
 class TextClassificationDataModule(HFDataModule):
@@ -30,7 +30,7 @@ class TextClassificationDataModule(HFDataModule):
         return self.labels.num_classes
 
     @property
-    def model_data_args(self) -> Dict[str, int]:
+    def model_data_kwargs(self) -> Dict[str, int]:
         return {"num_labels": self.num_classes}
 
     @staticmethod

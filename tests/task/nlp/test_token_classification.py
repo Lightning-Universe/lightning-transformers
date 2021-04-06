@@ -3,7 +3,7 @@ from unittest.mock import MagicMock
 
 import pytest
 
-from lightning_transformers.core.nlp.huggingface import HFBackboneConfig
+from lightning_transformers.core.nlp import HFBackboneConfig
 from lightning_transformers.task.nlp.token_classification import (
     TokenClassificationDataModule,
     TokenClassificationTransformer,
@@ -18,7 +18,7 @@ def test_smoke_train_e2e(script_runner):
 
 def test_smoke_predict_e2e(script_runner):
     y = script_runner.hf_predict(
-        ['+x="Have a good day!"', '+model_data_args={labels: 2}'],
+        ['+x="Have a good day!"', '+model_data_kwargs={labels: 2}'],
         task='token_classification',
         model='prajjwal1/bert-tiny',
     )

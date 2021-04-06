@@ -6,7 +6,7 @@ from pytorch_lightning import _logger as log
 from tokenizers import Tokenizer
 from transformers import default_data_collator, PreTrainedTokenizer, PreTrainedTokenizerFast
 
-from lightning_transformers.core.nlp.huggingface import HFDataModule
+from lightning_transformers.core.nlp import HFDataModule
 from lightning_transformers.task.nlp.language_modeling.config import LanguageModelingDataConfig
 
 
