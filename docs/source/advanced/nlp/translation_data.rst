@@ -83,7 +83,7 @@ We create a file at ``conf/datasets/nlp/translation/my_dataset.yaml`` containing
     # @package dataset
     defaults:
       - nlp/hf_default # Use the defaults from the default config found at `conf/dataset/nlp/hf_default.yaml`
-    _target_: examples.custom.dataset.translation.custom_dataset.MyTranslationDataModule # path to the class we'd like to instantiate
+    _target_: examples.custom_translation.dataset.MyTranslationDataModule # path to the class we'd like to instantiate
     cfg:
       max_source_length: 128 # any parameters you'd like from the inherited config object.
 

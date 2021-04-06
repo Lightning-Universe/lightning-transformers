@@ -126,7 +126,7 @@ We create a file at ``conf/datasets/nlp/language_modeling/my_dataset.yaml`` cont
     # @package dataset
     defaults:
       - nlp/hf_default # Use the defaults from the default config found at `conf/dataset/nlp/hf_default.yaml`
-    _target_: lightning_transformers.task.nlp.language_modeling.my_dataset.MyLanguageModelingDataModule # path to the class we'd like to instantiate
+    _target_: lightning_transformers.custom_language_modeling.dataset.MyLanguageModelingDataModule # path to the class we'd like to instantiate
     cfg:
       block_size: 512 # any parameters you'd like from the inherited config object.
 
