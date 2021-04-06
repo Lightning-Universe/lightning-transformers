@@ -4,14 +4,14 @@ from typing import Optional
 from datasets import Dataset
 from transformers import PreTrainedTokenizerBase
 
-from lightning_transformers.core.nlp import HFTransformerDataConfig
 from lightning_transformers.task.nlp.language_modeling import LanguageModelingDataModule
+from lightning_transformers.task.nlp.language_modeling.config import LanguageModelingDataConfig
 
 
 class MyLanguageModelingDataModule(LanguageModelingDataModule):
 
-    def __init__(self, cfg: HFTransformerDataConfig, tokenizer: PreTrainedTokenizerBase):
-        super().__init__(cfg, tokenizer)
+    def __init__(self, cfg: LanguageModelingDataConfig, tokenizer: PreTrainedTokenizerBase):
+        super().__init__(cfg=cfg, tokenizer=tokenizer)
         self.tokenized_condition_term = tokenizer("This is a story: ")
 
     def process_data(self, dataset: Dataset, stage: Optional[str] = None) -> Dataset:
@@ -61,8 +61,10 @@ class MyLanguageModelingDataModule(LanguageModelingDataModule):
         total_length = (total_length // block_size) * block_size
 
         # Add the term to the tokenized blocks of text
+        # here we iterate through the input ids and attention mask, so make sure we extract the right value from
+        # the tokenized conditional term (which has both)
         result = {
-            k: [tokenized_condition_term + t[i:i + block_size] for i in range(0, total_length, block_size)]
+            k: [tokenized_condition_term[k] + t[i:i + block_size] for i in range(0, total_length, block_size)]
             for k, t in concatenated_examples.items()
         }
         result["labels"] = result["input_ids"].copy()
