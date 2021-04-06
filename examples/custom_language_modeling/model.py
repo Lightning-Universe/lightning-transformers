@@ -5,8 +5,7 @@ from lightning_transformers.task.nlp.language_modeling import LanguageModelingTr
 
 class MyLanguageModelingTransformer(LanguageModelingTransformer):
 
-    def on_fit_start(self):
-        super().on_fit_start()
+    def setup(self, stage):
         # Freeze backbone
         for param in self.model.transformer.parameters():
             param.requires_grad = False
