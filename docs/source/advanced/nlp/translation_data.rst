@@ -1,7 +1,7 @@
 Translation using Custom Data Processing
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Below we show an example of how overriding data processing logic, by adding a prefix to the source language sample in translation.
+Below we show an example of how overriding data processing logic, by adding a prefix to the source language sample in translation. Check :doc:`/tasks/nlp/translation` for more information around the task.
 
 Ultimately to create your own custom data processing the flow is like this:
 

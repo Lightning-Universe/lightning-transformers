@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from pathlib import Path
 from typing import Optional, Union
 
 from lightning_transformers.core.config import TaskConfig
@@ -19,7 +20,7 @@ class HFTransformerDataConfig(TransformerDataConfig):
     max_length: int = 128
     preprocessing_num_workers: int = 8
     load_from_cache_file: bool = True
-    cache_dir: Optional[str] = None
+    cache_dir: Optional[Union[Path, str]] = None
     limit_train_samples: Optional[int] = None
     limit_val_samples: Optional[int] = None
     limit_test_samples: Optional[int] = None
