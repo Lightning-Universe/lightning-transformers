@@ -3,18 +3,31 @@ import subprocess
 from unittest import mock
 from unittest.mock import ANY, MagicMock
 
+import pytest
 from omegaconf import OmegaConf
+from pytorch_lightning import LightningDataModule
 
 import lightning_transformers.cli.train as cli
 
 
-def test_train_run():
-    trainer_mock = MagicMock()
+def test_train_run_raises():
     instantiator = MagicMock()
-    instantiator.trainer.return_value = trainer_mock
+    instantiator.data_module.return_value = None
+    with pytest.raises(ValueError, match="No dataset found"):
+        cli.run(instantiator)
+
+    with pytest.raises(ValueError, match="did not return a DataModule"):
+        cli.run(MagicMock())
+
+
+def test_train_run():
+    instantiator = MagicMock()
+    instantiator.data_module.return_value = MagicMock(spec=LightningDataModule)
 
     cli.run(instantiator)
 
+    instantiator.data_module.return_value.setup.assert_called_with("fit")
+    trainer_mock = instantiator.trainer.return_value
     trainer_mock.fit.assert_called()
     trainer_mock.test.assert_called()
 
