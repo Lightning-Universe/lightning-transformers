@@ -31,7 +31,7 @@ def run(
 
     data_module: TransformerDataModule = instantiator.data_module(dataset, **data_module_kwargs)
     if data_module is None:
-        raise ValueError("No dataset found. Hydra hint: did you set `+dataset=...`?")
+        raise ValueError("No dataset found. Hydra hint: did you set `dataset=...`?")
     if not isinstance(data_module, LightningDataModule):
         raise ValueError(
             "The instantiator did not return a DataModule instance."
