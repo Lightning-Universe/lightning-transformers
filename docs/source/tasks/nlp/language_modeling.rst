@@ -24,13 +24,13 @@ Language Models pre-trained or fine-tuned to the Causal Language Modeling task c
 
 .. code-block:: bash
 
-    python train.py +task=nlp/language_modeling dataset=nlp/language_modeling/wikitext
+    python train.py task=nlp/language_modeling dataset=nlp/language_modeling/wikitext
 
 Swap to GPT backbone:
 
 .. code-block:: bash
 
-    python train.py +task=nlp/language_modeling dataset=nlp/language_modeling/wikitext backbone.pretrained_model_name_or_path=gpt2
+    python train.py task=nlp/language_modeling dataset=nlp/language_modeling/wikitext backbone.pretrained_model_name_or_path=gpt2
 
 We report the Cross Entropy Loss for validation. Find all options available for the task `here <https://github.com/PyTorchLightning/lightning-transformers/blob/master/conf/task/nlp/language_modeling.yaml>`_.
 
@@ -45,16 +45,16 @@ For Hydra to correctly parse your input argument, if your input contains any spe
 
 .. code-block:: bash
 
-    python predict.py +task=nlp/language_modeling +checkpoint_path=/path/to/model.ckpt +x="Condition sentence for the language model"
+    python predict.py task=nlp/language_modeling +checkpoint_path=/path/to/model.ckpt +x="Condition sentence for the language model"
 
 You can also run prediction using a default HuggingFace pre-trained model:
 
 .. code-block:: bash
 
-   python predict.py +task=nlp/language_modeling +x="Condition sentence for the language model"
+   python predict.py task=nlp/language_modeling +x="Condition sentence for the language model"
 
 Or run prediction on a specified HuggingFace pre-trained model:
 
 .. code-block:: bash
 
-   python predict.py +task=nlp/language_modeling backbone.pretrained_model_name_or_path=bert-base-cased +x="Condition sentence for the language model"
+   python predict.py task=nlp/language_modeling backbone.pretrained_model_name_or_path=bert-base-cased +x="Condition sentence for the language model"

@@ -26,7 +26,7 @@ To use this task, we must select a Seq2Seq Encoder/Decoder based model, such as 
 
 .. code-block:: bash
 
-    python train.py +task=nlp/summarization dataset=nlp/summarization/cnn_dailymail backbone.pretrained_model_name_or_path=t5-base # dataset can be swapped to xsum
+    python train.py task=nlp/summarization dataset=nlp/summarization/cnn_dailymail backbone.pretrained_model_name_or_path=t5-base # dataset can be swapped to xsum
 
 .. include:: /datasets/nlp/summarization_data.rst
 
@@ -39,16 +39,16 @@ For Hydra to correctly parse your input argument, if your input contains any spe
 
 .. code-block:: bash
 
-    python predict.py +task=nlp/summarization +checkpoint_path=/path/to/model.ckpt '+x="The car was racing towards the tunnel, whilst blue lights were flashing behind it. The car entered the tunnel and vanished..."'
+    python predict.py task=nlp/summarization +checkpoint_path=/path/to/model.ckpt '+x="The car was racing towards the tunnel, whilst blue lights were flashing behind it. The car entered the tunnel and vanished..."'
 
 You can also run prediction using a default HuggingFace pre-trained model:
 
 .. code-block:: bash
 
-   python predict.py +task=nlp/summarization '+x="The car was racing towards the tunnel, whilst blue lights were flashing behind it. The car entered the tunnel and vanished..."'
+   python predict.py task=nlp/summarization '+x="The car was racing towards the tunnel, whilst blue lights were flashing behind it. The car entered the tunnel and vanished..."'
 
 Or run prediction on a specified HuggingFace pre-trained model:
 
 .. code-block:: bash
 
-   python predict.py +task=nlp/summarization backbone.pretrained_model_name_or_path=t5-base '+x="The car was racing towards the tunnel, whilst blue lights were flashing behind it. The car entered the tunnel and vanished..."'
+   python predict.py task=nlp/summarization backbone.pretrained_model_name_or_path=t5-base '+x="The car was racing towards the tunnel, whilst blue lights were flashing behind it. The car entered the tunnel and vanished..."'

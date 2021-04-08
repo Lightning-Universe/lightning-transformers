@@ -63,8 +63,8 @@ Lightning Transformers tasks allow you to train models using HuggingFace Transfo
 #### Train [bert-base-cased](https://huggingface.co/bert-base-cased) on the [CARER](https://huggingface.co/datasets/emotion) emotion dataset using the Text Classification task.
 ```bash
 python train.py \
-    +task=nlp/text_classification \
-    +dataset=nlp/text_classification/emotion
+    task=nlp/text_classification \
+    dataset=nlp/text_classification/emotion
 ```
 
 <details>
@@ -181,8 +181,8 @@ backbone:
 
 ```bash
 python train.py \
-    +task=nlp/text_classification \
-    +dataset=nlp/text_classification/emotion
+    task=nlp/text_classification \
+    dataset=nlp/text_classification/emotion
     backbone.pretrained_model_name_or_path=roberta-base
     optimizer=rmsprop
 ```
@@ -212,8 +212,8 @@ tokenizer:
 #### Enable [Sharded](https://pytorch-lightning.readthedocs.io/en/latest/advanced/multi_gpu.html#sharded-training) Training.
 ```bash
 python train.py \
-    +task=nlp/text_classification \
-    +dataset=nlp/text_classification/emotion \
+    task=nlp/text_classification \
+    dataset=nlp/text_classification/emotion \
     trainer=ddp \
     trainer/plugins=sharded
 ```
@@ -269,8 +269,8 @@ tokenizer:
 #### Enable [DeepSpeed ZeRO-Offload](https://pytorch-lightning.readthedocs.io/en/latest/advanced/multi_gpu.html#deepspeed) Training.
 ```bash
 python train.py \
-    +task=nlp/text_classification \
-    +dataset=nlp/text_classification/emotion \
+    task=nlp/text_classification \
+    dataset=nlp/text_classification/emotion \
     trainer=ddp \
     trainer/plugins=deepspeed
 ```
@@ -317,16 +317,16 @@ trainer:
 #### Train with a pre-trained [t5-base](https://huggingface.co/t5-base) backbone, on the [XSUM](https://huggingface.co/datasets/xsum) dataset using the Summarization task.
 ```bash
 python train.py \
-    +task=nlp/summarization \
-    +dataset=nlp/summarization/xsum \
+    task=nlp/summarization \
+    dataset=nlp/summarization/xsum \
     backbone.pretrained_model_name_or_path=t5-base
 ```
 
 #### Train with a pre-trained [mt5-base](https://huggingface.co/google/mt5-base) backbone, on the [WMT16](https://huggingface.co/datasets/wmt16) dataset using the Translation task with 2 GPUs.
 ```bash
 python train.py \
-    +task=nlp/translation \
-    +dataset=nlp/translation/wmt16 \
+    task=nlp/translation \
+    dataset=nlp/translation/wmt16 \
     backbone.pretrained_model_name_or_path=google/mt5-base \
     trainer.gpus=2
 ```

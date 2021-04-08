@@ -25,13 +25,13 @@ In addition, you also need a tokenizer that has been created on multi-lingual te
 
 .. code-block:: bash
 
-    python train.py +task=nlp/translation dataset=nlp/translation/wmt16 backbone.pretrained_model_name_or_path=google/mt5-base
+    python train.py task=nlp/translation dataset=nlp/translation/wmt16 backbone.pretrained_model_name_or_path=google/mt5-base
 
 By default we fine-tune to translate from English to Romanian. This can be changed by specifying the source/target languages (see more in ``conf/dataset/nlp/translation/wmt16.yaml``):
 
 .. code-block:: bash
 
-    python train.py +task=nlp/translation dataset=nlp/translation/wmt16 backbone.pretrained_model_name_or_path=google/mt5-base dataset.cfg.dataset_config_name=de-en dataset.cfg.source_language=de dataset.cfg.target_language=en
+    python train.py task=nlp/translation dataset=nlp/translation/wmt16 backbone.pretrained_model_name_or_path=google/mt5-base dataset.cfg.dataset_config_name=de-en dataset.cfg.source_language=de dataset.cfg.target_language=en
 
 .. include:: /datasets/nlp/translation_data.rst
 
@@ -44,10 +44,10 @@ For Hydra to correctly parse your input argument, if your input contains any spe
 
 .. code-block:: bash
 
-    python predict.py +task=nlp/translation +checkpoint_path=/path/to/model.ckpt +x="The ground is black, the sky is blue and the car is red."
+    python predict.py task=nlp/translation +checkpoint_path=/path/to/model.ckpt +x="The ground is black, the sky is blue and the car is red."
 
 You can also run prediction using a HuggingFace pre-trained model:
 
 .. code-block:: bash
 
-   python predict.py +task=nlp/translation backbone.pretrained_model_name_or_path="Helsinki-NLP/opus-mt-en-de" '+x="The ground is black, the sky is blue and the car is red."'
+   python predict.py task=nlp/translation backbone.pretrained_model_name_or_path="Helsinki-NLP/opus-mt-en-de" '+x="The ground is black, the sky is blue and the car is red."'
