@@ -82,7 +82,7 @@ We create a file at ``conf/datasets/nlp/translation/my_dataset.yaml`` containing
 
     # @package dataset
     defaults:
-      - nlp/hf_default # Use the defaults from the default config found at `conf/dataset/nlp/hf_default.yaml`
+      - nlp/default # Use the defaults from the default config found at `conf/dataset/nlp/default.yaml`
     _target_: examples.custom_translation.dataset.MyTranslationDataModule # path to the class we'd like to instantiate
     cfg:
       max_source_length: 128 # any parameters you'd like from the inherited config object.
@@ -91,4 +91,4 @@ With this in place you can now train using either HuggingFace Datasets or your o
 
 .. code-block:: bash
 
-    python train.py +task=nlp/translation +dataset=nlp/translation/my_dataset dataset.train_file=train.csv dataset.validation_file=valid.csv
+    python train.py +task=nlp/translation dataset=nlp/translation/my_dataset dataset.cfg.train_file=train.csv dataset.cfg.validation_file=valid.csv

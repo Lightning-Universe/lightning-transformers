@@ -24,13 +24,13 @@ Language Models pre-trained or fine-tuned to the Causal Language Modeling task c
 
 .. code-block:: bash
 
-    python train.py +task=nlp/language_modeling +dataset=nlp/language_modeling/wikitext
+    python train.py +task=nlp/language_modeling dataset=nlp/language_modeling/wikitext
 
 Swap to GPT backbone:
 
 .. code-block:: bash
 
-    python train.py +task=nlp/language_modeling +dataset=nlp/language_modeling/wikitext backbone.pretrained_model_name_or_path=gpt2
+    python train.py +task=nlp/language_modeling dataset=nlp/language_modeling/wikitext backbone.pretrained_model_name_or_path=gpt2
 
 We report the Cross Entropy Loss for validation. Find all options available for the task `here <https://github.com/PyTorchLightning/lightning-transformers/blob/master/conf/task/nlp/language_modeling.yaml>`_.
 

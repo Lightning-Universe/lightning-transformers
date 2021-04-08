@@ -27,13 +27,13 @@ Training
 
 .. code-block:: bash
 
-    python train.py +task=nlp/question_answering +dataset=nlp/question_answering/squad
+    python train.py +task=nlp/question_answering dataset=nlp/question_answering/squad
 
 Swap to GPT backbone:
 
 .. code-block:: bash
 
-    python train.py +task=nlp/question_answering +dataset=nlp/question_answering/squad backbone.pretrained_model_name_or_path=gpt2
+    python train.py +task=nlp/question_answering dataset=nlp/question_answering/squad backbone.pretrained_model_name_or_path=gpt2
 
 .. include:: /datasets/nlp/question_answering_data.rst
 

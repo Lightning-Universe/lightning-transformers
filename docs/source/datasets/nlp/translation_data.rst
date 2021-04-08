@@ -14,4 +14,4 @@ We override the dataset files, allowing us to still use the data transforms defi
 
 .. code-block:: bash
 
-    python train.py +task=nlp/translation dataset.train_file=train.json dataset.validation_file=valid.json
+    python train.py +task=nlp/translation dataset.cfg.train_file=train.json dataset.cfg.validation_file=valid.json

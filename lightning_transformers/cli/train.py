@@ -2,6 +2,7 @@ from typing import Any, Optional
 
 import hydra
 from omegaconf import DictConfig, OmegaConf
+from pytorch_lightning import LightningDataModule
 from pytorch_lightning.utilities.distributed import rank_zero_info
 
 from lightning_transformers.core import TaskTransformer, TransformerDataModule
@@ -29,9 +30,16 @@ def run(
         data_module_kwargs["tokenizer"] = tokenizer
 
     data_module: TransformerDataModule = instantiator.data_module(dataset, **data_module_kwargs)
+    if data_module is None:
+        raise ValueError("No dataset found. Hydra hint: did you set `+dataset=...`?")
+    if not isinstance(data_module, LightningDataModule):
+        raise ValueError(
+            "The instantiator did not return a DataModule instance."
+            " Hydra hint: is `dataset._target_` defined?`"
+        )
     data_module.setup("fit")
 
-    model: TaskTransformer = instantiator.model(task, model_data_kwargs=data_module.model_data_kwargs)
+    model: TaskTransformer = instantiator.model(task, model_data_kwargs=getattr(data_module, "model_data_kwargs", None))
     trainer = instantiator.trainer(
         trainer,
         logger=logger,

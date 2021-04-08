@@ -16,4 +16,4 @@ Below we have defined a csv file to use as our input data.
 
 .. code-block:: bash
 
-    python train.py +task=nlp/language_modeling dataset.train_file=train.csv dataset.validation_file=valid.csv
+    python train.py +task=nlp/language_modeling dataset.cfg.train_file=train.csv dataset.cfg.validation_file=valid.csv

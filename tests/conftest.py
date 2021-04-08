@@ -47,8 +47,8 @@ class ScriptRunner:
     def hf_train(
         self,
         task: str,
-        dataset: str,
         model: str,
+        dataset: Optional[str] = None,
         cmd_args: Optional[List[str]] = None,
         max_samples: int = 16,
         num_workers: int = 0,
@@ -58,7 +58,6 @@ class ScriptRunner:
             cmd_args = []
         cmd_args.extend([
             f'+task=nlp/{task}',
-            f'+dataset=nlp/{task}/{dataset}',
             f'backbone.pretrained_model_name_or_path={model}',
             f'dataset.cfg.limit_train_samples={max_samples}',
             f'dataset.cfg.limit_val_samples={max_samples}',
@@ -66,6 +65,8 @@ class ScriptRunner:
             f'dataset.cfg.cache_dir={self.hf_cache_path}',
             f'training.num_workers={num_workers}',
         ])
+        if dataset is not None:
+            cmd_args.append(f'dataset=nlp/{task}/{dataset}')
         if fast_dev_run:
             cmd_args.append(f"trainer.fast_dev_run={fast_dev_run}")
         self.train(cmd_args)

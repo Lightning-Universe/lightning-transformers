@@ -24,13 +24,13 @@ For this task, you can rely on most Transformer models as your backbone.
 
 .. code-block:: bash
 
-    python train.py +task=nlp/text_classification +dataset=nlp/text_classification/emotion # can be swapped to xlni or glue
+    python train.py +task=nlp/text_classification dataset=nlp/text_classification/emotion # can be swapped to xlni or glue
 
 Swap to GPT backbone:
 
 .. code-block:: bash
 
-    python train.py +task=nlp/text_classification +dataset=nlp/text_classification/emotion backbone.pretrained_model_name_or_path=gpt2
+    python train.py +task=nlp/text_classification dataset=nlp/text_classification/emotion backbone.pretrained_model_name_or_path=gpt2
 
 We report the Precision, Recall, Accuracy and Cross Entropy Loss for validation. Find all options available for the task `here <https://github.com/PyTorchLightning/lightning-transformers/blob/master/conf/task/nlp/text_classification.yaml>`_.
 

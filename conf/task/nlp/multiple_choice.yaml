@@ -1,5 +1,6 @@
 # @package task
 defaults:
   - nlp/default
+  - override /dataset@_group_: nlp/multiple_choice/default
 _target_: lightning_transformers.task.nlp.multiple_choice.MultipleChoiceTransformer
 downstream_model_type: transformers.AutoModelForMultipleChoice

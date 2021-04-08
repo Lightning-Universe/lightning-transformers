@@ -20,4 +20,4 @@ Here we enable sharded training for the translation task.
 
 .. code-block:: bash
 
-    python train.py +task=nlp/translation +dataset=nlp/translation/wmt16 trainer=sharded
+    python train.py +task=nlp/translation dataset=nlp/translation/wmt16 trainer=sharded

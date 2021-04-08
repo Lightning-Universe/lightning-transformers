@@ -2,7 +2,3 @@
 defaults:
   - nlp/default
 _target_: lightning_transformers.task.nlp.language_modeling.LanguageModelingDataModule
-cfg:
-  dataset_name: wikitext
-  dataset_config_name: wikitext-2-raw-v1
-  block_size: 512

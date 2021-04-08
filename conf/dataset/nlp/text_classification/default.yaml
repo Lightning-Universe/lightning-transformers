@@ -2,5 +2,3 @@
 defaults:
   - nlp/default
 _target_: lightning_transformers.task.nlp.text_classification.TextClassificationDataModule
-cfg:
-  dataset_name: emotion

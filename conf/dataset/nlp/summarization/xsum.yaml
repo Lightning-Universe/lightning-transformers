@@ -1,6 +1,6 @@
 # @package dataset
 defaults:
-  - nlp/hf_default
+  - nlp/default
 _target_: lightning_transformers.task.nlp.summarization.XsumSummarizationDataModule
 cfg:
   dataset_name: xsum
