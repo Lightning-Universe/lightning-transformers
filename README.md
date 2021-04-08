@@ -214,11 +214,12 @@ tokenizer:
 python train.py \
     +task=nlp/text_classification \
     +dataset=nlp/text_classification/emotion \
-    trainer=sharded
+    trainer=ddp \
+    trainer/plugins=sharded
 ```
 
 <details>
-  <summary>See the modified Hydra config</summary>
+  <summary>See the changed Hydra config under-the-hood</summary>
 Without the need to modify any code, the config updated automatically for sharded training:
 
 ```diff
@@ -270,11 +271,12 @@ tokenizer:
 python train.py \
     +task=nlp/text_classification \
     +dataset=nlp/text_classification/emotion \
-    trainer=deepspeed
+    trainer=ddp \
+    trainer/plugins=deepspeed
 ```
 
 <details>
-  <summary>See the modified Hydra config</summary>
+  <summary>See the changed Hydra config under-the-hood</summary>
 Without the need to modify any code, the config updated automatically for DeepSpeed:
 
 ```diff
@@ -338,7 +340,7 @@ You can train, validate and test Lightning transformers tasks on your own data f
 
 ### Custom Tasks
 
-#### [Custom Language Modeling Task, using the Performer architecture](TODO)
+#### [Extending the Language Modeling Task](TODO)
 
 ## Contribute
 
