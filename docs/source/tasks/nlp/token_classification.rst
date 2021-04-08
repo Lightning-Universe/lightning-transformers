@@ -17,13 +17,13 @@ Training
 
 .. code-block:: bash
 
-    python train.py +task=nlp/token_classification +dataset=nlp/token_classification/conll
+    python train.py +task=nlp/token_classification dataset=nlp/token_classification/conll
 
 Swap to GPT backbone:
 
 .. code-block:: bash
 
-    python train.py +task=nlp/token_classification +dataset=nlp/token_classification/conll backbone.pretrained_model_name_or_path=gpt2
+    python train.py +task=nlp/token_classification dataset=nlp/token_classification/conll backbone.pretrained_model_name_or_path=gpt2
 
 We report the Precision, Recall, Accuracy and Cross Entropy Loss for validation. To see all options available for the task, see `Find all options available for the task `here <https://github.com/PyTorchLightning/lightning-transformers/blob/master/conf/task/nlp/token_classification.yaml>`_.
 

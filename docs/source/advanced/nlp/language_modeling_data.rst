@@ -134,4 +134,4 @@ With this in place you can now train using either HuggingFace Datasets or your o
 
 .. code-block:: bash
 
-    python train.py +task=nlp/language_modeling +dataset=nlp/language_modeling/my_dataset dataset.cfg.train_file=train.csv dataset.cfg.validation_file=valid.csv
+    python train.py +task=nlp/language_modeling dataset=nlp/language_modeling/my_dataset dataset.cfg.train_file=train.csv dataset.cfg.validation_file=valid.csv

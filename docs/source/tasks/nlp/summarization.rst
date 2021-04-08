@@ -26,7 +26,7 @@ To use this task, we must select a Seq2Seq Encoder/Decoder based model, such as 
 
 .. code-block:: bash
 
-    python train.py +task=nlp/summarization +dataset=nlp/summarization/cnn_dailymail backbone.pretrained_model_name_or_path=t5-base # dataset can be swapped to xsum
+    python train.py +task=nlp/summarization dataset=nlp/summarization/cnn_dailymail backbone.pretrained_model_name_or_path=t5-base # dataset can be swapped to xsum
 
 .. include:: /datasets/nlp/summarization_data.rst
 

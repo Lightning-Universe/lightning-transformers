@@ -85,7 +85,7 @@ With this in place you can now train using pre-made HuggingFace datasets:
 
 .. code-block:: bash
 
-    python train.py +task=nlp/my_language_modeling +dataset=nlp/language_modeling/wikitext dataset.train_file=train.csv dataset.validation_file=valid.csv
+    python train.py +task=nlp/my_language_modeling dataset=nlp/language_modeling/wikitext dataset.train_file=train.csv dataset.validation_file=valid.csv
 
 Or with your own files:
 
