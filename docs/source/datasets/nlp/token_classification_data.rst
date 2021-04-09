@@ -12,4 +12,4 @@ To use custom text files, the files should contain new line delimited json objec
 
 .. code-block:: bash
 
-    python train.py +task=nlp/token_classification dataset.cfg.train_file=train.json dataset.cfg.validation_file=valid.json
+    python train.py task=nlp/token_classification dataset.cfg.train_file=train.json dataset.cfg.validation_file=valid.json

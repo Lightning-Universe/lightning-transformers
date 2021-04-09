@@ -1,8 +1,10 @@
 # @package task
+defaults:
+  - /dataset@_group_: default
 
 # By default we turn off recursive instantiation, allowing the user to instantiate themselves at the appropriate times.
 _recursive_: false
 
-backbone: ${backbone}
+_target_: lightning_transformers.core.model.TaskTransformer
 optimizer: ${optimizer}
 scheduler: ${scheduler}

@@ -30,10 +30,10 @@ Task and Dataset have been marked as required within the ``config.yaml``, thus h
 
 .. code-block:: bash
 
-    python train.py +task=nlp/text_classification dataset=nlp/text_classification/emotion
+    python train.py task=nlp/text_classification dataset=nlp/text_classification/emotion
 
 
-``+task`` and ``dataset`` allow us to append configs from the conf folder to our training config. These config files can be found in ``task/nlp/text_classification`` and ``dataset/nlp/text_classification/emotion`` respectively.
+``task`` and ``dataset`` allow us to append configs from the conf folder to our training config. These config files can be found in ``task/nlp/text_classification`` and ``dataset/nlp/text_classification/emotion`` respectively.
 
 Overriding Configs
 ******************

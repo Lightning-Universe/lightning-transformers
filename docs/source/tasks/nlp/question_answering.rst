@@ -27,13 +27,13 @@ Training
 
 .. code-block:: bash
 
-    python train.py +task=nlp/question_answering dataset=nlp/question_answering/squad
+    python train.py task=nlp/question_answering dataset=nlp/question_answering/squad
 
 Swap to GPT backbone:
 
 .. code-block:: bash
 
-    python train.py +task=nlp/question_answering dataset=nlp/question_answering/squad backbone.pretrained_model_name_or_path=gpt2
+    python train.py task=nlp/question_answering dataset=nlp/question_answering/squad backbone.pretrained_model_name_or_path=gpt2
 
 .. include:: /datasets/nlp/question_answering_data.rst
 
@@ -46,16 +46,16 @@ For Hydra to correctly parse your input argument, if your input contains any spe
 
 .. code-block:: bash
 
-    python predict.py +task=nlp/question_answering +checkpoint_path=/path/to/model.ckpt +x='{context: "The ground is black, the sky is blue and the car is red.", question: "What color is the sky?"}'
+    python predict.py task=nlp/question_answering +checkpoint_path=/path/to/model.ckpt +x='{context: "The ground is black, the sky is blue and the car is red.", question: "What color is the sky?"}'
 
 You can also run prediction using a default HuggingFace pre-trained model:
 
 .. code-block:: bash
 
-   python predict.py +task=nlp/question_answering +x='{context: "The ground is black, the sky is blue and the car is red.", question: "What color is the sky?"}'
+   python predict.py task=nlp/question_answering +x='{context: "The ground is black, the sky is blue and the car is red.", question: "What color is the sky?"}'
 
 Or run prediction on a specified HuggingFace pre-trained model:
 
 .. code-block:: bash
 
-   python predict.py +task=nlp/question_answering backbone.pretrained_model_name_or_path=bert-base-cased +x='{context: "The ground is black, the sky is blue and the car is red.", question: "What color is the sky?"}'
+   python predict.py task=nlp/question_answering backbone.pretrained_model_name_or_path=bert-base-cased +x='{context: "The ground is black, the sky is blue and the car is red.", question: "What color is the sky?"}'

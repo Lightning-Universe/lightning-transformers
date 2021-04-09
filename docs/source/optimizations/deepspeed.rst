@@ -15,7 +15,7 @@ We provide out of the box configs to use the DeepSpeed plugin. Below is an examp
 
 .. code-block:: bash
 
-   python train.py +task=nlp/translation dataset=nlp/translation/wmt16 trainer=deepspeed
+   python train.py task=nlp/translation dataset=nlp/translation/wmt16 trainer=deepspeed
 
 All options can be found in ``conf/trainer/plugins/zero.yaml``. We suggest referring to `the DeepSpeed PyTorch Lightning docs <https://pytorch-lightning.readthedocs.io/en/latest/advanced/multi_gpu.html#deepspeed>`__ for more information on the parameters.
 
@@ -28,7 +28,7 @@ We provide default trainer configurations to enable ZeRO-Offload:
 
 .. code-block:: python
 
-   python train.py +task=nlp/translation dataset=nlp/translation/wmt16 trainer=zero_offload
+   python train.py task=nlp/translation dataset=nlp/translation/wmt16 trainer=zero_offload
 
 To see the configuration settings see ``conf/trainer/zero_offload.yaml`` and ``conf/trainer/plugins/zero_offload.yaml`` for the parameters. Within the config file, you can modify the ZeRO parameters as described in `the DeepSpeed PyTorch Lightning docs <https://pytorch-lightning.readthedocs.io/en/latest/advanced/multi_gpu.html#deepspeed>`__.
 
