@@ -2,5 +2,5 @@
 defaults:
   - /task/default
   - /backbone@_group_: nlp/default # use AutoModel backbone by default
-  - /dataset@_group_: nlp/default
+  - override /dataset@_group_: nlp/default
 backbone: ${backbone}

@@ -1,6 +1,5 @@
 defaults: # loads default configs
   - task: default
-  - dataset: default
   - optimizer: adamw
   - scheduler: linear_schedule_with_warmup
   - training: default
