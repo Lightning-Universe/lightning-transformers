@@ -32,7 +32,7 @@ The base data module can be used to modify this code, and follows a simple patte
         @staticmethod
         def tokenize_function(
             examples,
-            tokenizer: Union[Tokenizer, PreTrainedTokenizer, PreTrainedTokenizerFast],
+            tokenizer: Union[PreTrainedTokenizerBase],
             text_column_name: str = None,
         ):
             # tokenizes the data in a specific column using the AutoTokenizer,
