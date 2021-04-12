@@ -3,8 +3,7 @@ from typing import Callable, Optional, Union
 
 from datasets import Dataset
 from pytorch_lightning import _logger as log
-from tokenizers import Tokenizer
-from transformers import default_data_collator, PreTrainedTokenizer, PreTrainedTokenizerFast
+from transformers import default_data_collator, PreTrainedTokenizerBase
 
 from lightning_transformers.core.nlp import HFDataModule
 from lightning_transformers.task.nlp.language_modeling.config import LanguageModelingDataConfig
@@ -73,7 +72,7 @@ class LanguageModelingDataModule(HFDataModule):
     @staticmethod
     def tokenize_function(
         examples,
-        tokenizer: Union[Tokenizer, PreTrainedTokenizer, PreTrainedTokenizerFast],
+        tokenizer: Union[PreTrainedTokenizerBase],
         text_column_name: str = None,
     ):
         return tokenizer(examples[text_column_name])
