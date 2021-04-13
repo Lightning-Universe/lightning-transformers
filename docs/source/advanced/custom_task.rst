@@ -41,10 +41,9 @@ The ``LMHeadAutoModel`` task provides separate keys for the backbone and the ful
 
     class MyLanguageModelingTransformer(LanguageModelingTransformer):
 
-        def on_fit_start(self):
-            super().on_fit_start()
-            # Freeze backbone
-            for param in self.model.transformer.parameters():
+        def setup(self, stage):
+            # Freeze BERT backbone
+            for param in self.model.bert.parameters():
                 param.requires_grad = False
 
         def training_step(self, batch, batch_idx):
