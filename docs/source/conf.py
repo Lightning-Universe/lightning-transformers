@@ -131,6 +131,7 @@ PACKAGE_MAPPING = {
     'Pillow': 'PIL',
     'PyYAML': 'yaml',
     "hydra-core": "hydra",
+    "rouge-score": "rouge_score",
 }
 MOCK_PACKAGES = ['omegaconf']
 if SPHINX_MOCK_REQUIREMENTS:
