@@ -14,7 +14,6 @@ datasets
 
 # hydra
 hydra-core>=1.1.0.dev4 # todo: swap to 1.1 version once out
-omegaconf
 
 # task-specific
 rouge-score
