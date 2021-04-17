@@ -54,7 +54,7 @@ Lightning Transformers offers a flexible interface for training and fine-tuning 
 * **Powerful config composition backed by [Hydra](https://hydra.cc/)** - Easily swap out models, optimizers, schedulers and many more configurations without touching the code.
 * **Transformer Task Abstraction for Rapid Research & Experimentation** - Built from the ground up to be task agnostic, the library supports creating transformer tasks across all modalities with little friction.
 
-Lightning Transformers tasks allow you to train models using HuggingFace Transformer models and datasets, use Hydra to hotswap models, optimizers or schedulers and leverage all the advances features that Lightning has to offer, inculding custom Callbacks, Loggers, Accelerators and high performance scaling with minimal changes.
+Lightning Transformers tasks allow you to train models using HuggingFace Transformer models and datasets, use Hydra to hotswap models, optimizers or schedulers and leverage all the advances features that Lightning has to offer, including custom Callbacks, Loggers, Accelerators and high performance scaling with minimal changes.
 
 ## Using Lightning-Transformers
 
