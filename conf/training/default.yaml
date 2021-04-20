@@ -1,5 +1,4 @@
-do_train: True
-do_eval: True
+run_test_after_fit: True
 lr: 5e-5
 output_dir: '.'
 
