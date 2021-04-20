@@ -19,7 +19,6 @@
 # Disable formatting for easier diffs with upstream
 # yapf: disable
 # flake8: noqa
-
 import collections
 import json
 import os
