@@ -49,7 +49,7 @@ pip install lightning-transformers["extra"]
 
 Lightning Transformers offers a flexible interface for training and fine-tuning SOTA Transformer models using the [PyTorch Lightning Trainer](https://pytorch-lightning.readthedocs.io/en/stable/common/trainer.html).
 
-* **Train [HuggingFace Transformers](https://github.com/huggingface/transformers) models and datasets** with Lightning custom Callbacks, Loggers, Accelerators and high performance scaling.
+* **Train using [HuggingFace Transformers](https://github.com/huggingface/transformers) models and datasets** with Lightning custom Callbacks, Loggers, Accelerators and high performance scaling.
 * **Seamless Memory and Speed Optimizations** such as [DeepSpeed ZeRO](https://pytorch-lightning.readthedocs.io/en/latest/multi_gpu.html#deepspeed) or [FairScale Sharded Training](https://pytorch-lightning.readthedocs.io/en/latest/multi_gpu.html#sharded-training) with no code changes.
 * **Powerful config composition backed by [Hydra](https://hydra.cc/)** - Easily swap out models, optimizers, schedulers and many more configurations without touching the code.
 * **Transformer Task Abstraction for Rapid Research & Experimentation** - Built from the ground up to be task agnostic, the library supports creating transformer tasks across all modalities with little friction.
