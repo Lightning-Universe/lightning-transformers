@@ -7,7 +7,7 @@ Below we describe how you can customize the Language Modeling Task. In our examp
 For the purpose of this example we freeze the backbone within the Task, however this is recommended to be done via a `Callback <https://pytorch-lightning.readthedocs.io/en/latest/extensions/callbacks.html>`_ as seen in the `Freeze Embeddings Callback <https://github.com/PyTorchLightning/lightning-transformers/tree/master/lightning_transformers/core/nlp/seq2seq/finetuning.py>`_.
 
 Tasks are based of a AutoModel Transformer, which handles all the internal logic when running the forward pass
-through the model, and the loss calculation for a specific task. Below are the steps to customize a task within the ``LightningModule``.
+through the model, and the loss calculation for a specific task. Below are the steps to customize a task within the `LightningModule <https://pytorch-lightning.readthedocs.io/en/latest/common/lightning_module.html>`__.
 
 1. Inherit from Lightning Transformers Base Class
 2. Add custom task logic
@@ -82,12 +82,12 @@ Hydra supports config inheritence, so we could inherit from the language modelin
 
 With this in place you can now train using pre-made HuggingFace datasets:
 
-.. code-block:: bash
+.. code-block:: python
 
     python train.py task=nlp/my_language_modeling dataset=nlp/language_modeling/wikitext dataset.train_file=train.csv dataset.validation_file=valid.csv
 
 Or with your own files:
 
-.. code-block:: bash
+.. code-block:: python
 
     python train.py task=nlp/my_language_modeling dataset.train_file=train.csv dataset.validation_file=valid.csv

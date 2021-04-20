@@ -13,11 +13,11 @@ DeepSpeed ZeRO Stage 2
 
 We provide out of the box configs to use the DeepSpeed plugin. Below is an example of how you can swap to the default trainer config for DeepSpeed when using the translation task.
 
-.. code-block:: bash
+.. code-block:: python
 
    python train.py task=nlp/translation dataset=nlp/translation/wmt16 trainer=deepspeed
 
-All options can be found in ``conf/trainer/plugins/zero.yaml``. We suggest referring to `the DeepSpeed PyTorch Lightning docs <https://pytorch-lightning.readthedocs.io/en/latest/advanced/multi_gpu.html#deepspeed>`__ for more information on the parameters.
+All options can be found in `conf/trainer/plugins/deepspeed.yaml <https://github.com/PyTorchLightning/lightning-transformers/blob/master/conf/trainer/plugins/deepspeed.yaml>`__. We suggest referring to `the DeepSpeed PyTorch Lightning docs <https://pytorch-lightning.readthedocs.io/en/latest/advanced/multi_gpu.html#deepspeed>`__ for more information on the parameters.
 
 DeepSpeed ZeRO Stage 2 Offload
 ------------------------------
@@ -28,9 +28,9 @@ We provide default trainer configurations to enable ZeRO-Offload:
 
 .. code-block:: python
 
-   python train.py task=nlp/translation dataset=nlp/translation/wmt16 trainer=zero_offload
+   python train.py task=nlp/translation dataset=nlp/translation/wmt16 trainer=deepspeed_offload
 
-To see the configuration settings see ``conf/trainer/zero_offload.yaml`` and ``conf/trainer/plugins/zero_offload.yaml`` for the parameters. Within the config file, you can modify the ZeRO parameters as described in `the DeepSpeed PyTorch Lightning docs <https://pytorch-lightning.readthedocs.io/en/latest/advanced/multi_gpu.html#deepspeed>`__.
+To see the configuration settings see `conf/trainer/plugins/deepspeed_offload.yaml <https://github.com/PyTorchLightning/lightning-transformers/blob/master/conf/trainer/plugins/deepspeed_offload.yaml>`__  for the parameters. Within the config file, you can modify the ZeRO parameters as described in `the DeepSpeed PyTorch Lightning docs <https://pytorch-lightning.readthedocs.io/en/latest/advanced/multi_gpu.html#deepspeed>`__.
 
 .. code-block:: yaml
 

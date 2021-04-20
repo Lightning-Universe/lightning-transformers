@@ -10,22 +10,27 @@ Quick Start
 Using Lightning-Transformers
 ****************************
 
-Lightning Transfomers has a collections of configures tasks for common NLP problems such as :ref:`language_modeling`, :ref:`translation` and more. To use it simply:
+Lightning Transformers has a collections of tasks for common NLP problems such as :ref:`language_modeling`, :ref:`translation` and more. To use, simply:
 
-1. Pick a task to train (passed to train.py as ``task=``).
+1. Pick a task to train (passed to ``train.py`` as ``task=``)
 
-2. Pick a dataset (passed to train.py as ``dataset=``).
+2. Pick a dataset (passed to ``train.py`` as ``dataset=``)
 
-3. Customize the backbone, optimizer, or any part of the config.
+3. Customize the backbone, optimizer, or any component within the config
 
-4. Add any of the Lightning supported optimizations.
+4. Add any `Lightning supported parameters and optimizations <https://pytorch-lightning.readthedocs.io/en/stable/common/trainer.html>`_
 
 .. code-block:: python
 
-   python train.py task=<TASK> dataset=<DATA_SET>  [backbone.pretrained_model_name_or_path=<BACKBONE> optimizer=<OPTIMIZER> trainer.<ANY_TRAINER_FLASG>]
+   python train.py \
+        task=<TASK> \
+        dataset=<DATASET> \
+        backbone.pretrained_model_name_or_path=<BACKBONE> # Optionally change the HF backbone model
+        optimizer=<OPTIMIZER> # Optionally specify optimizer (Default AdamW)
+        trainer.<ANY_TRAINER_FLAGS> # Optionally specify Lightning trainer arguments
 
-Finetune
---------
+Finetuning
+----------
 
 In this example we will finetune the :ref:`text_classification` task on the `emotion <https://huggingface.co/datasets/emotion>`_ dataset.
 
@@ -35,7 +40,7 @@ To fine-tune using the Text Classification default `bert-based-cased <https://hu
 
    python train.py task=nlp/text_classification dataset=nlp/text_classification/emotion
 
-Change the backbone
+Change the Backbone
 -------------------
 
 Swap to the `RoBERTa <https://huggingface.co/roberta-base>`_ model:
@@ -44,7 +49,7 @@ Swap to the `RoBERTa <https://huggingface.co/roberta-base>`_ model:
 
    python train.py task=nlp/text_classification dataset=nlp/text_classification/emotion backbone.pretrained_model_name_or_path=roberta-base
 
-Change the optimizer
+Change the Optimizer
 --------------------
 
 Swap to using RMSProp optimizer (see `conf/optimizer/ <https://github.com/PyTorchLightning/lightning-transformers/tree/master/conf/optimizer>`_ for all supported optimizers):
@@ -55,19 +60,19 @@ Swap to using RMSProp optimizer (see `conf/optimizer/ <https://github.com/PyTorc
 
 For more info on how to override configuration, see :ref:`conf`.
 
-Lightning training optimizations
---------------------------------
+Lightning Trainer Options
+--------------------------
 
-Enable `Pytorch Lightning Native 16bit precision <https://pytorch-lightning.readthedocs.io/en/latest/amp.html#gpu-16-bit>`_:
+We expose all `Pytorch Lightning Trainer <https://pytorch-lightning.readthedocs.io/en/stable/common/trainer.html>`_ parameters via the ``trainer`` config. This makes it easy to configure the Lightning Trainer without touching the code.
+
+Below we enable `Pytorch Lightning Native 16bit precision <https://pytorch-lightning.readthedocs.io/en/latest/amp.html#gpu-16-bit>`_ by setting the parameter via the CLI:
 
 .. code-block:: python
 
    python train.py task=nlp/text_classification dataset=nlp/text_classification/emotion trainer.precision=16
 
 
-We expose all `Pytorch Lightning Trainer <https://pytorch-lightning.readthedocs.io/en/stable/common/trainer.html>`_ parameters via config files. This makes it easy to configure without touching the code.
-
-Setting maximum epochs:
+Setting the maximum epochs:
 
 .. code-block:: python
 
@@ -98,7 +103,7 @@ Run inference once model trained (experimental):
 
    # Returns [{'label': 'LABEL_0', 'score': 0.545...}]
 
-You can also run prediction using a default HuggingFace pre-trained model:
+You can also run prediction using the default HuggingFace pre-trained model:
 
 .. code-block:: python
 

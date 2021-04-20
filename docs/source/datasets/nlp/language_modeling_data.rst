@@ -14,6 +14,6 @@ Below we have defined a csv file to use as our input data.
     this is the second sentence,
 
 
-.. code-block:: bash
+.. code-block:: python
 
     python train.py task=nlp/language_modeling dataset.cfg.train_file=train.csv dataset.cfg.validation_file=valid.csv

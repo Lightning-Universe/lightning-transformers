@@ -25,7 +25,7 @@ Below is a diagram of the config structure, and how it fits together through the
 
 Hydra requires understanding of some syntactic sugar to use different configurations, which we explain below. For more details, we suggest looking at the `Hydra Documentation <https://hydra.cc/docs/next/advanced/override_grammar/basic>`_.
 
-By default train.py loads all the defined defaults in the ``config.yaml`` file in the ``conf/`` directory.
+By default ``train.py`` loads all the defined defaults in the `conf/config.yaml <https://github.com/PyTorchLightning/lightning-transformers/blob/master/conf/config.yaml>`__ file in the `conf/ <https://github.com/PyTorchLightning/lightning-transformers/blob/master/conf/>`__ directory.
 Task and Dataset have been marked as required within the ``config.yaml``, thus have to be specified on the command line.
 
 .. code-block:: bash
@@ -33,11 +33,11 @@ Task and Dataset have been marked as required within the ``config.yaml``, thus h
     python train.py task=nlp/text_classification dataset=nlp/text_classification/emotion
 
 
-``task`` and ``dataset`` allow us to append configs from the conf folder to our training config. These config files can be found in ``task/nlp/text_classification`` and ``dataset/nlp/text_classification/emotion`` respectively.
+``task`` and ``dataset`` allow us to append configs from the conf folder to our training config. These config files can be found in `task/nlp/text_classification  <https://github.com/PyTorchLightning/lightning-transformers/blob/master/conf/task/nlp/text_classification.yaml>`__ and `dataset/nlp/text_classification/emotion  <https://github.com/PyTorchLightning/lightning-transformers/blob/master/conf/dataset/nlp/text_classification/emotion.yaml>`__ respectively.
 
 Overriding Configs
 ******************
-All default configs can be overridden with custom configs, or pre-built configs found in the ``conf/`` directory.
+All default configs can be overridden with custom configs, or pre-built configs found in the `conf/ <https://github.com/PyTorchLightning/lightning-transformers/blob/master/conf/>`__ directory.
 
 For example, we can swap to different optimizers like below.
 
@@ -48,7 +48,7 @@ For example, we can swap to different optimizers like below.
 
 We can also modify the parameters in the config object from the commandline.
 
-.. code-block:: bash
+.. code-block:: python
 
     python train.py optimizer=sgd optimizer.momentum=0.99
 
@@ -70,7 +70,7 @@ Config Inheritance
 
 Just like code, configs inherit from other configs.
 
-For example, when defining a task, there is a default config object at ``task/nlp/default.yaml`` that contains a set of default configurations for all tasks.
+For example when defining a task, there is a default config object at `task/nlp/default.yaml <https://github.com/PyTorchLightning/lightning-transformers/blob/master/conf/task/nlp/default.yaml>`__ that contains a set of default configurations for all tasks.
 This is useful, as our task configs do not need to define these parameters and instead can import them, like below.
 
 .. code-block:: yaml

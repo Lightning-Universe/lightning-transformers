@@ -24,7 +24,7 @@ Training
 
 To use this task, we must select a Seq2Seq Encoder/Decoder based model, such as `T5 <https://huggingface.co/transformers/model_doc/t5.html>`_ or `BART <https://huggingface.co/transformers/model_doc/bart.html>`_. Conventional models like `GPT <https://huggingface.co/transformers/model_doc/gpt.html>`_/`BERT <https://huggingface.co/transformers/model_doc/bert.html>`_ will not work as they are encoder only.
 
-.. code-block:: bash
+.. code-block:: python
 
     python train.py task=nlp/summarization dataset=nlp/summarization/cnn_dailymail backbone.pretrained_model_name_or_path=t5-base # dataset can be swapped to xsum
 
