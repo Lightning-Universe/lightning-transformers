@@ -28,13 +28,13 @@ Currently supports the `RACE <https://huggingface.co/datasets/race>`_ and `SWAG 
 Training
 ^^^^^^^^
 
-.. code-block:: bash
+.. code-block:: python
 
-    python train.py task=nlp/multiple_choice dataset=nlp/multiple_choice/race # can use swag instead
+    python train.py task=nlp/multiple_choice dataset=nlp/multiple_choice/race # can use the swag dataset instead
 
 Swap to GPT backbone:
 
-.. code-block:: bash
+.. code-block:: python
 
     python train.py task=nlp/multiple_choice dataset=nlp/multiple_choice/race backbone.pretrained_model_name_or_path=gpt2
 

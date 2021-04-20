@@ -19,6 +19,6 @@ Below we have defined a json file to use as our input data.
 
 We override the dataset files, allowing us to still use the data transforms defined with the RACE dataset.
 
-.. code-block:: bash
+.. code-block:: python
 
     python train.py task=nlp/multiple_choice dataset=language_modeling/race dataset.cfg.train_file=train.json dataset.cfg.validation_file=valid.json

@@ -12,6 +12,6 @@ To use custom text files, the files should contain new line delimited json objec
 
 We override the dataset files, allowing us to still use the data transforms defined with this dataset.
 
-.. code-block:: bash
+.. code-block:: python
 
     python train.py task=nlp/summarization dataset.cfg.train_file=train.json dataset.cfg.validation_file=valid.json

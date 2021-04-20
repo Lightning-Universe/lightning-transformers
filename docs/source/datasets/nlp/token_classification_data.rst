@@ -10,6 +10,6 @@ To use custom text files, the files should contain new line delimited json objec
         "tokens": ["The", "European", "Commission", "said", "on", "Thursday", "it", "disagreed", "with", "German", "advice", "to", "consumers"]
     }
 
-.. code-block:: bash
+.. code-block:: python
 
     python train.py task=nlp/token_classification dataset.cfg.train_file=train.json dataset.cfg.validation_file=valid.json
