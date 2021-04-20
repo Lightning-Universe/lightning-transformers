@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="docs/source/_static/images/LightningTrasnformers-logo.png" width="500px">
+<img src="docs/source/_static/images/logo.png" width="500px">
 
 **Flexible interface for high performance research using SOTA Transformers leveraging [Pytorch Lightning](https://github.com/PyTorchLightning/pytorch-lightning), [Transformers](https://github.com/huggingface/transformers), and [Hydra](https://github.com/facebookresearch/hydra).**
 
