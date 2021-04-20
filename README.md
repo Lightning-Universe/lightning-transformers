@@ -92,8 +92,7 @@ scheduler:
   num_training_steps: -1
   num_warmup_steps: 0.1
 training:
-  do_train: true
-  do_eval: true
+  run_test_after_fit: true
   lr: 5.0e-05
   output_dir: .
   batch_size: 16

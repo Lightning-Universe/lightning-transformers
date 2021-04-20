@@ -34,10 +34,17 @@ def test_train_run():
 
 @mock.patch("lightning_transformers.cli.train.run")
 def test_train_main(run_mock):
-    cfg = OmegaConf.create({"training": {"do_train": True}})
+    cfg = OmegaConf.create({"training": {"run_test_after_fit": True}})
     cli.main(cfg)
     run_mock.assert_called_with(
-        ANY, ignore_warnings=ANY, do_train=True, dataset=ANY, task=ANY, trainer=ANY, logger=None, tokenizer=ANY
+        ANY,
+        ignore_warnings=ANY,
+        run_test_after_fit=True,
+        dataset=ANY,
+        task=ANY,
+        trainer=ANY,
+        logger=None,
+        tokenizer=ANY
     )
 
 

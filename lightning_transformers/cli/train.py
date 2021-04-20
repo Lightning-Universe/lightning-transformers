@@ -15,7 +15,7 @@ from lightning_transformers.core.utils import set_ignore_warnings
 def run(
     instantiator: Instantiator,
     ignore_warnings: bool = True,
-    do_train: bool = True,
+    run_test_after_fit: bool = True,
     dataset: TransformerDataConfig = TransformerDataConfig(),
     task: TaskConfig = TaskConfig(),
     trainer: TrainerConfig = TrainerConfig(),
@@ -45,9 +45,9 @@ def run(
         logger=logger,
     )
 
-    if do_train:
-        trainer.fit(model, datamodule=data_module)
-    trainer.test(model, datamodule=data_module)
+    trainer.fit(model, datamodule=data_module)
+    if run_test_after_fit:
+        trainer.test(model, datamodule=data_module)
 
 
 def main(cfg: DictConfig) -> None:
@@ -57,7 +57,7 @@ def main(cfg: DictConfig) -> None:
     run(
         instantiator,
         ignore_warnings=cfg.get("ignore_warnings"),
-        do_train=cfg.get("training").get("do_train"),
+        run_test_after_fit=cfg.get("training").get("run_test_after_fit"),
         dataset=cfg.get("dataset"),
         tokenizer=cfg.get("tokenizer"),
         task=cfg.get("task"),
