@@ -27,9 +27,7 @@
 ```bash
 # Option 1: from PyPI
 pip install lightning-transformers
-# instead of:
-python train.py ...
-# run as
+# instead of: `python train.py ...`, run with:
 pl-transformers-train ...
 ```
 
