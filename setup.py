@@ -6,10 +6,8 @@ from setuptools import find_packages, setup
 import lightning_transformers as ltf
 from lightning_transformers import setup_tools
 
-
 _PATH_ROOT = os.path.dirname(__file__)
 long_description = setup_tools._load_readme_description(_PATH_ROOT, homepage=ltf.__homepage__, ver=ltf.__version__)
-
 
 setup(
     name="lightning-transformers",
