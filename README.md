@@ -24,21 +24,8 @@
 
 ```bash
 pip install lightning-transformers
-```
 
-<details>
-  <summary>Other installations</summary>
-
-Install bleeding-edge:
-
-```bash
-pip install git+https://github.com/PytorchLightning/lightning-transformers.git@master --upgrade
-```
-
-Install all optional dependencies as well:
-
-```bash
-pip install lightning-transformers["extra"]
+git clone https://github.com/PyTorchLightning/lightning-transformers.git
 ```
 
 </details>
