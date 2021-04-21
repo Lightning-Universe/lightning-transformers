@@ -23,7 +23,7 @@ def _load_requirements(path_dir: str, file_name: str = 'requirements.txt', comme
     """Load requirements from a file
 
     >>> _load_requirements(_PROJECT_ROOT)  # doctest: +ELLIPSIS +NORMALIZE_WHITESPACE
-    ['torch...', 'pytorch-lightning...]
+    ['pytorch-lightning...', 'torch...', ...]
     """
     with open(os.path.join(path_dir, file_name), 'r') as file:
         lines = [ln.strip() for ln in file.readlines()]
@@ -44,7 +44,7 @@ def _load_readme_description(path_dir: str, homepage: str, ver: str) -> str:
     """Load readme as decribtion
 
     >>> _load_readme_description(_PROJECT_ROOT, "", "")  # doctest: +ELLIPSIS +NORMALIZE_WHITESPACE
-    '# Lightning Sample...'
+    '<div align="center">...'
     """
     path_readme = os.path.join(path_dir, "README.md")
     text = open(path_readme, encoding="utf-8").read()
