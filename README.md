@@ -23,10 +23,18 @@
 ## Installation
 
 ```bash
+# Option 1: from PyPI
 pip install lightning-transformers
+# instead of:
+python train.py ...
+# run as
+pl-transformers-train ...
 
-# If you'd like to use train.py/predict.py rather than the pl-transformers-train CLI
+# Option 2: from source
 git clone https://github.com/PyTorchLightning/lightning-transformers.git
+cd lightning-transformers
+python train.py ...
+# the `pl-transformers-train` endpoint is also available!
 ```
 
 </details>
