@@ -58,6 +58,9 @@ Lightning Transformers tasks allow you to train models using HuggingFace Transfo
 
 ## Using Lightning-Transformers
 
+**Grid** is our platform for training models at scale on the cloud! Sign up [here](https://www.grid.ai/).
+
+
 | Task                 | Quick Commands                                                                                           | Run |
 |----------------------|-----------------------------------------------------------------------------------------------------------|-----|
 | [Language Modeling](https://lightning-transformers.readthedocs.io/tasks/nlp/language_modeling.html)    | ```python train.py task=nlp/language_modeling dataset=nlp/language_modeling/wikitext trainer.gpus=1 training.batch_size=8```    |[![Grid](https://img.shields.io/badge/rid_AI-run-78FF96.svg?labelColor=black&logo=data:image/svg%2bxml;base64,PHN2ZyB3aWR0aD0iNDgiIGhlaWdodD0iNDgiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHBhdGggZD0iTTEgMTR2MjBhMTQgMTQgMCAwMDE0IDE0aDlWMzYuOEgxMi42VjExaDIyLjV2N2gxMS4yVjE0QTE0IDE0IDAgMDAzMi40IDBIMTVBMTQgMTQgMCAwMDEgMTR6IiBmaWxsPSIjZmZmIi8+PHBhdGggZD0iTTM1LjIgNDhoMTEuMlYyNS41SDIzLjl2MTEuM2gxMS4zVjQ4eiIgZmlsbD0iI2ZmZiIvPjwvc3ZnPg==)](https://platform.grid.ai/#/runs?script=https://github.com/PyTorchLightning/lightning-transformers/blob/009d016f/train.py&cloud=grid&instance=p3.2xlarge&accelerators=1&disk_size=200&framework=lightning&script_args=--grid_name%20transformers-run%20%5C%0A--grid_strategy%20grid_search%20%5C%0A--grid_disk_size%20200%20%5C%0A--grid_max_nodes%2010%20%5C%0A--grid_datastore_mount_dir%20%2Fopt%2Fdatastore%20%5C%0A--grid_instance_type%20p3.2xlarge%20%5C%0A--grid_credential%20cc-b87v8%20%5C%0A--grid_framework%20lightning%20%5C%0A--grid_gpus%201%20%5C%0Atrain.py%20task%3Dnlp%2Flanguage_modeling%20dataset%3Dnlp%2Flanguage_modeling%2Fwikitext%20trainer.gpus%3D1%20training.batch_size%3D8)     |
