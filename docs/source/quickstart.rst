@@ -25,7 +25,7 @@ Lightning Transformers has a collections of tasks for common NLP problems such a
    python train.py \
         task=<TASK> \
         dataset=<DATASET> \
-        backbone.pretrained_model_name_or_path=<BACKBONE> # Optionally change the HF backbone model
+        backbone.pretrained_model_name_or_path=<BACKBONE> # Optionally change the HF backbone
         optimizer=<OPTIMIZER> # Optionally specify optimizer (Default AdamW)
         trainer.<ANY_TRAINER_FLAGS> # Optionally specify Lightning trainer arguments
 
