@@ -34,7 +34,7 @@ pl-transformers-train ...
 ```
 
 #### Option 2: from source
-```
+```bash
 git clone https://github.com/PyTorchLightning/lightning-transformers.git
 cd lightning-transformers
 python train.py ...
