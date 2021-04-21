@@ -22,6 +22,8 @@
 
 ## Installation
 
+#### Option 1: from PyPI
+
 ```bash
 # Option 1: from PyPI
 pip install lightning-transformers
@@ -29,8 +31,10 @@ pip install lightning-transformers
 python train.py ...
 # run as
 pl-transformers-train ...
+```
 
-# Option 2: from source
+#### Option 2: from source
+```
 git clone https://github.com/PyTorchLightning/lightning-transformers.git
 cd lightning-transformers
 python train.py ...
