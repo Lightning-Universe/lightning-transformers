@@ -25,6 +25,7 @@
 ```bash
 pip install lightning-transformers
 
+# If you'd like to use train.py/predict.py rather than the pl-transformers-train CLI
 git clone https://github.com/PyTorchLightning/lightning-transformers.git
 ```
 
