@@ -5,7 +5,7 @@ Text Classification
 
 The Task
 ^^^^^^^^
-The Text Classification Task fine-tunes the model to predict probabilities across a set of labels given input text.
+The Text Classification Task fine-tunes the model to predict probabilities across a set of labels given input text. The task supports both binary and multi-class/multi-label classification.
 
 Datasets
 ^^^^^^^^
