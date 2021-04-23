@@ -34,7 +34,7 @@ pl-transformers-train ...
 ```bash
 git clone https://github.com/PyTorchLightning/lightning-transformers.git
 cd lightning-transformers
-pip install -r requirements.txt
+pip install .
 python train.py ...
 # the `pl-transformers-train` endpoint is also available!
 ```
