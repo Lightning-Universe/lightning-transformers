@@ -347,12 +347,12 @@ python train.py \
 
 You can train, validate and test Lightning transformers tasks on your own data files, and you can extend datasets for custom processing and your own tasks.
 
-#### [How to train, validate and test on custom files](https://lightning-transformers.readthedocs.io/tasks/advanced/custom_data.html)
-#### [How to extend datasets](https://lightning-transformers.readthedocs.io/tasks/advanced/custom_datasets.html)
+#### [How to train, validate and test on custom files](https://lightning-transformers.readthedocs.io/en/latest/datasets/custom_data.html)
+#### [How to extend datasets](https://lightning-transformers.readthedocs.io/en/latest/advanced/custom_datasets.html)
 
 ### Custom Tasks
 
-#### [Extending the Language Modeling Task](https://lightning-transformers.readthedocs.io/tasks/advanced/custom_task.html)
+#### [Extending the Language Modeling Task](https://lightning-transformers.readthedocs.io/en/latest/advanced/custom_task.html)
 
 ## Contribute
 
