@@ -2,3 +2,5 @@
 defaults:
   - nlp/default
 _target_: lightning_transformers.task.nlp.language_modeling.LanguageModelingDataModule
+cfg:
+  block_size: null
