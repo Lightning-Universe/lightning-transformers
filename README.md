@@ -226,7 +226,6 @@ tokenizer:
 python train.py \
     task=nlp/text_classification \
     dataset=nlp/text_classification/emotion \
-    trainer=ddp \
     trainer/plugins=sharded
 ```
 
