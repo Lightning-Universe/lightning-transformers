@@ -226,7 +226,7 @@ tokenizer:
 python train.py \
     task=nlp/text_classification \
     dataset=nlp/text_classification/emotion \
-    trainer/plugins=sharded
+    trainer=sharded
 ```
 
 <details>
@@ -247,8 +247,6 @@ trainer:
    tpu_cores: null
    log_gpu_memory: null
    ...
-   val_check_interval: 1.0
-   flush_logs_every_n_steps: 100
    log_every_n_steps: 50
 -  accelerator: null
 +  accelerator: ddp
@@ -256,8 +254,6 @@ trainer:
 -  precision: 32
 +  precision: 16
    weights_summary: top
-   weights_save_path: null
-   num_sanity_val_steps: 2
    ....
    terminate_on_nan: false
    auto_scale_batch_size: false
@@ -282,8 +278,7 @@ tokenizer:
 python train.py \
     task=nlp/text_classification \
     dataset=nlp/text_classification/emotion \
-    trainer=ddp \
-    trainer/plugins=deepspeed
+    trainer=deepspeed
 ```
 
 <details>
