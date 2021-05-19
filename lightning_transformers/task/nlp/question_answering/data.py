@@ -12,9 +12,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 from functools import partial
-from typing import Any, Callable, Optional
+from typing import Any, Callable, Dict, Optional
 
 from datasets import Dataset
+import torch
 from transformers import DataCollatorWithPadding, default_data_collator, PreTrainedTokenizerBase
 
 from lightning_transformers.core.nlp import HFDataModule
@@ -43,6 +44,7 @@ class QuestionAnsweringDataModule(HFDataModule):
         question_column_name = "question" if "question" in column_names else column_names[0]
         context_column_name = "context" if "context" in column_names else column_names[1]
         answer_column_name = "answers" if "answers" in column_names else column_names[2]
+        self.answer_column_name = answer_column_name
 
         kwargs = {
             "tokenizer": self.tokenizer,
@@ -69,6 +71,7 @@ class QuestionAnsweringDataModule(HFDataModule):
         if "test" not in dataset:
             kwargs.pop("answer_column_name")
             prepare_validation_features = partial(self.convert_to_validation_features, **kwargs)
+            dataset["validation_original"] = dataset["validation"]  # keep an original copy for computing metrics
             dataset["validation"] = dataset["validation"].map(
                 prepare_validation_features,
                 batched=True,
@@ -111,4 +114,13 @@ class QuestionAnsweringDataModule(HFDataModule):
         doc_stride: int,
         padding: str,
     ):
+        raise NotImplementedError
+
+    def postprocess_func(
+        self,
+        dataset: Dataset,
+        validation_dataset: Dataset,
+        original_validation_dataset: Dataset,
+        predictions: Dict[int, torch.Tensor],
+    ) -> Any:
         raise NotImplementedError
