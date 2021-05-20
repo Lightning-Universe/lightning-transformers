@@ -47,15 +47,16 @@ class QuestionAnsweringTransformer(HFTransformer):
         return "question-answering"
 
     def validation_step(self, batch: Any, batch_idx: int, dataloader_idx: int = 0) -> Dict[str, torch.Tensor]:
-        # todo: however is needed for metrics computation eventually...
-        print(batch.keys())
         batch.pop("offset_mapping")
+        example_ids = batch.pop("example_id")
         outputs = self.model(**batch)
-        example_ids = batch["example_id"]
         loss = outputs[0]
         self.log("val_loss", loss, prog_bar=True, sync_dist=True)
-        self.metric(example_ids, outputs)
+        self.metric(example_ids, outputs.start_logits, outputs.end_logits)
         return loss
+    
+    def validation_epoch_end(self, outputs: Any) -> None:
+        self.metric.compute()
 
     '''
     def test_step(self, batch: Any, batch_idx: int, dataloader_idx: int = 0):
@@ -74,4 +75,8 @@ class QuestionAnsweringTransformer(HFTransformer):
             validation_dataset=validation_dataset,
             original_validation_dataset=original_validation_dataset,
         )
-        self.metric = SquadMetric(postprocess_func=postprocess_func)
+        example_id_strings = dataset.example_id_strings
+        self.metric = SquadMetric(
+            postprocess_func=postprocess_func, 
+            example_id_strings=example_id_strings
+        )

@@ -23,7 +23,7 @@
 import collections
 import json
 import os
-from typing import Any, Optional, Tuple
+from typing import Any, Dict, Optional, Tuple
 
 import numpy as np
 from pytorch_lightning import _logger as logger
@@ -122,7 +122,8 @@ def prepare_validation_features(
         context_column_name: str,
         max_length: int,
         doc_stride: int,
-        padding: str
+        padding: str,
+        example_id_strings: Dict[str,int],
 ):
     # Tokenize our examples with truncation and maybe padding, but keep the overflows using a stride. This results
     # in one example possible giving several features when a context is long, each of those features having a
@@ -153,7 +154,13 @@ def prepare_validation_features(
 
         # One example can give several spans, this is the index of the example containing this span of text.
         sample_index = sample_mapping[i]
-        tokenized_examples["example_id"].append(examples["id"][sample_index])
+
+        try:
+            numerical_example_id = example_id_strings[examples["id"][sample_index]]
+        except KeyError:
+            numerical_example_id = len(example_id_strings)
+            example_id_strings[examples["id"][sample_index]] = numerical_example_id
+        tokenized_examples["example_id"].append(numerical_example_id)
 
         # Set to start_index/end_index to [-1, 1] if the offset_mapping that are not part of the context
         # so it's easy to determine if a token position is part of the context or not.
@@ -195,7 +202,7 @@ def post_processing_function(
         ]
     else:
         formatted_predictions = [{"id": k, "prediction_text": v} for k, v in predictions.items()]
-    references = [{"id": ex["id"], "answers": ex[answer_column_name]} for ex in datasets["validation"]]
+    references = [{"id": ex["id"], "answers": ex[answer_column_name]} for ex in datasets["validation_original"]]
     return EvalPrediction(predictions=formatted_predictions, label_ids=references)
 
 
@@ -241,8 +248,8 @@ def postprocess_qa_predictions(
         prefix (:obj:`str`, `optional`):
             If provided, the dictionaries mentioned above are saved with `prefix` added to their names.
     """
-    assert len(predictions) == 2, "`predictions` should be a tuple with two elements (start_logits, end_logits)."
-    all_start_logits, all_end_logits = predictions
+    assert len(predictions) == 3, "`predictions` should be a tuple with two elements (start_logits, end_logits)."
+    all_start_logits, all_end_logits, example_ids = predictions
 
     assert len(predictions[0]) == len(features), f"Got {len(predictions[0])} predictions and {len(features)} features."
 
@@ -250,7 +257,8 @@ def postprocess_qa_predictions(
     example_id_to_index = {k: i for i, k in enumerate(examples["id"])}
     features_per_example = collections.defaultdict(list)
     for i, feature in enumerate(features):
-        features_per_example[example_id_to_index[feature["example_id"]]].append(i)
+        #features_per_example[example_id_to_index[feature["example_id"]]].append(i)
+        features_per_example[feature["example_id"]].append(i)
 
     # The dictionaries we have to fill.
     all_predictions = collections.OrderedDict()

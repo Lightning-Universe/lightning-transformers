@@ -11,6 +11,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+from collections import OrderedDict
 from functools import partial
 from typing import Any, Callable, Dict, Optional
 
@@ -36,6 +37,7 @@ class QuestionAnsweringDataModule(HFDataModule):
 
     def __init__(self, *args, cfg: QuestionAnsweringDataConfig = QuestionAnsweringDataConfig(), **kwargs) -> None:
         super().__init__(*args, cfg=cfg, **kwargs)
+        self.example_id_strings = OrderedDict()
 
     def process_data(self, dataset: Dataset, stage: Optional[str] = None) -> Dataset:
         train = stage == "fit"
@@ -70,7 +72,7 @@ class QuestionAnsweringDataModule(HFDataModule):
 
         if "test" not in dataset:
             kwargs.pop("answer_column_name")
-            prepare_validation_features = partial(self.convert_to_validation_features, **kwargs)
+            prepare_validation_features = partial(self.convert_to_validation_features, example_id_strings=self.example_id_strings, **kwargs)
             dataset["validation_original"] = dataset["validation"]  # keep an original copy for computing metrics
             dataset["validation"] = dataset["validation"].map(
                 prepare_validation_features,
