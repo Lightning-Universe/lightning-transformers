@@ -18,7 +18,6 @@ class SquadMetric(Metric):
         self.end_logits += end_logits
     
     def compute(self):
-        print('computing metric')
         reverse_lookup = {i: s for s, i in self.example_id_strings.items()}
         example_ids = [reverse_lookup[i.item()] for i in self.example_ids]
         predictions = (
@@ -26,15 +25,14 @@ class SquadMetric(Metric):
             torch.stack(self.end_logits).cpu().numpy(), 
             example_ids
         )
-        #preds = {list(self.example_id_strings.keys())[id]: pred for id, pred in zip(self.example_ids, predictions)}
         predictions, references = self.postprocess_func(predictions=predictions)
 
-        with open('predictions.out', 'w') as f:
-            for pred in predictions:
-                f.write(f"{pred}\n")
-        with open('references.out', 'w') as f:
-            for ref in references:
-                f.write(f"{ref}\n")
+        # with open('predictions.out', 'w') as f:
+        #     for pred in predictions:
+        #         f.write(f"{pred}\n")
+        # with open('references.out', 'w') as f:
+        #     for ref in references:
+        #         f.write(f"{ref}\n")
         
         value = self.metric.compute(predictions=predictions, references=references)
         print(value)
@@ -42,4 +40,10 @@ class SquadMetric(Metric):
 
 
 # "/home/bjschre2/old_transformer/qa_ckpts/distilbert-base-cased_squad_64/"
-# {'exact_match': 76.21570482497634, 'f1': 84.47421369559193}
+# {'exact_match': 76.1968, 'f1': 84.4771}
+
+# HF reference
+# python -m pdb examples/question-answering/run_qa.py --model_name_or_path "/home/bjschre2/old_transformer/qa_ckpts/distilbert-base-cased_squad_64/" --dataset_name squad --do_eval --fp16 --max_seq_length 384 --doc_stride 128 --output_dir=/home/bjschre2/transformer-pruning/outputs/tmp
+
+# Lightning
+# python lightning-transformers/train.py task=nlp/question_answering dataset=nlp/question_answering/squad backbone.pretrained_model_name_or_path="/home/bjschre2/old_transformer/qa_ckpts/distilbert-base-cased_squad_64/" trainer.gpus=1 trainer.num_sanity_val_steps=-1 trainer.precision=16
