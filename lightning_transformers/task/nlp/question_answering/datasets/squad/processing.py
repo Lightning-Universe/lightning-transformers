@@ -218,20 +218,6 @@ def postprocess_qa_predictions(
     prefix: Optional[str] = None,
 ):
     """
-    with open('examples.out', 'w') as f:
-        for row in examples:
-            f.write(f"{row}\n")
-    with open('features.out', 'w') as f:
-        for row in features:
-            f.write(f"{row}\n")
-    with open('predictions[0].out', 'w') as f:
-        for row in predictions[0]:
-            f.write(f"{row}\n")
-    with open('predictions[1].out', 'w') as f:
-        for row in predictions[1]:
-            f.write(f"{row}\n")
-    """
-    """
     Post-processes the predictions of a question-answering model to convert them to answers that are substrings of the
     original contexts. This is the base postprocessing functions for models that only return start and end logits.
 
@@ -268,7 +254,6 @@ def postprocess_qa_predictions(
     assert len(predictions[0]) == len(features), f"Got {len(predictions[0])} predictions and {len(features)} features."
 
     # Build a map example to its corresponding features.
-    example_id_to_index = {k: i for i, k in enumerate(examples["id"])}
     features_per_example = collections.defaultdict(list)
     for i, feature in enumerate(features):
         #features_per_example[example_id_to_index[feature["example_id"]]].append(i)
@@ -342,9 +327,6 @@ def postprocess_qa_predictions(
                             "end_logit": end_logits[end_index],
                         }
                     )
-        
-        # if example_index == 257:
-        #     breakpoint()
         
         if version_2_with_negative:
             # Add the minimum null prediction
