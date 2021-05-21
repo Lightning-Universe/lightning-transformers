@@ -25,6 +25,7 @@ from lightning_transformers.task.nlp.question_answering.datasets.squad.processin
 
 
 class SquadDataModule(QuestionAnsweringDataModule):
+
     def __init__(self, *args, cfg, **kwargs):
         super().__init__(*args, cfg=cfg, **kwargs)
 
@@ -35,7 +36,7 @@ class SquadDataModule(QuestionAnsweringDataModule):
     @staticmethod
     def convert_to_validation_features(*args, example_id_strings, **kwargs):
         return prepare_validation_features(*args, example_id_strings=example_id_strings, **kwargs)
-    
+
     def postprocess_func(
         self,
         dataset: Dataset,

@@ -32,15 +32,8 @@ from transformers import EvalPrediction, PreTrainedTokenizerBase
 
 
 def prepare_train_features(
-    examples: Any, 
-    tokenizer: PreTrainedTokenizerBase, 
-    pad_on_right: bool, 
-    question_column_name: str,
-    context_column_name: str, 
-    answer_column_name: str, 
-    max_length: int, 
-    doc_stride: int, 
-    padding: str
+    examples: Any, tokenizer: PreTrainedTokenizerBase, pad_on_right: bool, question_column_name: str,
+    context_column_name: str, answer_column_name: str, max_length: int, doc_stride: int, padding: str
 ):
     # Tokenize our examples with truncation and maybe padding, but keep the overflows using a stride. This results
     # in one example possible giving several features when a context is long, each of those features having a
@@ -115,15 +108,15 @@ def prepare_train_features(
 
 
 def prepare_validation_features(
-        examples: Any,
-        tokenizer: PreTrainedTokenizerBase,
-        pad_on_right: bool,
-        question_column_name: str,
-        context_column_name: str,
-        max_length: int,
-        doc_stride: int,
-        padding: str,
-        example_id_strings: Dict[str,int],
+    examples: Any,
+    tokenizer: PreTrainedTokenizerBase,
+    pad_on_right: bool,
+    question_column_name: str,
+    context_column_name: str,
+    max_length: int,
+    doc_stride: int,
+    padding: str,
+    example_id_strings: Dict[str, int],
 ):
     # Tokenize our examples with truncation and maybe padding, but keep the overflows using a stride. This results
     # in one example possible giving several features when a context is long, each of those features having a
@@ -164,10 +157,8 @@ def prepare_validation_features(
 
         # Set to start_index/end_index to [-1, 1] if the offset_mapping that are not part of the context
         # so it's easy to determine if a token position is part of the context or not.
-        tokenized_examples["offset_mapping"][i] = [
-            (o if sequence_ids[k] == context_index else (-1, -1))
-            for k, o in enumerate(tokenized_examples["offset_mapping"][i])
-        ]
+        tokenized_examples["offset_mapping"][i] = [(o if sequence_ids[k] == context_index else (-1, -1))
+                                                   for k, o in enumerate(tokenized_examples["offset_mapping"][i])]
 
     return tokenized_examples
 
@@ -197,9 +188,11 @@ def post_processing_function(
     )
     # Format the result to the format the metric expects.
     if version_2_with_negative:
-        formatted_predictions = [
-            {"id": k, "prediction_text": v, "no_answer_probability": 0.0} for k, v in predictions.items()
-        ]
+        formatted_predictions = [{
+            "id": k,
+            "prediction_text": v,
+            "no_answer_probability": 0.0
+        } for k, v in predictions.items()]
     else:
         formatted_predictions = [{"id": k, "prediction_text": v} for k, v in predictions.items()]
     references = [{"id": ex["id"], "answers": ex[answer_column_name]} for ex in datasets["validation_original"]]
@@ -305,10 +298,8 @@ def postprocess_qa_predictions(
                     # Don't consider out-of-scope answers, either because the indices are out of bounds or correspond
                     # to part of the input_ids that are not in the context.
                     if (
-                        start_index >= len(offset_mapping) 
-                        or end_index >= len(offset_mapping)
-                        or offset_mapping[start_index] == [-1, -1] 
-                        or offset_mapping[end_index] == [-1, -1]
+                        start_index >= len(offset_mapping) or end_index >= len(offset_mapping)
+                        or offset_mapping[start_index] == [-1, -1] or offset_mapping[end_index] == [-1, -1]
                     ):
                         continue
                     # Don't consider answers with a length that is either < 0 or > max_answer_length.
@@ -318,15 +309,13 @@ def postprocess_qa_predictions(
                     # provided).
                     if token_is_max_context is not None and not token_is_max_context.get(str(start_index), False):
                         continue
-                    prelim_predictions.append(
-                        {
-                            "offsets": (offset_mapping[start_index][0], offset_mapping[end_index][1]),
-                            "score": start_logits[start_index] + end_logits[end_index],
-                            "start_logit": start_logits[start_index],
-                            "end_logit": end_logits[end_index],
-                        }
-                    )
-        
+                    prelim_predictions.append({
+                        "offsets": (offset_mapping[start_index][0], offset_mapping[end_index][1]),
+                        "score": start_logits[start_index] + end_logits[end_index],
+                        "start_logit": start_logits[start_index],
+                        "end_logit": end_logits[end_index],
+                    })
+
         if version_2_with_negative:
             # Add the minimum null prediction
             prelim_predictions.append(min_null_prediction)

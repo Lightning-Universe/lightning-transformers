@@ -20,6 +20,7 @@ from lightning_transformers.core.nlp import HFTransformer
 from lightning_transformers.task.nlp.question_answering import QuestionAnsweringDataModule
 from lightning_transformers.task.nlp.question_answering.datasets.squad.metric import SquadMetric
 
+
 class QuestionAnsweringTransformer(HFTransformer):
     """
     Defines ``LightningModule`` for the Question Answering Task.
@@ -54,7 +55,7 @@ class QuestionAnsweringTransformer(HFTransformer):
         self.log("val_loss", loss, prog_bar=True, sync_dist=True)
         self.metric(example_ids, outputs.start_logits, outputs.end_logits)
         return loss
-    
+
     def validation_epoch_end(self, outputs: Any) -> None:
         metric_dict = self.metric.compute()
         self.log_dict(metric_dict, prog_bar=True)
@@ -70,7 +71,4 @@ class QuestionAnsweringTransformer(HFTransformer):
             original_validation_dataset=original_validation_dataset,
         )
         example_id_strings = dataset.example_id_strings
-        self.metric = SquadMetric(
-            postprocess_func=postprocess_func, 
-            example_id_strings=example_id_strings
-        )
+        self.metric = SquadMetric(postprocess_func=postprocess_func, example_id_strings=example_id_strings)

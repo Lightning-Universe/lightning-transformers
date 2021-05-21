@@ -15,8 +15,8 @@ from collections import OrderedDict
 from functools import partial
 from typing import Any, Callable, Dict, Optional
 
-from datasets import Dataset
 import torch
+from datasets import Dataset
 from transformers import DataCollatorWithPadding, default_data_collator, PreTrainedTokenizerBase
 
 from lightning_transformers.core.nlp import HFDataModule
@@ -72,7 +72,9 @@ class QuestionAnsweringDataModule(HFDataModule):
 
         if "test" not in dataset:
             kwargs.pop("answer_column_name")
-            prepare_validation_features = partial(self.convert_to_validation_features, example_id_strings=self.example_id_strings, **kwargs)
+            prepare_validation_features = partial(
+                self.convert_to_validation_features, example_id_strings=self.example_id_strings, **kwargs
+            )
             dataset["validation_original"] = dataset["validation"]  # keep an original copy for computing metrics
             dataset["validation"] = dataset["validation"].map(
                 prepare_validation_features,
