@@ -256,7 +256,6 @@ def postprocess_qa_predictions(
     # Build a map example to its corresponding features.
     features_per_example = collections.defaultdict(list)
     for i, feature in enumerate(features):
-        #features_per_example[example_id_to_index[feature["example_id"]]].append(i)
         features_per_example[feature["example_id"]].append(i)
 
     # The dictionaries we have to fill.
@@ -360,9 +359,6 @@ def postprocess_qa_predictions(
         # Include the probabilities in our predictions.
         for prob, pred in zip(probs, predictions):
             pred["probability"] = prob
-        
-        # if example_index == 257:
-        #     breakpoint()
 
         # Pick the best prediction. If the null answer is not possible, this is easy.
         if not version_2_with_negative:
