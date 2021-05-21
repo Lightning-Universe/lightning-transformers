@@ -56,14 +56,8 @@ class QuestionAnsweringTransformer(HFTransformer):
         return loss
     
     def validation_epoch_end(self, outputs: Any) -> None:
-        self.metric.compute()
-
-    '''
-    def test_step(self, batch: Any, batch_idx: int, dataloader_idx: int = 0):
-        outputs = self.model(**batch)
-        loss, logits = outputs[:2]
-        return loss
-    '''
+        metric_dict = self.metric.compute()
+        self.log_dict(metric_dict, prog_bar=True)
 
     def configure_metrics(self, stage: str):
         dataset: QuestionAnsweringDataModule = self.trainer.datamodule
