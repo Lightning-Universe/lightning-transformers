@@ -1,0 +1,8 @@
+# @package dataset
+defaults:
+  - nlp/default
+_target_: lightning_transformers.task.nlp.masked_language_modeling.MaskedLanguageModelingDataModule
+cfg:
+  mlm_probability: null
+  line_by_line: null
+  wwm: null

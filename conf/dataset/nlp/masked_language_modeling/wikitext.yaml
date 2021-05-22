@@ -1,0 +1,10 @@
+# @package dataset
+defaults:
+  - nlp/default
+_target_: lightning_transformers.task.nlp.masked_language_modeling.MaskedLanguageModelingDataModule
+cfg:
+  dataset_name: wikitext
+  dataset_config_name: wikitext-2-raw-v1
+  mlm_probability: 0.15
+  line_by_line: False
+  wwm: False
