@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 from functools import partial
-from typing import Any, Dict
+from typing import Any
 
 import torch
 
@@ -47,14 +47,11 @@ class QuestionAnsweringTransformer(HFTransformer):
     def hf_pipeline_task(self) -> str:
         return "question-answering"
 
-    def validation_step(self, batch: Any, batch_idx: int, dataloader_idx: int = 0) -> Dict[str, torch.Tensor]:
+    def validation_step(self, batch: Any, batch_idx: int, dataloader_idx: int = 0) -> None:
         batch.pop("offset_mapping")
         example_ids = batch.pop("example_id")
         outputs = self.model(**batch)
-        loss = outputs[0]
-        self.log("val_loss", loss, prog_bar=True, sync_dist=True)
-        self.metric(example_ids, outputs.start_logits, outputs.end_logits)
-        return loss
+        self.metric.update(example_ids, outputs.start_logits, outputs.end_logits)
 
     def validation_epoch_end(self, outputs: Any) -> None:
         metric_dict = self.metric.compute()
