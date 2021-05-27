@@ -53,7 +53,10 @@ class QuestionAnsweringTransformer(HFTransformer):
         outputs = self.model(**batch)
         self.metric.update(example_ids, outputs.start_logits, outputs.end_logits)
 
-    def validation_epoch_end(self, outputs: Any) -> None:
+    def on_validation_epoch_start(self) -> None:
+        self.metric.reset()
+
+    def on_validation_epoch_end(self) -> None:
         metric_dict = self.metric.compute()
         self.log_dict(metric_dict, prog_bar=True)
 
