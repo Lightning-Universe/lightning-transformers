@@ -37,7 +37,7 @@ class TextClassificationDataModule(HFDataModule):
         cols_to_keep = [
             x for x in ["input_ids", "attention_mask", "token_type_ids", "labels"] if x in dataset["train"].features
         ]
-        for split in dataset.keys():
+        for split in dataset:
             dataset[split] = dataset[split].class_encode_column("labels")
 
         dataset.set_format("torch", columns=cols_to_keep)
