@@ -70,7 +70,7 @@ class LanguageModelingDataModule(HFDataModule):
                 log.warn(
                     f"The tokenizer picked seems to have a very large `model_max_length` "
                     f"({self.tokenizer.model_max_length}). "
-                    "Picking 1024 instead. You can change that default value by passing --block_size xxx."
+                    "Picking 1024 instead. You can change that default value by passing dataset.cfg.block_size=x."
                 )
             block_size = 1024
         else:

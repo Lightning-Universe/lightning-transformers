@@ -18,23 +18,23 @@ default_language_version:
 
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v3.4.0
+    rev: v4.0.1
     hooks:
       - id: trailing-whitespace
       - id: end-of-file-fixer
 
   - repo: https://github.com/PyCQA/isort
-    rev: 5.7.0
+    rev: 5.8.0
     hooks:
       - id: isort
 
   - repo: https://github.com/pre-commit/mirrors-yapf
-    rev: v0.30.0
+    rev: v0.31.0
     hooks:
       - id: yapf
         args: [--parallel, --in-place]
 
-  - repo: https://gitlab.com/pycqa/flake8.git
-    rev: 3.8.4
+  - repo: https://github.com/PyCQA/flake8
+    rev: 3.9.2
     hooks:
       - id: flake8
