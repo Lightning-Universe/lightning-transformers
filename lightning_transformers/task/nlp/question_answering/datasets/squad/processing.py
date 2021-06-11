@@ -19,10 +19,11 @@
 # Disable formatting for easier diffs with upstream
 # yapf: disable
 # flake8: noqa
+
 import collections
 import json
 import os
-from typing import Any, Optional, Tuple
+from typing import Any, Dict, Optional, Tuple
 
 import numpy as np
 from pytorch_lightning import _logger as logger
@@ -107,8 +108,15 @@ def prepare_train_features(
 
 
 def prepare_validation_features(
-    examples: Any, tokenizer: PreTrainedTokenizerBase, pad_on_right: bool, question_column_name: str,
-    context_column_name: str, max_length: int, doc_stride: int, padding: str
+    examples: Any,
+    tokenizer: PreTrainedTokenizerBase,
+    pad_on_right: bool,
+    question_column_name: str,
+    context_column_name: str,
+    max_length: int,
+    doc_stride: int,
+    padding: str,
+    example_id_strings: Dict[str, int],
 ):
     # Tokenize our examples with truncation and maybe padding, but keep the overflows using a stride. This results
     # in one example possible giving several features when a context is long, each of those features having a
@@ -120,14 +128,37 @@ def prepare_validation_features(
         max_length=max_length,
         stride=doc_stride,
         return_overflowing_tokens=True,
-        return_offsets_mapping=False,  # todo: will need to be enabled for inference/eval
+        return_offsets_mapping=True,
         padding=padding,
     )
 
-    # todo implement missing inference/eval squad features
     # Since one example might give us several features if it has a long context, we need a map from a feature to
     # its corresponding example. This key gives us just that.
-    tokenized_examples.pop("overflow_to_sample_mapping")
+    sample_mapping = tokenized_examples.pop("overflow_to_sample_mapping")
+
+    # For evaluation, we will need to convert our predictions to substrings of the context, so we keep the
+    # corresponding example_id and we will store the offset mappings.
+    tokenized_examples["example_id"] = []
+
+    for i in range(len(tokenized_examples["input_ids"])):
+        # Grab the sequence corresponding to that example (to know what is the context and what is the question).
+        sequence_ids = tokenized_examples.sequence_ids(i)
+        context_index = 1 if pad_on_right else 0
+
+        # One example can give several spans, this is the index of the example containing this span of text.
+        sample_index = sample_mapping[i]
+
+        try:
+            numerical_example_id = example_id_strings[examples["id"][sample_index]]
+        except KeyError:
+            numerical_example_id = len(example_id_strings)
+            example_id_strings[examples["id"][sample_index]] = numerical_example_id
+        tokenized_examples["example_id"].append(numerical_example_id)
+
+        # Set to start_index/end_index to [-1, 1] if the offset_mapping that are not part of the context
+        # so it's easy to determine if a token position is part of the context or not.
+        tokenized_examples["offset_mapping"][i] = [(o if sequence_ids[k] == context_index else (-1, -1))
+                                                   for k, o in enumerate(tokenized_examples["offset_mapping"][i])]
 
     return tokenized_examples
 
@@ -164,7 +195,7 @@ def post_processing_function(
         } for k, v in predictions.items()]
     else:
         formatted_predictions = [{"id": k, "prediction_text": v} for k, v in predictions.items()]
-    references = [{"id": ex["id"], "answers": ex[answer_column_name]} for ex in datasets["validation"]]
+    references = [{"id": ex["id"], "answers": ex[answer_column_name]} for ex in datasets["validation_original"]]
     return EvalPrediction(predictions=formatted_predictions, label_ids=references)
 
 
@@ -210,16 +241,15 @@ def postprocess_qa_predictions(
         prefix (:obj:`str`, `optional`):
             If provided, the dictionaries mentioned above are saved with `prefix` added to their names.
     """
-    assert len(predictions) == 2, "`predictions` should be a tuple with two elements (start_logits, end_logits)."
-    all_start_logits, all_end_logits = predictions
+    assert len(predictions) == 3, "`predictions` should be a tuple with two elements (start_logits, end_logits)."
+    all_start_logits, all_end_logits, example_ids = predictions
 
     assert len(predictions[0]) == len(features), f"Got {len(predictions[0])} predictions and {len(features)} features."
 
     # Build a map example to its corresponding features.
-    example_id_to_index = {k: i for i, k in enumerate(examples["id"])}
     features_per_example = collections.defaultdict(list)
     for i, feature in enumerate(features):
-        features_per_example[example_id_to_index[feature["example_id"]]].append(i)
+        features_per_example[feature["example_id"]].append(i)
 
     # The dictionaries we have to fill.
     all_predictions = collections.OrderedDict()
@@ -269,7 +299,7 @@ def postprocess_qa_predictions(
                     # to part of the input_ids that are not in the context.
                     if (
                         start_index >= len(offset_mapping) or end_index >= len(offset_mapping)
-                        or offset_mapping[start_index] == -1 or offset_mapping[end_index] == -1
+                        or offset_mapping[start_index] == [-1, -1] or offset_mapping[end_index] == [-1, -1]
                     ):
                         continue
                     # Don't consider answers with a length that is either < 0 or > max_answer_length.
@@ -285,6 +315,7 @@ def postprocess_qa_predictions(
                         "start_logit": start_logits[start_index],
                         "end_logit": end_logits[end_index],
                     })
+
         if version_2_with_negative:
             # Add the minimum null prediction
             prelim_predictions.append(min_null_prediction)
