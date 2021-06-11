@@ -11,9 +11,11 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+from collections import OrderedDict
 from functools import partial
-from typing import Any, Callable, Optional
+from typing import Any, Callable, Dict, Optional
 
+import torch
 from datasets import Dataset
 from transformers import DataCollatorWithPadding, default_data_collator, PreTrainedTokenizerBase
 
@@ -35,6 +37,7 @@ class QuestionAnsweringDataModule(HFDataModule):
 
     def __init__(self, *args, cfg: QuestionAnsweringDataConfig = QuestionAnsweringDataConfig(), **kwargs) -> None:
         super().__init__(*args, cfg=cfg, **kwargs)
+        self.example_id_strings = OrderedDict()
 
     def process_data(self, dataset: Dataset, stage: Optional[str] = None) -> Dataset:
         train = stage == "fit"
@@ -43,6 +46,7 @@ class QuestionAnsweringDataModule(HFDataModule):
         question_column_name = "question" if "question" in column_names else column_names[0]
         context_column_name = "context" if "context" in column_names else column_names[1]
         answer_column_name = "answers" if "answers" in column_names else column_names[2]
+        self.answer_column_name = answer_column_name
 
         kwargs = {
             "tokenizer": self.tokenizer,
@@ -68,7 +72,10 @@ class QuestionAnsweringDataModule(HFDataModule):
 
         if "test" not in dataset:
             kwargs.pop("answer_column_name")
-            prepare_validation_features = partial(self.convert_to_validation_features, **kwargs)
+            prepare_validation_features = partial(
+                self.convert_to_validation_features, example_id_strings=self.example_id_strings, **kwargs
+            )
+            dataset["validation_original"] = dataset["validation"]  # keep an original copy for computing metrics
             dataset["validation"] = dataset["validation"].map(
                 prepare_validation_features,
                 batched=True,
@@ -111,4 +118,13 @@ class QuestionAnsweringDataModule(HFDataModule):
         doc_stride: int,
         padding: str,
     ):
+        raise NotImplementedError
+
+    def postprocess_func(
+        self,
+        dataset: Dataset,
+        validation_dataset: Dataset,
+        original_validation_dataset: Dataset,
+        predictions: Dict[int, torch.Tensor],
+    ) -> Any:
         raise NotImplementedError
