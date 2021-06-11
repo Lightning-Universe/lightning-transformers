@@ -13,7 +13,7 @@
 # limitations under the License.
 from typing import Any, Dict, List, Optional
 
-from datasets import Dataset, ClassLabel
+from datasets import ClassLabel, Dataset
 from transformers import PreTrainedTokenizerBase
 
 from lightning_transformers.core.nlp import HFDataModule
