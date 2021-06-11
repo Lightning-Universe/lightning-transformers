@@ -13,7 +13,7 @@
 # limitations under the License.
 from typing import Any, Dict, List, Optional
 
-from datasets import Dataset
+from datasets import Dataset, ClassLabel
 from transformers import PreTrainedTokenizerBase
 
 from lightning_transformers.core.nlp import HFDataModule
@@ -38,7 +38,8 @@ class TextClassificationDataModule(HFDataModule):
             x for x in ["input_ids", "attention_mask", "token_type_ids", "labels"] if x in dataset["train"].features
         ]
         for split in dataset:
-            dataset[split] = dataset[split].class_encode_column("labels")
+            if not isinstance(dataset[split].features["labels"], ClassLabel):
+                dataset[split] = dataset[split].class_encode_column("labels")
 
         dataset.set_format("torch", columns=cols_to_keep)
         self.labels = dataset["train"].features["labels"]
