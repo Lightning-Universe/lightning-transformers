@@ -1,0 +1,2 @@
+_target_: pytorch_lightning.loggers.WandbLogger
+project: lightning-transformers
