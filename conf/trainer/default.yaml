@@ -1,5 +1,5 @@
 _target_: pytorch_lightning.Trainer
-logger: True
+logger: tensorboard
 checkpoint_callback: True
 callbacks: null
 default_root_dir: null
