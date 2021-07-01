@@ -133,7 +133,7 @@ PACKAGE_MAPPING = {
     "hydra-core": "hydra",
     "rouge-score": "rouge_score",
 }
-MOCK_PACKAGES = ['omegaconf', 'tqdm']
+MOCK_PACKAGES = ['omegaconf']
 if SPHINX_MOCK_REQUIREMENTS:
     # mock also base packages when we are on RTD since we don't install them there
     MOCK_PACKAGES += _package_list_from_file(os.path.join(_PATH_ROOT, 'requirements.txt'))
