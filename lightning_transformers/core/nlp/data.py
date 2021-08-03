@@ -46,7 +46,7 @@ class HFDataModule(TokenizerDataModule):
         if self.cfg.validation_file is not None:
             data_files["validation"] = self.cfg.validation_file
         if self.cfg.test_file is not None:
-            data_files["test_file"] = self.cfg.test_file
+            data_files["test"] = self.cfg.test_file
 
         data_files = data_files if data_files else None
         if self.cfg.dataset_name is not None:
