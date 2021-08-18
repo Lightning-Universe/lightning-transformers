@@ -9,7 +9,7 @@
 ---
 
 <p align="center">
-  <a href="#what-is-lightning-transformers">What is Lightning Transfomers</a> •
+  <a href="#what-is-lightning-transformers">What is Lightning Transformers</a> •
   <a href="#using-lightning-transformers">Using Lightning Transformers</a> •
   <a href="https://lightning-transformers.readthedocs.io/">Docs</a> •
   <a href="#community">Community</a> •
