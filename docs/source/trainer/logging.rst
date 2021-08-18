@@ -5,6 +5,10 @@ Logging
 
 Lightning Transformers offers pre-built logging configurations out of the box to quickly get training visualizations.
 
+.. note::
+
+    If the logger saves to a directory, this will be located within the hydra default save directory. The configuration for this can be found in the `hydra run config <https://github.com/PyTorchLightning/lightning-transformers/blob/master/conf/hydra/output/custom.yaml>`__ and modified on the CLI, e.g ``hydra.run.dir=./``.
+
 TensorBoard
 ^^^^^^^^^^^
 
