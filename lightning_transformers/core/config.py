@@ -22,7 +22,7 @@ class TransformerDataConfig:
 
 @dataclass
 class OptimizerConfig:
-    lr: float = 1e-3
+    lr: float = 1e-5
     weight_decay: float = 0.0
 
 
