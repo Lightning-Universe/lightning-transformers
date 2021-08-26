@@ -134,7 +134,6 @@ trainer:
   weights_summary: top
   weights_save_path: null
   num_sanity_val_steps: 2
-  truncated_bptt_steps: null
   resume_from_checkpoint: null
   profiler: null
   benchmark: false
