@@ -15,8 +15,8 @@ from typing import Any, Dict, Optional, Tuple, Union
 
 import pytorch_lightning as pl
 import torch
-from pytorch_lightning.utilities import rank_zero_info
-from pytorch_lightning.utilities.exceptions import MisconfigurationException
+import transformers
+from pytorch_lightning.utilities import rank_zero_info, rank_zero_warn
 
 from lightning_transformers.core.config import OptimizerConfig, SchedulerConfig
 from lightning_transformers.core.instantiator import Instantiator
@@ -104,8 +104,8 @@ class TaskTransformer(LitTransformer):
     def __init__(
         self,
         model: torch.nn.Module,
-        optimizer: OptimizerConfig,
-        scheduler: SchedulerConfig,
+        optimizer: Optional[OptimizerConfig] = None,
+        scheduler: Optional[SchedulerConfig] = None,
         instantiator: Optional[Instantiator] = None,
     ):
         super().__init__(model)
@@ -115,10 +115,15 @@ class TaskTransformer(LitTransformer):
 
     def configure_optimizers(self) -> Dict:
         if self.instantiator is None:
-            raise MisconfigurationException(
-                "To train you must provide an instantiator to instantiate the optimizer and scheduler "
-                "or override `configure_optimizers` in the `LightningModule`."
+            rank_zero_warn(
+                "You haven't specified an optimizer or lr scheduler. "
+                "Defaulting to AdamW with an lr of 1e-5 and linear warmup for 10% of steps. "
+                "To change this, either use Hydra configs or override ``configure_optimizers`` in the Task."
+                "For more information: <todo>"
             )
+            self._set_default_optimizer_scheduler()
+            return super().configure_optimizers()
+
         self.optimizer = self.instantiator.optimizer(self.model, self.optimizer_cfg)
         # compute_warmup needs the datamodule to be available when `self.num_training_steps`
         # is called that is why this is done here and not in the __init__
@@ -130,6 +135,16 @@ class TaskTransformer(LitTransformer):
         rank_zero_info(f"Inferring number of warmup steps from ratio, set to {self.scheduler_cfg.num_warmup_steps}")
         self.scheduler = self.instantiator.scheduler(self.scheduler_cfg, self.optimizer)
         return super().configure_optimizers()
+
+    def _set_default_optimizer_scheduler(self):
+        self.optimizer = torch.optim.AdamW(self.parameters(), lr=1e-5)
+        num_training_steps, num_warmup_steps = self.compute_warmup(
+            num_training_steps=-1,
+            num_warmup_steps=0.1,
+        )
+        self.scheduler = transformers.get_linear_schedule_with_warmup(
+            self.optimizer, num_warmup_steps=num_warmup_steps, num_training_steps=num_training_steps
+        )
 
     def on_save_checkpoint(self, checkpoint: Dict[str, Any]):
         # Save tokenizer from datamodule for predictions
