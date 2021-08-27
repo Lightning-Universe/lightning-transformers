@@ -11,11 +11,11 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+from torchmetrics.text.bleu import BLEUScore
 from transformers import MBartTokenizer
 
 from lightning_transformers.core.nlp.seq2seq import Seq2SeqTransformer
 from lightning_transformers.task.nlp.translation.config import TranslationConfig, TranslationDataConfig
-from lightning_transformers.task.nlp.translation.metric import BLEUScore
 
 
 class TranslationTransformer(Seq2SeqTransformer):

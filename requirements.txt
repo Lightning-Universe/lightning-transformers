@@ -4,7 +4,7 @@ numpy
 tqdm
 
 #metrics
-torchmetrics
+torchmetrics>=0.5.0
 
 # extras
 fairscale
@@ -17,5 +17,4 @@ datasets
 hydra-core>=1.1.0
 
 # task-specific
-rouge-score
 sentencepiece
