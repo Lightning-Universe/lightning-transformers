@@ -4,7 +4,7 @@ numpy
 tqdm
 
 #metrics
-torchmetrics>=0.5.0
+torchmetrics>=0.5.1
 
 # extras
 fairscale
