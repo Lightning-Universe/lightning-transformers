@@ -1,0 +1,3 @@
+_target_: lightning_transformers.core.callback.LightningBoltsSparseMLCallback
+output_dir: MODELS
+recipe_path: recipe.yaml

@@ -1,0 +1,3 @@
+defaults:
+  - default # inherit from default trainer conf
+  - plugins: sparseml

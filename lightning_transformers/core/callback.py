@@ -14,8 +14,31 @@
 import time
 
 import torch
+from torch import Tensor
 from pytorch_lightning import Callback
 from pytorch_lightning.utilities import rank_zero_info
+from pl_bolts.callbacks import SparseMLCallback
+from typing import List, Union, Dict, Any
+
+
+class LightningBoltsSparseMLCallback(SparseMLCallback, Callback):
+    def __init__(self, output_dir, recipe_path):
+        self.output_dir = output_dir
+        super().__init__(recipe_path=recipe_path)
+        self.sample_batch = None
+    
+    def training_epoch_end(self, training_step_outputs: List[Union[Tensor, Dict[str, Any]]]) -> None:
+        # get sample batch data at the end of the training epoch
+        if isinstance(training_step_outputs, list) and len(training_step_outputs) > 0:
+            self.sample_batch = training_step_outputs[0]
+        else:
+            raise ValueError("Training batch output is empty.",
+                             "Please check data to make sure there is no null instances")
+
+    def on_save_checkpoint(
+        self, trainer: "pl.Trainer", pl_module: "pl.LightningModule", callback_state: Dict[str, Any]
+    ) -> None:
+        self.export_to_sparse_onnx(output_dir: str=self.output_dir, sample_batch=self.sample_batch)
 
 
 class CUDACallback(Callback):
