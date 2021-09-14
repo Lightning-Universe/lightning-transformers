@@ -38,7 +38,7 @@ class LightningBoltsSparseMLCallback(SparseMLCallback, Callback):
     def on_save_checkpoint(
         self, trainer: "pl.Trainer", pl_module: "pl.LightningModule", callback_state: Dict[str, Any]
     ) -> None:
-        self.export_to_sparse_onnx(output_dir: str=self.output_dir, sample_batch=self.sample_batch)
+        self.export_to_sparse_onnx(output_dir=self.output_dir, sample_batch=self.sample_batch)
 
 
 class CUDACallback(Callback):
