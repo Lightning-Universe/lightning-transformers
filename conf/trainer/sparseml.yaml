@@ -1,3 +1,0 @@
-defaults:
-  - default # inherit from default trainer conf
-  - callbacks: sparseml
