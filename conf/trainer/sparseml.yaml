@@ -1,4 +1,4 @@
 defaults:
+  _self_
   - default
-  - fast_dev_run: True
-  - callbacks: sparseml
+callbacks: sparseml
