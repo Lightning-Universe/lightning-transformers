@@ -1,2 +1,4 @@
 defaults:
+  - default
+  - fast_dev_run: True
   - callbacks: sparseml
