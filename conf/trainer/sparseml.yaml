@@ -1,1 +1,2 @@
-callbacks: sparseml
+defaults:
+  - override callbacks: sparseml
