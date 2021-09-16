@@ -1,15 +1,10 @@
 from sparseml.pytorch.utils.logger import LambdaLogger
-from typing import Optional, Dict
-
-try:
-    import wandb
-    wandb_err = None
-except Exception as err:
-    wandb = None
-    wandb_err = err
+from pytorch_lightning.loggers import WandbLogger
+from typing import Optional, Dict, Union
+import time
 
 
-class WANDBLogger(LambdaLogger):
+class WANDBLogger(WandbLogger):
     """
     Modifier logger that handles outputting values to Weights and Biases.
 
@@ -20,23 +15,77 @@ class WANDBLogger(LambdaLogger):
     :param enabled: True to log, False otherwise
     """
 
-    @staticmethod
-    def available() -> bool:
-        """
-        :return: True if wandb is available and installed, False, otherwise
-        """
-        return not wandb_err
-
-    def __init__(
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.enabled=True
+    
+    def _lambda_func(
         self,
-        init_kwargs: Optional[Dict] = None,
-        name: str = "wandb",
-        enabled: bool = True,
+        tag: Optional[str],
+        value: Optional[float],
+        values: Optional[Dict[str, float]],
+        step: Optional[int],
+        wall_time: Optional[float],
+    ) -> bool:
+        params = {}
+
+        if value is not None:
+            params[tag] = value
+
+        if values:
+            if tag:
+                values = {f"{tag}/{key}": val for key, val in values.items()}
+            params.update(values)
+        
+        try:
+            self.log_metrics(params, step=step)
+        except Exception as e:
+            print(params, e)
+
+        return True
+    
+    def log_scalar(
+        self,
+        tag: str,
+        value: float,
+        step: Union[None, int] = None,
+        wall_time: Union[None, float] = None,
     ):
-        super().__init__(lambda_func=self._log_lambda, name=name, enabled=enabled)
+        """
+        :param tag: identifying tag to log the value with
+        :param value: value to save
+        :param step: global step for when the value was taken
+        :param wall_time: global wall time for when the value was taken,
+            defaults to time.time()
+        :return: True if logged, False otherwise.
+        """
+        if not self.enabled:
+            return False
 
-        if wandb_err:
-            raise wandb_err
+        if not wall_time:
+            wall_time = time.time()
 
-        if init_kwargs:
-            wandb.init(**init_kwargs)
+        return self._lambda_func(tag, value, None, step, wall_time)
+
+    def log_scalars(
+        self,
+        tag: str,
+        values: Dict[str, float],
+        step: Union[None, int] = None,
+        wall_time: Union[None, float] = None,
+    ):
+        """
+        :param tag: identifying tag to log the values with
+        :param values: values to save
+        :param step: global step for when the values were taken
+        :param wall_time: global wall time for when the values were taken,
+            defaults to time.time()
+        :return: True if logged, False otherwise.
+        """
+        if not self.enabled:
+            return False
+
+        if not wall_time:
+            wall_time = time.time()
+
+        return self._lambda_func(tag, None, values, step, wall_time)
