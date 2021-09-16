@@ -38,8 +38,6 @@ class LightningBoltsSparseMLCallback(SparseMLCallback):
     def on_init_end(self, trainer: "pl.Trainer") -> None:
         if isinstance(trainer.logger, WANDBLogger):
             trainer.logger.__init__(init_kwargs={"project": "lightning-transformers"})
-        # so that the entire model is not saved
-        trainer.callbacks.append(ModelCheckpoint(save_weights_only=True))
 
     def on_fit_start(self, trainer: "pl.Trainer", pl_module: "pl.LightningModule") -> None:
         optimizer = trainer.optimizers
