@@ -27,16 +27,19 @@ from typing import List, Union, Dict, Any, Optional
 from pytorch_lightning.utilities import rank_zero_info
 from pytorch_lightning.utilities.exceptions import MisconfigurationException
 from sparseml.pytorch.utils.logger import WANDBLogger
+from pytorch_lightning.loggers import WandbLogger
 
 
 class LightningBoltsSparseMLCallback(SparseMLCallback):
     def __init__(self, output_dir, recipe_path):
         self.output_dir = output_dir
         super().__init__(recipe_path=recipe_path)
-
+    
     def on_init_end(self, trainer: 'pl.Trainer') -> None:
         if isinstance(trainer.logger, WANDBLogger):
-            trainer.logger.init(init_kwargs={'project':'lightning-transformers'})
+            trainer.logger.__init__(init_kwargs={'project':'lightning-transformers'})
+        elif isinstance(trainer.logger, WandbLogger):
+            trainer.logger.init({'project':'lightning-transformers'})
     
     def on_fit_start(self, trainer: "pl.Trainer", pl_module: "pl.LightningModule") -> None:
         optimizer = trainer.optimizers
@@ -48,11 +51,6 @@ class LightningBoltsSparseMLCallback(SparseMLCallback):
         loggers = trainer.logger
         
         if not isinstance(loggers, list):
-          
-          if hasattr(loggers, 'init'):
-            # this is for wandb
-            loggers.init()
-          
           loggers = [loggers]
         
         self.manager.initialize(pl_module, epoch=0.0, logger=loggers)
