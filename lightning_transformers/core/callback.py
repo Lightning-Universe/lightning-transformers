@@ -33,10 +33,10 @@ class LightningBoltsSparseMLCallback(SparseMLCallback):
     def __init__(self, output_dir, recipe_path):
         self.output_dir = output_dir
         super().__init__(recipe_path=recipe_path)
-    
-    def on_init_start(self, trainer: 'pl.Trainer') -> None:
+
+    def on_init_end(self, trainer: 'pl.Trainer') -> None:
         if isinstance(trainer.logger, WANDBLogger):
-            trainer.logger.init()
+            trainer.logger.init(init_kwargs={'project':'lightning-transformers'})
     
     def on_fit_start(self, trainer: "pl.Trainer", pl_module: "pl.LightningModule") -> None:
         optimizer = trainer.optimizers
