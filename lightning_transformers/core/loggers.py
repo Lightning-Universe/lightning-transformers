@@ -17,8 +17,8 @@ class WANDBLogger(WandbLogger):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.enabled=True
-    
+        self.enabled = True
+
     def _lambda_func(
         self,
         tag: Optional[str],
@@ -36,14 +36,14 @@ class WANDBLogger(WandbLogger):
             if tag:
                 values = {f"{tag}/{key}": val for key, val in values.items()}
             params.update(values)
-        
+
         try:
             self.log_metrics(params, step=step)
         except Exception as e:
             print(params, e)
 
         return True
-    
+
     def log_scalar(
         self,
         tag: str,
