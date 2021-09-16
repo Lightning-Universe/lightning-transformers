@@ -11,9 +11,14 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-import time
 
+import os
+import time
 import torch
+import numpy
+import inspect
+import collections
+import onnxruntime
 from torch import Tensor
 from pytorch_lightning import Callback
 from pytorch_lightning.utilities import rank_zero_info
@@ -41,11 +46,49 @@ class LightningBoltsSparseMLCallback(SparseMLCallback):
                     "``SparseMLCallback.export_to_sparse_onnx(model, output_dir, sample_batch=sample_batch)`` "
                     "or an ``example_input_array`` property within the LightningModule"
                 )
-            exporter.export_onnx(sample_batch=sample_batch, **kwargs)
+            
+            # the following is adapted from @natuan and @spacemanidol
+            sess = None
+            num_samples = 0
+
+            sample_inputs = os.path.join(output_dir, "sample-inputs")
+            sample_outputs = os.path.join(output_dir, "sample-outputs")
+            os.makedirs(sample_inputs, exist_ok=True)
+            os.makedirs(sample_outputs, exist_ok=True)
+
+            if sess is None:
+                forward_args_spec = inspect.getfullargspec(exporter._module.__class__.forward)
+                one_sample_input = collections.OrderedDict(
+                    [(f, sample_batch[f][0].long().reshape(1, -1)) for f in forward_args_spec.args if f in sample_batch]
+                )
+
+                try:
+                    exporter.export_onnx(sample_batch=one_sample_input, convert_qat=True, **kwargs)
+                    onnx_file = os.path.join(output_dir, "model.onnx")
+                
+                except Exception:
+                    raise RuntimeError("Error exporting ONNX models and/or inputs/outputs")
+
+                sess = onnxruntime.InferenceSession(onnx_file)
+
+            input_names = list(sample_batch.keys())
+            output_names = [o.name for o in sess.get_outputs()]
+            for input_vals in zip(*sample_batch.values()):
+                input_feed = {k: v.long().numpy() for k, v in zip(input_names, input_vals)}
+                output_vals = sess.run(output_names, {k: input_feed[k].reshape(1, -1) for k in input_feed})
+                output_dict = {name: numpy.squeeze(val) for name, val in zip(output_names, output_vals)}
+                file_idx = f"{num_samples}".zfill(4)
+                numpy.savez(f"{sample_inputs}/inp-{file_idx}.npz", **input_feed)
+                numpy.savez(f"{sample_outputs}/out-{file_idx}.npz", **output_dict)
+                num_samples += 1
     
     def teardown(self, trainer: "pl.Trainer", pl_module: "pl.LightningModule", stage: Optional[str] = None) -> None:
         sample_batch = next(iter(trainer.train_dataloader))
-        self.export_to_sparse_onnx(output_dir=self.output_dir, model=pl_module, sample_batch=sample_batch, output_names=['logits'])
+        # if asked for output names, bert's ModelOutput gives two names
+        # but when run, this the model only gives one output
+        # workaround is just to force onnx to realize there is only one output
+        output_names = ['logits']
+        self.export_to_sparse_onnx(output_dir=self.output_dir, model=pl_module, sample_batch=sample_batch, output_names=output_names)
 
 
 class CUDACallback(Callback):
