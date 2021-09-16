@@ -1,0 +1,1 @@
+_target_: sparseml.pytorch.utils.logger.WANDBLogger

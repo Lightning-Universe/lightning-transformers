@@ -21,16 +21,48 @@ import collections
 import onnxruntime
 from torch import Tensor
 from pytorch_lightning import Callback
-from pytorch_lightning.utilities import rank_zero_info
 from pl_bolts.callbacks import SparseMLCallback
-from typing import List, Union, Dict, Any, Optional
 from sparseml.pytorch.utils import ModuleExporter
+from typing import List, Union, Dict, Any, Optional
+from pytorch_lightning.utilities import rank_zero_info
+from pytorch_lightning.utilities.exceptions import MisconfigurationException
+from sparseml.pytorch.utils.logger import WANDBLogger
 
 
 class LightningBoltsSparseMLCallback(SparseMLCallback):
     def __init__(self, output_dir, recipe_path):
         self.output_dir = output_dir
         super().__init__(recipe_path=recipe_path)
+    
+    def on_init_start(self, trainer: 'pl.Trainer') -> None:
+        if isinstance(trainer.logger, WANDBLogger):
+            trainer.logger.init()
+    
+    def on_fit_start(self, trainer: "pl.Trainer", pl_module: "pl.LightningModule") -> None:
+        optimizer = trainer.optimizers
+
+        if len(optimizer) > 1:
+            raise MisconfigurationException("SparseML only supports training with one optimizer.")
+        optimizer = optimizer[0]
+        
+        loggers = trainer.logger
+        
+        if not isinstance(loggers, list):
+          
+          if hasattr(loggers, 'init'):
+            # this is for wandb
+            loggers.init()
+          
+          loggers = [loggers]
+        
+        self.manager.initialize(pl_module, epoch=0.0, logger=loggers)
+        self.manager.initialize_loggers(loggers)
+        
+        optimizer = self.manager.modify(
+            pl_module, optimizer, steps_per_epoch=self._num_training_steps_per_epoch(trainer), epoch=0
+        )
+
+        trainer.optimizers = [optimizer]
     
     @staticmethod
     def export_to_sparse_onnx(
