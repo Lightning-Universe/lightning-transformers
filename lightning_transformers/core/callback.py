@@ -12,25 +12,27 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import collections
+import inspect
 import os
 import time
-import torch
+from typing import Any, Dict, List, Optional, Union
+
 import numpy
-import inspect
-import collections
 import onnxruntime
-from torch import Tensor
-from pytorch_lightning import Callback
+import torch
 from pl_bolts.callbacks import SparseMLCallback
+from pytorch_lightning import Callback
 from pytorch_lightning.loggers import WandbLogger
-from sparseml.pytorch.utils import ModuleExporter
-from typing import List, Union, Dict, Any, Optional
-from sparseml.pytorch.utils.logger import WANDBLogger
 from pytorch_lightning.utilities import rank_zero_info
 from pytorch_lightning.utilities.exceptions import MisconfigurationException
+from sparseml.pytorch.utils import ModuleExporter
+from sparseml.pytorch.utils.logger import WANDBLogger
+from torch import Tensor
 
 
 class LightningBoltsSparseMLCallback(SparseMLCallback):
+
     def __init__(self, output_dir, recipe_path):
         self.output_dir = output_dir
         super().__init__(recipe_path=recipe_path)
@@ -86,9 +88,8 @@ class LightningBoltsSparseMLCallback(SparseMLCallback):
 
             if sess is None:
                 forward_args_spec = inspect.getfullargspec(exporter._module.__class__.forward)
-                one_sample_input = collections.OrderedDict(
-                    [(f, sample_batch[f][0].long().reshape(1, -1)) for f in forward_args_spec.args if f in sample_batch]
-                )
+                one_sample_input = collections.OrderedDict([(f, sample_batch[f][0].long().reshape(1, -1))
+                                                            for f in forward_args_spec.args if f in sample_batch])
 
                 try:
                     exporter.export_onnx(sample_batch=one_sample_input, convert_qat=True, **kwargs)
@@ -105,7 +106,7 @@ class LightningBoltsSparseMLCallback(SparseMLCallback):
                     raise RuntimeError("Error exporting ONNX models and/or inputs/outputs")
 
                 sess = onnxruntime.InferenceSession(onnx_file)
-            
+
             # add additional files for testing since this feature is very new
             input_names = list(sample_batch.keys())
             output_names = [o.name for o in sess.get_outputs()]
@@ -130,6 +131,7 @@ class LightningBoltsSparseMLCallback(SparseMLCallback):
 
 
 class CUDACallback(Callback):
+
     def on_train_epoch_start(self, trainer, pl_module):
         # Reset the memory use counter
         torch.cuda.reset_peak_memory_stats(trainer.root_gpu)
@@ -138,7 +140,7 @@ class CUDACallback(Callback):
 
     def on_train_epoch_end(self, trainer, pl_module, outputs):
         torch.cuda.synchronize(trainer.root_gpu)
-        max_memory = torch.cuda.max_memory_allocated(trainer.root_gpu) / 2 ** 20
+        max_memory = torch.cuda.max_memory_allocated(trainer.root_gpu) / 2**20
         epoch_time = time.time() - self.start_time
 
         max_memory = trainer.training_type_plugin.reduce(max_memory)

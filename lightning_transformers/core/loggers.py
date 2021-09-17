@@ -1,7 +1,8 @@
-from sparseml.pytorch.utils.logger import LambdaLogger
-from pytorch_lightning.loggers import WandbLogger
-from typing import Optional, Dict, Union
 import time
+from typing import Dict, Optional, Union
+
+from pytorch_lightning.loggers import WandbLogger
+from sparseml.pytorch.utils.logger import LambdaLogger
 
 
 class WANDBLogger(WandbLogger):
