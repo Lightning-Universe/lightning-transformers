@@ -1,6 +1,5 @@
 defaults:
   - default # inherit from default trainer conf
   - plugins: sharded
-  - callbacks: sparseml
 accelerator: ddp
 precision: 16
