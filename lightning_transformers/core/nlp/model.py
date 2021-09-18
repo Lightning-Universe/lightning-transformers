@@ -56,7 +56,9 @@ class HFTransformer(TaskTransformer):
     @property
     def tokenizer(self) -> Optional["PreTrainedTokenizerBase"]:
         if (
-            self._tokenizer is None and hasattr(self, "trainer") and hasattr(self.trainer, "datamodule")
+            self._tokenizer is None
+                and hasattr(self, "trainer")  # noqa: W503
+                and hasattr(self.trainer, "datamodule")  # noqa: W503
             and hasattr(self.trainer.datamodule, "tokenizer")  # noqa: W503
         ):
             self._tokenizer = self.trainer.datamodule.tokenizer
