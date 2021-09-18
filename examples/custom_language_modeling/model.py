@@ -4,7 +4,6 @@ from lightning_transformers.task.nlp.language_modeling import LanguageModelingTr
 
 
 class MyLanguageModelingTransformer(LanguageModelingTransformer):
-
     def setup(self, stage):
         # Freeze BERT backbone
         for param in self.model.bert.parameters():

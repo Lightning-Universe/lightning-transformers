@@ -19,8 +19,7 @@ from lightning_transformers.task.nlp.translation.metric import BLEUScore
 
 
 class TranslationTransformer(Seq2SeqTransformer):
-    """
-    Defines ``LightningModule`` for the Translation Task.
+    """Defines ``LightningModule`` for the Translation Task.
 
     Args:
         *args: :class:`lightning_transformers.core.nlp.seq2seq.Seq2SeqTransformer` arguments.
@@ -32,9 +31,9 @@ class TranslationTransformer(Seq2SeqTransformer):
     def __init__(
         self,
         *args,
-        downstream_model_type: str = 'transformers.AutoModelForSeq2SeqLM',
+        downstream_model_type: str = "transformers.AutoModelForSeq2SeqLM",
         cfg: TranslationConfig = TranslationConfig(),
-        **kwargs
+        **kwargs,
     ) -> None:
         super().__init__(downstream_model_type, *args, cfg=cfg, **kwargs)
         self.bleu = None

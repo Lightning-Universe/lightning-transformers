@@ -25,7 +25,6 @@ from torch.optim import Optimizer
 
 
 class TransformersBaseFinetuning(BaseFinetuning):
-
     def __init__(self, attr_names: Union[str, List[str]] = "backbone", train_bn: bool = True):
         r"""
 

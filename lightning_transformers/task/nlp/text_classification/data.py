@@ -20,9 +20,7 @@ from lightning_transformers.core.nlp import HFDataModule
 
 
 class TextClassificationDataModule(HFDataModule):
-    """
-    Defines the ``LightningDataModule`` for Text Classification Datasets.
-    """
+    """Defines the ``LightningDataModule`` for Text Classification Datasets."""
 
     def process_data(self, dataset: Dataset, stage: Optional[str] = None) -> Dataset:
         input_feature_fields = [k for k, v in dataset["train"].features.items() if k not in ["label", "idx"]]

@@ -23,9 +23,7 @@ from lightning_transformers.core.nlp import HFTransformerDataConfig
 
 @dataclass
 class QuestionAnsweringDataConfig(HFTransformerDataConfig):
-    """
-    Arguments pertaining to what data we are going to input our model for training and eval.
-    """
+    """Arguments pertaining to what data we are going to input our model for training and eval."""
 
     max_length: int = field(
         default=384,

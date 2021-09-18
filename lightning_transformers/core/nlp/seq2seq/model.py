@@ -8,7 +8,6 @@ from lightning_transformers.core.nlp.seq2seq.utils import _pad_tensors_to_max_le
 
 
 class Seq2SeqTransformer(HFTransformer):
-
     def __init__(self, *args, cfg: HFSeq2SeqConfig = HFSeq2SeqConfig(), **kwargs) -> None:
         super().__init__(*args, **kwargs)
         self.cfg = cfg

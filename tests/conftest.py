@@ -12,7 +12,6 @@ from tests import CACHE_PATH  # GitHub Actions use this path to cache datasets.
 
 
 class ScriptRunner:
-
     def __init__(self, hf_cache_path: Path) -> None:
         self.hf_cache_path = hf_cache_path
 
@@ -56,26 +55,30 @@ class ScriptRunner:
     ) -> None:
         if cmd_args is None:
             cmd_args = []
-        cmd_args.extend([
-            f'task=nlp/{task}',
-            f'backbone.pretrained_model_name_or_path={model}',
-            f'dataset.cfg.limit_train_samples={max_samples}',
-            f'dataset.cfg.limit_val_samples={max_samples}',
-            f'dataset.cfg.limit_test_samples={max_samples}',
-            f'dataset.cfg.cache_dir={self.hf_cache_path}',
-            f'training.num_workers={num_workers}',
-        ])
+        cmd_args.extend(
+            [
+                f"task=nlp/{task}",
+                f"backbone.pretrained_model_name_or_path={model}",
+                f"dataset.cfg.limit_train_samples={max_samples}",
+                f"dataset.cfg.limit_val_samples={max_samples}",
+                f"dataset.cfg.limit_test_samples={max_samples}",
+                f"dataset.cfg.cache_dir={self.hf_cache_path}",
+                f"training.num_workers={num_workers}",
+            ]
+        )
         if dataset is not None:
-            cmd_args.append(f'dataset=nlp/{task}/{dataset}')
+            cmd_args.append(f"dataset=nlp/{task}/{dataset}")
         if fast_dev_run:
             cmd_args.append(f"trainer.fast_dev_run={fast_dev_run}")
         self.train(cmd_args)
 
     def hf_predict(self, cmd_args: List[str], task: str, model: str) -> Any:
-        cmd_args.extend([
-            f'task=nlp/{task}',
-            f'backbone.pretrained_model_name_or_path={model}',
-        ])
+        cmd_args.extend(
+            [
+                f"task=nlp/{task}",
+                f"backbone.pretrained_model_name_or_path={model}",
+            ]
+        )
         return self.predict(cmd_args)
 
 
