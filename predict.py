@@ -1,4 +1,4 @@
-"""The shell entry point `$ pl-transformers-predict` is also available"""
+"""The shell entry point `$ pl-transformers-predict` is also available."""
 import hydra
 from omegaconf import DictConfig
 

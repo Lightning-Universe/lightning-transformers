@@ -14,14 +14,13 @@
 from typing import Any, Dict, List, Union
 
 import torch
-from torchmetrics import Accuracy, F1, Precision, Recall
+from torchmetrics import F1, Accuracy, Precision, Recall
 
 from lightning_transformers.core.nlp import HFTransformer
 
 
 class TokenClassificationTransformer(HFTransformer):
-    """
-    Defines ``LightningModule`` for the Text Classification Task.
+    """Defines ``LightningModule`` for the Text Classification Task.
 
     Args:
         *args: :class:`lightning_transformers.core.nlp.HFTransformer` arguments.
@@ -34,8 +33,8 @@ class TokenClassificationTransformer(HFTransformer):
         self,
         *args,
         labels: Union[int, List[str]],
-        downstream_model_type: str = 'transformers.AutoModelForTokenClassification',
-        **kwargs
+        downstream_model_type: str = "transformers.AutoModelForTokenClassification",
+        **kwargs,
     ) -> None:
         num_labels = labels if isinstance(labels, int) else len(labels)
         super().__init__(downstream_model_type, *args, num_labels=num_labels, **kwargs)

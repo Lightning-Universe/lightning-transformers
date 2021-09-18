@@ -22,8 +22,7 @@ from lightning_transformers.task.nlp.token_classification.config import TokenCla
 
 
 class TokenClassificationDataModule(HFDataModule):
-    """
-    Defines the ``LightningDataModule`` for Token Classification Datasets.
+    """Defines the ``LightningDataModule`` for Token Classification Datasets.
 
     Args:
         *args: ``HFDataModule`` specific arguments.
@@ -31,6 +30,7 @@ class TokenClassificationDataModule(HFDataModule):
             (Default ``TokenClassificationDataConfig``)
         **kwargs: ``HFDataModule`` specific arguments.
     """
+
     cfg: TokenClassificationDataConfig
 
     def __init__(self, *args, cfg: TokenClassificationDataConfig = TokenClassificationDataConfig(), **kwargs) -> None:
@@ -57,7 +57,8 @@ class TokenClassificationDataModule(HFDataModule):
             load_from_cache_file=self.cfg.load_from_cache_file,
         )
         cols_to_keep = [
-            x for x in ["input_ids", "attention_mask", "token_type_ids", "labels", "idx"]
+            x
+            for x in ["input_ids", "attention_mask", "token_type_ids", "labels", "idx"]
             if x in dataset["train"].features
         ]
         dataset.set_format(columns=cols_to_keep)
@@ -80,7 +81,7 @@ class TokenClassificationDataModule(HFDataModule):
             label_to_id = {i: i for i in range(len(label_list))}
         else:
             # Create unique label set from train dataset.
-            label_list = sorted(set(label for column in dataset["train"][label_column_name] for label in column))
+            label_list = sorted({label for column in dataset["train"][label_column_name] for label in column})
             label_to_id = {l: i for i, l in enumerate(label_list)}
         self.labels = label_list
         self.label_to_id = label_to_id

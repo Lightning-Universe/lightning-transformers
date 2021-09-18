@@ -10,14 +10,14 @@ from lightning_transformers.core.nlp.config import HFTransformerDataConfig
 
 
 class HFDataModule(TokenizerDataModule):
-    """
-    Base ``LightningDataModule`` for HuggingFace Datasets. Provides helper functions and boilerplate logic
-    to load/process datasets.
+    """Base ``LightningDataModule`` for HuggingFace Datasets. Provides helper functions and boilerplate logic to
+    load/process datasets.
 
     Args:
         tokenizer: ``PreTrainedTokenizerBase`` for tokenizing data.
         cfg: Contains data specific parameters when processing/loading the dataset (Default ``HFTransformerDataConfig``)
     """
+
     cfg: HFTransformerDataConfig
     tokenizer: PreTrainedTokenizerBase
 
@@ -33,9 +33,9 @@ class HFDataModule(TokenizerDataModule):
         dataset = self.process_data(dataset, stage=stage)
         self.ds = dataset
 
-    def process_data(self,
-                     dataset: Union[Dataset, DatasetDict],
-                     stage: Optional[str] = None) -> Union[Dataset, DatasetDict]:
+    def process_data(
+        self, dataset: Union[Dataset, DatasetDict], stage: Optional[str] = None
+    ) -> Union[Dataset, DatasetDict]:
         return dataset
 
     def load_dataset(self) -> Dataset:
@@ -55,7 +55,7 @@ class HFDataModule(TokenizerDataModule):
                 path=self.cfg.dataset_name,
                 name=self.cfg.dataset_config_name,
                 cache_dir=self.cfg.cache_dir,
-                data_files=data_files
+                data_files=data_files,
             )
 
         # Load straight from data files
@@ -75,8 +75,11 @@ class HFDataModule(TokenizerDataModule):
         return dataset
 
     def _select_samples(self, dataset: Union[Dataset, DatasetDict]) -> Union[Dataset, DatasetDict]:
-        samples = (("train", self.cfg.limit_train_samples), ("validation", self.cfg.limit_val_samples),
-                   ("test", self.cfg.limit_test_samples))
+        samples = (
+            ("train", self.cfg.limit_train_samples),
+            ("validation", self.cfg.limit_val_samples),
+            ("test", self.cfg.limit_test_samples),
+        )
         for column_name, n_samples in samples:
             if n_samples is not None and column_name in dataset:
                 indices = range(min(len(dataset[column_name]), n_samples))

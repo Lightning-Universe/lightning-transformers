@@ -18,8 +18,7 @@ from lightning_transformers.task.nlp.translation.config import TranslationDataCo
 
 
 class TranslationDataModule(Seq2SeqDataModule):
-    """
-    Defines the ``LightningDataModule`` for Translation Datasets.
+    """Defines the ``LightningDataModule`` for Translation Datasets.
 
     Args:
         *args: ``Seq2SeqDataModule`` specific arguments.
@@ -27,6 +26,7 @@ class TranslationDataModule(Seq2SeqDataModule):
             (Default ``TranslationDataConfig``)
         **kwargs: ``Seq2SeqDataModule`` specific arguments.
     """
+
     cfg: TranslationDataConfig
 
     def __init__(self, *args, cfg: TranslationDataConfig = TranslationDataConfig(), **kwargs) -> None:

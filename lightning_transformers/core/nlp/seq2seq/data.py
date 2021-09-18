@@ -2,15 +2,14 @@ from functools import partial
 from typing import Any, Callable, Optional, Tuple
 
 from datasets import Dataset
-from transformers import default_data_collator, PreTrainedTokenizerBase
+from transformers import PreTrainedTokenizerBase, default_data_collator
 
 from lightning_transformers.core.nlp import HFDataModule
 from lightning_transformers.core.nlp.seq2seq import Seq2SeqDataConfig
 
 
 class Seq2SeqDataModule(HFDataModule):
-    """
-    Defines the ``LightningDataModule`` for Seq2Seq Datasets, such as Summarization and Translation.
+    """Defines the ``LightningDataModule`` for Seq2Seq Datasets, such as Summarization and Translation.
 
     Args:
         *args: ``HFDataModule`` specific arguments.
@@ -18,6 +17,7 @@ class Seq2SeqDataModule(HFDataModule):
             (Default ``Seq2SeqDataConfig``)
         **kwargs: ``HFDataModule`` specific arguments.
     """
+
     cfg: Seq2SeqDataConfig
 
     def __init__(self, *args, cfg: Seq2SeqDataConfig = Seq2SeqDataConfig(), **kwargs) -> None:
@@ -48,7 +48,7 @@ class Seq2SeqDataModule(HFDataModule):
 
     @property
     def source_target_column_names(self) -> Tuple[str, str]:
-        return 'source', 'target'
+        return "source", "target"
 
     @staticmethod
     def convert_to_features(

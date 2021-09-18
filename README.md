@@ -6,7 +6,7 @@
 
 <img src="https://pl-bolts-doc-images.s3.us-east-2.amazonaws.com/lit-tfmrs.gif">
 
----
+______________________________________________________________________
 
 <p align="center">
   <a href="#what-is-lightning-transformers">What is Lightning Transformers</a> •
@@ -16,7 +16,7 @@
   <a href="#license">License</a>
 </p>
 
----
+______________________________________________________________________
 
 </div>
 
@@ -31,6 +31,7 @@ pl-transformers-train ...
 ```
 
 #### Option 2: from source
+
 ```bash
 git clone https://github.com/PyTorchLightning/lightning-transformers.git
 cd lightning-transformers
@@ -41,16 +42,16 @@ python train.py ...
 
 </details>
 
----
+______________________________________________________________________
 
 ## What is Lightning-Transformers
 
 Lightning Transformers offers a flexible interface for training and fine-tuning SOTA Transformer models using the [PyTorch Lightning Trainer](https://pytorch-lightning.readthedocs.io/en/stable/common/trainer.html).
 
-* **Train using [HuggingFace Transformers](https://github.com/huggingface/transformers) models and datasets** with Lightning custom Callbacks, Loggers, Accelerators and high performance scaling.
-* **Seamless Memory and Speed Optimizations** such as [DeepSpeed ZeRO](https://pytorch-lightning.readthedocs.io/en/latest/multi_gpu.html#deepspeed) or [FairScale Sharded Training](https://pytorch-lightning.readthedocs.io/en/latest/multi_gpu.html#sharded-training) with no code changes.
-* **Powerful config composition backed by [Hydra](https://hydra.cc/)** - Easily swap out models, optimizers, schedulers and many more configurations without touching the code.
-* **Transformer Task Abstraction for Rapid Research & Experimentation** - Built from the ground up to be task agnostic, the library supports creating transformer tasks across all modalities with little friction.
+- **Train using [HuggingFace Transformers](https://github.com/huggingface/transformers) models and datasets** with Lightning custom Callbacks, Loggers, Accelerators and high performance scaling.
+- **Seamless Memory and Speed Optimizations** such as [DeepSpeed ZeRO](https://pytorch-lightning.readthedocs.io/en/latest/multi_gpu.html#deepspeed) or [FairScale Sharded Training](https://pytorch-lightning.readthedocs.io/en/latest/multi_gpu.html#sharded-training) with no code changes.
+- **Powerful config composition backed by [Hydra](https://hydra.cc/)** - Easily swap out models, optimizers, schedulers and many more configurations without touching the code.
+- **Transformer Task Abstraction for Rapid Research & Experimentation** - Built from the ground up to be task agnostic, the library supports creating transformer tasks across all modalities with little friction.
 
 Lightning Transformers tasks allow you to train models using HuggingFace Transformer models and datasets, use Hydra to hotswap models, optimizers or schedulers and leverage all the advances features that Lightning has to offer, including custom Callbacks, Loggers, Accelerators and high performance scaling with minimal changes.
 
@@ -58,22 +59,21 @@ Lightning Transformers tasks allow you to train models using HuggingFace Transfo
 
 **Grid** is our platform for training models at scale on the cloud! Sign up [here](https://www.grid.ai/).
 
-
-| Task                 | Quick Commands                                                                                           | Run |
-|----------------------|-----------------------------------------------------------------------------------------------------------|-----|
-| [Language Modeling](https://lightning-transformers.readthedocs.io/en/latest/tasks/nlp/language_modeling.html)    | ```python train.py task=nlp/language_modeling dataset=nlp/language_modeling/wikitext trainer.gpus=1 training.batch_size=8```    |[![Grid](https://img.shields.io/badge/rid_AI-run-78FF96.svg?labelColor=black&logo=data:image/svg%2bxml;base64,PHN2ZyB3aWR0aD0iNDgiIGhlaWdodD0iNDgiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHBhdGggZD0iTTEgMTR2MjBhMTQgMTQgMCAwMDE0IDE0aDlWMzYuOEgxMi42VjExaDIyLjV2N2gxMS4yVjE0QTE0IDE0IDAgMDAzMi40IDBIMTVBMTQgMTQgMCAwMDEgMTR6IiBmaWxsPSIjZmZmIi8+PHBhdGggZD0iTTM1LjIgNDhoMTEuMlYyNS41SDIzLjl2MTEuM2gxMS4zVjQ4eiIgZmlsbD0iI2ZmZiIvPjwvc3ZnPg==)](https://platform.grid.ai/#/runs?script=https://github.com/PyTorchLightning/lightning-transformers/blob/ebef2896cca8380ab69873f6c2ee3a08464d2fe3/train.py&cloud=grid&instance=p3.2xlarge&accelerators=1&disk_size=200&framework=lightning&script_args=train.py+task=nlp/language_modeling+dataset=nlp/language_modeling/wikitext+trainer.gpus=1+training.batch_size=8)     |
-| [Multiple Choice](https://lightning-transformers.readthedocs.io/en/latest/tasks/nlp/multiple_choice.html)      | ```python train.py task=nlp/multiple_choice dataset=nlp/multiple_choice/race trainer.gpus=1```            |[![Grid](https://img.shields.io/badge/rid_AI-run-78FF96.svg?labelColor=black&logo=data:image/svg%2bxml;base64,PHN2ZyB3aWR0aD0iNDgiIGhlaWdodD0iNDgiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHBhdGggZD0iTTEgMTR2MjBhMTQgMTQgMCAwMDE0IDE0aDlWMzYuOEgxMi42VjExaDIyLjV2N2gxMS4yVjE0QTE0IDE0IDAgMDAzMi40IDBIMTVBMTQgMTQgMCAwMDEgMTR6IiBmaWxsPSIjZmZmIi8+PHBhdGggZD0iTTM1LjIgNDhoMTEuMlYyNS41SDIzLjl2MTEuM2gxMS4zVjQ4eiIgZmlsbD0iI2ZmZiIvPjwvc3ZnPg==)](https://platform.grid.ai/#/runs?script=https://github.com/PyTorchLightning/lightning-transformers/blob/ebef2896cca8380ab69873f6c2ee3a08464d2fe3/train.py&cloud=grid&instance=p3.2xlarge&accelerators=1&disk_size=200&framework=lightning&script_args=train.py+task=nlp/multiple_choice+dataset=nlp/multiple_choice/race+trainer.gpus=1)     |
-| [Question Answering](https://lightning-transformers.readthedocs.io/en/latest/tasks/nlp/question_answering.html)   | ```python train.py task=nlp/question_answering dataset=nlp/question_answering/squad trainer.gpus=1```     |[![Grid](https://img.shields.io/badge/rid_AI-run-78FF96.svg?labelColor=black&logo=data:image/svg%2bxml;base64,PHN2ZyB3aWR0aD0iNDgiIGhlaWdodD0iNDgiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHBhdGggZD0iTTEgMTR2MjBhMTQgMTQgMCAwMDE0IDE0aDlWMzYuOEgxMi42VjExaDIyLjV2N2gxMS4yVjE0QTE0IDE0IDAgMDAzMi40IDBIMTVBMTQgMTQgMCAwMDEgMTR6IiBmaWxsPSIjZmZmIi8+PHBhdGggZD0iTTM1LjIgNDhoMTEuMlYyNS41SDIzLjl2MTEuM2gxMS4zVjQ4eiIgZmlsbD0iI2ZmZiIvPjwvc3ZnPg==)](https://platform.grid.ai/#/runs?script=https://github.com/PyTorchLightning/lightning-transformers/blob/ebef2896cca8380ab69873f6c2ee3a08464d2fe3/train.py&cloud=grid&instance=p3.2xlarge&accelerators=1&disk_size=200&framework=lightning&script_args=train.py+task=nlp/question_answering+dataset=nlp/question_answering/squad+trainer.gpus=1)     |
-| [Summarization](https://lightning-transformers.readthedocs.io/en/latest/tasks/nlp/summarization.html)        | ```python train.py task=nlp/summarization dataset=nlp/summarization/xsum trainer.gpus=1```                |[![Grid](https://img.shields.io/badge/rid_AI-run-78FF96.svg?labelColor=black&logo=data:image/svg%2bxml;base64,PHN2ZyB3aWR0aD0iNDgiIGhlaWdodD0iNDgiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHBhdGggZD0iTTEgMTR2MjBhMTQgMTQgMCAwMDE0IDE0aDlWMzYuOEgxMi42VjExaDIyLjV2N2gxMS4yVjE0QTE0IDE0IDAgMDAzMi40IDBIMTVBMTQgMTQgMCAwMDEgMTR6IiBmaWxsPSIjZmZmIi8+PHBhdGggZD0iTTM1LjIgNDhoMTEuMlYyNS41SDIzLjl2MTEuM2gxMS4zVjQ4eiIgZmlsbD0iI2ZmZiIvPjwvc3ZnPg==)](https://platform.grid.ai/#/runs?script=https://github.com/PyTorchLightning/lightning-transformers/blob/ebef2896cca8380ab69873f6c2ee3a08464d2fe3/train.py&cloud=grid&instance=p3.2xlarge&accelerators=1&disk_size=200&framework=lightning&script_args=train.py+task=nlp/summarization+dataset=nlp/summarization/xsum+trainer.gpus=1)     |
-| [Text Classification](https://lightning-transformers.readthedocs.io/en/latest/tasks/nlp/text_classification.html)  | ```python train.py task=nlp/text_classification dataset=nlp/text_classification/emotion trainer.gpus=1``` |[![Grid](https://img.shields.io/badge/rid_AI-run-78FF96.svg?labelColor=black&logo=data:image/svg%2bxml;base64,PHN2ZyB3aWR0aD0iNDgiIGhlaWdodD0iNDgiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHBhdGggZD0iTTEgMTR2MjBhMTQgMTQgMCAwMDE0IDE0aDlWMzYuOEgxMi42VjExaDIyLjV2N2gxMS4yVjE0QTE0IDE0IDAgMDAzMi40IDBIMTVBMTQgMTQgMCAwMDEgMTR6IiBmaWxsPSIjZmZmIi8+PHBhdGggZD0iTTM1LjIgNDhoMTEuMlYyNS41SDIzLjl2MTEuM2gxMS4zVjQ4eiIgZmlsbD0iI2ZmZiIvPjwvc3ZnPg==)](https://platform.grid.ai/#/runs?script=https://github.com/PyTorchLightning/lightning-transformers/blob/ebef2896cca8380ab69873f6c2ee3a08464d2fe3/train.py&cloud=grid&instance=p3.2xlarge&accelerators=1&disk_size=200&framework=lightning&script_args=train.py+task=nlp/text_classification+dataset=nlp/text_classification/emotion+trainer.gpus=1)     |
-| [Token Classification](https://lightning-transformers.readthedocs.io/en/latest/tasks/nlp/token_classification.html) | ```python train.py task=nlp/token_classification dataset=nlp/token_classification/conll trainer.gpus=1``` |[![Grid](https://img.shields.io/badge/rid_AI-run-78FF96.svg?labelColor=black&logo=data:image/svg%2bxml;base64,PHN2ZyB3aWR0aD0iNDgiIGhlaWdodD0iNDgiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHBhdGggZD0iTTEgMTR2MjBhMTQgMTQgMCAwMDE0IDE0aDlWMzYuOEgxMi42VjExaDIyLjV2N2gxMS4yVjE0QTE0IDE0IDAgMDAzMi40IDBIMTVBMTQgMTQgMCAwMDEgMTR6IiBmaWxsPSIjZmZmIi8+PHBhdGggZD0iTTM1LjIgNDhoMTEuMlYyNS41SDIzLjl2MTEuM2gxMS4zVjQ4eiIgZmlsbD0iI2ZmZiIvPjwvc3ZnPg==)](https://platform.grid.ai/#/runs?script=https://github.com/PyTorchLightning/lightning-transformers/blob/ebef2896cca8380ab69873f6c2ee3a08464d2fe3/train.py&cloud=grid&instance=p3.2xlarge&accelerators=1&disk_size=200&framework=lightning&script_args=train.py+task=nlp/token_classification+dataset=nlp/token_classification/conll+trainer.gpus=1)     |
-| [Translation](https://lightning-transformers.readthedocs.io/en/latest/tasks/nlp/translation.html)          | ```python train.py task=nlp/translation dataset=nlp/translation/wmt16 trainer.gpus=1```                   |[![Grid](https://img.shields.io/badge/rid_AI-run-78FF96.svg?labelColor=black&logo=data:image/svg%2bxml;base64,PHN2ZyB3aWR0aD0iNDgiIGhlaWdodD0iNDgiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHBhdGggZD0iTTEgMTR2MjBhMTQgMTQgMCAwMDE0IDE0aDlWMzYuOEgxMi42VjExaDIyLjV2N2gxMS4yVjE0QTE0IDE0IDAgMDAzMi40IDBIMTVBMTQgMTQgMCAwMDEgMTR6IiBmaWxsPSIjZmZmIi8+PHBhdGggZD0iTTM1LjIgNDhoMTEuMlYyNS41SDIzLjl2MTEuM2gxMS4zVjQ4eiIgZmlsbD0iI2ZmZiIvPjwvc3ZnPg==)](https://platform.grid.ai/#/runs?script=https://github.com/PyTorchLightning/lightning-transformers/blob/ebef2896cca8380ab69873f6c2ee3a08464d2fe3/train.py&cloud=grid&instance=p3.2xlarge&accelerators=1&disk_size=200&framework=lightning&script_args=train.py+task=nlp/translation+dataset=nlp/translation/wmt16+trainer.gpus=1)     |
-|||<img width=200/>| <!-- This empty row is here to force a minimum badge width -->
-
+| Task                                                                                                                | Quick Commands                                                                                                           | Run                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
+| ------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| [Language Modeling](https://lightning-transformers.readthedocs.io/en/latest/tasks/nlp/language_modeling.html)       | `python train.py task=nlp/language_modeling dataset=nlp/language_modeling/wikitext trainer.gpus=1 training.batch_size=8` | [![Grid](https://img.shields.io/badge/rid_AI-run-78FF96.svg?labelColor=black&logo=data:image/svg%2bxml%3Bbase64,PHN2ZyB3aWR0aD0iNDgiIGhlaWdodD0iNDgiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHBhdGggZD0iTTEgMTR2MjBhMTQgMTQgMCAwMDE0IDE0aDlWMzYuOEgxMi42VjExaDIyLjV2N2gxMS4yVjE0QTE0IDE0IDAgMDAzMi40IDBIMTVBMTQgMTQgMCAwMDEgMTR6IiBmaWxsPSIjZmZmIi8+PHBhdGggZD0iTTM1LjIgNDhoMTEuMlYyNS41SDIzLjl2MTEuM2gxMS4zVjQ4eiIgZmlsbD0iI2ZmZiIvPjwvc3ZnPg==)](https://platform.grid.ai/#/runs?script=https://github.com/PyTorchLightning/lightning-transformers/blob/ebef2896cca8380ab69873f6c2ee3a08464d2fe3/train.py&cloud=grid&instance=p3.2xlarge&accelerators=1&disk_size=200&framework=lightning&script_args=train.py+task=nlp/language_modeling+dataset=nlp/language_modeling/wikitext+trainer.gpus=1+training.batch_size=8) |
+| [Multiple Choice](https://lightning-transformers.readthedocs.io/en/latest/tasks/nlp/multiple_choice.html)           | `python train.py task=nlp/multiple_choice dataset=nlp/multiple_choice/race trainer.gpus=1`                               | [![Grid](https://img.shields.io/badge/rid_AI-run-78FF96.svg?labelColor=black&logo=data:image/svg%2bxml%3Bbase64,PHN2ZyB3aWR0aD0iNDgiIGhlaWdodD0iNDgiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHBhdGggZD0iTTEgMTR2MjBhMTQgMTQgMCAwMDE0IDE0aDlWMzYuOEgxMi42VjExaDIyLjV2N2gxMS4yVjE0QTE0IDE0IDAgMDAzMi40IDBIMTVBMTQgMTQgMCAwMDEgMTR6IiBmaWxsPSIjZmZmIi8+PHBhdGggZD0iTTM1LjIgNDhoMTEuMlYyNS41SDIzLjl2MTEuM2gxMS4zVjQ4eiIgZmlsbD0iI2ZmZiIvPjwvc3ZnPg==)](https://platform.grid.ai/#/runs?script=https://github.com/PyTorchLightning/lightning-transformers/blob/ebef2896cca8380ab69873f6c2ee3a08464d2fe3/train.py&cloud=grid&instance=p3.2xlarge&accelerators=1&disk_size=200&framework=lightning&script_args=train.py+task=nlp/multiple_choice+dataset=nlp/multiple_choice/race+trainer.gpus=1)                               |
+| [Question Answering](https://lightning-transformers.readthedocs.io/en/latest/tasks/nlp/question_answering.html)     | `python train.py task=nlp/question_answering dataset=nlp/question_answering/squad trainer.gpus=1`                        | [![Grid](https://img.shields.io/badge/rid_AI-run-78FF96.svg?labelColor=black&logo=data:image/svg%2bxml%3Bbase64,PHN2ZyB3aWR0aD0iNDgiIGhlaWdodD0iNDgiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHBhdGggZD0iTTEgMTR2MjBhMTQgMTQgMCAwMDE0IDE0aDlWMzYuOEgxMi42VjExaDIyLjV2N2gxMS4yVjE0QTE0IDE0IDAgMDAzMi40IDBIMTVBMTQgMTQgMCAwMDEgMTR6IiBmaWxsPSIjZmZmIi8+PHBhdGggZD0iTTM1LjIgNDhoMTEuMlYyNS41SDIzLjl2MTEuM2gxMS4zVjQ4eiIgZmlsbD0iI2ZmZiIvPjwvc3ZnPg==)](https://platform.grid.ai/#/runs?script=https://github.com/PyTorchLightning/lightning-transformers/blob/ebef2896cca8380ab69873f6c2ee3a08464d2fe3/train.py&cloud=grid&instance=p3.2xlarge&accelerators=1&disk_size=200&framework=lightning&script_args=train.py+task=nlp/question_answering+dataset=nlp/question_answering/squad+trainer.gpus=1)                        |
+| [Summarization](https://lightning-transformers.readthedocs.io/en/latest/tasks/nlp/summarization.html)               | `python train.py task=nlp/summarization dataset=nlp/summarization/xsum trainer.gpus=1`                                   | [![Grid](https://img.shields.io/badge/rid_AI-run-78FF96.svg?labelColor=black&logo=data:image/svg%2bxml%3Bbase64,PHN2ZyB3aWR0aD0iNDgiIGhlaWdodD0iNDgiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHBhdGggZD0iTTEgMTR2MjBhMTQgMTQgMCAwMDE0IDE0aDlWMzYuOEgxMi42VjExaDIyLjV2N2gxMS4yVjE0QTE0IDE0IDAgMDAzMi40IDBIMTVBMTQgMTQgMCAwMDEgMTR6IiBmaWxsPSIjZmZmIi8+PHBhdGggZD0iTTM1LjIgNDhoMTEuMlYyNS41SDIzLjl2MTEuM2gxMS4zVjQ4eiIgZmlsbD0iI2ZmZiIvPjwvc3ZnPg==)](https://platform.grid.ai/#/runs?script=https://github.com/PyTorchLightning/lightning-transformers/blob/ebef2896cca8380ab69873f6c2ee3a08464d2fe3/train.py&cloud=grid&instance=p3.2xlarge&accelerators=1&disk_size=200&framework=lightning&script_args=train.py+task=nlp/summarization+dataset=nlp/summarization/xsum+trainer.gpus=1)                                   |
+| [Text Classification](https://lightning-transformers.readthedocs.io/en/latest/tasks/nlp/text_classification.html)   | `python train.py task=nlp/text_classification dataset=nlp/text_classification/emotion trainer.gpus=1`                    | [![Grid](https://img.shields.io/badge/rid_AI-run-78FF96.svg?labelColor=black&logo=data:image/svg%2bxml%3Bbase64,PHN2ZyB3aWR0aD0iNDgiIGhlaWdodD0iNDgiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHBhdGggZD0iTTEgMTR2MjBhMTQgMTQgMCAwMDE0IDE0aDlWMzYuOEgxMi42VjExaDIyLjV2N2gxMS4yVjE0QTE0IDE0IDAgMDAzMi40IDBIMTVBMTQgMTQgMCAwMDEgMTR6IiBmaWxsPSIjZmZmIi8+PHBhdGggZD0iTTM1LjIgNDhoMTEuMlYyNS41SDIzLjl2MTEuM2gxMS4zVjQ4eiIgZmlsbD0iI2ZmZiIvPjwvc3ZnPg==)](https://platform.grid.ai/#/runs?script=https://github.com/PyTorchLightning/lightning-transformers/blob/ebef2896cca8380ab69873f6c2ee3a08464d2fe3/train.py&cloud=grid&instance=p3.2xlarge&accelerators=1&disk_size=200&framework=lightning&script_args=train.py+task=nlp/text_classification+dataset=nlp/text_classification/emotion+trainer.gpus=1)                    |
+| [Token Classification](https://lightning-transformers.readthedocs.io/en/latest/tasks/nlp/token_classification.html) | `python train.py task=nlp/token_classification dataset=nlp/token_classification/conll trainer.gpus=1`                    | [![Grid](https://img.shields.io/badge/rid_AI-run-78FF96.svg?labelColor=black&logo=data:image/svg%2bxml%3Bbase64,PHN2ZyB3aWR0aD0iNDgiIGhlaWdodD0iNDgiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHBhdGggZD0iTTEgMTR2MjBhMTQgMTQgMCAwMDE0IDE0aDlWMzYuOEgxMi42VjExaDIyLjV2N2gxMS4yVjE0QTE0IDE0IDAgMDAzMi40IDBIMTVBMTQgMTQgMCAwMDEgMTR6IiBmaWxsPSIjZmZmIi8+PHBhdGggZD0iTTM1LjIgNDhoMTEuMlYyNS41SDIzLjl2MTEuM2gxMS4zVjQ4eiIgZmlsbD0iI2ZmZiIvPjwvc3ZnPg==)](https://platform.grid.ai/#/runs?script=https://github.com/PyTorchLightning/lightning-transformers/blob/ebef2896cca8380ab69873f6c2ee3a08464d2fe3/train.py&cloud=grid&instance=p3.2xlarge&accelerators=1&disk_size=200&framework=lightning&script_args=train.py+task=nlp/token_classification+dataset=nlp/token_classification/conll+trainer.gpus=1)                    |
+| [Translation](https://lightning-transformers.readthedocs.io/en/latest/tasks/nlp/translation.html)                   | `python train.py task=nlp/translation dataset=nlp/translation/wmt16 trainer.gpus=1`                                      | [![Grid](https://img.shields.io/badge/rid_AI-run-78FF96.svg?labelColor=black&logo=data:image/svg%2bxml%3Bbase64,PHN2ZyB3aWR0aD0iNDgiIGhlaWdodD0iNDgiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHBhdGggZD0iTTEgMTR2MjBhMTQgMTQgMCAwMDE0IDE0aDlWMzYuOEgxMi42VjExaDIyLjV2N2gxMS4yVjE0QTE0IDE0IDAgMDAzMi40IDBIMTVBMTQgMTQgMCAwMDEgMTR6IiBmaWxsPSIjZmZmIi8+PHBhdGggZD0iTTM1LjIgNDhoMTEuMlYyNS41SDIzLjl2MTEuM2gxMS4zVjQ4eiIgZmlsbD0iI2ZmZiIvPjwvc3ZnPg==)](https://platform.grid.ai/#/runs?script=https://github.com/PyTorchLightning/lightning-transformers/blob/ebef2896cca8380ab69873f6c2ee3a08464d2fe3/train.py&cloud=grid&instance=p3.2xlarge&accelerators=1&disk_size=200&framework=lightning&script_args=train.py+task=nlp/translation+dataset=nlp/translation/wmt16+trainer.gpus=1)                                      |
+|                                                                                                                     |                                                                                                                          | <img width=200/>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
 
 ### Quick recipes
 
 #### Train [bert-base-cased](https://huggingface.co/bert-base-cased) on the [CARER](https://huggingface.co/datasets/emotion) emotion dataset using the Text Classification task.
+
 ```bash
 python train.py \
     task=nlp/text_classification \
@@ -186,6 +186,7 @@ tokenizer:
 backbone:
   pretrained_model_name_or_path: bert-base-cased
 ```
+
 </details>
 
 #### Swap the backbone to [RoBERTa](https://huggingface.co/transformers/model_doc/roberta.html) and the optimizer to RMSprop:
@@ -218,9 +219,11 @@ tokenizer:
 -  pretrained_model_name_or_path: bert-base-cased
 +  pretrained_model_name_or_path: roberta-base
 ```
+
 </details>
 
 #### Enable [Sharded](https://pytorch-lightning.readthedocs.io/en/latest/advanced/multi_gpu.html#sharded-training) Training.
+
 ```bash
 python train.py \
     task=nlp/text_classification \
@@ -270,9 +273,11 @@ tokenizer:
    pretrained_model_name_or_path: bert-base-cased
 
 ```
+
 </details>
 
 #### Enable [DeepSpeed ZeRO](https://pytorch-lightning.readthedocs.io/en/latest/advanced/multi_gpu.html#deepspeed-zero-stage-2) Training.
+
 ```bash
 python train.py \
     task=nlp/text_classification \
@@ -317,9 +322,11 @@ trainer:
    move_metrics_to_cpu: false
 ...
 ```
+
 </details>
 
 #### Train with a pre-trained [t5-base](https://huggingface.co/t5-base) backbone, on the [XSUM](https://huggingface.co/datasets/xsum) dataset using the Summarization task.
+
 ```bash
 python train.py \
     task=nlp/summarization \
@@ -328,6 +335,7 @@ python train.py \
 ```
 
 #### Train with a pre-trained [mt5-base](https://huggingface.co/google/mt5-base) backbone, on the [WMT16](https://huggingface.co/datasets/wmt16) dataset using the Translation task with 2 GPUs.
+
 ```bash
 python train.py \
     task=nlp/translation \
@@ -341,6 +349,7 @@ python train.py \
 You can train, validate and test Lightning transformers tasks on your own data files, and you can extend datasets for custom processing and your own tasks.
 
 #### [How to train, validate and test on custom files](https://lightning-transformers.readthedocs.io/en/latest/datasets/custom_data.html)
+
 #### [How to extend datasets](https://lightning-transformers.readthedocs.io/en/latest/advanced/custom_datasets.html)
 
 ### Custom Tasks
@@ -354,7 +363,9 @@ Pull requests are welcome. For major changes, please open an issue first to disc
 Please make sure to update tests as appropriate.
 
 ## Community
+
 For help or questions, join our huge community on [Slack](https://join.slack.com/t/pytorch-lightning/shared_invite/zt-f6bl2l0l-JYMK3tbAgAmGRrlNr00f1A)!
 
 ## License
+
 Please observe the Apache 2.0 license that is listed in this repository. In addition, the Lightning framework is Patent Pending.

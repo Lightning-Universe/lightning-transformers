@@ -14,9 +14,9 @@ import sys
 
 import pt_lightning_sphinx_theme
 
-SPHINX_MOCK_REQUIREMENTS = int(os.environ.get('SPHINX_MOCK_REQUIREMENTS', True))
+SPHINX_MOCK_REQUIREMENTS = int(os.environ.get("SPHINX_MOCK_REQUIREMENTS", True))
 _PATH_HERE = os.path.abspath(os.path.dirname(__file__))
-_PATH_ROOT = os.path.join(_PATH_HERE, '..', '..')
+_PATH_ROOT = os.path.join(_PATH_HERE, "..", "..")
 sys.path.insert(0, os.path.abspath(_PATH_ROOT))
 
 import lightning_transformers  # noqa: E402
@@ -33,21 +33,21 @@ author = "PyTorch Lightning"
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = [
-    'sphinx.ext.autodoc',
-    'sphinx.ext.doctest',
-    'sphinx.ext.intersphinx',
+    "sphinx.ext.autodoc",
+    "sphinx.ext.doctest",
+    "sphinx.ext.intersphinx",
     # 'sphinx.ext.todo',
     # 'sphinx.ext.coverage',
-    'sphinx.ext.autosummary',
-    'sphinx.ext.napoleon',
-    'sphinx.ext.imgmath',
-    'recommonmark',
+    "sphinx.ext.autosummary",
+    "sphinx.ext.napoleon",
+    "sphinx.ext.imgmath",
+    "recommonmark",
     # 'sphinx.ext.autosectionlabel',
     # 'nbsphinx',  # it seems some sphinx issue
-    'sphinx_autodoc_typehints',
-    'sphinx_copybutton',
-    'sphinx_paramlinks',
-    'sphinx_togglebutton',
+    "sphinx_autodoc_typehints",
+    "sphinx_copybutton",
+    "sphinx_paramlinks",
+    "sphinx_togglebutton",
 ]
 
 # Add any paths that contain templates here, relative to this directory.
@@ -63,7 +63,7 @@ exclude_patterns = ["api", "readme.md"]  # TODO: ignored until fixed
 #
 source_suffix = [".rst", ".md"]
 
-needs_sphinx = '3.4'
+needs_sphinx = "3.4"
 
 # -- Options for intersphinx extension ---------------------------------------
 
@@ -106,19 +106,19 @@ html_css_files = []
 def setup(app):
     # this is for hiding doctest decoration,
     # see: http://z4r.github.io/python/2011/12/02/hides-the-prompts-and-output/
-    app.add_js_file('copybutton.js')
+    app.add_js_file("copybutton.js")
 
 
 # Ignoring Third-party packages
 # https://stackoverflow.com/questions/15889621/sphinx-how-to-exclude-imports-in-automodule
 def _package_list_from_file(pfile):
     assert os.path.isfile(pfile)
-    with open(pfile, 'r') as fp:
+    with open(pfile) as fp:
         lines = fp.readlines()
     list_pkgs = []
     for ln in lines:
-        found = [ln.index(ch) for ch in list(',=<>#@') if ch in ln]
-        pkg = ln[:min(found)] if found else ln
+        found = [ln.index(ch) for ch in list(",=<>#@") if ch in ln]
+        pkg = ln[: min(found)] if found else ln
         if pkg.strip():
             list_pkgs.append(pkg.strip())
     return list_pkgs
@@ -126,17 +126,17 @@ def _package_list_from_file(pfile):
 
 # define mapping from PyPI names to python imports
 PACKAGE_MAPPING = {
-    'pytorch-lightning': 'pytorch_lightning',
-    'scikit-learn': 'sklearn',
-    'Pillow': 'PIL',
-    'PyYAML': 'yaml',
+    "pytorch-lightning": "pytorch_lightning",
+    "scikit-learn": "sklearn",
+    "Pillow": "PIL",
+    "PyYAML": "yaml",
     "hydra-core": "hydra",
     "rouge-score": "rouge_score",
 }
-MOCK_PACKAGES = ['omegaconf']
+MOCK_PACKAGES = ["omegaconf"]
 if SPHINX_MOCK_REQUIREMENTS:
     # mock also base packages when we are on RTD since we don't install them there
-    MOCK_PACKAGES += _package_list_from_file(os.path.join(_PATH_ROOT, 'requirements.txt'))
+    MOCK_PACKAGES += _package_list_from_file(os.path.join(_PATH_ROOT, "requirements.txt"))
 # replace PyPI packages by importing ones
 MOCK_PACKAGES = [PACKAGE_MAPPING.get(pkg, pkg) for pkg in MOCK_PACKAGES]
 

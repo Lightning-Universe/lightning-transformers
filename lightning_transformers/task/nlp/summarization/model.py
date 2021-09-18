@@ -18,8 +18,7 @@ from lightning_transformers.task.nlp.summarization.config import SummarizationCo
 
 
 class SummarizationTransformer(Seq2SeqTransformer):
-    """
-    Defines ``LightningModule`` for the Summarization Task.
+    """Defines ``LightningModule`` for the Summarization Task.
 
     Args:
         *args: :class:`lightning_transformers.core.nlp.seq2seq.Seq2SeqTransformer` arguments.
@@ -31,7 +30,7 @@ class SummarizationTransformer(Seq2SeqTransformer):
     def __init__(
         self,
         *args,
-        downstream_model_type: str = 'transformers.AutoModelForSeq2SeqLM',
+        downstream_model_type: str = "transformers.AutoModelForSeq2SeqLM",
         cfg: SummarizationConfig = SummarizationConfig(),
         **kwargs
     ) -> None:
