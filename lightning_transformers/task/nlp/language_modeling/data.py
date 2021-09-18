@@ -16,15 +16,14 @@ from typing import Callable, Optional, Union
 
 from datasets import Dataset
 from pytorch_lightning import _logger as log
-from transformers import default_data_collator, PreTrainedTokenizerBase
+from transformers import PreTrainedTokenizerBase, default_data_collator
 
 from lightning_transformers.core.nlp import HFDataModule
 from lightning_transformers.task.nlp.language_modeling.config import LanguageModelingDataConfig
 
 
 class LanguageModelingDataModule(HFDataModule):
-    """
-    Defines ``LightningDataModule`` for Language Modeling Datasets.
+    """Defines ``LightningDataModule`` for Language Modeling Datasets.
 
     Args:
         *args: ``HFDataModule`` specific arguments.
@@ -32,6 +31,7 @@ class LanguageModelingDataModule(HFDataModule):
             (Default ``LanguageModelingDataConfig``)
         **kwargs: ``HFDataModule`` specific arguments.
     """
+
     cfg: LanguageModelingDataConfig
 
     def __init__(self, *args, cfg: LanguageModelingDataConfig = LanguageModelingDataConfig(), **kwargs) -> None:
@@ -100,7 +100,7 @@ class LanguageModelingDataModule(HFDataModule):
         total_length = (total_length // block_size) * block_size
         # Split by chunks of max_len.
         result = {
-            k: [t[i:i + block_size] for i in range(0, total_length, block_size)]
+            k: [t[i : i + block_size] for i in range(0, total_length, block_size)]
             for k, t in concatenated_examples.items()
         }
         result["labels"] = result["input_ids"].copy()

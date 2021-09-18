@@ -47,8 +47,7 @@ def run(
         raise ValueError("No dataset found. Hydra hint: did you set `dataset=...`?")
     if not isinstance(data_module, LightningDataModule):
         raise ValueError(
-            "The instantiator did not return a DataModule instance."
-            " Hydra hint: is `dataset._target_` defined?`"
+            "The instantiator did not return a DataModule instance." " Hydra hint: is `dataset._target_` defined?`"
         )
     data_module.setup("fit")
 

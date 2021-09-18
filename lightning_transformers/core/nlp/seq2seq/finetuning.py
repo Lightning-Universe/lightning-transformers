@@ -18,9 +18,7 @@ from lightning_transformers.core import TransformersBaseFinetuning
 
 
 class FreezeEmbeddings(TransformersBaseFinetuning):
-    """
-    Freezes the embedding layers during training.
-    """
+    """Freezes the embedding layers during training."""
 
     def __init__(self, train_bn: bool = True):
         super().__init__("", train_bn)

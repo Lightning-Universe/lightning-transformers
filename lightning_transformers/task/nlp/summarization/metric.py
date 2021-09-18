@@ -23,7 +23,6 @@ from lightning_transformers.task.nlp.summarization.utils import add_newline_to_e
 
 
 class RougeMetric(Metric):
-
     def __init__(
         self,
         rouge_newline_sep: bool,
@@ -72,10 +71,9 @@ class RougeMetric(Metric):
 
 
 class RougeBatchAggregator(scoring.BootstrapAggregator):
-
     def aggregate(self):
-        """
-        Override function to wrap the final results in `Score` objects.
+        """Override function to wrap the final results in `Score` objects.
+
         This is due to the scores being replaced with a list of torch tensors.
         """
         result = {}
@@ -85,7 +83,7 @@ class RougeBatchAggregator(scoring.BootstrapAggregator):
             # Percentiles are returned as (interval, measure).
             percentiles = self._bootstrap_resample(score_matrix)
             # Extract the three intervals (low, mid, high).
-            intervals = tuple((Score(*percentiles[j, :]) for j in range(3)))
+            intervals = tuple(Score(*percentiles[j, :]) for j in range(3))
             result[score_type] = AggregateScore(low=intervals[0], mid=intervals[1], high=intervals[2])
         return result
 

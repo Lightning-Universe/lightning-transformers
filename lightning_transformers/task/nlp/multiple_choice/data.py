@@ -20,9 +20,7 @@ from lightning_transformers.task.nlp.multiple_choice.utils import DataCollatorFo
 
 
 class MultipleChoiceDataModule(HFDataModule):
-    """
-    Defines the ``LightningDataModule`` for Multiple Choice Datasets.
-    """
+    """Defines the ``LightningDataModule`` for Multiple Choice Datasets."""
 
     @property
     def pad_to_max_length(self):
@@ -31,8 +29,7 @@ class MultipleChoiceDataModule(HFDataModule):
     @property
     def collate_fn(self) -> callable:
         return (
-            default_data_collator
-            if self.pad_to_max_length else DataCollatorForMultipleChoice(tokenizer=self.tokenizer)
+            default_data_collator if self.pad_to_max_length else DataCollatorForMultipleChoice(tokenizer=self.tokenizer)
         )
 
     @property

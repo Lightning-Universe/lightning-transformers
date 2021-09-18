@@ -1,8 +1,8 @@
-from typing import Any, Dict, Optional, Type, TYPE_CHECKING
+from typing import TYPE_CHECKING, Any, Dict, Optional, Type
 
 from hydra.utils import get_class
-from transformers import pipeline as hf_transformers_pipeline
 from transformers import PreTrainedTokenizerBase
+from transformers import pipeline as hf_transformers_pipeline
 
 from lightning_transformers.core.config import OptimizerConfig, SchedulerConfig
 from lightning_transformers.core.instantiator import Instantiator
@@ -14,9 +14,8 @@ if TYPE_CHECKING:
 
 
 class HFTransformer(TaskTransformer):
-    """
-    Base class for task specific transformers, wrapping pre-trained language models for downstream tasks.
-    The API is built on top of AutoModel and AutoConfig, provided by HuggingFace.
+    """Base class for task specific transformers, wrapping pre-trained language models for downstream tasks. The
+    API is built on top of AutoModel and AutoConfig, provided by HuggingFace.
 
     see: https://huggingface.co/transformers/model_doc/auto.html
 
@@ -56,7 +55,9 @@ class HFTransformer(TaskTransformer):
     @property
     def tokenizer(self) -> Optional["PreTrainedTokenizerBase"]:
         if (
-            self._tokenizer is None and hasattr(self, "trainer") and hasattr(self.trainer, "datamodule")
+            self._tokenizer is None
+            and hasattr(self, "trainer")  # noqa: W503
+            and hasattr(self.trainer, "datamodule")  # noqa: W503
             and hasattr(self.trainer.datamodule, "tokenizer")  # noqa: W503
         ):
             self._tokenizer = self.trainer.datamodule.tokenizer
@@ -68,14 +69,14 @@ class HFTransformer(TaskTransformer):
 
     @property
     def hf_pipeline_task(self) -> Optional[str]:
-        """
-        Override to define what HuggingFace pipeline task to use.
+        """Override to define what HuggingFace pipeline task to use.
+
         Returns: Optional string to define what pipeline task to use.
         """
         return None
 
     @property
-    def hf_pipeline(self) -> 'Pipeline':
+    def hf_pipeline(self) -> "Pipeline":
         if self._hf_pipeline is None:
             if self.hf_pipeline_task is not None:
                 self._hf_pipeline = hf_transformers_pipeline(
@@ -86,7 +87,7 @@ class HFTransformer(TaskTransformer):
         return self._hf_pipeline
 
     @hf_pipeline.setter
-    def hf_pipeline(self, pipeline: 'Pipeline') -> None:
+    def hf_pipeline(self, pipeline: "Pipeline") -> None:
         self._hf_pipeline = pipeline
 
     def hf_predict(self, *args, **kwargs) -> Any:

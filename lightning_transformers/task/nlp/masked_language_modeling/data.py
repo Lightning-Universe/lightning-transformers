@@ -22,8 +22,7 @@ from lightning_transformers.task.nlp.masked_language_modeling.config import Mask
 
 
 class MaskedLanguageModelingDataModule(HFDataModule):
-    """
-    Defines ``LightningDataModule`` for Language Modeling Datasets.
+    """Defines ``LightningDataModule`` for Language Modeling Datasets.
 
     Args:
         *args: ``HFDataModule`` specific arguments.
@@ -31,6 +30,7 @@ class MaskedLanguageModelingDataModule(HFDataModule):
             (Default ``MaskedLanguageModelingDataConfig``)
         **kwargs: ``HFDataModule`` specific arguments.
     """
+
     cfg: MaskedLanguageModelingDataConfig
 
     def __init__(
@@ -111,7 +111,7 @@ class MaskedLanguageModelingDataModule(HFDataModule):
         total_length = (total_length // max_seq_length) * max_seq_length
         # Split by chunks of max_len.
         result = {
-            k: [t[i:i + max_seq_length] for i in range(0, total_length, max_seq_length)]
+            k: [t[i : i + max_seq_length] for i in range(0, total_length, max_seq_length)]
             for k, t in concatenated_examples.items()
         }
         return result

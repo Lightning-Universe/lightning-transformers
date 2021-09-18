@@ -6,7 +6,6 @@ from lightning_transformers.task.nlp.translation import WMT16TranslationDataModu
 
 
 class MyTranslationDataModule(WMT16TranslationDataModule):
-
     @staticmethod
     def convert_to_features(
         examples: Any,

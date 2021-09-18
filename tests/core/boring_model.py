@@ -6,7 +6,6 @@ from lightning_transformers.core import LitTransformer
 
 
 class BoringDataModule(LightningDataModule):
-
     def train_dataloader(self):
         return DataLoader(RandomDataset(32, 64))
 
@@ -18,7 +17,6 @@ class BoringDataModule(LightningDataModule):
 
 
 class RandomDataset(Dataset):
-
     def __init__(self, size, length):
         self.len = length
         self.data = torch.randn(length, size)
@@ -31,7 +29,6 @@ class RandomDataset(Dataset):
 
 
 class BoringTransformerModel(LitTransformer):
-
     def __init__(self):
         super().__init__(model=torch.nn.Linear(32, 2))
 
