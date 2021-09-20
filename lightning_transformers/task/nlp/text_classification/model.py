@@ -44,17 +44,21 @@ class TextClassificationTransformer(HFTransformer):
 
     def common_step(self, prefix: str, batch: Any) -> torch.Tensor:
         outputs = self.model(**batch)
-        loss, logits = outputs[:2]
+        loss = outputs.loss
+        logits = outputs.logits
         preds = torch.argmax(logits, dim=1)
-        metric_dict = self.compute_metrics(preds, batch["labels"], mode=prefix)
-        self.log_dict(metric_dict, prog_bar=True, on_step=False, on_epoch=True)
-        self.log(f"{prefix}_loss", loss, prog_bar=True, sync_dist=True)
+        if batch["labels"] != None:
+          metric_dict = self.compute_metrics(preds, batch["labels"], mode=prefix)
+          self.log_dict(metric_dict, prog_bar=True, on_step=False, on_epoch=True)
+          self.log(f"{prefix}_loss", loss, prog_bar=True, sync_dist=True)
         return loss
 
     def validation_step(self, batch: Any, batch_idx: int, dataloader_idx: int = 0) -> torch.Tensor:
         return self.common_step("val", batch)
 
     def test_step(self, batch: Any, batch_idx: int, dataloader_idx: int = 0) -> torch.Tensor:
+        if -1 in batch["labels"]:
+            batch["labels"] = None
         return self.common_step("test", batch)
 
     def configure_metrics(self, _) -> None:
