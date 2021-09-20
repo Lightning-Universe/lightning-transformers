@@ -30,7 +30,6 @@ from torch import Tensor
 
 
 class TransformerSparseMLCallback(SparseMLCallback):
-
     def __init__(self, output_dir, recipe_path):
         self.output_dir = output_dir
         super().__init__(recipe_path=recipe_path)
@@ -82,8 +81,9 @@ class TransformerSparseMLCallback(SparseMLCallback):
 
             if sess is None:
                 forward_args_spec = inspect.getfullargspec(exporter._module.__class__.forward)
-                one_sample_input = collections.OrderedDict([(f, sample_batch[f][0].long().reshape(1, -1))
-                                                            for f in forward_args_spec.args if f in sample_batch])
+                one_sample_input = collections.OrderedDict(
+                    [(f, sample_batch[f][0].long().reshape(1, -1)) for f in forward_args_spec.args if f in sample_batch]
+                )
 
                 try:
                     exporter.export_onnx(sample_batch=one_sample_input, convert_qat=True, **kwargs)
