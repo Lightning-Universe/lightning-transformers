@@ -48,9 +48,9 @@ class TextClassificationTransformer(HFTransformer):
         logits = outputs.logits
         preds = torch.argmax(logits, dim=1)
         if batch["labels"] != None:
-          metric_dict = self.compute_metrics(preds, batch["labels"], mode=prefix)
-          self.log_dict(metric_dict, prog_bar=True, on_step=False, on_epoch=True)
-          self.log(f"{prefix}_loss", loss, prog_bar=True, sync_dist=True)
+            metric_dict = self.compute_metrics(preds, batch["labels"], mode=prefix)
+            self.log_dict(metric_dict, prog_bar=True, on_step=False, on_epoch=True)
+            self.log(f"{prefix}_loss", loss, prog_bar=True, sync_dist=True)
         return loss
 
     def validation_step(self, batch: Any, batch_idx: int, dataloader_idx: int = 0) -> torch.Tensor:
