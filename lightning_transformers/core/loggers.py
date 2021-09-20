@@ -6,8 +6,7 @@ from sparseml.pytorch.utils.logger import LambdaLogger
 
 
 class WABLogger(WandbLogger):
-    """
-    Modifier logger that handles outputting values to Weights and Biases.
+    """Modifier logger that handles outputting values to Weights and Biases.
 
     :param init_kwargs: the args to call into wandb.init with;
         ex: wandb.init(**init_kwargs). If not supplied, then init will not be called
