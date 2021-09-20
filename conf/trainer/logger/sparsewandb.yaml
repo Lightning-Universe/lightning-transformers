@@ -1,1 +1,1 @@
-_target_: lightning_transformers.core.loggers.WANDBLogger
+_target_: lightning_transformers.core.loggers.WABLogger

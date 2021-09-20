@@ -5,7 +5,7 @@ from pytorch_lightning.loggers import WandbLogger
 from sparseml.pytorch.utils.logger import LambdaLogger
 
 
-class WANDBLogger(WandbLogger):
+class WABLogger(WandbLogger):
     """
     Modifier logger that handles outputting values to Weights and Biases.
 

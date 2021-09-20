@@ -23,22 +23,21 @@ import onnxruntime
 import torch
 from pl_bolts.callbacks import SparseMLCallback
 from pytorch_lightning import Callback
-from pytorch_lightning.loggers import WandbLogger
 from pytorch_lightning.utilities import rank_zero_info
 from pytorch_lightning.utilities.exceptions import MisconfigurationException
 from sparseml.pytorch.utils import ModuleExporter
-from sparseml.pytorch.utils.logger import WANDBLogger
+from sparseml.pytorch.utils.logger import WABLogger
 from torch import Tensor
 
 
-class LightningBoltsSparseMLCallback(SparseMLCallback):
+class TransformerSparseMLCallback(SparseMLCallback):
 
     def __init__(self, output_dir, recipe_path):
         self.output_dir = output_dir
         super().__init__(recipe_path=recipe_path)
 
     def on_init_end(self, trainer: "pl.Trainer") -> None:
-        if isinstance(trainer.logger, WANDBLogger):
+        if isinstance(trainer.logger, WABLogger):
             trainer.logger.__init__(init_kwargs={"project": "lightning-transformers"})
 
     def on_fit_start(self, trainer: "pl.Trainer", pl_module: "pl.LightningModule") -> None:
@@ -102,7 +101,7 @@ class LightningBoltsSparseMLCallback(SparseMLCallback):
                     )
                     onnx_file = os.path.join(output_dir, "model.onnx")
 
-                except Exception:
+                except RuntimeError:
                     raise RuntimeError("Error exporting ONNX models and/or inputs/outputs")
 
                 sess = onnxruntime.InferenceSession(onnx_file)

@@ -1,3 +1,3 @@
-_target_: lightning_transformers.core.callback.LightningBoltsSparseMLCallback
+_target_: lightning_transformers.core.callback.TransformerSparseMLCallback
 output_dir: ${env:MODELS_PATH}
 recipe_path: ${env:RECIPE_PATH}
