@@ -47,7 +47,7 @@ class TextClassificationTransformer(HFTransformer):
         loss = outputs.loss
         logits = outputs.logits
         preds = torch.argmax(logits, dim=1)
-        if batch["labels"] != None:
+        if batch["labels"] is not None:
             metric_dict = self.compute_metrics(preds, batch["labels"], mode=prefix)
             self.log_dict(metric_dict, prog_bar=True, on_step=False, on_epoch=True)
             self.log(f"{prefix}_loss", loss, prog_bar=True, sync_dist=True)

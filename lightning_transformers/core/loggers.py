@@ -2,7 +2,6 @@ import time
 from typing import Dict, Optional, Union
 
 from pytorch_lightning.loggers import WandbLogger
-from sparseml.pytorch.utils.logger import LambdaLogger
 
 
 class WABLogger(WandbLogger):
