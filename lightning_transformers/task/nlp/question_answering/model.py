@@ -22,8 +22,7 @@ from lightning_transformers.task.nlp.question_answering.datasets.squad.metric im
 
 
 class QuestionAnsweringTransformer(HFTransformer):
-    """
-    Defines ``LightningModule`` for the Question Answering Task.
+    """Defines ``LightningModule`` for the Question Answering Task.
 
     Args:
         *args: :class:`lightning_transformers.core.nlp.HFTransformer` arguments.
@@ -33,7 +32,7 @@ class QuestionAnsweringTransformer(HFTransformer):
     """
 
     def __init__(
-        self, *args, downstream_model_type: str = 'transformers.AutoModelForQuestionAnswering', **kwargs
+        self, *args, downstream_model_type: str = "transformers.AutoModelForQuestionAnswering", **kwargs
     ) -> None:
         super().__init__(downstream_model_type, *args, **kwargs)
 

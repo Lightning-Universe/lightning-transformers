@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 import logging
-from typing import Optional, TYPE_CHECKING, Union
+from typing import TYPE_CHECKING, Optional, Union
 
 import hydra
 import pytorch_lightning as pl
@@ -28,7 +28,6 @@ if TYPE_CHECKING:
 
 
 class Instantiator:
-
     def model(self, *args, **kwargs):
         raise NotImplementedError("Child class must implement method")
 
@@ -52,13 +51,12 @@ class Instantiator:
 
 
 class HydraInstantiator(Instantiator):
-
     def model(
         self,
         cfg: DictConfig,
         model_data_kwargs: Optional[DictConfig] = None,
         tokenizer: Optional[DictConfig] = None,
-        pipeline_kwargs: Optional[DictConfig] = None
+        pipeline_kwargs: Optional[DictConfig] = None,
     ) -> "TaskTransformer":
         if model_data_kwargs is None:
             model_data_kwargs = {}

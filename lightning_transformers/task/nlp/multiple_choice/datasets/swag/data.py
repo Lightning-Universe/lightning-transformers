@@ -48,7 +48,8 @@ class SwagMultipleChoiceDataModule(MultipleChoiceDataModule):
         )
 
         cols_to_keep = [
-            x for x in ["input_ids", "attention_mask", "token_type_ids", "label", "idx"]
+            x
+            for x in ["input_ids", "attention_mask", "token_type_ids", "label", "idx"]
             if x in dataset["train"].features
         ]
         dataset.set_format(columns=cols_to_keep)
@@ -80,8 +81,9 @@ class SwagMultipleChoiceDataModule(MultipleChoiceDataModule):
     ) -> Dict:
         first_sentences = [[context] * num_choices for context in examples[context_name]]
         question_headers = examples[question_header_name]
-        second_sentences = [[f"{header} {examples[end][i]}" for end in ending_names]
-                            for i, header in enumerate(question_headers)]
+        second_sentences = [
+            [f"{header} {examples[end][i]}" for end in ending_names] for i, header in enumerate(question_headers)
+        ]
 
         # Flatten out
         first_sentences = sum(first_sentences, [])
@@ -92,10 +94,10 @@ class SwagMultipleChoiceDataModule(MultipleChoiceDataModule):
             first_sentences, second_sentences, truncation=True, max_length=max_length, padding=padding
         )
         # Un-flatten
-        return {k: [v[i:i + num_choices] for i in range(0, len(v), num_choices)] for k, v in tokenized_examples.items()}
+        return {
+            k: [v[i : i + num_choices] for i in range(0, len(v), num_choices)] for k, v in tokenized_examples.items()
+        }
 
     def test_dataloader(self) -> Optional[DataLoader]:
-        """
-        SWAG does not offer labels within the test set (blind).
-        """
+        """SWAG does not offer labels within the test set (blind)."""
         pass

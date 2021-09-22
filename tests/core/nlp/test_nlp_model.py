@@ -25,7 +25,6 @@ from lightning_transformers.core.nlp import HFTransformer
 
 
 class RandomDataset(Dataset):
-
     def __init__(self, size: int, length: int):
         self.len = length
         self.data = torch.randn(length, size)
@@ -38,7 +37,6 @@ class RandomDataset(Dataset):
 
 
 class BoringModel(LightningModule):
-
     def __init__(self):
         super().__init__()
         self.layer = torch.nn.Linear(32, 2)
@@ -101,9 +99,7 @@ class BoringModel(LightningModule):
 
 
 def test_pipeline_kwargs():
-
     class TestModel(HFTransformer):
-
         @property
         def hf_pipeline_task(self):
             return "task_name"
@@ -118,16 +114,14 @@ def test_pipeline_kwargs():
     cls_mock.from_pretrained.assert_called_once_with(backbone_config.pretrained_model_name_or_path, foo="bar")
 
     with patch("lightning_transformers.core.nlp.model.hf_transformers_pipeline") as pipeline_mock:
-        model.hf_pipeline  # noqa
+        model.hf_pipeline
         pipeline_mock.assert_called_once_with(
             task="task_name", model=cls_mock.from_pretrained.return_value, tokenizer=None, device=0
         )
 
 
 def test_task_transformer_default_optimizer_scheduler():
-
     class TestTransformer(TaskTransformer):
-
         def training_step(self, batch, batch_idx):
             output = self.model(batch)
             loss = self.model.loss(batch, output)
@@ -136,7 +130,9 @@ def test_task_transformer_default_optimizer_scheduler():
         def train_dataloader(self):
             return self.model.train_dataloader()
 
-    model = TestTransformer(model=BoringModel(), )
+    model = TestTransformer(
+        model=BoringModel(),
+    )
 
     trainer = Trainer(fast_dev_run=True, limit_val_batches=0, limit_test_batches=0)
     with pytest.warns(UserWarning, match="You haven't specified an optimizer or lr scheduler."):

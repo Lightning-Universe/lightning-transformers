@@ -20,8 +20,7 @@ from lightning_transformers.core.nlp import HFTransformer
 
 
 class TextClassificationTransformer(HFTransformer):
-    """
-    Defines ``LightningModule`` for the Text Classification Task.
+    """Defines ``LightningModule`` for the Text Classification Task.
 
     Args:
         *args: :class:`lightning_transformers.core.nlp.HFTransformer` arguments.
@@ -31,7 +30,7 @@ class TextClassificationTransformer(HFTransformer):
     """
 
     def __init__(
-        self, *args, downstream_model_type: str = 'transformers.AutoModelForSequenceClassification', **kwargs
+        self, *args, downstream_model_type: str = "transformers.AutoModelForSequenceClassification", **kwargs
     ) -> None:
         super().__init__(downstream_model_type, *args, **kwargs)
         self.metrics = {}

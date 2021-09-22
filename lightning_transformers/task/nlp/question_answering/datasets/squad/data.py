@@ -25,7 +25,6 @@ from lightning_transformers.task.nlp.question_answering.datasets.squad.processin
 
 
 class SquadDataModule(QuestionAnsweringDataModule):
-
     def __init__(self, *args, cfg, **kwargs):
         super().__init__(*args, cfg=cfg, **kwargs)
 

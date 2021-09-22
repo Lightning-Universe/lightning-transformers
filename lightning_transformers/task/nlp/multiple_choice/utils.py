@@ -21,8 +21,7 @@ from transformers.tokenization_utils_base import PaddingStrategy, PreTrainedToke
 
 @dataclass
 class DataCollatorForMultipleChoice:
-    """
-    Data collator that will dynamically pad the inputs for multiple choice received.
+    """Data collator that will dynamically pad the inputs for multiple choice received.
 
     Args:
         tokenizer (:class:`~transformers.PreTrainedTokenizer` or :class:`~transformers.PreTrainedTokenizerFast`):
@@ -57,8 +56,9 @@ class DataCollatorForMultipleChoice:
         labels = [feature.pop(label_name) for feature in features]
         batch_size = len(features)
         num_choices = len(features[0]["input_ids"])
-        flattened_features = [[{k: v[i]
-                                for k, v in feature.items()} for i in range(num_choices)] for feature in features]
+        flattened_features = [
+            [{k: v[i] for k, v in feature.items()} for i in range(num_choices)] for feature in features
+        ]
         flattened_features = sum(flattened_features, [])
 
         batch = self.tokenizer.pad(

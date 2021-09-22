@@ -20,7 +20,6 @@ from lightning_transformers.core.config import TransformerDataConfig
 
 
 class TransformerDataModule(pl.LightningDataModule):
-
     def __init__(self, cfg: TransformerDataConfig = TransformerDataConfig()) -> None:
         super().__init__()
         self.cfg = cfg
@@ -61,8 +60,8 @@ class TransformerDataModule(pl.LightningDataModule):
 
     @property
     def model_data_kwargs(self) -> Dict:
-        """
-        Override to provide the model with additional kwargs.
+        """Override to provide the model with additional kwargs.
+
         This is useful to provide the number of classes/pixels to the model or any other data specific args
         Returns: Dict of args
         """
@@ -70,7 +69,6 @@ class TransformerDataModule(pl.LightningDataModule):
 
 
 class TokenizerDataModule(TransformerDataModule):
-
     def __init__(self, tokenizer: Any, cfg: TransformerDataConfig = TransformerDataConfig()) -> None:
         super().__init__(cfg=cfg)
         self.tokenizer = tokenizer

@@ -15,8 +15,7 @@ from lightning_transformers.core.nlp import HFTransformer
 
 
 class MaskedLanguageModelingTransformer(HFTransformer):
-    """
-    Defines ``LightningModule`` for the Masked Language Modeling Task.
+    """Defines ``LightningModule`` for the Masked Language Modeling Task.
 
     Args:
         *args: :class:`lightning_transformers.core.nlp.HFTransformer` arguments.
@@ -24,7 +23,7 @@ class MaskedLanguageModelingTransformer(HFTransformer):
         **kwargs: :class:`lightning_transformers.core.nlp.HFTransformer` arguments.
     """
 
-    def __init__(self, *args, downstream_model_type: str = 'transformers.AutoModelForMaskedLM', **kwargs) -> None:
+    def __init__(self, *args, downstream_model_type: str = "transformers.AutoModelForMaskedLM", **kwargs) -> None:
         super().__init__(downstream_model_type, *args, **kwargs)
 
     def on_fit_start(self):

@@ -21,7 +21,6 @@ from lightning_transformers.task.nlp.multiple_choice import MultipleChoiceDataMo
 
 
 class RaceMultipleChoiceDataModule(MultipleChoiceDataModule):
-
     @property
     def choices(self) -> list:
         return ["A", "B", "C", "D"]
@@ -47,7 +46,8 @@ class RaceMultipleChoiceDataModule(MultipleChoiceDataModule):
         )
 
         cols_to_keep = [
-            x for x in ["input_ids", "attention_mask", "token_type_ids", "label", "idx"]
+            x
+            for x in ["input_ids", "attention_mask", "token_type_ids", "label", "idx"]
             if x in dataset["train"].features
         ]
         dataset.set_format(columns=cols_to_keep)
@@ -90,8 +90,9 @@ class RaceMultipleChoiceDataModule(MultipleChoiceDataModule):
         first_sentences = [[context] * num_choices for context in examples[context_name]]
         question_headers = examples[question_header_name]
         options = examples[options_column_name]
-        second_sentences = [[f"{header} {option}" for option in options[i]]
-                            for i, header in enumerate(question_headers)]
+        second_sentences = [
+            [f"{header} {option}" for option in options[i]] for i, header in enumerate(question_headers)
+        ]
 
         # Flatten out
         first_sentences = sum(first_sentences, [])
@@ -104,8 +105,7 @@ class RaceMultipleChoiceDataModule(MultipleChoiceDataModule):
 
         # Un-flatten
         result = {
-            k: [v[i:i + num_choices] for i in range(0, len(v), num_choices)]
-            for k, v in tokenized_examples.items()
+            k: [v[i : i + num_choices] for i in range(0, len(v), num_choices)] for k, v in tokenized_examples.items()
         }
 
         label_to_idx = {k: i for i, k in enumerate(choices)}  # convert to label_to_idx

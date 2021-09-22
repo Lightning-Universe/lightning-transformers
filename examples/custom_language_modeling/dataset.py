@@ -9,7 +9,6 @@ from lightning_transformers.task.nlp.language_modeling.config import LanguageMod
 
 
 class MyLanguageModelingDataModule(LanguageModelingDataModule):
-
     def __init__(self, cfg: LanguageModelingDataConfig, tokenizer: PreTrainedTokenizerBase):
         super().__init__(cfg=cfg, tokenizer=tokenizer)
         self.tokenized_condition_term = tokenizer("This is a story: ")
@@ -32,7 +31,7 @@ class MyLanguageModelingDataModule(LanguageModelingDataModule):
         convert_to_features = partial(
             self.convert_to_features,
             block_size=self.effective_block_size,
-            tokenized_condition_term=self.tokenized_condition_term
+            tokenized_condition_term=self.tokenized_condition_term,
         )
 
         dataset = dataset.map(
@@ -47,7 +46,7 @@ class MyLanguageModelingDataModule(LanguageModelingDataModule):
     @staticmethod
     def convert_to_features(examples, block_size: int, **kwargs):
         # Our argument is passed in via kwargs
-        tokenized_condition_term = kwargs['tokenized_condition_term']
+        tokenized_condition_term = kwargs["tokenized_condition_term"]
 
         # Ensure we consider the conditional term part of the block size
         block_size = block_size - len(tokenized_condition_term)
@@ -64,7 +63,7 @@ class MyLanguageModelingDataModule(LanguageModelingDataModule):
         # here we iterate through the input ids and attention mask, so make sure we extract the right value from
         # the tokenized conditional term (which has both)
         result = {
-            k: [tokenized_condition_term[k] + t[i:i + block_size] for i in range(0, total_length, block_size)]
+            k: [tokenized_condition_term[k] + t[i : i + block_size] for i in range(0, total_length, block_size)]
             for k, t in concatenated_examples.items()
         }
         result["labels"] = result["input_ids"].copy()

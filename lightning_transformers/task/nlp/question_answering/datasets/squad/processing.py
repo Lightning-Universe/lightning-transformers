@@ -210,9 +210,9 @@ def postprocess_qa_predictions(
     output_dir: Optional[str] = None,
     prefix: Optional[str] = None,
 ):
-    """
-    Post-processes the predictions of a question-answering model to convert them to answers that are substrings of the
-    original contexts. This is the base postprocessing functions for models that only return start and end logits.
+    """Post-processes the predictions of a question-answering model to convert them to answers that are substrings
+    of the original contexts. This is the base postprocessing functions for models that only return start and end
+    logits.
 
     Args:
         examples: The non-preprocessed dataset (see the main script for more information).

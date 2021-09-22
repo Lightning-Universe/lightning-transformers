@@ -30,7 +30,7 @@ def test_predict_main(run_mock):
         model_data_kwargs=None,
         tokenizer=None,
         pipeline_kwargs={},
-        predict_kwargs={}
+        predict_kwargs={},
     )
 
 

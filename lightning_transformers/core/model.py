@@ -23,8 +23,8 @@ from lightning_transformers.core.instantiator import Instantiator
 
 
 class LitTransformer(pl.LightningModule):
-    """
-    Base class for transformers.
+    """Base class for transformers.
+
     Provides a few helper functions primarily for optimization.
     """
 
@@ -42,14 +42,10 @@ class LitTransformer(pl.LightningModule):
         self.scheduler = scheduler
 
     def configure_optimizers(self) -> Dict:
-        """Prepare optimizer and scheduler"""
+        """Prepare optimizer and scheduler."""
         return {
             "optimizer": self.optimizer,
-            "lr_scheduler": {
-                "scheduler": self.scheduler,
-                "interval": "step",
-                "frequency": 1
-            },
+            "lr_scheduler": {"scheduler": self.scheduler, "interval": "step", "frequency": 1},
         }
 
     @property
@@ -88,18 +84,15 @@ class LitTransformer(pl.LightningModule):
         self.configure_metrics(stage)
 
     def configure_metrics(self, stage: str) -> Optional[Any]:
-        """
-        Override to configure metrics for train/validation/test.
-        This is called on fit start to have access to the data module,
-        and initialize any data specific metrics.
+        """Override to configure metrics for train/validation/test.
+
+        This is called on fit start to have access to the data module, and initialize any data specific metrics.
         """
         pass
 
 
 class TaskTransformer(LitTransformer):
-    """
-    Base class for task specific transformers
-    """
+    """Base class for task specific transformers."""
 
     def __init__(
         self,

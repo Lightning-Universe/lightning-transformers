@@ -17,15 +17,14 @@ from typing import Any, Callable, Dict, Optional
 
 import torch
 from datasets import Dataset
-from transformers import DataCollatorWithPadding, default_data_collator, PreTrainedTokenizerBase
+from transformers import DataCollatorWithPadding, PreTrainedTokenizerBase, default_data_collator
 
 from lightning_transformers.core.nlp import HFDataModule
 from lightning_transformers.task.nlp.question_answering.config import QuestionAnsweringDataConfig
 
 
 class QuestionAnsweringDataModule(HFDataModule):
-    """
-    Defines the ``LightningDataModule`` for Question Answering Datasets.
+    """Defines the ``LightningDataModule`` for Question Answering Datasets.
 
     Args:
         *args: ``HFDataModule`` specific arguments.
@@ -33,6 +32,7 @@ class QuestionAnsweringDataModule(HFDataModule):
             (Default ``QuestionAnsweringDataConfig``)
         **kwargs: ``HFDataModule`` specific arguments.
     """
+
     cfg: QuestionAnsweringDataConfig
 
     def __init__(self, *args, cfg: QuestionAnsweringDataConfig = QuestionAnsweringDataConfig(), **kwargs) -> None:

@@ -44,7 +44,7 @@ def test_train_main(run_mock):
         task=ANY,
         trainer=ANY,
         logger=None,
-        tokenizer=ANY
+        tokenizer=ANY,
     )
 
 
