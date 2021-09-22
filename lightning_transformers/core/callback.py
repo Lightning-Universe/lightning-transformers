@@ -16,20 +16,27 @@ import collections
 import inspect
 import os
 import time
-from typing import Any, Dict, List, Optional, Union
+from typing import Optional
 
 import numpy
 import onnxruntime
+import pytorch_lightning as pl
 import torch
-from pl_bolts.callbacks import SparseMLCallback
 from pytorch_lightning import Callback
 from pytorch_lightning.utilities import rank_zero_info
 from pytorch_lightning.utilities.exceptions import MisconfigurationException
 from sparseml.pytorch.utils import ModuleExporter
 from torch import Tensor
 
+from lightning_transformers.utilities.imports import _BOLTS_AVAILABLE
+
+SparseMLCallback = None
+if _BOLTS_AVAILABLE:
+    from pl_bolts.callbacks import SparseMLCallback
+
 
 class TransformerSparseMLCallback(SparseMLCallback):
+
     def __init__(self, output_dir, recipe_path):
         self.output_dir = output_dir
         super().__init__(recipe_path=recipe_path)
@@ -57,7 +64,7 @@ class TransformerSparseMLCallback(SparseMLCallback):
 
     @staticmethod
     def export_to_sparse_onnx(
-        model: "LightningModule", output_dir: str, sample_batch: Optional[Tensor] = None, **kwargs
+        model: "pl.LightningModule", output_dir: str, sample_batch: Optional[Tensor] = None, **kwargs
     ) -> None:
         """Exports the model to ONNX format."""
         with model._prevent_trainer_and_dataloaders_deepcopy():
@@ -81,9 +88,8 @@ class TransformerSparseMLCallback(SparseMLCallback):
 
             if sess is None:
                 forward_args_spec = inspect.getfullargspec(exporter._module.__class__.forward)
-                one_sample_input = collections.OrderedDict(
-                    [(f, sample_batch[f][0].long().reshape(1, -1)) for f in forward_args_spec.args if f in sample_batch]
-                )
+                one_sample_input = collections.OrderedDict([(f, sample_batch[f][0].long().reshape(1, -1))
+                                                            for f in forward_args_spec.args if f in sample_batch])
 
                 try:
                     exporter.export_onnx(sample_batch=one_sample_input, convert_qat=True, **kwargs)
