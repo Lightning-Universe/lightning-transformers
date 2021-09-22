@@ -30,121 +30,118 @@ from torch import Tensor
 
 from lightning_transformers.utilities.imports import _BOLTS_AVAILABLE
 
-SparseMLCallback = None
 if _BOLTS_AVAILABLE:
     from pl_bolts.callbacks import SparseMLCallback
 
+    class TransformerSparseMLCallback(SparseMLCallback):
 
-class TransformerSparseMLCallback(SparseMLCallback):
-    def __init__(self, output_dir, recipe_path):
-        self.output_dir = output_dir
-        super().__init__(recipe_path=recipe_path)
+        def __init__(self, output_dir, recipe_path):
+            self.output_dir = output_dir
+            super().__init__(recipe_path=recipe_path)
 
-    def on_fit_start(self, trainer: "pl.Trainer", pl_module: "pl.LightningModule") -> None:
-        optimizer = trainer.optimizers
+        def on_fit_start(self, trainer: "pl.Trainer", pl_module: "pl.LightningModule") -> None:
+            optimizer = trainer.optimizers
 
-        if len(optimizer) > 1:
-            raise MisconfigurationException("SparseML only supports training with one optimizer.")
-        optimizer = optimizer[0]
+            if len(optimizer) > 1:
+                raise MisconfigurationException("SparseML only supports training with one optimizer.")
+            optimizer = optimizer[0]
 
-        loggers = trainer.logger
+            loggers = trainer.logger
 
-        if not isinstance(loggers, list):
-            loggers = [loggers]
+            if not isinstance(loggers, list):
+                loggers = [loggers]
 
-        self.manager.initialize(pl_module, epoch=0.0, logger=loggers)
-        self.manager.initialize_loggers(loggers)
+            self.manager.initialize(pl_module, epoch=0.0, logger=loggers)
+            self.manager.initialize_loggers(loggers)
 
-        optimizer = self.manager.modify(
-            pl_module, optimizer, steps_per_epoch=self._num_training_steps_per_epoch(trainer), epoch=0
-        )
+            optimizer = self.manager.modify(
+                pl_module, optimizer, steps_per_epoch=self._num_training_steps_per_epoch(trainer), epoch=0
+            )
 
-        trainer.optimizers = [optimizer]
+            trainer.optimizers = [optimizer]
 
-    @staticmethod
-    def export_to_sparse_onnx(
-        model: "pl.LightningModule", output_dir: str, sample_batch: Optional[Tensor] = None, **kwargs
-    ) -> None:
-        """Exports the model to ONNX format."""
-        with model._prevent_trainer_and_dataloaders_deepcopy():
-            exporter = ModuleExporter(model.model, output_dir=output_dir)
-            sample_batch = sample_batch if sample_batch is not None else model.example_input_array
-            if sample_batch is None:
-                raise MisconfigurationException(
-                    "To export the model, a sample batch must be passed via "
-                    "``SparseMLCallback.export_to_sparse_onnx(model, output_dir, sample_batch=sample_batch)`` "
-                    "or an ``example_input_array`` property within the LightningModule"
-                )
-
-            # the following is adapted from @natuan and @spacemanidol
-            sess = None
-            num_samples = 0
-
-            sample_inputs = os.path.join(output_dir, "sample-inputs")
-            sample_outputs = os.path.join(output_dir, "sample-outputs")
-            os.makedirs(sample_inputs, exist_ok=True)
-            os.makedirs(sample_outputs, exist_ok=True)
-
-            if sess is None:
-                forward_args_spec = inspect.getfullargspec(exporter._module.__class__.forward)
-                one_sample_input = collections.OrderedDict(
-                    [(f, sample_batch[f][0].long().reshape(1, -1)) for f in forward_args_spec.args if f in sample_batch]
-                )
-
-                try:
-                    exporter.export_onnx(sample_batch=one_sample_input, convert_qat=True, **kwargs)
-                    exporter.export_onnx(
-                        sample_batch=one_sample_input,
-                        name="small_model.onnx",
-                        convert_qat=True,
-                        export_params=False,
-                        **kwargs,
+        @staticmethod
+        def export_to_sparse_onnx(
+            model: "pl.LightningModule", output_dir: str, sample_batch: Optional[Tensor] = None, **kwargs
+        ) -> None:
+            """Exports the model to ONNX format."""
+            with model._prevent_trainer_and_dataloaders_deepcopy():
+                exporter = ModuleExporter(model.model, output_dir=output_dir)
+                sample_batch = sample_batch if sample_batch is not None else model.example_input_array
+                if sample_batch is None:
+                    raise MisconfigurationException(
+                        "To export the model, a sample batch must be passed via "
+                        "``SparseMLCallback.export_to_sparse_onnx(model, output_dir, sample_batch=sample_batch)`` "
+                        "or an ``example_input_array`` property within the LightningModule"
                     )
-                    onnx_file = os.path.join(output_dir, "model.onnx")
 
-                except RuntimeError:
-                    raise RuntimeError("Error exporting ONNX models and/or inputs/outputs")
+                # the following is adapted from @natuan and @spacemanidol
+                sess = None
+                num_samples = 0
 
-                sess = onnxruntime.InferenceSession(onnx_file)
+                sample_inputs = os.path.join(output_dir, "sample-inputs")
+                sample_outputs = os.path.join(output_dir, "sample-outputs")
+                os.makedirs(sample_inputs, exist_ok=True)
+                os.makedirs(sample_outputs, exist_ok=True)
 
-            # add additional files for testing since this feature is very new
-            input_names = list(sample_batch.keys())
-            output_names = [o.name for o in sess.get_outputs()]
-            for input_vals in zip(*sample_batch.values()):
-                input_feed = {k: v.long().numpy() for k, v in zip(input_names, input_vals)}
-                output_vals = sess.run(output_names, {k: input_feed[k].reshape(1, -1) for k in input_feed})
-                output_dict = {name: numpy.squeeze(val) for name, val in zip(output_names, output_vals)}
-                file_idx = f"{num_samples}".zfill(4)
-                numpy.savez(f"{sample_inputs}/inp-{file_idx}.npz", **input_feed)
-                numpy.savez(f"{sample_outputs}/out-{file_idx}.npz", **output_dict)
-                num_samples += 1
+                if sess is None:
+                    forward_args_spec = inspect.getfullargspec(exporter._module.__class__.forward)
+                    one_sample_input = collections.OrderedDict([(f, sample_batch[f][0].long().reshape(1, -1))
+                                                                for f in forward_args_spec.args if f in sample_batch])
 
-    def teardown(self, trainer: "pl.Trainer", pl_module: "pl.LightningModule", stage: Optional[str] = None) -> None:
-        sample_batch = next(iter(trainer.train_dataloader))
-        # if asked for output names, bert's ModelOutput gives two names
-        # but when run, this the model only gives one output
-        # workaround is just to force onnx to realize there is only one output
-        output_names = ["logits"]
-        self.export_to_sparse_onnx(
-            output_dir=self.output_dir, model=pl_module, sample_batch=sample_batch, output_names=output_names
-        )
+                    try:
+                        exporter.export_onnx(sample_batch=one_sample_input, convert_qat=True, **kwargs)
+                        exporter.export_onnx(
+                            sample_batch=one_sample_input,
+                            name="small_model.onnx",
+                            convert_qat=True,
+                            export_params=False,
+                            **kwargs,
+                        )
+                        onnx_file = os.path.join(output_dir, "model.onnx")
 
+                    except RuntimeError:
+                        raise RuntimeError("Error exporting ONNX models and/or inputs/outputs")
 
-class CUDACallback(Callback):
+                    sess = onnxruntime.InferenceSession(onnx_file)
 
-    def on_train_epoch_start(self, trainer, pl_module):
-        # Reset the memory use counter
-        torch.cuda.reset_peak_memory_stats(trainer.root_gpu)
-        torch.cuda.synchronize(trainer.root_gpu)
-        self.start_time = time.time()
+                # add additional files for testing since this feature is very new
+                input_names = list(sample_batch.keys())
+                output_names = [o.name for o in sess.get_outputs()]
+                for input_vals in zip(*sample_batch.values()):
+                    input_feed = {k: v.long().numpy() for k, v in zip(input_names, input_vals)}
+                    output_vals = sess.run(output_names, {k: input_feed[k].reshape(1, -1) for k in input_feed})
+                    output_dict = {name: numpy.squeeze(val) for name, val in zip(output_names, output_vals)}
+                    file_idx = f"{num_samples}".zfill(4)
+                    numpy.savez(f"{sample_inputs}/inp-{file_idx}.npz", **input_feed)
+                    numpy.savez(f"{sample_outputs}/out-{file_idx}.npz", **output_dict)
+                    num_samples += 1
 
-    def on_train_epoch_end(self, trainer, pl_module, outputs):
-        torch.cuda.synchronize(trainer.root_gpu)
-        max_memory = torch.cuda.max_memory_allocated(trainer.root_gpu) / 2**20
-        epoch_time = time.time() - self.start_time
+        def teardown(self, trainer: "pl.Trainer", pl_module: "pl.LightningModule", stage: Optional[str] = None) -> None:
+            sample_batch = next(iter(trainer.train_dataloader))
+            # if asked for output names, bert's ModelOutput gives two names
+            # but when run, this the model only gives one output
+            # workaround is just to force onnx to realize there is only one output
+            output_names = ["logits"]
+            self.export_to_sparse_onnx(
+                output_dir=self.output_dir, model=pl_module, sample_batch=sample_batch, output_names=output_names
+            )
 
-        max_memory = trainer.training_type_plugin.reduce(max_memory)
-        epoch_time = trainer.training_type_plugin.reduce(epoch_time)
+    class CUDACallback(Callback):
 
-        rank_zero_info(f"Average Epoch time: {epoch_time:.2f} seconds")
-        rank_zero_info(f"Average Peak memory {max_memory:.2f}MiB")
+        def on_train_epoch_start(self, trainer, pl_module):
+            # Reset the memory use counter
+            torch.cuda.reset_peak_memory_stats(trainer.root_gpu)
+            torch.cuda.synchronize(trainer.root_gpu)
+            self.start_time = time.time()
+
+        def on_train_epoch_end(self, trainer, pl_module, outputs):
+            torch.cuda.synchronize(trainer.root_gpu)
+            max_memory = torch.cuda.max_memory_allocated(trainer.root_gpu) / 2**20
+            epoch_time = time.time() - self.start_time
+
+            max_memory = trainer.training_type_plugin.reduce(max_memory)
+            epoch_time = trainer.training_type_plugin.reduce(epoch_time)
+
+            rank_zero_info(f"Average Epoch time: {epoch_time:.2f} seconds")
+            rank_zero_info(f"Average Peak memory {max_memory:.2f}MiB")
