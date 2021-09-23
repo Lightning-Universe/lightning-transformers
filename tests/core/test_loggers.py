@@ -5,7 +5,7 @@ from importlib.util import find_spec
 
 from lightning_transformers.core.loggers import WABLogger
 
-if importlib.util.find_spec("wandb") != None:
+if find_spec("wandb") is not None:
     wandb_does_not_exist = False
 else:
     wandb_does_not_exist = True
