@@ -17,7 +17,7 @@ class TestModifierLogger(unittest.TestCase):
             shutil.rmtree(os.path.join(cwd, "wandb"))
 
     def test_enabled(self):
-        assert self.logger.enabled == True
+        self.assertEqual(self.logger.enabled, True)
 
     def test_log_hyperparams(self):
         model_parameters = {"param1": 0.0, "param2": 1.0}

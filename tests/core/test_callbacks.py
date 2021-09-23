@@ -2,7 +2,7 @@ import os
 import shutil
 
 import pytest
-from pytorch_lightning import Callback, Trainer
+from pytorch_lightning import Trainer
 
 from lightning_transformers.core import callback
 from lightning_transformers.core.loggers import WABLogger
