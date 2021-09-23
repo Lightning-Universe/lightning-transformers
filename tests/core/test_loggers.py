@@ -1,6 +1,5 @@
-import os
-import time
 import unittest
+import os, shutil
 
 from lightning_transformers.core.loggers import WABLogger
 
@@ -10,6 +9,12 @@ class TestModifierLogger(unittest.TestCase):
         # run logger offline
         self.logger = WABLogger(offline=True)
     
+    def tearDown(self):
+        # delete wandb folder
+        cwd = os.getcwd()
+        if os.path.exists(os.path.join(cwd, "wandb")):
+            shutil.rmtree(os.path.join(cwd, "wandb"))
+
     def test_enabled(self):
         assert self.logger.enabled == True
 
@@ -25,7 +30,7 @@ class TestModifierLogger(unittest.TestCase):
 
         self.logger.log_scalar("test-scalar-tag", 0.3, 5)
         assert self.logger.experiment.summary["test-scalar-tag"] == 0.3
-        
+
         time = 1632368396.120609
         self.logger.log_scalar("test-scalar-tag", 0.9, 4, time - 1)
         assert self.logger.experiment.summary["test-scalar-tag"] == 0.9
@@ -34,14 +39,12 @@ class TestModifierLogger(unittest.TestCase):
         self.logger.log_scalars("test-scalars-tag", {"scalar1": 0.2, "scalar2": 7.0})
         assert self.logger.experiment.summary["test-scalars-tag/scalar1"] == 0.2
         assert self.logger.experiment.summary["test-scalars-tag/scalar2"] == 7.0
-        
+
         self.logger.log_scalars("test-scalars-tag", {"scalar1": 1.0, "scalar2": 5.6}, 1)
         assert self.logger.experiment.summary["test-scalars-tag/scalar1"] == 1.0
         assert self.logger.experiment.summary["test-scalars-tag/scalar2"] == 5.6
-        
+
         time = 69082160104.686754
-        self.logger.log_scalars(
-            "test-scalars-tag", {"scalar1": 6.0, "scalar2": 3.0}, 2, time - 1
-        )
+        self.logger.log_scalars("test-scalars-tag", {"scalar1": 6.0, "scalar2": 3.0}, 2, time - 1)
         assert self.logger.experiment.summary["test-scalars-tag/scalar1"] == 6.0
         assert self.logger.experiment.summary["test-scalars-tag/scalar2"] == 3.0
