@@ -108,7 +108,7 @@ if _BOLTS_AVAILABLE:
                     raise RuntimeError("Error exporting ONNX models and/or inputs/outputs")
 
                 sess = onnxruntime.InferenceSession(onnx_file)
-                
+
                 num_samples = 0
                 # add additional files for testing since this feature is very new
                 if type(one_sample_input) == type(collections.OrderedDict([])):
@@ -124,7 +124,7 @@ if _BOLTS_AVAILABLE:
                         num_samples += 1
                 else:
                     output_names = [o.name for o in sess.get_outputs()]
-                    input_feed = {'input': sample_batch.numpy()}
+                    input_feed = {"input": sample_batch.numpy()}
                     output_vals = sess.run(output_names, input_feed)
                     output_dict = {name: numpy.squeeze(val) for name, val in zip(output_names, output_vals)}
                     file_idx = f"{num_samples}".zfill(4)

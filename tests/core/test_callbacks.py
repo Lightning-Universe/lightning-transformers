@@ -1,11 +1,13 @@
 import os
 import shutil
+
 import pytest
 from pytorch_lightning import Callback, Trainer
+
 from lightning_transformers.core import callback
 from lightning_transformers.core.loggers import WABLogger
-from tests.core.boring_model import BoringDataModule, BoringTransformerModel
 from lightning_transformers.utilities.imports import _BOLTS_AVAILABLE
+from tests.core.boring_model import BoringDataModule, BoringTransformerModel
 
 BOLTS_NOT_AVAILABLE = not _BOLTS_AVAILABLE
 
