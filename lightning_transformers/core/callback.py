@@ -75,16 +75,14 @@ if _BOLTS_AVAILABLE:
                     )
 
                 # the following is adapted from @natuan and @spacemanidol
-                sess = None
-                num_samples = 0
-
                 sample_inputs = os.path.join(output_dir, "sample-inputs")
                 sample_outputs = os.path.join(output_dir, "sample-outputs")
                 os.makedirs(sample_inputs, exist_ok=True)
                 os.makedirs(sample_outputs, exist_ok=True)
 
-                if sess is None:
-                    forward_args_spec = inspect.getfullargspec(exporter._module.__class__.forward)
+                forward_args_spec = inspect.getfullargspec(exporter._module.__class__.forward)
+                try:
+                    # assume sample_batch is a callable dictionary-type object
                     one_sample_input = collections.OrderedDict(
                         [
                             (f, sample_batch[f][0].long().reshape(1, -1))
@@ -92,34 +90,46 @@ if _BOLTS_AVAILABLE:
                             if f in sample_batch
                         ]
                     )
+                except RuntimeError:
+                    # assume sample_batch is a tensor
+                    one_sample_input = sample_batch
 
-                    try:
-                        exporter.export_onnx(sample_batch=one_sample_input, convert_qat=True, **kwargs)
-                        exporter.export_onnx(
-                            sample_batch=one_sample_input,
-                            name="small_model.onnx",
-                            convert_qat=True,
-                            export_params=False,
-                            **kwargs,
-                        )
-                        onnx_file = os.path.join(output_dir, "model.onnx")
+                try:
+                    exporter.export_onnx(sample_batch=one_sample_input, convert_qat=True, **kwargs)
+                    exporter.export_onnx(
+                        sample_batch=one_sample_input,
+                        name="small_model.onnx",
+                        export_params=False,
+                        **kwargs,
+                    )
+                    onnx_file = os.path.join(output_dir, "model.onnx")
 
-                    except RuntimeError:
-                        raise RuntimeError("Error exporting ONNX models and/or inputs/outputs")
+                except RuntimeError:
+                    raise RuntimeError("Error exporting ONNX models and/or inputs/outputs")
 
-                    sess = onnxruntime.InferenceSession(onnx_file)
-
+                sess = onnxruntime.InferenceSession(onnx_file)
+                
+                num_samples = 0
                 # add additional files for testing since this feature is very new
-                input_names = list(sample_batch.keys())
-                output_names = [o.name for o in sess.get_outputs()]
-                for input_vals in zip(*sample_batch.values()):
-                    input_feed = {k: v.long().numpy() for k, v in zip(input_names, input_vals)}
-                    output_vals = sess.run(output_names, {k: input_feed[k].reshape(1, -1) for k in input_feed})
+                if type(sample_batch) == type(collections.OrderedDict):
+                    input_names = list(sample_batch.keys())
+                    output_names = [o.name for o in sess.get_outputs()]
+                    for input_vals in zip(*sample_batch.values()):
+                        input_feed = {k: v.long().numpy() for k, v in zip(input_names, input_vals)}
+                        output_vals = sess.run(output_names, {k: input_feed[k].reshape(1, -1) for k in input_feed})
+                        output_dict = {name: numpy.squeeze(val) for name, val in zip(output_names, output_vals)}
+                        file_idx = f"{num_samples}".zfill(4)
+                        numpy.savez(f"{sample_inputs}/inp-{file_idx}.npz", **input_feed)
+                        numpy.savez(f"{sample_outputs}/out-{file_idx}.npz", **output_dict)
+                        num_samples += 1
+                else:
+                    output_names = [o.name for o in sess.get_outputs()]
+                    input_feed = {'input': sample_batch.numpy()}
+                    output_vals = sess.run(output_names, input_feed)
                     output_dict = {name: numpy.squeeze(val) for name, val in zip(output_names, output_vals)}
                     file_idx = f"{num_samples}".zfill(4)
                     numpy.savez(f"{sample_inputs}/inp-{file_idx}.npz", **input_feed)
                     numpy.savez(f"{sample_outputs}/out-{file_idx}.npz", **output_dict)
-                    num_samples += 1
 
         def teardown(self, trainer: "pl.Trainer", pl_module: "pl.LightningModule", stage: Optional[str] = None) -> None:
             sample_batch = next(iter(trainer.train_dataloader))
