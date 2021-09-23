@@ -4,7 +4,13 @@ import unittest
 
 from lightning_transformers.core.loggers import WABLogger
 
+try:
+    import wandb
+    wandb_does_not_exist = False
+except ImportError:
+    wandb_does_not_exist = True
 
+@unittest.skipIf(wandb_does_not_exist, "wandb does not exist")
 class TestModifierLogger(unittest.TestCase):
     def setUp(self):
         # run logger offline
