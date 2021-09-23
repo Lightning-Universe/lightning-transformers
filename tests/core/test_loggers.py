@@ -10,6 +10,7 @@ if importlib.util.find_spec("wandb") != None:
 else:
     wandb_does_not_exist = True
 
+
 @unittest.skipIf(wandb_does_not_exist, "wandb does not exist")
 class TestModifierLogger(unittest.TestCase):
     def setUp(self):
