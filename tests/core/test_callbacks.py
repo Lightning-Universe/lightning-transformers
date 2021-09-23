@@ -2,14 +2,13 @@ import os
 import shutil
 
 import pytest
+from pl_bolts.utils import _PL_GREATER_EQUAL_1_4_5, _TORCH_MAX_VERSION_1_8_1
 from pytorch_lightning import Trainer
 
 from lightning_transformers.core import callback
 from lightning_transformers.core.loggers import WABLogger
 from lightning_transformers.utilities.imports import _BOLTS_AVAILABLE
 from tests.core.boring_model import BoringDataModule, BoringTransformerModel
-from pl_bolts.utils import _PL_GREATER_EQUAL_1_4_5, _TORCH_MAX_VERSION_1_8_1
-
 
 epoch_range_modifier = """
 - !EpochRangeModifier
@@ -55,7 +54,6 @@ set_weight_decay_modifier = """
         (6, 1, 6, set_weight_decay_modifier),
     ],
 )
-
 @pytest.mark.skipif(not _BOLTS_AVAILABLE, reason="pytorch-lightning bolts not available")
 @pytest.mark.skipif(not _PL_GREATER_EQUAL_1_4_5, reason="pytorch-lightning version must be >= 1.4.5")
 @pytest.mark.skipif(not _TORCH_MAX_VERSION_1_8_1, reason="pytorch version must be <= 1.8.")
