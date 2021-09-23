@@ -111,7 +111,7 @@ if _BOLTS_AVAILABLE:
                 
                 num_samples = 0
                 # add additional files for testing since this feature is very new
-                if type(sample_batch) == type(collections.OrderedDict):
+                if type(one_sample_input) == type(collections.OrderedDict([])):
                     input_names = list(sample_batch.keys())
                     output_names = [o.name for o in sess.get_outputs()]
                     for input_vals in zip(*sample_batch.values()):
