@@ -1,5 +1,6 @@
+import os
+import shutil
 import unittest
-import os, shutil
 
 from lightning_transformers.core.loggers import WABLogger
 
@@ -8,7 +9,7 @@ class TestModifierLogger(unittest.TestCase):
     def setUp(self):
         # run logger offline
         self.logger = WABLogger(offline=True)
-    
+
     def tearDown(self):
         # delete wandb folder
         cwd = os.getcwd()
