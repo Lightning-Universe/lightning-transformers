@@ -1,13 +1,13 @@
 import os
 import shutil
 import unittest
+from importlib.util import find_spec
 
 from lightning_transformers.core.loggers import WABLogger
 
-try:
-    import wandb
+if importlib.util.find_spec("wandb") != None:
     wandb_does_not_exist = False
-except ImportError:
+else:
     wandb_does_not_exist = True
 
 @unittest.skipIf(wandb_does_not_exist, "wandb does not exist")
