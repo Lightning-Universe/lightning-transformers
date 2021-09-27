@@ -1,17 +1,12 @@
 import os
 import shutil
 import unittest
-from importlib.util import find_spec
 
 from lightning_transformers.core.loggers import WABLogger
-
-if find_spec("wandb") is not None:
-    wandb_does_not_exist = False
-else:
-    wandb_does_not_exist = True
+from lightning_transformers.utilities.imports import _WANDB_AVAILABLE
 
 
-@unittest.skipIf(wandb_does_not_exist, "wandb does not exist")
+@unittest.skipIf(not _WANDB_AVAILABLE, "wandb does not exist")
 class TestModifierLogger(unittest.TestCase):
     def setUp(self):
         # run logger offline
