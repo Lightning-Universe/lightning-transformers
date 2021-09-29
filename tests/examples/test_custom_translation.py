@@ -1,3 +1,6 @@
+import sys
+
+import pytest
 import pytorch_lightning as pl
 from transformers import AutoTokenizer
 
@@ -7,6 +10,7 @@ from lightning_transformers.core.nlp import HFBackboneConfig
 from lightning_transformers.task.nlp.translation.config import TranslationDataConfig
 
 
+@pytest.mark.skipif(sys.platform == "win32", reason="Currently Windows is not supported")
 def test_example(hf_cache_path):
     tokenizer = AutoTokenizer.from_pretrained(pretrained_model_name_or_path="patrickvonplaten/t5-tiny-random")
     model = MyTranslationTransformer(
