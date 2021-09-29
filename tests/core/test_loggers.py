@@ -1,12 +1,16 @@
 import os
 import shutil
+import sys
 import unittest
+
+import pytest
 
 from lightning_transformers.core.loggers import WABLogger
 from lightning_transformers.utilities.imports import _WANDB_AVAILABLE
 
 
-@unittest.skipIf(not _WANDB_AVAILABLE, "wandb does not exist")
+@pytest.mark.skipIf(not _WANDB_AVAILABLE, reason="wandb does not exist")
+@pytest.mark.skipif(sys.platform == "win32", reason="Currently Windows is not supported")
 class TestModifierLogger(unittest.TestCase):
     def setUp(self):
         # run logger offline
