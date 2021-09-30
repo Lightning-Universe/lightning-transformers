@@ -1,8 +1,9 @@
 import os
 import shutil
 import sys
-import pytest
 import unittest
+
+import pytest
 
 from lightning_transformers.core.loggers import WABLogger
 from lightning_transformers.utilities.imports import _WANDB_AVAILABLE
