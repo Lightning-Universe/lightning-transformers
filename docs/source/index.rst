@@ -37,6 +37,7 @@ Lightning Transformers
    optimizations/lightning
    optimizations/deepspeed
    optimizations/sharded
+   optimizations/sparseml
 
 .. toctree::
    :maxdepth: 1

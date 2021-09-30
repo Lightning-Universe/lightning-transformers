@@ -19,3 +19,7 @@ hydra-core>=1.1.0
 # task-specific
 sentencepiece
 torchmetrics[text]
+sparseml[torch]
+
+# extensions
+lightning-bolts>=0.4.0
