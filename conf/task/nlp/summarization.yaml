@@ -7,7 +7,6 @@ _target_: lightning_transformers.task.nlp.summarization.SummarizationTransformer
 downstream_model_type: transformers.AutoModelForSeq2SeqLM
 cfg:
   use_stemmer: True
-  rouge_newline_sep: True
   val_target_max_length: 142
   num_beams: null
   compute_generate_metrics: True
