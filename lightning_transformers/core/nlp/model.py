@@ -110,5 +110,6 @@ class HFTransformer(TaskTransformer):
     ):
         model: HFTransformer = super().load_from_checkpoint(checkpoint_path, map_location, hparams_file, strict)
         # update model with hf_pipeline_kwargs override
-        model._hf_pipeline_kwargs.update(hf_pipeline_kwargs)
+        if hf_pipeline_kwargs is not None:
+            model._hf_pipeline_kwargs.update(hf_pipeline_kwargs)
         return model
