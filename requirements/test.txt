@@ -9,3 +9,4 @@ flake8
 pre-commit
 mypy
 wandb>=0.10.13
+sparseml[torch]
