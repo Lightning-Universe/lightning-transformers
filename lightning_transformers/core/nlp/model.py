@@ -1,5 +1,6 @@
-from typing import TYPE_CHECKING, Any, Dict, Optional, Type
+from typing import IO, TYPE_CHECKING, Any, Callable, Dict, Optional, Type, Union
 
+import torch
 from hydra.utils import get_class
 from transformers import PreTrainedTokenizerBase
 from transformers import pipeline as hf_transformers_pipeline
@@ -96,3 +97,19 @@ class HFTransformer(TaskTransformer):
     def on_load_checkpoint(self, checkpoint: Dict[str, Any]) -> None:
         if "tokenizer" in checkpoint:
             self.tokenizer = checkpoint["tokenizer"]
+
+    @classmethod
+    def load_from_checkpoint(
+        cls,
+        checkpoint_path: Union[str, IO],
+        map_location: Optional[Union[Dict[str, str], str, torch.device, int, Callable]] = None,
+        hparams_file: Optional[str] = None,
+        strict: bool = True,
+        hf_pipeline_kwargs: Optional[Dict] = None,
+        **kwargs,
+    ):
+        model: HFTransformer = super().load_from_checkpoint(checkpoint_path, map_location, hparams_file, strict)
+        # update model with hf_pipeline_kwargs override
+        if hf_pipeline_kwargs is not None:
+            model._hf_pipeline_kwargs.update(hf_pipeline_kwargs)
+        return model
