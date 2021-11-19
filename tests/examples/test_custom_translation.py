@@ -25,6 +25,7 @@ def test_example(hf_cache_path):
             limit_test_samples=16,
             max_source_length=32,
             max_target_length=32,
+            preprocessing_num_workers=1,
         ),
         tokenizer=tokenizer,
     )

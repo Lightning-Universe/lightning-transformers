@@ -67,7 +67,7 @@ class LitTransformer(pl.LightningModule):
         effective_batch_size = self.trainer.accumulate_grad_batches * num_devices
         max_estimated_steps = (dataset_size // effective_batch_size) * self.trainer.max_epochs
 
-        if self.trainer.max_steps and self.trainer.max_steps < max_estimated_steps:
+        if self.trainer.max_steps and 0 < self.trainer.max_steps < max_estimated_steps:
             return self.trainer.max_steps
         return max_estimated_steps
 
