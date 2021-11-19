@@ -6,9 +6,6 @@ tqdm
 #metrics
 torchmetrics>=0.5.1
 
-# extras
-fairscale
-
 # huggingface
 transformers
 datasets
