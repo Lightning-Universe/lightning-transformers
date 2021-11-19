@@ -19,13 +19,11 @@ import time
 from typing import Optional
 
 import numpy
-import onnxruntime
 import pytorch_lightning as pl
 import torch
 from pytorch_lightning import Callback
 from pytorch_lightning.utilities import rank_zero_info
 from pytorch_lightning.utilities.exceptions import MisconfigurationException
-from sparseml.pytorch.utils import ModuleExporter
 from torch import Tensor
 
 from lightning_transformers.utilities.imports import _BOLTS_AVAILABLE
@@ -64,6 +62,9 @@ if _BOLTS_AVAILABLE:
             model: "pl.LightningModule", output_dir: str, sample_batch: Optional[Tensor] = None, **kwargs
         ) -> None:
             """Exports the model to ONNX format."""
+            import onnxruntime
+            from sparseml.pytorch.utils import ModuleExporter
+
             with model._prevent_trainer_and_dataloaders_deepcopy():
                 exporter = ModuleExporter(model.model, output_dir=output_dir)
                 sample_batch = sample_batch if sample_batch is not None else model.example_input_array
