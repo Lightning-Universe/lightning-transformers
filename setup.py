@@ -7,7 +7,17 @@ import lightning_transformers as ltf
 from lightning_transformers import setup_tools
 
 _PATH_ROOT = os.path.dirname(__file__)
+_PATH_REQUIRE = os.path.join(_PATH_ROOT, "requirements")
+
 long_description = setup_tools._load_readme_description(_PATH_ROOT, homepage=ltf.__homepage__, ver=ltf.__version__)
+
+# https://setuptools.readthedocs.io/en/latest/setuptools.html#declaring-extras
+# Define package extras. These are only installed if you specify them.
+# From remote, use like `pip install lightning-transformers[extra]`
+# From local copy of repo, use like `pip install ".[extra]"`
+extras = {
+    "extra": setup_tools._load_requirements(path_dir=_PATH_REQUIRE, file_name="extra.txt"),
+}
 
 setup(
     name="lightning-transformers",
@@ -26,6 +36,7 @@ setup(
     keywords=["deep learning", "pytorch", "AI"],
     python_requires=">=3.6",
     setup_requires=[],
+    extras_require=extras,
     install_requires=setup_tools._load_requirements(_PATH_ROOT),
     entry_points={
         "console_scripts": [
