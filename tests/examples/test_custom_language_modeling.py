@@ -18,6 +18,7 @@ def test_example(hf_cache_path):
             dataset_name="wikitext",
             dataset_config_name="wikitext-2-raw-v1",
             cache_dir=hf_cache_path,
+            preprocessing_num_workers=1,
         ),
         tokenizer=tokenizer,
     )
