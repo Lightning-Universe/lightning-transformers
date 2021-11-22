@@ -138,7 +138,6 @@ trainer:
   profiler: null
   benchmark: false
   deterministic: false
-  reload_dataloaders_every_epoch: false
   auto_lr_find: false
   replace_sampler_ddp: true
   terminate_on_nan: false

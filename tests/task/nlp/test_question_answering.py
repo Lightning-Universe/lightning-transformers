@@ -11,7 +11,12 @@ from lightning_transformers.task.nlp.question_answering.config import QuestionAn
 
 @pytest.mark.skipif(sys.platform == "win32", reason="Currently Windows is not supported")
 def test_smoke_train_e2e(script_runner):
-    script_runner.hf_train(task="question_answering", dataset="squad", model="prajjwal1/bert-tiny")
+    script_runner.hf_train(
+        task="question_answering",
+        dataset="squad",
+        model="prajjwal1/bert-tiny",
+        cmd_args=["training.run_test_after_fit=False"],
+    )
 
 
 def test_smoke_predict_e2e(script_runner):
