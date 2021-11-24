@@ -25,7 +25,7 @@ class ScriptRunner:
         Returns: Relative config path
 
         """
-        parent_dir = find_parent_dir_containing(config_dir)
+        parent_dir = find_parent_dir_containing(config_dir, initial_dir=os.path.dirname(__file__))
         relative_conf_dir = os.path.relpath(parent_dir, os.path.dirname(__file__))
         return os.path.join(relative_conf_dir, config_dir)
 
