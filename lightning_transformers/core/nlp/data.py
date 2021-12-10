@@ -73,7 +73,7 @@ class HFDataModule(TokenizerDataModule):
             config_attr = f"{subset}_subset_name"
             if hasattr(self.cfg, config_attr):
                 special_subset_name = getattr(self.cfg, config_attr)
-                if not special_subset_name in dataset:
+                if special_subset_name not in dataset:
                     raise KeyError(
                         f"Special {subset} subset name {special_subset_name} provided but not found in the dataset"
                     )
