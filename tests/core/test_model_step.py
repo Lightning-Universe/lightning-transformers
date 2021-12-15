@@ -4,6 +4,25 @@ from pytorch_lightning import Callback, Trainer
 from tests.core.boring_model import BoringDataModule, BoringTransformerModel
 
 
+class TestCallback(Callback):
+    def __init__(self, total_steps, input_wm_steps):
+        self.total_steps = total_steps
+        self.input_wm_steps = input_wm_steps
+
+    def on_fit_start(self, trainer, transformer_model: BoringTransformerModel) -> None:
+        assert transformer_model.num_training_steps == self.total_steps
+        if isinstance(self.input_wm_steps, int):
+            training_steps, warmup_steps = transformer_model.compute_warmup(-1, self.input_wm_steps)
+            assert training_steps == self.total_steps
+            assert warmup_steps == self.input_wm_steps
+        else:
+            # assume float value
+            training_steps, warmup_steps = transformer_model.compute_warmup(-1, self.input_wm_steps)
+            assert training_steps == self.total_steps
+            assert warmup_steps == (self.total_steps * self.input_wm_steps)
+        raise SystemExit
+
+
 @pytest.mark.parametrize(
     "max_epochs,num_processes,limit_train_batches,accumulate_grad_batches,input_wm_steps",
     [
@@ -32,22 +51,8 @@ def test_training_and_warmup_steps(
     effective_batch_size = accumulate_grad_batches * num_processes
     total_steps = (num_steps // effective_batch_size) * max_epochs
 
-    class TestCallback(Callback):
-        def on_fit_start(self, trainer, transformer_model: BoringTransformerModel) -> None:
-            assert transformer_model.num_training_steps == total_steps
-            if isinstance(input_wm_steps, int):
-                training_steps, warmup_steps = transformer_model.compute_warmup(-1, input_wm_steps)
-                assert training_steps == total_steps
-                assert warmup_steps == input_wm_steps
-            else:
-                # assume float value
-                training_steps, warmup_steps = transformer_model.compute_warmup(-1, input_wm_steps)
-                assert training_steps == total_steps
-                assert warmup_steps == (total_steps * input_wm_steps)
-            raise SystemExit
-
     trainer = Trainer(
-        callbacks=TestCallback(),
+        callbacks=TestCallback(total_steps=total_steps, input_wm_steps=input_wm_steps),
         max_epochs=max_epochs,
         num_processes=num_processes,
         limit_train_batches=limit_train_batches,
