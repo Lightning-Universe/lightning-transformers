@@ -2,13 +2,15 @@ import os
 import shutil
 
 import pytest
-from pl_bolts.utils import _PL_GREATER_EQUAL_1_4_5, _TORCH_MAX_VERSION_SPARSEML
 from pytorch_lightning import Trainer
 
 from lightning_transformers.core import callback
 from lightning_transformers.core.loggers import WABLogger
 from lightning_transformers.utilities.imports import _BOLTS_AVAILABLE
 from tests.core.boring_model import BoringDataModule, BoringTransformerModel
+
+if _BOLTS_AVAILABLE:
+    from pl_bolts.utils import _PL_GREATER_EQUAL_1_4_5, _TORCH_MAX_VERSION_SPARSEML
 
 epoch_range_modifier = """
 - !EpochRangeModifier
