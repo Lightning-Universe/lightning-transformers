@@ -2,7 +2,7 @@ import os
 import shutil
 
 import pytest
-from pl_bolts.utils import _PL_GREATER_EQUAL_1_4_5, _TORCH_MAX_VERSION_1_8_1
+from pl_bolts.utils import _PL_GREATER_EQUAL_1_4_5, _TORCH_MAX_VERSION_SPARSEML
 from pytorch_lightning import Trainer
 
 from lightning_transformers.core import callback
@@ -56,7 +56,7 @@ set_weight_decay_modifier = """
 )
 @pytest.mark.skipif(not _BOLTS_AVAILABLE, reason="pytorch-lightning bolts not available")
 @pytest.mark.skipif(not _PL_GREATER_EQUAL_1_4_5, reason="pytorch-lightning version must be >= 1.4.5")
-@pytest.mark.skipif(not _TORCH_MAX_VERSION_1_8_1, reason="pytorch version must be <= 1.8.")
+@pytest.mark.skipif(not _TORCH_MAX_VERSION_SPARSEML, reason="pytorch version must be <= 1.8.")
 def test_training_steps(max_epochs, num_processes, limit_train_batches, modifier):
     cwd = os.getcwd()
     output_dir = os.path.join(cwd, "MODELS")
