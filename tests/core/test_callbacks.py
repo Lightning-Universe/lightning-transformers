@@ -2,6 +2,7 @@ import os
 import shutil
 
 import pytest
+from pl_bolts.utils import _PL_GREATER_EQUAL_1_4_5
 from pytorch_lightning import Trainer
 
 from lightning_transformers.core import callback
@@ -9,13 +10,14 @@ from lightning_transformers.core.loggers import WABLogger
 from lightning_transformers.utilities.imports import _BOLTS_AVAILABLE, _BOLTS_GREATER_EQUAL_0_5_0
 from tests.core.boring_model import BoringDataModule, BoringTransformerModel
 
-from pl_bolts.utils import _PL_GREATER_EQUAL_1_4_5
 if _BOLTS_GREATER_EQUAL_0_5_0:
     from pl_bolts.utils import _TORCH_MAX_VERSION_SPARSEML as _TORCH_MAX_VERSION
-    MAX_VERSION = '1.10.0'
+
+    MAX_VERSION = "1.10.0"
 else:
     from pl_bolts.utils import _TORCH_MAX_VERSION_1_8_1 as _TORCH_MAX_VERSION
-    MAX_VERSION = '1.8.1'
+
+    MAX_VERSION = "1.8.1"
 
 epoch_range_modifier = """
 - !EpochRangeModifier
