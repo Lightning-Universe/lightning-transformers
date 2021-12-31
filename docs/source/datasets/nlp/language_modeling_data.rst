@@ -14,6 +14,8 @@ Below we have defined a csv file to use as our input data.
     this is the second sentence,
 
 
+When specifying the file path with hydra, it is important to use the absolute path to the file.
+
 .. code-block:: python
 
-    python train.py task=nlp/language_modeling dataset.cfg.train_file=train.csv dataset.cfg.validation_file=valid.csv
+    python train.py task=nlp/language_modeling dataset.cfg.train_file=abs/path/train.csv dataset.cfg.validation_file=abs/path/valid.csv
