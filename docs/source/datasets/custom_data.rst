@@ -7,6 +7,8 @@ In most cases when training/validating/testing on custom files, you’ll be able
 
 Below we show per task how to fine-tune/validate/test on your own files per task or modify the logic within the data classes. Some tasks are more involved than others, as they may require more data processing.
 
+.. include:: nlp/custom_subset_names.rst
+
 .. include:: nlp/language_modeling_data.rst
 
 .. include:: nlp/multiple_choice_data.rst

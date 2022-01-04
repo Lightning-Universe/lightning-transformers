@@ -51,7 +51,7 @@ class HFDataModule(TokenizerDataModule):
         data_files = data_files if data_files else None
         if self.cfg.dataset_name is not None:
             # Download and load the Huggingface dataset.
-            return load_dataset(
+            dataset = load_dataset(
                 path=self.cfg.dataset_name,
                 name=self.cfg.dataset_config_name,
                 cache_dir=self.cfg.cache_dir,
@@ -59,12 +59,27 @@ class HFDataModule(TokenizerDataModule):
             )
 
         # Load straight from data files
-        if not data_files:
+        elif self.cfg.datafiles:
+            extension = self.cfg.train_file.split(".")[-1]
+            dataset = load_dataset(extension, data_files=data_files)
+
+        else:
             raise MisconfigurationException(
-                "You have not specified a dataset name. A custom train and validation file is required"
+                "You have not specified a dataset name nor a custom train and validation file"
             )
-        extension = self.cfg.train_file.split(".")[-1]
-        return load_dataset(extension, data_files=data_files)
+
+        # Use special subset names if provided, and rename them back to standard ones
+        for subset in ("train", "validation", "test"):
+            config_attr = f"{subset}_subset_name"
+            if hasattr(self.cfg, config_attr):
+                special_subset_name = getattr(self.cfg, config_attr)
+                if special_subset_name not in dataset:
+                    raise KeyError(
+                        f"Special {subset} subset name {special_subset_name} provided but not found in the dataset"
+                    )
+                dataset[subset] = dataset.pop(special_subset_name)
+
+        return dataset
 
     def split_dataset(self, dataset: Union[Dataset, DatasetDict]) -> Union[Dataset, DatasetDict]:
         if self.cfg.train_val_split is not None:
