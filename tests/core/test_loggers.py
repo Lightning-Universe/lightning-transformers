@@ -16,7 +16,8 @@ class TestModifierLogger(unittest.TestCase):
         # run logger offline
         self.logger = WABLogger(offline=True)
 
-    def tearDown(self):
+    @classmethod
+    def tearDownClass(cls):
         # delete wandb folder
         cwd = os.getcwd()
         if os.path.exists(os.path.join(cwd, "wandb")):
