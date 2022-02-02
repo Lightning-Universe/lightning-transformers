@@ -11,3 +11,4 @@ sphinx-autodoc-typehints>=1.11.1  # required by: https://github.com/agronholm/sp
 sphinx-paramlinks>=0.4.0
 sphinx-togglebutton>=0.2
 sphinx-copybutton>=0.3
+mistune==0.8.4
