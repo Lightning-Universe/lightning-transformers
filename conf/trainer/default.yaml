@@ -7,7 +7,7 @@ gradient_clip_val: 0.0
 process_position: 0
 num_nodes: 1
 num_processes: 1
-gpus: null
+devices: null
 auto_select_gpus: False
 tpu_cores: null
 log_gpu_memory: null

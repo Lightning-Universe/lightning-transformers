@@ -1,6 +1,6 @@
 defaults:
   - default # add args from default trainer conf
-gpus: 1
+devices: 1
 accelerator: ddp
 precision: 16
 checkpoint_callback: False
