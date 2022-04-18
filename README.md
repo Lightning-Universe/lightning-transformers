@@ -363,7 +363,7 @@ Please make sure to update tests as appropriate.
 
 ## Community
 
-For help or questions, join our huge community on [Slack](https://join.slack.com/t/pytorch-lightning/shared_invite/zt-f6bl2l0l-JYMK3tbAgAmGRrlNr00f1A)!
+For help or questions, join our huge community on [Slack](https://www.pytorchlightning.ai/community)!
 
 ## License
 
