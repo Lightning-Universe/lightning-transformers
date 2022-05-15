@@ -5,7 +5,7 @@ import pytest
 import pytorch_lightning as pl
 from transformers import AutoTokenizer
 
-from lightning_transformers import (
+from lightning_transformers.task.nlp.masked_language_modeling import (
     MaskedLanguageModelingDataConfig,
     MaskedLanguageModelingDataModule,
     MaskedLanguageModelingTransformer,

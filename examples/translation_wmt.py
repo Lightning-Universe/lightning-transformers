@@ -1,7 +1,7 @@
 import pytorch_lightning as pl
 from transformers import AutoTokenizer
 
-from lightning_transformers import (
+from lightning_transformers.task.nlp.translation import (
     TranslationConfig,
     TranslationDataConfig,
     TranslationTransformer,

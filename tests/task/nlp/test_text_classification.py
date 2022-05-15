@@ -5,7 +5,11 @@ import pytest
 import pytorch_lightning as pl
 from transformers import AutoTokenizer
 
-from lightning_transformers import HFTransformerDataConfig, TextClassificationDataModule, TextClassificationTransformer
+from lightning_transformers.task.nlp.text_classification import (
+    TextClassificationDataConfig,
+    TextClassificationDataModule,
+    TextClassificationTransformer,
+)
 
 
 @pytest.mark.skipif(sys.platform == "win32", reason="Currently Windows is not supported")
@@ -13,7 +17,7 @@ def test_smoke_train(hf_cache_path):
     tokenizer = AutoTokenizer.from_pretrained(pretrained_model_name_or_path="prajjwal1/bert-tiny")
     model = TextClassificationTransformer(pretrained_model_name_or_path="prajjwal1/bert-tiny")
     dm = TextClassificationDataModule(
-        cfg=HFTransformerDataConfig(
+        cfg=TextClassificationDataConfig(
             batch_size=1,
             dataset_name="glue",
             dataset_config_name="sst2",
@@ -48,5 +52,5 @@ def test_model_has_correct_cfg():
 def test_datamodule_has_correct_cfg():
     tokenizer = MagicMock()
     dm = TextClassificationDataModule(tokenizer)
-    assert type(dm.cfg) is HFTransformerDataConfig
+    assert type(dm.cfg) is TextClassificationDataConfig
     assert dm.tokenizer is tokenizer

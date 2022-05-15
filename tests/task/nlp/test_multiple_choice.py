@@ -5,8 +5,8 @@ import pytest
 import pytorch_lightning as pl
 from transformers import AutoTokenizer
 
-from lightning_transformers import (
-    HFTransformerDataConfig,
+from lightning_transformers.task.nlp.multiple_choice import (
+    MultipleChoiceDataConfig,
     MultipleChoiceDataModule,
     MultipleChoiceTransformer,
     SwagMultipleChoiceDataModule,
@@ -18,7 +18,7 @@ def test_smoke_train(hf_cache_path):
     tokenizer = AutoTokenizer.from_pretrained(pretrained_model_name_or_path="prajjwal1/bert-tiny")
     model = MultipleChoiceTransformer(pretrained_model_name_or_path="prajjwal1/bert-tiny")
     dm = SwagMultipleChoiceDataModule(
-        cfg=HFTransformerDataConfig(
+        cfg=MultipleChoiceDataConfig(
             batch_size=1,
             dataset_name="swag",
             dataset_config_name="regular",
@@ -40,5 +40,5 @@ def test_model_has_correct_cfg():
 def test_datamodule_has_correct_cfg():
     tokenizer = MagicMock()
     dm = MultipleChoiceDataModule(tokenizer)
-    assert type(dm.cfg) is HFTransformerDataConfig
+    assert type(dm.cfg) is MultipleChoiceDataConfig
     assert dm.tokenizer is tokenizer

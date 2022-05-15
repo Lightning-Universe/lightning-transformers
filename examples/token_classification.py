@@ -1,7 +1,7 @@
 import pytorch_lightning as pl
 from transformers import AutoTokenizer
 
-from lightning_transformers import (
+from lightning_transformers.task.nlp.token_classification import (
     TokenClassificationDataConfig,
     TokenClassificationDataModule,
     TokenClassificationTransformer,
@@ -20,7 +20,6 @@ if __name__ == "__main__":
         ),
         tokenizer=tokenizer,
     )
-    dm.setup("fit")
     model = TokenClassificationTransformer(pretrained_model_name_or_path="bert-base-uncased", labels=dm.labels)
     trainer = pl.Trainer(accelerator="auto", devices="auto", max_epochs=1)
 

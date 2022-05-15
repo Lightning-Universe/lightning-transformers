@@ -13,13 +13,9 @@
 # limitations under the License.
 from dataclasses import dataclass
 
-from lightning_transformers.core.nlp.seq2seq import HFSeq2SeqConfig, Seq2SeqDataConfig
+from lightning_transformers.core.nlp import HFTransformerDataConfig
 
 
 @dataclass
-class SummarizationConfig(HFSeq2SeqConfig):
-    use_stemmer: bool = True
-
-
-class SummarizationDataConfig(Seq2SeqDataConfig):
+class MultipleChoiceDataConfig(HFTransformerDataConfig):
     ...

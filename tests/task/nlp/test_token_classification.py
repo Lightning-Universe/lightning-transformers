@@ -5,7 +5,7 @@ import pytest
 import pytorch_lightning as pl
 from transformers import AutoTokenizer
 
-from lightning_transformers import (
+from lightning_transformers.task.nlp.token_classification import (
     TokenClassificationDataConfig,
     TokenClassificationDataModule,
     TokenClassificationTransformer,

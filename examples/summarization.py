@@ -1,9 +1,9 @@
 import pytorch_lightning as pl
 from transformers import AutoTokenizer
 
-from lightning_transformers import (
-    Seq2SeqDataConfig,
+from lightning_transformers.task.nlp.summarization import (
     SummarizationConfig,
+    SummarizationDataConfig,
     SummarizationTransformer,
     XsumSummarizationDataModule,
 )
@@ -20,7 +20,7 @@ if __name__ == "__main__":
         ),
     )
     dm = XsumSummarizationDataModule(
-        cfg=Seq2SeqDataConfig(
+        cfg=SummarizationDataConfig(
             batch_size=1,
             dataset_name="xsum",
             max_source_length=128,

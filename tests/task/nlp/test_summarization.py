@@ -5,9 +5,9 @@ import pytest
 import pytorch_lightning as pl
 from transformers import AutoTokenizer
 
-from lightning_transformers import (
-    Seq2SeqDataConfig,
+from lightning_transformers.task.nlp.summarization import (
     SummarizationConfig,
+    SummarizationDataConfig,
     SummarizationDataModule,
     SummarizationTransformer,
     XsumSummarizationDataModule,
@@ -27,7 +27,7 @@ def test_smoke_train(hf_cache_path):
         ),
     )
     dm = XsumSummarizationDataModule(
-        cfg=Seq2SeqDataConfig(
+        cfg=SummarizationDataConfig(
             limit_train_samples=64,
             limit_val_samples=64,
             limit_test_samples=64,
@@ -70,5 +70,5 @@ def test_model_has_correct_cfg():
 def test_datamodule_has_correct_cfg():
     tokenizer = MagicMock()
     dm = SummarizationDataModule(tokenizer)
-    assert type(dm.cfg) is Seq2SeqDataConfig
+    assert type(dm.cfg) is SummarizationDataConfig
     assert dm.tokenizer is tokenizer
