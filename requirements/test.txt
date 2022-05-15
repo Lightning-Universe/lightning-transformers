@@ -7,5 +7,5 @@ isort
 yapf
 flake8
 pre-commit
-mypy
+mypy>=0.920
 wandb>=0.10.13
