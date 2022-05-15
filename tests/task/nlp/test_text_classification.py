@@ -5,11 +5,7 @@ import pytest
 import pytorch_lightning as pl
 from transformers import AutoTokenizer
 
-from lightning_transformers.core.nlp import HFTransformerDataConfig
-from lightning_transformers.task.nlp.text_classification import (
-    TextClassificationDataModule,
-    TextClassificationTransformer,
-)
+from lightning_transformers import HFTransformerDataConfig, TextClassificationDataModule, TextClassificationTransformer
 
 
 @pytest.mark.skipif(sys.platform == "win32", reason="Currently Windows is not supported")

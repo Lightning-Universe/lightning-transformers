@@ -1,8 +1,7 @@
 import pytorch_lightning as pl
 from transformers import AutoTokenizer
 
-from lightning_transformers.core.nlp import HFTransformerDataConfig
-from lightning_transformers.task.nlp.multiple_choice import MultipleChoiceTransformer, SwagMultipleChoiceDataModule
+from lightning_transformers import HFTransformerDataConfig, MultipleChoiceTransformer, SwagMultipleChoiceDataModule
 
 if __name__ == "__main__":
     tokenizer = AutoTokenizer.from_pretrained(pretrained_model_name_or_path="bert-base-uncased")

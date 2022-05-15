@@ -5,13 +5,13 @@ import pytest
 import pytorch_lightning as pl
 from transformers import AutoTokenizer
 
-from lightning_transformers.core.nlp.seq2seq import Seq2SeqDataConfig
-from lightning_transformers.task.nlp.summarization import (
+from lightning_transformers import (
+    Seq2SeqDataConfig,
+    SummarizationConfig,
     SummarizationDataModule,
     SummarizationTransformer,
     XsumSummarizationDataModule,
 )
-from lightning_transformers.task.nlp.summarization.config import SummarizationConfig
 
 
 @pytest.mark.skipif(sys.platform == "win32", reason="Currently Windows is not supported")

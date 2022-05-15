@@ -5,9 +5,13 @@ import pytest
 import pytorch_lightning as pl
 from transformers import AutoTokenizer
 
-from lightning_transformers.task.nlp.translation import TranslationTransformer, WMT16TranslationDataModule
-from lightning_transformers.task.nlp.translation.config import TranslationConfig, TranslationDataConfig
-from lightning_transformers.task.nlp.translation.data import TranslationDataModule
+from lightning_transformers import (
+    TranslationConfig,
+    TranslationDataConfig,
+    TranslationDataModule,
+    TranslationTransformer,
+    WMT16TranslationDataModule,
+)
 
 
 @pytest.mark.skipif(sys.platform == "win32", reason="Currently Windows is not supported")

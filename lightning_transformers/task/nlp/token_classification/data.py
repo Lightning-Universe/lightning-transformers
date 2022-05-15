@@ -35,6 +35,7 @@ class TokenClassificationDataModule(HFDataModule):
     cfg: TokenClassificationDataConfig
 
     def __init__(self, *args, cfg: TokenClassificationDataConfig = TokenClassificationDataConfig(), **kwargs) -> None:
+        self.labels = None
         super().__init__(*args, cfg=cfg, **kwargs)
 
     def process_data(self, dataset: Dataset, stage: Optional[str] = None) -> Dataset:

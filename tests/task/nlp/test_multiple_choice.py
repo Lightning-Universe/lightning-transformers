@@ -5,8 +5,8 @@ import pytest
 import pytorch_lightning as pl
 from transformers import AutoTokenizer
 
-from lightning_transformers.core.nlp import HFTransformerDataConfig
-from lightning_transformers.task.nlp.multiple_choice import (
+from lightning_transformers import (
+    HFTransformerDataConfig,
     MultipleChoiceDataModule,
     MultipleChoiceTransformer,
     SwagMultipleChoiceDataModule,

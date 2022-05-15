@@ -11,15 +11,55 @@ __copyright__ = f"Copyright (c) 2020-2020, {__author__}."
 __homepage__ = "https://github.com/PyTorchLightning/lightning-transformers"
 __docs__ = "PyTorch Lightning Transformers."
 __long_doc__ = """
-Flexible interface for high performance research using SOTA Transformers leveraging PyTorch Lightning,
- Transformers, and Hydra.
-
-Transformers are increasingly popular for SOTA deep learning, gaining traction in NLP with BeRT based architectures
- more recently transcending into the world of Computer Vision and Audio Processing.
-
-However, training and fine-tuning transformers at scale is not trivial and can vary from domain to domain requiring
- additional research effort, and significant engineering.
-
-Lightning Transformers gives researchers a way to train HuggingFace Transformer models with all the features
- of PyTorch Lightning, while leveraging Hydra to provide composability of blocks and configs to focus on research.
+Lightning Transformers provides `LightningModules`, `LightningDataModules` and `Strategies` to use
+HuggingFace Transformers with the PyTorch Lightning Trainer.
 """
+
+from lightning_transformers.core.nlp import HFTransformerDataConfig  # noqa: F401
+from lightning_transformers.core.nlp.seq2seq import Seq2SeqDataConfig  # noqa: F401
+from lightning_transformers.task.nlp.language_modeling import (  # noqa: F401
+    LanguageModelingDataModule,
+    LanguageModelingTransformer,
+)
+from lightning_transformers.task.nlp.language_modeling.config import LanguageModelingDataConfig  # noqa: F401
+from lightning_transformers.task.nlp.masked_language_modeling import (  # noqa: F401
+    MaskedLanguageModelingDataModule,
+    MaskedLanguageModelingTransformer,
+)
+from lightning_transformers.task.nlp.masked_language_modeling.config import (  # noqa: F401
+    MaskedLanguageModelingDataConfig,
+)
+from lightning_transformers.task.nlp.multiple_choice import (  # noqa: F401
+    MultipleChoiceDataModule,
+    MultipleChoiceTransformer,
+    RaceMultipleChoiceDataModule,
+    SwagMultipleChoiceDataModule,
+)
+from lightning_transformers.task.nlp.question_answering import (  # noqa: F401
+    QuestionAnsweringDataModule,
+    QuestionAnsweringTransformer,
+)
+from lightning_transformers.task.nlp.question_answering.config import QuestionAnsweringDataConfig  # noqa: F401
+from lightning_transformers.task.nlp.question_answering.datasets import SquadDataModule  # noqa: F401
+from lightning_transformers.task.nlp.summarization import (  # noqa: F401
+    CNNDailyMailSummarizationDataModule,
+    SummarizationDataModule,
+    SummarizationTransformer,
+    XsumSummarizationDataModule,
+)
+from lightning_transformers.task.nlp.summarization.config import SummarizationConfig  # noqa: F401
+from lightning_transformers.task.nlp.text_classification import (  # noqa: F401
+    TextClassificationDataModule,
+    TextClassificationTransformer,
+)
+from lightning_transformers.task.nlp.token_classification import (  # noqa: F401
+    TokenClassificationDataModule,
+    TokenClassificationTransformer,
+)
+from lightning_transformers.task.nlp.token_classification.config import TokenClassificationDataConfig  # noqa: F401
+from lightning_transformers.task.nlp.translation import (  # noqa: F401
+    TranslationDataModule,
+    TranslationTransformer,
+    WMT16TranslationDataModule,
+)
+from lightning_transformers.task.nlp.translation.config import TranslationConfig, TranslationDataConfig  # noqa: F401

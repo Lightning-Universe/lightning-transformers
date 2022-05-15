@@ -1,9 +1,7 @@
 import pytorch_lightning as pl
 from transformers import AutoTokenizer
 
-from lightning_transformers.task.nlp.question_answering import QuestionAnsweringTransformer
-from lightning_transformers.task.nlp.question_answering.config import QuestionAnsweringDataConfig
-from lightning_transformers.task.nlp.question_answering.datasets import SquadDataModule
+from lightning_transformers import QuestionAnsweringDataConfig, QuestionAnsweringTransformer, SquadDataModule
 
 if __name__ == "__main__":
     tokenizer = AutoTokenizer.from_pretrained(pretrained_model_name_or_path="bert-base-uncased")

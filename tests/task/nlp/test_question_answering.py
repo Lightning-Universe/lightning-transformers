@@ -5,9 +5,12 @@ import pytest
 import pytorch_lightning as pl
 from transformers import AutoTokenizer
 
-from lightning_transformers.task.nlp.question_answering import QuestionAnsweringDataModule, QuestionAnsweringTransformer
-from lightning_transformers.task.nlp.question_answering.config import QuestionAnsweringDataConfig
-from lightning_transformers.task.nlp.question_answering.datasets import SquadDataModule
+from lightning_transformers import (
+    QuestionAnsweringDataConfig,
+    QuestionAnsweringDataModule,
+    QuestionAnsweringTransformer,
+    SquadDataModule,
+)
 
 
 @pytest.mark.skipif(sys.platform == "win32", reason="Currently Windows is not supported")

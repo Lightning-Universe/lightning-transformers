@@ -5,11 +5,11 @@ import pytest
 import pytorch_lightning as pl
 from transformers import AutoTokenizer
 
-from lightning_transformers.task.nlp.masked_language_modeling import (
+from lightning_transformers import (
+    MaskedLanguageModelingDataConfig,
     MaskedLanguageModelingDataModule,
     MaskedLanguageModelingTransformer,
 )
-from lightning_transformers.task.nlp.masked_language_modeling.config import MaskedLanguageModelingDataConfig
 
 
 @pytest.mark.skipif(sys.platform == "win32", reason="Currently Windows is not supported")

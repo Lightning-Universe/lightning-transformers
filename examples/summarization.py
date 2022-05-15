@@ -1,9 +1,12 @@
 import pytorch_lightning as pl
 from transformers import AutoTokenizer
 
-from lightning_transformers.core.nlp.seq2seq import Seq2SeqDataConfig
-from lightning_transformers.task.nlp.summarization import SummarizationTransformer, XsumSummarizationDataModule
-from lightning_transformers.task.nlp.summarization.config import SummarizationConfig
+from lightning_transformers import (
+    Seq2SeqDataConfig,
+    SummarizationConfig,
+    SummarizationTransformer,
+    XsumSummarizationDataModule,
+)
 
 if __name__ == "__main__":
     tokenizer = AutoTokenizer.from_pretrained(pretrained_model_name_or_path="t5-base")

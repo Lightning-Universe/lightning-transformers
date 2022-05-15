@@ -1,11 +1,11 @@
 import pytorch_lightning as pl
 from transformers import AutoTokenizer
 
-from lightning_transformers.task.nlp.masked_language_modeling import (
+from lightning_transformers import (
+    MaskedLanguageModelingDataConfig,
     MaskedLanguageModelingDataModule,
     MaskedLanguageModelingTransformer,
 )
-from lightning_transformers.task.nlp.masked_language_modeling.config import MaskedLanguageModelingDataConfig
 
 if __name__ == "__main__":
     tokenizer = AutoTokenizer.from_pretrained(pretrained_model_name_or_path="bert-base-uncased")
