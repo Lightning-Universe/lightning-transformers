@@ -1,17 +1,17 @@
-pytorch-lightning>=1.6.0
-torch>=1.10.0
+pytorch-lightning==1.6.0
+torch==1.10.0
 numpy
 tqdm
 
 #metrics
-torchmetrics>=0.7.0
+torchmetrics==0.7.0
 
 # huggingface
 transformers
 datasets
 
 # hydra
-hydra-core>=1.1.0
+hydra-core==1.1.0
 
 # task-specific
 sentencepiece
