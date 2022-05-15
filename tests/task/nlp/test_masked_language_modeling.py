@@ -49,5 +49,5 @@ def test_model_has_correct_cfg():
 def test_datamodule_has_correct_cfg():
     tokenizer = MagicMock()
     dm = MaskedLanguageModelingDataModule(tokenizer)
-    assert type(dm.cfg) is MaskedLanguageModelingDataConfig
+    assert isinstance(dm.cfg, MaskedLanguageModelingDataConfig)
     assert dm.tokenizer is tokenizer

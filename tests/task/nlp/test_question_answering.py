@@ -61,5 +61,5 @@ def test_model_has_correct_cfg():
 def test_datamodule_has_correct_cfg():
     tokenizer = MagicMock()
     dm = QuestionAnsweringDataModule(tokenizer)
-    assert type(dm.cfg) is QuestionAnsweringDataConfig
+    assert isinstance(dm.cfg, QuestionAnsweringDataConfig)
     assert dm.tokenizer is tokenizer

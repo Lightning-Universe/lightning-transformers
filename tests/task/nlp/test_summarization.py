@@ -70,5 +70,5 @@ def test_model_has_correct_cfg():
 def test_datamodule_has_correct_cfg():
     tokenizer = MagicMock()
     dm = SummarizationDataModule(tokenizer)
-    assert type(dm.cfg) is SummarizationDataConfig
+    assert isinstance(dm.cfg, SummarizationDataConfig)
     assert dm.tokenizer is tokenizer
