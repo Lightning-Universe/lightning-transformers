@@ -25,6 +25,9 @@ class TextClassificationDataModule(HFDataModule):
 
     cfg: TextClassificationDataConfig
 
+    def __init__(self, *args, cfg: TextClassificationDataConfig = TextClassificationDataConfig(), **kwargs) -> None:
+        super().__init__(*args, cfg=cfg, **kwargs)
+
     def process_data(self, dataset: Dataset, stage: Optional[str] = None) -> Dataset:
         input_feature_fields = [k for k, v in dataset["train"].features.items() if k not in ["label", "idx"]]
         dataset = TextClassificationDataModule.preprocess(

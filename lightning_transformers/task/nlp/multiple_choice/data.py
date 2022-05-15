@@ -25,6 +25,9 @@ class MultipleChoiceDataModule(HFDataModule):
 
     cfg: MultipleChoiceDataConfig
 
+    def __init__(self, *args, cfg: MultipleChoiceDataConfig = MultipleChoiceDataConfig(), **kwargs) -> None:
+        super().__init__(*args, cfg=cfg, **kwargs)
+
     @property
     def pad_to_max_length(self):
         return self.cfg.padding == "max_length"

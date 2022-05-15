@@ -19,3 +19,6 @@ class SummarizationDataModule(Seq2SeqDataModule):
     """Defines the ``LightningDataModule`` for Summarization Datasets."""
 
     cfg: SummarizationDataConfig
+
+    def __init__(self, *args, cfg: SummarizationDataConfig = SummarizationDataConfig(), **kwargs) -> None:
+        super().__init__(*args, cfg=cfg, **kwargs)
