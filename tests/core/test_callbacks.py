@@ -10,7 +10,7 @@ from lightning_transformers.utilities.imports import _BOLTS_AVAILABLE
 from tests.core.boring_model import BoringDataModule, BoringTransformerModel
 
 if _BOLTS_AVAILABLE:
-    from pl_bolts import _SPARSEML_AVAILABLE
+    from pl_bolts.utils import _SPARSEML_AVAILABLE
 
 epoch_range_modifier = """
 - !EpochRangeModifier
