@@ -17,10 +17,13 @@ from datasets import ClassLabel, Dataset
 from transformers import PreTrainedTokenizerBase
 
 from lightning_transformers.core.nlp import HFDataModule
+from lightning_transformers.task.nlp.text_classification.config import TextClassificationDataConfig
 
 
 class TextClassificationDataModule(HFDataModule):
     """Defines the ``LightningDataModule`` for Text Classification Datasets."""
+
+    cfg: TextClassificationDataConfig
 
     def process_data(self, dataset: Dataset, stage: Optional[str] = None) -> Dataset:
         input_feature_fields = [k for k, v in dataset["train"].features.items() if k not in ["label", "idx"]]

@@ -14,8 +14,8 @@ from lightning_transformers.task.nlp.language_modeling import (
 
 @pytest.mark.skipif(sys.platform == "win32", reason="Currently Windows is not supported")
 def test_smoke_train(hf_cache_path):
-    tokenizer = AutoTokenizer.from_pretrained(pretrained_model_name_or_path="sshleifer/tiny-gpt2")
-    model = LanguageModelingTransformer(pretrained_model_name_or_path="sshleifer/tiny-gpt2")
+    tokenizer = AutoTokenizer.from_pretrained(pretrained_model_name_or_path="prajjwal1/bert-tiny")
+    model = LanguageModelingTransformer(pretrained_model_name_or_path="prajjwal1/bert-tiny")
     dm = LanguageModelingDataModule(
         cfg=LanguageModelingDataConfig(
             batch_size=1,
@@ -33,8 +33,8 @@ def test_smoke_train(hf_cache_path):
 @pytest.mark.skipif(sys.platform == "win32", reason="Currently Windows is not supported")
 def test_smoke_predict():
     model = LanguageModelingTransformer(
-        pretrained_model_name_or_path="sshleifer/tiny-gpt2",
-        tokenizer=AutoTokenizer.from_pretrained(pretrained_model_name_or_path="sshleifer/tiny-gpt2"),
+        pretrained_model_name_or_path="prajjwal1/bert-tiny",
+        tokenizer=AutoTokenizer.from_pretrained(pretrained_model_name_or_path="prajjwal1/bert-tiny"),
     )
     y = model.hf_predict("The house:")
     assert len(y) == 1
@@ -42,7 +42,7 @@ def test_smoke_predict():
 
 
 def test_model_has_correct_cfg():
-    model = LanguageModelingTransformer(pretrained_model_name_or_path="sshleifer/tiny-gpt2")
+    model = LanguageModelingTransformer(pretrained_model_name_or_path="prajjwal1/bert-tiny")
     assert model.hparams.downstream_model_type == "transformers.AutoModelForCausalLM"
 
 
