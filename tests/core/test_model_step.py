@@ -23,29 +23,27 @@ class TestCallback(Callback):
 
 
 @pytest.mark.parametrize(
-    "max_epochs,devices,accumulate_grad_batches,expected_wm_steps",
+    "max_epochs,accumulate_grad_batches,expected_wm_steps",
     [
-        (5, 2, 1, 5),
-        (5, 1, 1, 5),
-        (5, 1, 2, 5),
-        (6, 2, 2, 5),
-        (6, 2, 2, 0.5),
+        (5, 1, 5),
+        (5, 2, 5),
+        (6, 2, 5),
+        (6, 2, 0.5),
     ],
 )
-def test_training_and_warmup_steps(max_epochs, devices, accumulate_grad_batches, expected_wm_steps):
+def test_training_and_warmup_steps(max_epochs, accumulate_grad_batches, expected_wm_steps):
     model = BoringTransformerModel()
 
     dm = BoringDataModule()
     num_steps = len(dm.train_dataloader())
 
-    effective_batch_size = accumulate_grad_batches * devices
-    expected_steps = (num_steps // effective_batch_size) * max_epochs
+    expected_steps = (num_steps // accumulate_grad_batches) * max_epochs
 
     trainer = Trainer(
         callbacks=TestCallback(expected_steps=expected_steps, expected_wm_steps=expected_wm_steps),
         max_epochs=max_epochs,
         accelerator="cpu",
-        devices=devices,
+        devices=1,
         accumulate_grad_batches=accumulate_grad_batches,
     )
     trainer.fit(model, dm)
