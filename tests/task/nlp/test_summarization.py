@@ -2,26 +2,59 @@ import sys
 from unittest.mock import MagicMock
 
 import pytest
+import pytorch_lightning as pl
+from transformers import AutoTokenizer
 
-from lightning_transformers.core.nlp import HFBackboneConfig
 from lightning_transformers.core.nlp.seq2seq import Seq2SeqDataConfig
-from lightning_transformers.task.nlp.summarization import SummarizationDataModule, SummarizationTransformer
+from lightning_transformers.task.nlp.summarization import (
+    SummarizationDataModule,
+    SummarizationTransformer,
+    XsumSummarizationDataModule,
+)
 from lightning_transformers.task.nlp.summarization.config import SummarizationConfig
 
 
 @pytest.mark.skipif(sys.platform == "win32", reason="Currently Windows is not supported")
-def test_smoke_train_e2e(script_runner):
-    script_runner.hf_train(task="summarization", dataset="xsum", model="patrickvonplaten/t5-tiny-random")
+def test_smoke_train(hf_cache_path):
+    tokenizer = AutoTokenizer.from_pretrained(pretrained_model_name_or_path="patrickvonplaten/t5-tiny-random")
+    model = SummarizationTransformer(
+        pretrained_model_name_or_path="patrickvonplaten/t5-tiny-random",
+        cfg=SummarizationConfig(
+            use_stemmer=True,
+            val_target_max_length=142,
+            num_beams=None,
+            compute_generate_metrics=True,
+        ),
+    )
+    dm = XsumSummarizationDataModule(
+        cfg=Seq2SeqDataConfig(
+            limit_train_samples=64,
+            limit_val_samples=64,
+            limit_test_samples=64,
+            batch_size=1,
+            dataset_name="xsum",
+            max_source_length=128,
+            max_target_length=128,
+            cache_dir=hf_cache_path,
+        ),
+        tokenizer=tokenizer,
+    )
+    trainer = pl.Trainer(fast_dev_run=True)
+
+    trainer.fit(model, dm)
 
 
-def test_smoke_predict_e2e(script_runner):
-    y = script_runner.hf_predict(
-        [
-            '+x="The results found significant improvements over all tasks evaluated"',
-            "+predict_kwargs={min_length: 2, max_length: 12}",
-        ],
-        task="summarization",
-        model="patrickvonplaten/t5-tiny-random",
+@pytest.mark.skipif(sys.platform == "win32", reason="Currently Windows is not supported")
+def test_smoke_predict():
+    model = SummarizationTransformer(
+        pretrained_model_name_or_path="patrickvonplaten/t5-tiny-random",
+        tokenizer=AutoTokenizer.from_pretrained(pretrained_model_name_or_path="patrickvonplaten/t5-tiny-random"),
+    )
+
+    y = model.hf_predict(
+        "The results found significant improvements over all tasks evaluated",
+        min_length=2,
+        max_length=12,
     )
     assert len(y) == 1
     output = y[0]["summary_text"]
@@ -29,7 +62,7 @@ def test_smoke_predict_e2e(script_runner):
 
 
 def test_model_has_correct_cfg():
-    model = SummarizationTransformer(HFBackboneConfig(pretrained_model_name_or_path="t5-base"))
+    model = SummarizationTransformer(pretrained_model_name_or_path="t5-base")
     assert model.hparams.downstream_model_type == "transformers.AutoModelForSeq2SeqLM"
     assert type(model.cfg) is SummarizationConfig
 

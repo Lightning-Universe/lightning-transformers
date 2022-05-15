@@ -17,6 +17,7 @@
 # yapf: off
 
 from dataclasses import dataclass, field
+from typing import Optional
 
 from lightning_transformers.core.nlp import HFTransformerDataConfig
 
@@ -56,6 +57,15 @@ class QuestionAnsweringDataConfig(HFTransformerDataConfig):
         metadata={
             "help": "The maximum length of an answer that can be generated. This is needed because the start "
             "and end predictions are not conditioned on one another."
+        },
+    )
+    output_dir: Optional[str] = field(
+        default=None,
+        metadata={
+            "help": "If provided, the dictionaries of predictions, "
+            "n_best predictions (with their scores and logits) and, "
+            "if `version_2_with_negative=True`, the dictionary of the scores differences "
+            "between best and null answers, are saved in `output_dir`."
         },
     )
 

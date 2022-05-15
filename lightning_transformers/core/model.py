@@ -50,26 +50,7 @@ class LitTransformer(pl.LightningModule):
 
     @property
     def num_training_steps(self) -> int:
-        """Total training steps inferred from datamodule and devices."""
-        if isinstance(self.trainer.limit_train_batches, int) and self.trainer.limit_train_batches != 0:
-            dataset_size = self.trainer.limit_train_batches
-        elif isinstance(self.trainer.limit_train_batches, float):
-            # limit_train_batches is a percentage of batches
-            dataset_size = len(self.trainer.datamodule.train_dataloader())
-            dataset_size = int(dataset_size * self.trainer.limit_train_batches)
-        else:
-            dataset_size = len(self.trainer.datamodule.train_dataloader())
-
-        num_devices = max(1, self.trainer.num_gpus, self.trainer.num_processes)
-        if self.trainer.tpu_cores:
-            num_devices = max(num_devices, self.trainer.tpu_cores)
-
-        effective_batch_size = self.trainer.accumulate_grad_batches * num_devices
-        max_estimated_steps = (dataset_size // effective_batch_size) * self.trainer.max_epochs
-
-        if self.trainer.max_steps and 0 < self.trainer.max_steps < max_estimated_steps:
-            return self.trainer.max_steps
-        return max_estimated_steps
+        return self.trainer.estimated_stepping_batches
 
     def compute_warmup(self, num_training_steps: int, num_warmup_steps: Union[int, float]) -> Tuple[int, int]:
         if num_training_steps < 0:

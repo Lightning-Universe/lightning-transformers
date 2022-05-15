@@ -73,5 +73,5 @@ class TextClassificationDataModule(HFDataModule):
             with_indices=True,
             fn_kwargs=fn_kwargs,
         )
-        ds.rename_column_("label", "labels")
+        ds = ds.rename_column("label", "labels")
         return ds
