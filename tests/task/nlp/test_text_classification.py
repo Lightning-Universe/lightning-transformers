@@ -29,9 +29,7 @@ def test_smoke_train(hf_cache_path):
         ),
         tokenizer=tokenizer,
     )
-    dm.setup("fit")
     trainer = pl.Trainer(fast_dev_run=True)
-
     trainer.fit(model, dm)
 
 

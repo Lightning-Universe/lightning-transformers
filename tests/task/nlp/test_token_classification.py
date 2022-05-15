@@ -30,8 +30,7 @@ def test_smoke_train(hf_cache_path):
         ),
         tokenizer=tokenizer,
     )
-    dm.setup("fit")
-    model = TokenClassificationTransformer(pretrained_model_name_or_path="prajjwal1/bert-tiny", labels=dm.labels)
+    model = TokenClassificationTransformer(pretrained_model_name_or_path="prajjwal1/bert-tiny", labels=dm.num_classes)
 
     trainer = pl.Trainer(fast_dev_run=True)
     trainer.fit(model, dm)
