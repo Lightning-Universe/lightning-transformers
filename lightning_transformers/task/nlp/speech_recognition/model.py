@@ -12,10 +12,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 from torchmetrics.text.wer import WordErrorRate
-from transformers import MBartTokenizer
+from transformers import Wav2Vec2CTCTokenizer
 
 from lightning_transformers.core.nlp.seq2seq import Seq2SeqTransformer
-from lightning_transformers.task.nlp.speech_recognition.config import SpeechRecognitionConfig, SpeechRecognitionDataConfig
+from lightning_transformers.task.nlp.speech_recognition.config import (
+    SpeechRecognitionConfig, SpeechRecognitionDataConfig
+)
 
 
 class SpeechRecognitionTransformer(Seq2SeqTransformer):
@@ -36,13 +38,13 @@ class SpeechRecognitionTransformer(Seq2SeqTransformer):
         **kwargs,
     ) -> None:
         super().__init__(downstream_model_type, *args, cfg=cfg, **kwargs)
-        self.bleu = None
+        self.wer = None
 
     def compute_generate_metrics(self, batch, prefix):
-        tgt_lns = self.tokenize_labels(batch["labels"])
-        pred_lns = self.generate(batch["input_ids"], batch["attention_mask"])
+        target = self.tokenize_labels(batch["labels"])
+        pred = self.generate(batch["input_ids"], batch["attention_mask"])
         # wrap targets in list as score expects a list of potential references
-        result = self.bleu(pred_lns, tgt_lns)
+        result = self.wer(pred, target)
         self.log(f"{prefix}_wer_score", result, on_step=False, on_epoch=True, prog_bar=True)
 
     def configure_metrics(self, stage: str):
@@ -50,7 +52,7 @@ class SpeechRecognitionTransformer(Seq2SeqTransformer):
 
     def initialize_model_specific_parameters(self):
         super().initialize_model_specific_parameters()
-        if isinstance(self.tokenizer, MBartTokenizer):
+        if isinstance(self.tokenizer, Wav2Vec2CTCTokenizer):
             cfg: SpeechRecognitionDataConfig = self.trainer.datamodule.cfg
             #tgt_lang = cfg.target_language
             # set decoder_start_token_id for MBart
