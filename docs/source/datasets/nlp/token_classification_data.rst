@@ -12,4 +12,21 @@ To use custom text files, the files should contain new line delimited json objec
 
 .. code-block:: python
 
-    python train.py task=nlp/token_classification dataset.cfg.train_file=train.json dataset.cfg.validation_file=valid.json
+    from lightning_transformers.task.nlp.token_classification import (
+        TokenClassificationDataConfig,
+        TokenClassificationDataModule,
+    )
+
+    dm = TokenClassificationDataModule(
+        cfg=TokenClassificationDataConfig(
+            batch_size=1,
+            task_name="ner",
+            dataset_name="conll2003",
+            preprocessing_num_workers=1,
+            label_all_tokens=False,
+            revision="master",
+            train_file="path/train.json",
+            validation_file="/path/valid.json"
+        ),
+        tokenizer=tokenizer,
+    )

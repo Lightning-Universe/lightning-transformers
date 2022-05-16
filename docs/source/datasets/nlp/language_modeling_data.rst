@@ -18,4 +18,16 @@ When specifying the file path with hydra, it is important to use the absolute pa
 
 .. code-block:: python
 
-    python train.py task=nlp/language_modeling dataset.cfg.train_file=abs/path/train.csv dataset.cfg.validation_file=abs/path/valid.csv
+    from lightning_transformers.task.nlp.language_modeling import (
+        LanguageModelingDataConfig,
+        LanguageModelingDataModule,
+    )
+
+    dm = LanguageModelingDataModule(
+        cfg=LanguageModelingDataConfig(
+            batch_size=1,
+            train_file="path/train.csv",
+            validation_file="/path/valid.csv"
+        ),
+        tokenizer=tokenizer,
+    )

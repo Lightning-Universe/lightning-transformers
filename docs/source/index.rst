@@ -14,7 +14,6 @@ Lightning Transformers
    :caption: Get started
 
    quickstart
-   structure/conf
 
 .. toctree::
    :maxdepth: 1
