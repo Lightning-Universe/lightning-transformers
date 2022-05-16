@@ -9,8 +9,6 @@ This is useful when you have specific data processing you'd like to apply when t
 
 Currently we have examples for two tasks (one encoder, one encoder/decoder), more examples coming soon!
 
-.. include:: nlp/custom_subset_names.rst
-
 .. include:: nlp/language_modeling_data.rst
 
 .. include:: nlp/translation_data.rst
