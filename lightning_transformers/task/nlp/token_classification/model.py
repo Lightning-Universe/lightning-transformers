@@ -14,7 +14,7 @@
 from typing import Any, Dict, List, Union
 
 import torch
-from torchmetrics import F1, Accuracy, Precision, Recall
+from torchmetrics import Accuracy, F1Score, Precision, Recall
 
 from lightning_transformers.core.nlp import HFTransformer
 
@@ -65,7 +65,7 @@ class TokenClassificationTransformer(HFTransformer):
     def configure_metrics(self, _) -> None:
         self.prec = Precision(num_classes=self.num_labels)
         self.recall = Recall(num_classes=self.num_labels)
-        self.f1 = F1(num_classes=self.num_labels)
+        self.f1 = F1Score(num_classes=self.num_labels)
         self.acc = Accuracy()
         self.metrics = {"precision": self.prec, "recall": self.recall, "accuracy": self.acc, "f1": self.f1}
 

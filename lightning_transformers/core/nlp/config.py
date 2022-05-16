@@ -2,7 +2,10 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Optional, Union
 
-from lightning_transformers.core.config import TaskConfig, TransformerDataConfig
+from datasets import Version
+
+from lightning_transformers.core.config import TaskConfig
+from lightning_transformers.core.data import TransformerDataConfig
 
 
 @dataclass
@@ -10,6 +13,7 @@ class HFTransformerDataConfig(TransformerDataConfig):
 
     dataset_name: Optional[str] = None
     dataset_config_name: Optional[str] = None
+    revision: Optional[Union[str, Version]] = None
     train_val_split: Optional[int] = None
     train_file: Optional[str] = None
     test_file: Optional[str] = None

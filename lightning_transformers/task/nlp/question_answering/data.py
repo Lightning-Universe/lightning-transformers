@@ -81,7 +81,9 @@ class QuestionAnsweringDataModule(HFDataModule):
                 batched=True,
                 num_proc=self.cfg.preprocessing_num_workers,
                 remove_columns=column_names,
-                load_from_cache_file=self.cfg.load_from_cache_file,
+                # Legacy code `prepare_validation_features` must run to populate `self.example_id_strings`
+                # Therefore we cannot load from cache here
+                load_from_cache_file=False,
             )
         return dataset
 

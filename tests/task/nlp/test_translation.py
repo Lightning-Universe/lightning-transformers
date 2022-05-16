@@ -3,22 +3,21 @@ from unittest.mock import MagicMock
 
 import pytest
 import pytorch_lightning as pl
-import torch
 from transformers import AutoTokenizer
 
-from lightning_transformers.core.nlp import HFBackboneConfig
-from lightning_transformers.task.nlp.translation import TranslationTransformer, WMT16TranslationDataModule
-from lightning_transformers.task.nlp.translation.config import TranslationConfig, TranslationDataConfig
-from lightning_transformers.task.nlp.translation.data import TranslationDataModule
+from lightning_transformers.task.nlp.translation import (
+    TranslationConfig,
+    TranslationDataConfig,
+    TranslationDataModule,
+    TranslationTransformer,
+    WMT16TranslationDataModule,
+)
 
 
+@pytest.mark.skipif(sys.platform == "win32", reason="Currently Windows is not supported")
 def test_smoke_train(hf_cache_path):
-    class TestModel(TranslationTransformer):
-        def configure_optimizers(self):
-            return torch.optim.AdamW(self.parameters(), lr=1e-5)
-
     tokenizer = AutoTokenizer.from_pretrained(pretrained_model_name_or_path="patrickvonplaten/t5-tiny-random")
-    model = TestModel(backbone=HFBackboneConfig(pretrained_model_name_or_path="patrickvonplaten/t5-tiny-random"))
+    model = TranslationTransformer(pretrained_model_name_or_path="patrickvonplaten/t5-tiny-random")
     dm = WMT16TranslationDataModule(
         cfg=TranslationDataConfig(
             batch_size=1,
@@ -41,18 +40,18 @@ def test_smoke_train(hf_cache_path):
 
 
 @pytest.mark.skipif(sys.platform == "win32", reason="Currently Windows is not supported")
-def test_smoke_train_e2e(script_runner):
-    script_runner.hf_train(task="translation", dataset="wmt16", model="patrickvonplaten/t5-tiny-random")
-
-
-def test_smoke_predict_e2e(script_runner):
-    y = script_runner.hf_predict(['+x="¡Hola Sean!"'], task="translation", model="patrickvonplaten/t5-tiny-random")
+def test_smoke_predict():
+    model = TranslationTransformer(
+        pretrained_model_name_or_path="patrickvonplaten/t5-tiny-random",
+        tokenizer=AutoTokenizer.from_pretrained(pretrained_model_name_or_path="patrickvonplaten/t5-tiny-random"),
+    )
+    y = model.hf_predict("¡Hola Sean!")
     assert len(y) == 1
     assert isinstance(y[0]["translation_text"], str)
 
 
 def test_model_has_correct_cfg():
-    model = TranslationTransformer(HFBackboneConfig(pretrained_model_name_or_path="patrickvonplaten/t5-tiny-random"))
+    model = TranslationTransformer(pretrained_model_name_or_path="patrickvonplaten/t5-tiny-random")
     assert model.hparams.downstream_model_type == "transformers.AutoModelForSeq2SeqLM"
     assert type(model.cfg) is TranslationConfig
 
@@ -60,5 +59,5 @@ def test_model_has_correct_cfg():
 def test_datamodule_has_correct_cfg():
     tokenizer = MagicMock()
     dm = TranslationDataModule(tokenizer)
-    assert type(dm.cfg) is TranslationDataConfig
+    assert isinstance(dm.cfg, TranslationDataConfig)
     assert dm.tokenizer is tokenizer

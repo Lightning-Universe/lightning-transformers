@@ -24,6 +24,7 @@ class HFTransformer(TaskTransformer):
         downstream_model_type: The AutoModel downstream model type.
             See https://huggingface.co/transformers/model_doc/auto.html
         backbone: Config containing backbone specific arguments.
+        pretrained_model_name_or_path: Huggingface model to use if backbone config not passed.
         optimizer: Config containing optimizer specific arguments.
         scheduler: Config containing scheduler specific arguments.
         instantiator: Used to instantiate objects (when using Hydra).
@@ -37,9 +38,10 @@ class HFTransformer(TaskTransformer):
     def __init__(
         self,
         downstream_model_type: str,
-        backbone: HFBackboneConfig,
         optimizer: OptimizerConfig = OptimizerConfig(),
         scheduler: SchedulerConfig = SchedulerConfig(),
+        pretrained_model_name_or_path: Optional[str] = None,
+        backbone: Optional[HFBackboneConfig] = None,
         instantiator: Optional[Instantiator] = None,
         tokenizer: Optional[PreTrainedTokenizerBase] = None,
         pipeline_kwargs: Optional[dict] = None,
@@ -47,7 +49,8 @@ class HFTransformer(TaskTransformer):
     ) -> None:
         self.save_hyperparameters()
         model_cls: Type["AutoModel"] = get_class(downstream_model_type)
-        model = model_cls.from_pretrained(backbone.pretrained_model_name_or_path, **model_data_kwargs)
+        model_path = backbone.pretrained_model_name_or_path if backbone else pretrained_model_name_or_path
+        model = model_cls.from_pretrained(model_path, **model_data_kwargs)
         super().__init__(model=model, optimizer=optimizer, scheduler=scheduler, instantiator=instantiator)
         self._tokenizer = tokenizer  # necessary for hf_pipeline
         self._hf_pipeline = None
