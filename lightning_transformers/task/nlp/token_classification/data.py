@@ -15,6 +15,7 @@ from functools import partial
 from typing import Any, Callable, Dict, Optional
 
 from datasets import ClassLabel, Dataset
+from pytorch_lightning.utilities import rank_zero_warn
 from transformers import DataCollatorForTokenClassification, PreTrainedTokenizerBase
 
 from lightning_transformers.core.nlp import HFDataModule
@@ -34,6 +35,7 @@ class TokenClassificationDataModule(HFDataModule):
     cfg: TokenClassificationDataConfig
 
     def __init__(self, *args, cfg: TokenClassificationDataConfig = TokenClassificationDataConfig(), **kwargs) -> None:
+        self.labels = None
         super().__init__(*args, cfg=cfg, **kwargs)
 
     def process_data(self, dataset: Dataset, stage: Optional[str] = None) -> Dataset:
@@ -89,7 +91,8 @@ class TokenClassificationDataModule(HFDataModule):
     @property
     def num_classes(self) -> int:
         if self.labels is None:
-            raise ValueError("Labels has not been set, have you called `datamodule.setup('fit')`?")
+            rank_zero_warn("Labels has not been set, calling `setup('fit')`.")
+            self.setup("fit")
         return len(self.labels)
 
     @property

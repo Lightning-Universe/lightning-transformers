@@ -56,6 +56,7 @@ class HFDataModule(TokenizerDataModule):
                 name=self.cfg.dataset_config_name,
                 cache_dir=self.cfg.cache_dir,
                 data_files=data_files,
+                revision=self.cfg.revision,
             )
 
         # Load straight from data files

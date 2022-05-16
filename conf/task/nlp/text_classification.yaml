@@ -2,5 +2,5 @@
 defaults:
   - nlp/default
   - override /dataset@_group_: nlp/text_classification/default
-_target_: lightning_transformers.task.nlp..text_classification.TextClassificationTransformer
+_target_: lightning_transformers.task.nlp.text_classification.TextClassificationTransformer
 downstream_model_type: transformers.AutoModelForSequenceClassification
