@@ -78,7 +78,7 @@ def test_training_steps(max_epochs, num_processes, limit_train_batches, modifier
         num_processes=num_processes,
         limit_train_batches=limit_train_batches,
         logger=WABLogger(offline=True),
-        gpus=0,
+        devices=0,
     )
 
     trainer.fit(model, data_module)
