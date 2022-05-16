@@ -16,11 +16,17 @@ from typing import Dict
 from transformers import default_data_collator
 
 from lightning_transformers.core.nlp import HFDataModule
+from lightning_transformers.task.nlp.multiple_choice.config import MultipleChoiceDataConfig
 from lightning_transformers.task.nlp.multiple_choice.utils import DataCollatorForMultipleChoice
 
 
 class MultipleChoiceDataModule(HFDataModule):
     """Defines the ``LightningDataModule`` for Multiple Choice Datasets."""
+
+    cfg: MultipleChoiceDataConfig
+
+    def __init__(self, *args, cfg: MultipleChoiceDataConfig = MultipleChoiceDataConfig(), **kwargs) -> None:
+        super().__init__(*args, cfg=cfg, **kwargs)
 
     @property
     def pad_to_max_length(self):
