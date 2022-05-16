@@ -14,13 +14,13 @@
 from torchmetrics.text.wer import WordErrorRate
 from transformers import Wav2Vec2CTCTokenizer
 
-from lightning_transformers.core.nlp.seq2seq import Seq2SeqTransformer
+from lightning_transformers.core.nlp import HFDataModule
 from lightning_transformers.task.nlp.speech_recognition.config import (
     SpeechRecognitionConfig, SpeechRecognitionDataConfig
 )
 
 
-class SpeechRecognitionTransformer(Seq2SeqTransformer):
+class SpeechRecognitionTransformer(HFDataModule):
     """Defines ``LightningModule`` for the SpeechRecognition Task.
 
     Args:
@@ -40,6 +40,28 @@ class SpeechRecognitionTransformer(Seq2SeqTransformer):
         super().__init__(downstream_model_type, *args, cfg=cfg, **kwargs)
         self.wer = None
 
+    def on_fit_start(self):
+        tokenizer_length = len(self.tokenizer)
+        self.model.resize_token_embeddings(tokenizer_length)
+
+    def _step(self, batch, batch_idx):
+        outputs = self.model(**batch)
+        loss = outputs[0]
+        return loss
+
+    def training_step(self, batch, batch_idx):
+        loss = self._step(batch, batch_idx)
+        self.log("train_loss", loss)
+        return loss
+
+    def validation_step(self, batch, batch_idx, dataloader_idx=0):
+        loss = self._step(batch, batch_idx)
+        self.log("val_loss", loss, sync_dist=True)
+
+    def test_step(self, batch, batch_idx, dataloader_idx=0):
+        loss = self._step(batch, batch_idx)
+        self.log("test_loss", loss, sync_dist=True)
+
     def compute_generate_metrics(self, batch, prefix):
         target = self.tokenize_labels(batch["labels"])
         pred = self.generate(batch["input_ids"], batch["attention_mask"])
@@ -54,11 +76,6 @@ class SpeechRecognitionTransformer(Seq2SeqTransformer):
         super().initialize_model_specific_parameters()
         if isinstance(self.tokenizer, Wav2Vec2CTCTokenizer):
             cfg: SpeechRecognitionDataConfig = self.trainer.datamodule.cfg
-            #tgt_lang = cfg.target_language
-            # set decoder_start_token_id for MBart
-            #if self.model.config.decoder_start_token_id is None:
-                #assert tgt_lang is not None, "mBart requires --target_language"
-                #self.model.config.decoder_start_token_id = self.tokenizer.lang_code_to_id[tgt_lang]
 
     @property
     def hf_pipeline_task(self) -> str:

@@ -13,16 +13,18 @@
 # limitations under the License.
 from dataclasses import dataclass
 
-from lightning_transformers.core.nlp.seq2seq import HFSeq2SeqConfig, Seq2SeqDataConfig
+from lightning_transformers.core.nlp import HFTransformerDataConfig
 
 
 @dataclass
-class SpeechRecognitionConfig(HFSeq2SeqConfig):
-    #n_gram: int = 4
-    #smooth: bool = False
+class SpeechRecognitionConfig(HFTransformerDataConfig):
+    
 
 
 @dataclass
-class SpeechRecognitionDataConfig(Seq2SeqDataConfig):
-    #source_language: str = ""
-    #target_language: str = ""
+class SpeechRecognitionDataConfig(HFTransformerDataConfig):
+    feature_size: int = 1
+    sampling_rate: int = 16000
+    padding_value: float = 0.0
+    do_normalize: bool = True
+    return_attention_mask: bool = False

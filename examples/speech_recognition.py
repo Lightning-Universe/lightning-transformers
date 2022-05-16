@@ -13,11 +13,11 @@ if __name__ == "__main__":
     model = SpeechRecognitionTransformer(
         pretrained_model_name_or_path="facebook/wav2vec2-base",
         cfg=SpeechRecognitionConfig(
-            n_gram=4,
-            smooth=False,
-            val_target_max_length=142,
-            num_beams=None,
-            compute_generate_metrics=True,
+            feature_size=1,
+            sampling_rate=16000,
+            padding_value=0.0,
+            do_normalize=True,
+            return_attention_mask=False
         ),
     )
     dm = SpeechRecognitionDataModule(

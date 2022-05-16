@@ -85,7 +85,7 @@ class LanguageModelingDataModule(HFDataModule):
     @staticmethod
     def tokenize_function(
         examples,
-        tokenizer: Union[PreTrainedTokenizerBase],
+        tokenizer: Union[PreTrainedTokenizerBase, None],
         text_column_name: str = None,
     ):
         return tokenizer(examples[text_column_name])
