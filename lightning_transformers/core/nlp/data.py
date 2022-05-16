@@ -72,7 +72,7 @@ class HFDataModule(TokenizerDataModule):
         # Use special subset names if provided, and rename them back to standard ones
         for subset in ("train", "validation", "test"):
             config_attr = f"{subset}_subset_name"
-            if hasattr(self.cfg, config_attr):
+            if getattr(self.cfg, config_attr) is not None:
                 special_subset_name = getattr(self.cfg, config_attr)
                 if special_subset_name not in dataset:
                     raise KeyError(
