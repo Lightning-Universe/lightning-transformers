@@ -109,7 +109,7 @@ def test_pipeline_kwargs():
     backbone_config = MagicMock()
 
     with patch("lightning_transformers.core.nlp.model.get_class", return_value=cls_mock) as get_class_mock:
-        model = TestModel(downstream_model_type, backbone_config, pipeline_kwargs=dict(device=0), foo="bar")
+        model = TestModel(downstream_model_type, backbone=backbone_config, pipeline_kwargs=dict(device=0), foo="bar")
     get_class_mock.assert_called_once_with(downstream_model_type)
     cls_mock.from_pretrained.assert_called_once_with(backbone_config.pretrained_model_name_or_path, foo="bar")
 

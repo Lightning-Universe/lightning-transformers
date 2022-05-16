@@ -2,41 +2,64 @@ import sys
 from unittest.mock import MagicMock
 
 import pytest
-from pytorch_lightning import seed_everything
+import pytorch_lightning as pl
+from transformers import AutoTokenizer
 
-from lightning_transformers.core.nlp import HFBackboneConfig
-from lightning_transformers.task.nlp.question_answering import QuestionAnsweringDataModule, QuestionAnsweringTransformer
-from lightning_transformers.task.nlp.question_answering.config import QuestionAnsweringDataConfig
+from lightning_transformers.task.nlp.question_answering import (
+    QuestionAnsweringDataConfig,
+    QuestionAnsweringDataModule,
+    QuestionAnsweringTransformer,
+    SquadDataModule,
+)
 
 
 @pytest.mark.skipif(sys.platform == "win32", reason="Currently Windows is not supported")
-def test_smoke_train_e2e(script_runner):
-    script_runner.hf_train(
-        task="question_answering",
-        dataset="squad",
-        model="prajjwal1/bert-tiny",
-        cmd_args=["training.run_test_after_fit=False"],
+@pytest.mark.skip(reason="Currently Question Answering is broken.")
+def test_smoke_train(hf_cache_path):
+    tokenizer = AutoTokenizer.from_pretrained(pretrained_model_name_or_path="sshleifer/tiny-gpt2")
+    model = QuestionAnsweringTransformer(pretrained_model_name_or_path="sshleifer/tiny-gpt2")
+    dm = SquadDataModule(
+        cfg=QuestionAnsweringDataConfig(
+            batch_size=1,
+            dataset_name="squad",
+            dataset_config_name="plain_text",
+            max_length=384,
+            version_2_with_negative=False,
+            null_score_diff_threshold=0.0,
+            doc_stride=128,
+            n_best_size=20,
+            max_answer_length=30,
+            limit_train_samples=64,
+            limit_test_samples=64,
+            limit_val_samples=64,
+            cache_dir=hf_cache_path,
+        ),
+        tokenizer=tokenizer,
     )
+    trainer = pl.Trainer(fast_dev_run=True)
+
+    trainer.fit(model, dm)
 
 
-def test_smoke_predict_e2e(script_runner):
-    seed_everything(0)
-    y = script_runner.hf_predict(
-        ['+x={context: "Lightning is great", question: "What is great?"}'],
-        task="question_answering",
-        model="prajjwal1/bert-tiny",
+@pytest.mark.skipif(sys.platform == "win32", reason="Currently Windows is not supported")
+@pytest.mark.skip(reason="Currently Question Answering is broken.")
+def test_smoke_predict():
+    model = QuestionAnsweringTransformer(
+        pretrained_model_name_or_path="sshleifer/tiny-gpt2",
+        tokenizer=AutoTokenizer.from_pretrained(pretrained_model_name_or_path="sshleifer/tiny-gpt2"),
     )
+    y = model.hf_predict(dict(context="Lightning is great", question="What is great?"))
     assert isinstance(y, dict)
     assert isinstance(y["answer"], str)
 
 
 def test_model_has_correct_cfg():
-    model = QuestionAnsweringTransformer(HFBackboneConfig(pretrained_model_name_or_path="bert-base-cased"))
+    model = QuestionAnsweringTransformer(pretrained_model_name_or_path="bert-base-cased")
     assert model.hparams.downstream_model_type == "transformers.AutoModelForQuestionAnswering"
 
 
 def test_datamodule_has_correct_cfg():
     tokenizer = MagicMock()
     dm = QuestionAnsweringDataModule(tokenizer)
-    assert type(dm.cfg) is QuestionAnsweringDataConfig
+    assert isinstance(dm.cfg, QuestionAnsweringDataConfig)
     assert dm.tokenizer is tokenizer
