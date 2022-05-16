@@ -18,13 +18,13 @@ from lightning_transformers.core.nlp import HFTransformerDataConfig
 
 @dataclass
 class SpeechRecognitionConfig(HFTransformerDataConfig):
-    
+    do_normalize: bool = True
+    return_attention_mask: bool = False
 
 
 @dataclass
 class SpeechRecognitionDataConfig(HFTransformerDataConfig):
-    feature_size: int = 1
+    max_length = 5
     sampling_rate: int = 16000
-    padding_value: float = 0.0
-    do_normalize: bool = True
-    return_attention_mask: bool = False
+    padding: float = 0.0
+    

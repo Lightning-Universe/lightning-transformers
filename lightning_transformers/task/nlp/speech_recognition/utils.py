@@ -13,10 +13,16 @@
 # limitations under the License.
 
 from dataclasses import dataclass
-from typing import Optional, Union
+from typing import (
+    Optional,
+    Union,
+    List,
+    Dict
+)
 
 import torch
-from transformers.tokenization_utils_base import PaddingStrategy, PreTrainedTokenizerBase, PretrainedConfig
+from transformers.tokenization_utils_base import PaddingStrategy, PreTrainedTokenizerBase
+from transformers import ProcessorMixin
 
 
 @dataclass
@@ -24,7 +30,7 @@ class DataCollatorCTCWithPadding:
     """
     Data collator that will dynamically pad the inputs received.
     Args:
-        processor (:class:`~transformers.Wav2Vec2Processor`)
+        processor (:class:`~transformers.ProcessorMixin`)
             The processor used for proccessing the data.
         padding (:obj:`bool`, :obj:`str` or :class:`~transformers.tokenization_utils_base.PaddingStrategy`, `optional`, defaults to :obj:`True`):
             Select a strategy to pad the returned sequences (according to the model's padding side and padding index)
@@ -45,7 +51,7 @@ class DataCollatorCTCWithPadding:
             7.5 (Volta).
     """
 
-    processor: Wav2Vec2Processor
+    processor: ProcessorMixin
     padding: Union[bool, str] = True
     max_length: Optional[int] = None
     max_length_labels: Optional[int] = None

@@ -11,6 +11,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+from functools import partial
 from typing import (
     Tuple,
     List,
@@ -19,21 +20,22 @@ from typing import (
     Dict
 )
 
-from lightning_transformers.core.nlp.seq2seq import Seq2SeqDataModule
+from datasets import Dataset
+from lightning_transformers.core.nlp import HFDataModule
 from lightning_transformers.task.nlp.speech_recognition.config import SpeechRecognitionDataConfig
 
 import torch
 from transformers import default_data_collator
 
 
-class SpeechRecognitionDataModule(Seq2SeqDataModule):
+class SpeechRecognitionDataModule(HFDataModule):
     """Defines the ``LightningDataModule`` for Translation Datasets.
 
     Args:
-        *args: ``Seq2SeqDataModule`` specific arguments.
+        *args: ``SpeechRecognitionDataModule`` specific arguments.
         cfg: Contains data specific parameters when processing/loading the dataset
             (Default ``SpeechRecognitionDataConfig``)
-        **kwargs: ``Seq2SeqDataModule`` specific arguments.
+        **kwargs: ``SpeechRecognitionDataModule`` specific arguments.
     """
 
     cfg: SpeechRecognitionDataConfig
@@ -45,18 +47,54 @@ class SpeechRecognitionDataModule(Seq2SeqDataModule):
         **kwargs
     ) -> None:
         super().__init__(*args, cfg=cfg, **kwargs)
+        input_fields="file"
+        target_fields="text"
+        train_file="data/train.json"
+        test_file="data/test.json"
 
-    @property
-    def source_target_column_names(self) -> Tuple[str, str]:
-        return self.cfg.source_language, self.cfg.target_language
+    def process_data(self, dataset: Dataset, stage: Optional[str] = None) -> Dataset:
+        train = stage == "fit"
+        column_names = dataset["train" if train else "validation"].column_names
 
-    def prepare_dataset(self, batch):
-        audio = batch["audio"]
+        audio_column_name = "audio" if "audio" in column_names else column_names[0]
+        sentence_column_name = "sentence" if "sentence" in column_names else column_names[1]
+        self.sentence_column_name = sentence_column_name
 
-        # batched output is "un-batched" to ensure mapping is correct
-        batch["input_values"] = processor(audio["array"], sampling_rate=audio["sampling_rate"]).input_values[0]
-        
-        with processor.as_target_processor():
-            batch["labels"] = processor(batch["text"]).input_ids
-        return batch
+        kwargs = {
+            "tokenizer": self.tokenizer,
+            "pad_on_right": self.tokenizer.padding_side == "right",
+            "audio_column_name": audio_column_name,
+            "sentence_column_name": sentence_column_name,
+            "max_length": self.cfg.max_length,
+            "padding": self.cfg.padding,
+            "sampling_rate": self.cfg.sampling_rate,
+        }
+
+        prepare_train_features = partial(self.convert_to_train_features, **kwargs)
+
+        if train:
+            dataset["train"] = dataset["train"].map(
+                prepare_train_features,
+                batched=True,
+                num_proc=self.cfg.preprocessing_num_workers,
+                remove_columns=column_names,
+                load_from_cache_file=self.cfg.load_from_cache_file,
+            )
+
+        if "test" not in dataset:
+            kwargs.pop("sentence_column_name")
+            prepare_validation_features = partial(
+                self.convert_to_validation_features, example_id_strings=self.example_id_strings, **kwargs
+            )
+            dataset["validation_original"] = dataset["validation"]  # keep an original copy for computing metrics
+            dataset["validation"] = dataset["validation"].map(
+                prepare_validation_features,
+                batched=True,
+                num_proc=self.cfg.preprocessing_num_workers,
+                remove_columns=column_names,
+                # Legacy code `prepare_validation_features` must run to populate `self.example_id_strings`
+                # Therefore we cannot load from cache here
+                load_from_cache_file=False,
+            )
+        return dataset
 
