@@ -27,6 +27,9 @@ class HFTransformerDataConfig(TransformerDataConfig):
     limit_train_samples: Optional[int] = None
     limit_val_samples: Optional[int] = None
     limit_test_samples: Optional[int] = None
+    train_subset_name: Optional[str] = None
+    validation_subset_name: Optional[str] = None
+    test_subset_name: Optional[str] = None
 
 
 @dataclass

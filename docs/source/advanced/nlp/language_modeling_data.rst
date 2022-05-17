@@ -1,18 +1,10 @@
 Language Modeling using Custom Data Processing
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Below we show an example of how to override data processing logic. In this example, we add a prefix to each block of text used in the language modeling task.
+Below we show how to override data processing logic.
 
-This reflects the idea of passing a conditional term that is used to give the language model context. Check :doc:`/tasks/nlp/language_modeling` for more information around the task.
-
-Ultimately to create your own custom data processing the flow is like this:
-
-1. Extend the ``LanguageModelingDataModule`` base class, Override hooks with your own logic
-2. (Optional) Keep file in the specific task directory
-3. Add a hydra config object to use your new dataset
-
-1. Extend the ``LanguageModelingDataModule`` base class
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""
+Extend the ``LanguageModelingDataModule`` base class
+""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 The base data module can be used to modify this code, and follows a simple pattern. Internally the dataset is loaded via HuggingFace Datasets, which returns an `Apache Arrow Parquet <https://arrow.apache.org/docs/python/generated/pyarrow.parquet.ParquetDataset.html>`_ Dataset. This data format is easy to transform and modify using map functions, which you'll see within the class.
 
@@ -105,33 +97,3 @@ Below we have the pseudo code version to show where most of the changes happened
             }
             result["labels"] = result["input_ids"].copy()
             return result
-
-
-To see the full example, see ``examples/custom/dataset/language_modeling/custom_dataset.py``
-
-2. (Optional) Keep file in the specific task directory
-""""""""""""""""""""""""""""""""""""""""""""""""""""""
-
-This makes tracking of files easier. Our example is stored in ``examples/`` however in reality we would store our DataModule in ``lightning_transformers/task/nlp/language_modeling/custom_dataset.py``.
-
-3. Add a hydra config object to use your new dataset
-""""""""""""""""""""""""""""""""""""""""""""""""""""
-
-Finally to use the Hydra CLI and configs, we would add our own custom yaml file containing the necessary code to run using our dataset.
-
-We create a file at ``conf/datasets/nlp/language_modeling/my_dataset.yaml`` containing the below config.
-
-.. code-block:: yaml
-
-    # @package dataset
-    defaults:
-      - nlp/default # Use the defaults from the default config found at `conf/dataset/nlp/default.yaml`
-    _target_: lightning_transformers.custom_language_modeling.dataset.MyLanguageModelingDataModule # path to the class we'd like to instantiate
-    cfg:
-      block_size: 512 # any parameters you'd like from the inherited config object.
-
-With this in place you can now train using either HuggingFace Datasets or your own custom files.
-
-.. code-block:: bash
-
-    python train.py task=nlp/language_modeling dataset=nlp/language_modeling/my_dataset dataset.cfg.train_file=train.csv dataset.cfg.validation_file=valid.csv

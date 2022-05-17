@@ -24,37 +24,46 @@ Language Models pre-trained or fine-tuned to the Causal Language Modeling task c
 
 .. code-block:: python
 
-    python train.py task=nlp/language_modeling dataset=nlp/language_modeling/wikitext
+    import pytorch_lightning as pl
+    from transformers import AutoTokenizer
 
-Swap to GPT backbone:
+    from lightning_transformers.task.nlp.language_modeling import (
+        LanguageModelingDataConfig,
+        LanguageModelingDataModule,
+        LanguageModelingTransformer,
+    )
 
-.. code-block:: python
+    tokenizer = AutoTokenizer.from_pretrained(pretrained_model_name_or_path="gpt2")
+    model = LanguageModelingTransformer(pretrained_model_name_or_path="gpt2")
+    dm = LanguageModelingDataModule(
+        cfg=LanguageModelingDataConfig(
+            batch_size=1,
+            dataset_name="wikitext",
+            dataset_config_name="wikitext-2-raw-v1",
+        ),
+        tokenizer=tokenizer,
+    )
+    trainer = pl.Trainer(accelerator="auto", devices="auto", max_epochs=1)
 
-    python train.py task=nlp/language_modeling dataset=nlp/language_modeling/wikitext backbone.pretrained_model_name_or_path=gpt2
+    trainer.fit(model, dm)
 
-We report the Cross Entropy Loss for validation. Find all options available for the task `here <https://github.com/PyTorchLightning/lightning-transformers/blob/master/conf/task/nlp/language_modeling.yaml>`_.
+
+We report the Cross Entropy Loss for validation.
 
 .. include:: /datasets/nlp/language_modeling_data.rst
 
-Language Modeling Inference Pipeline (experimental)
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Language Modeling Inference Pipeline
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 By default we use the text generation pipeline, which requires a conditional input string and generates an output string.
 
-For Hydra to correctly parse your input argument, if your input contains any special characters you must either wrap the entire call in single quotes like `'+x="my, sentence"'` or escape special characters. See `Escaped characters in unquoted values <https://hydra.cc/docs/advanced/override_grammar/basic/#escaped-characters-in-unquoted-values>`_.
-
 .. code-block:: python
 
-    python predict.py task=nlp/language_modeling +checkpoint_path=/path/to/model.ckpt +x="Condition sentence for the language model"
+    from transformers import AutoTokenizer
+    from lightning_transformers.task.nlp.language_modeling import LanguageModelingTransformer
 
-You can also run prediction using a default HuggingFace pre-trained model:
-
-.. code-block:: python
-
-   python predict.py task=nlp/language_modeling +x="Condition sentence for the language model"
-
-Or run prediction on a specified HuggingFace pre-trained model:
-
-.. code-block:: python
-
-   python predict.py task=nlp/language_modeling backbone.pretrained_model_name_or_path=bert-base-cased +x="Condition sentence for the language model"
+    model = LanguageModelingTransformer(
+            pretrained_model_name_or_path="prajjwal1/bert-tiny",
+            tokenizer=AutoTokenizer.from_pretrained(pretrained_model_name_or_path="prajjwal1/bert-tiny"),
+        )
+    model.hf_predict("The house:")

@@ -14,6 +14,7 @@
 from typing import Any, Dict, List, Optional
 
 from datasets import ClassLabel, Dataset
+from pytorch_lightning.utilities import rank_zero_warn
 from transformers import PreTrainedTokenizerBase
 
 from lightning_transformers.core.nlp import HFDataModule
@@ -27,6 +28,7 @@ class TextClassificationDataModule(HFDataModule):
 
     def __init__(self, *args, cfg: TextClassificationDataConfig = TextClassificationDataConfig(), **kwargs) -> None:
         super().__init__(*args, cfg=cfg, **kwargs)
+        self.labels = None
 
     def process_data(self, dataset: Dataset, stage: Optional[str] = None) -> Dataset:
         input_feature_fields = [k for k, v in dataset["train"].features.items() if k not in ["label", "idx"]]
@@ -50,6 +52,9 @@ class TextClassificationDataModule(HFDataModule):
 
     @property
     def num_classes(self) -> int:
+        if self.labels is None:
+            rank_zero_warn("Labels has not been set, calling `setup('fit')`.")
+            self.setup("fit")
         return self.labels.num_classes
 
     @property
