@@ -16,10 +16,10 @@ from typing import Any, Dict
 import torch
 from torchmetrics import Accuracy, Precision, Recall
 
-from lightning_transformers.core.nlp import HFTransformer
+from lightning_transformers.core import TaskTransformer
 
 
-class TextClassificationTransformer(HFTransformer):
+class TextClassificationTransformer(TaskTransformer):
     """Defines ``LightningModule`` for the Text Classification Task.
 
     Args:

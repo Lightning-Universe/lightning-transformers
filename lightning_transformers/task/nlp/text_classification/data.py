@@ -17,11 +17,11 @@ from datasets import ClassLabel, Dataset
 from pytorch_lightning.utilities import rank_zero_warn
 from transformers import PreTrainedTokenizerBase
 
-from lightning_transformers.core.nlp import HFDataModule
+from lightning_transformers.core import TransformerDataModule
 from lightning_transformers.task.nlp.text_classification.config import TextClassificationDataConfig
 
 
-class TextClassificationDataModule(HFDataModule):
+class TextClassificationDataModule(TransformerDataModule):
     """Defines the ``LightningDataModule`` for Text Classification Datasets."""
 
     cfg: TextClassificationDataConfig

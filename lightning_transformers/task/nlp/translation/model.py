@@ -14,7 +14,7 @@
 from torchmetrics.text.bleu import BLEUScore
 from transformers import MBartTokenizer
 
-from lightning_transformers.core.nlp.seq2seq import Seq2SeqTransformer
+from lightning_transformers.core.seq2seq.model import Seq2SeqTransformer
 from lightning_transformers.task.nlp.translation.config import TranslationConfig, TranslationDataConfig
 
 

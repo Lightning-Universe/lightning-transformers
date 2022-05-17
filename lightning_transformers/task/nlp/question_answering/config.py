@@ -19,11 +19,11 @@
 from dataclasses import dataclass, field
 from typing import Optional
 
-from lightning_transformers.core.nlp import HFTransformerDataConfig
+from lightning_transformers.core.config import TransformerDataConfig
 
 
 @dataclass
-class QuestionAnsweringDataConfig(HFTransformerDataConfig):
+class QuestionAnsweringDataConfig(TransformerDataConfig):
     """Arguments pertaining to what data we are going to input our model for training and eval."""
 
     max_length: int = field(

@@ -22,5 +22,5 @@ Task API Reference
 .. autoclass:: lightning_transformers.task.nlp.translation.TranslationTransformer
     :noindex:
 
-.. autoclass:: lightning_transformers.core.nlp.HFTransformer
+.. autoclass:: lightning_transformers.core.TaskTransformer
     :noindex:

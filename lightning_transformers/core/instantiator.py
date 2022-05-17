@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 import logging
-from typing import TYPE_CHECKING, Optional, Union
+from typing import TYPE_CHECKING, Optional
 
 import hydra
 import pytorch_lightning as pl
@@ -20,7 +20,6 @@ import torch
 from omegaconf import DictConfig
 
 from lightning_transformers.core import TransformerDataModule
-from lightning_transformers.core.data import TokenizerDataModule
 
 if TYPE_CHECKING:
     # avoid circular imports
@@ -96,7 +95,7 @@ class HydraInstantiator(Instantiator):
         self,
         cfg: DictConfig,
         tokenizer: Optional[DictConfig] = None,
-    ) -> Union[TransformerDataModule, TokenizerDataModule]:
+    ) -> TransformerDataModule:
         if tokenizer:
             return self.instantiate(cfg, tokenizer=self.instantiate(tokenizer))
         return self.instantiate(cfg)

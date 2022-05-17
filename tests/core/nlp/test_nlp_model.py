@@ -19,9 +19,14 @@ import torch
 from pytorch_lightning import LightningModule, Trainer
 from torch.optim.lr_scheduler import LambdaLR
 from torch.utils.data import DataLoader, Dataset
+from transformers import AutoTokenizer
 
 from lightning_transformers.core import TaskTransformer
-from lightning_transformers.core.nlp import HFTransformer
+from lightning_transformers.task.nlp.text_classification import (
+    TextClassificationDataConfig,
+    TextClassificationDataModule,
+    TextClassificationTransformer,
+)
 
 
 class RandomDataset(Dataset):
@@ -99,7 +104,7 @@ class BoringModel(LightningModule):
 
 
 def test_pipeline_kwargs():
-    class TestModel(HFTransformer):
+    class TestModel(TaskTransformer):
         @property
         def hf_pipeline_task(self):
             return "task_name"
@@ -108,35 +113,38 @@ def test_pipeline_kwargs():
     cls_mock = MagicMock()
     backbone_config = MagicMock()
 
-    with patch("lightning_transformers.core.nlp.model.get_class", return_value=cls_mock) as get_class_mock:
+    with patch("lightning_transformers.core.model.get_class", return_value=cls_mock) as get_class_mock:
         model = TestModel(downstream_model_type, backbone=backbone_config, pipeline_kwargs=dict(device=0), foo="bar")
     get_class_mock.assert_called_once_with(downstream_model_type)
     cls_mock.from_pretrained.assert_called_once_with(backbone_config.pretrained_model_name_or_path, foo="bar")
 
-    with patch("lightning_transformers.core.nlp.model.hf_transformers_pipeline") as pipeline_mock:
+    with patch("lightning_transformers.core.model.hf_transformers_pipeline") as pipeline_mock:
         model.hf_pipeline
         pipeline_mock.assert_called_once_with(
             task="task_name", model=cls_mock.from_pretrained.return_value, tokenizer=None, device=0
         )
 
 
-def test_task_transformer_default_optimizer_scheduler():
-    class TestTransformer(TaskTransformer):
-        def training_step(self, batch, batch_idx):
-            output = self.model(batch)
-            loss = self.model.loss(batch, output)
-            return {"loss": loss}
-
-        def train_dataloader(self):
-            return self.model.train_dataloader()
-
-    model = TestTransformer(
-        model=BoringModel(),
+def test_task_transformer_default_optimizer_scheduler(hf_cache_path):
+    tokenizer = AutoTokenizer.from_pretrained(pretrained_model_name_or_path="prajjwal1/bert-tiny")
+    dm = TextClassificationDataModule(
+        cfg=TextClassificationDataConfig(
+            batch_size=1,
+            dataset_name="glue",
+            dataset_config_name="sst2",
+            max_length=512,
+            limit_test_samples=64,
+            limit_val_samples=64,
+            limit_train_samples=64,
+            cache_dir=hf_cache_path,
+        ),
+        tokenizer=tokenizer,
     )
+    model = TextClassificationTransformer(pretrained_model_name_or_path="prajjwal1/bert-tiny")
 
     trainer = Trainer(fast_dev_run=True, limit_val_batches=0, limit_test_batches=0)
     with pytest.warns(UserWarning, match="You haven't specified an optimizer or lr scheduler."):
-        trainer.fit(model)
-
-    assert isinstance(model.optimizer, torch.optim.AdamW)
-    assert isinstance(model.scheduler, LambdaLR)
+        trainer.fit(model, dm)
+    x = model.configure_optimizers()
+    assert isinstance(x["optimizer"], torch.optim.AdamW)
+    assert isinstance(x["lr_scheduler"]["scheduler"], LambdaLR)

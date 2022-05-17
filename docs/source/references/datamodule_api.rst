@@ -22,8 +22,8 @@ DataModule API Reference
 .. autoclass:: lightning_transformers.task.nlp.translation.TranslationDataModule
     :noindex:
 
-.. autoclass:: lightning_transformers.core.nlp.seq2seq.Seq2SeqDataModule
+.. autoclass:: lightning_transformers.core.seq2seq.Seq2SeqDataModule
     :noindex:
 
-.. autoclass:: lightning_transformers.core.nlp.HFDataModule
+.. autoclass:: lightning_transformers.core.TransformerDataModule
     :noindex:
