@@ -9,7 +9,6 @@ ______________________________________________________________________
 <p align="center">
   <a href="https://lightning-transformers.readthedocs.io/">Docs</a> •
   <a href="#community">Community</a> •
-  <a href="#license">License</a>
 </p>
 
 ______________________________________________________________________
