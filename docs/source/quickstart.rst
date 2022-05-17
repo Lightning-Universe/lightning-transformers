@@ -50,7 +50,7 @@ Here is an example of training `bert-base-cased <https://huggingface.co/bert-bas
 
 
 Changing the Optimizer
---------------------
+----------------------
 
 Swapping to the RMSProp optimizer:
 
