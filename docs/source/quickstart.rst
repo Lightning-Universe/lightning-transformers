@@ -3,12 +3,13 @@
 Quick Start
 ===========
 
-Lightning Transformers provides LightningModules, LightningDataModules and Strategies to use 🤗 Transformers with the PyTorch Lightning Trainer.
+.. include:: installation.rst
+
 
 Using Lightning-Transformers
 ****************************
 
-Lightning Transformers has a collections of tasks for common NLP problems such as :ref:`language_modeling`, :ref:`translation` and more. To use, simply:
+Lightning Transformers provides LightningModules, LightningDataModules and Strategies to use 🤗 Transformers with the PyTorch Lightning Trainer, supporting tasks such as:ref:`language_modeling`, :ref:`translation` and more. To use, simply:
 
 1. Pick a task to train (`LightningModule`)
 
