@@ -3,9 +3,7 @@
 Quick Start
 ===========
 
-
-.. include:: installation.rst
-
+Lightning Transformers provides LightningModules, LightningDataModules and Strategies to use 🤗 Transformers with the PyTorch Lightning Trainer.
 
 Using Lightning-Transformers
 ****************************
