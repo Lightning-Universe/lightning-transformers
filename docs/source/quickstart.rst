@@ -12,105 +12,118 @@ Using Lightning-Transformers
 
 Lightning Transformers has a collections of tasks for common NLP problems such as :ref:`language_modeling`, :ref:`translation` and more. To use, simply:
 
-1. Pick a task to train (passed to ``train.py`` as ``task=``)
+1. Pick a task to train (`LightningModule`)
 
-2. Pick a dataset (passed to ``train.py`` as ``dataset=``)
+2. Pick a dataset (`LightningDataModule`)
 
-3. Customize the backbone, optimizer, or any component within the config
+3. Use any `PyTorch Lightning parameters and optimizations <https://pytorch-lightning.readthedocs.io/en/stable/common/trainer.html>`_
 
-4. Add any `Lightning supported parameters and optimizations <https://pytorch-lightning.readthedocs.io/en/stable/common/trainer.html>`_
-
-.. code-block:: python
-
-   python train.py \
-        task=<TASK> \
-        dataset=<DATASET> \
-        backbone.pretrained_model_name_or_path=<BACKBONE> # Optionally change the HF backbone
-        optimizer=<OPTIMIZER> # Optionally specify optimizer (Default AdamW)
-        trainer.<ANY_TRAINER_FLAGS> # Optionally specify Lightning trainer arguments
-
-Finetuning
-----------
-
-In this example we will finetune the :ref:`text_classification` task on the `emotion <https://huggingface.co/datasets/emotion>`_ dataset.
-
-To fine-tune using the Text Classification default `bert-based-cased <https://huggingface.co/bert-base-cased>`_ model, use the following:
+Here is an example of training `bert-base-cased <https://huggingface.co/bert-base-cased>`__ on the `CARER <https://huggingface.co/datasets/emotion>`__ emotion dataset using the Text Classification task.
 
 .. code-block:: python
 
-   python train.py task=nlp/text_classification dataset=nlp/text_classification/emotion
+    import pytorch_lightning as pl
+    from transformers import AutoTokenizer
 
-Change the Backbone
--------------------
+    from lightning_transformers.task.nlp.text_classification import (
+        TextClassificationDataModule,
+        TextClassificationTransformer,
+        TextClassificationDataConfig,
+    )
 
-Swap to the `RoBERTa <https://huggingface.co/roberta-base>`_ model:
+    tokenizer = AutoTokenizer.from_pretrained(
+        pretrained_model_name_or_path="bert-base-cased"
+    )
+    dm = TextClassificationDataModule(
+        cfg=TextClassificationDataConfig(
+            batch_size=1,
+            dataset_name="emotion",
+            max_length=512,
+        ),
+        tokenizer=tokenizer,
+    )
+    model = TextClassificationTransformer(pretrained_model_name_or_path="bert-base-cased")
 
-.. code-block:: python
+    trainer = pl.Trainer(accelerator="auto", devices="auto", max_epochs=1)
 
-   python train.py task=nlp/text_classification dataset=nlp/text_classification/emotion backbone.pretrained_model_name_or_path=roberta-base
+    trainer.fit(model, dm)
 
-Change the Optimizer
+
+Changing the Optimizer
 --------------------
 
-Swap to using RMSProp optimizer (see `conf/optimizer/ <https://github.com/PyTorchLightning/lightning-transformers/tree/master/conf/optimizer>`_ for all supported optimizers):
+Swapping to the RMSProp optimizer:
 
 .. code-block:: python
 
-   python train.py task=nlp/text_classification dataset=nlp/text_classification/emotion optimizer=rmsprop
+    import pytorch_lightning as pl
+    import torch
+    import transformers
+    from transformers import AutoTokenizer
 
-For more info on how to override configuration, see :ref:`conf`.
+    from lightning_transformers.task.nlp.text_classification import (
+        TextClassificationDataModule,
+        TextClassificationTransformer,
+        TextClassificationDataConfig,
+    )
 
-Lightning Trainer Options
---------------------------
 
-We expose all `Pytorch Lightning Trainer <https://pytorch-lightning.readthedocs.io/en/stable/common/trainer.html>`_ parameters via the ``trainer`` config. This makes it easy to configure the Lightning Trainer without touching the code.
+    class RMSPropTransformer(TextClassificationTransformer):
+        def configure_optimizers(self):
+            optimizer = torch.optim.AdamW(self.parameters(), lr=1e-5)
+            # automatically find the total number of steps we need!
+            num_training_steps, num_warmup_steps = self.compute_warmup(self.num_training_steps, num_warmup_steps=0.1)
+            scheduler = transformers.get_linear_schedule_with_warmup(
+                self.optimizer, num_warmup_steps=num_warmup_steps, num_training_steps=num_training_steps
+            )
+            return {
+                "optimizer": optimizer,
+                "lr_scheduler": {"scheduler": scheduler, "interval": "step", "frequency": 1},
+            }
 
-Below we enable `Pytorch Lightning Native 16bit precision <https://pytorch-lightning.readthedocs.io/en/latest/amp.html#gpu-16-bit>`_ by setting the parameter via the CLI:
+
+    tokenizer = AutoTokenizer.from_pretrained(
+        pretrained_model_name_or_path="bert-base-cased"
+    )
+    dm = TextClassificationDataModule(
+        cfg=TextClassificationDataConfig(
+            batch_size=1,
+            dataset_name="emotion",
+            max_length=512,
+        ),
+        tokenizer=tokenizer,
+    )
+    model = RMSPropTransformer(pretrained_model_name_or_path="bert-base-cased")
+
+    trainer = pl.Trainer(accelerator="auto", devices="auto", max_epochs=1)
+
+    trainer.fit(model, dm)
+
+
+Enabling DeepSpeed/Sharded/Mixed Precision and more is super simple through the Lightning Trainer.
 
 .. code-block:: python
 
-   python train.py task=nlp/text_classification dataset=nlp/text_classification/emotion trainer.precision=16
+    # enable DeepSpeed with 16bit precision
+    trainer = pl.Trainer(accelerator="auto", devices="auto", max_epochs=1, strategy='deepspeed', precision=16)
 
+    # enable DeepSpeed ZeRO Stage 3 with BFLOAT16 precision
+    trainer = pl.Trainer(accelerator="auto", devices="auto", max_epochs=1, strategy='deepspeed_stage_3_offload', precision="bf16")
 
-Setting the maximum epochs:
-
-.. code-block:: python
-
-    python train.py task=nlp/translation dataset=nlp/translation/wmt16 trainer.max_epochs=4
-
-Using multiple GPUs:
-
-.. code-block:: python
-
-    python train.py task=nlp/translation dataset=nlp/translation/wmt16 trainer.gpus=4
-
-Using TPUs:
-
-.. code-block:: python
-
-    python train.py task=nlp/translation dataset=nlp/translation/wmt16 trainer.tpu_cores=8
-
-See the `Pytorch Lightning Trainer <https://pytorch-lightning.readthedocs.io/en/stable/common/trainer.html>`_  or `conf/trainer/default <https://github.com/PyTorchLightning/lightning-transformers/blob/master/conf/trainer/default.yaml>`_ for all parameters.
+    # enable Sharded Training with 16bit precision
+    trainer = pl.Trainer(accelerator="auto", devices="auto", max_epochs=1, strategy='ddp_sharded', precision=16)
 
 Inference
 ---------
 
-Run inference once model trained (experimental):
-
 .. code-block:: python
 
-   python predict.py task=nlp/text_classification +checkpoint_path=/path/to/model.ckpt +x="Classify this sentence."
+    from transformers import AutoTokenizer
+    from lightning_transformers.task.nlp.text_classification import TextClassificationTransformer
 
+    model = TextClassificationTransformer(
+        pretrained_model_name_or_path="bert-base-uncased",
+        tokenizer=AutoTokenizer.from_pretrained(pretrained_model_name_or_path="bert-base-uncased"),
+    )
+    model.hf_predict("Lightning rocks!")
    # Returns [{'label': 'LABEL_0', 'score': 0.545...}]
-
-You can also run prediction using the default HuggingFace pre-trained model:
-
-.. code-block:: python
-
-   python predict.py task=nlp/text_classification +x="Classify this sentence."
-
-Or run prediction on a specified HuggingFace pre-trained model:
-
-.. code-block:: python
-
-   python predict.py task=nlp/text_classification backbone.pretrained_model_name_or_path=bert-base-cased +x="Classify this sentence."
