@@ -3,11 +3,16 @@ import shutil
 
 import pytest
 from pytorch_lightning import Trainer
+from transformers import AutoTokenizer
 
 from lightning_transformers.callbacks import TransformerSparseMLCallback
 from lightning_transformers.core.loggers import WABLogger
+from lightning_transformers.task.nlp.text_classification import (
+    TextClassificationDataConfig,
+    TextClassificationDataModule,
+    TextClassificationTransformer,
+)
 from lightning_transformers.utilities.imports import _BOLTS_AVAILABLE
-from tests.core.boring_model import BoringDataModule, BoringTransformerModel
 
 if _BOLTS_AVAILABLE:
     from pl_bolts.utils import _SPARSEML_AVAILABLE
@@ -59,7 +64,7 @@ set_weight_decay_modifier = """
 @pytest.mark.skipif(not _BOLTS_AVAILABLE, reason="pytorch-lightning bolts not available")
 @pytest.mark.skipif(not _SPARSEML_AVAILABLE, reason="SparseML is not available")
 @pytest.mark.skip(reason="Test current failing.")
-def test_training_steps(max_epochs, num_processes, limit_train_batches, modifier):
+def test_training_steps(max_epochs, num_processes, limit_train_batches, modifier, hf_cache_path):
     cwd = os.getcwd()
     output_dir = os.path.join(cwd, "MODELS")
     recipe_path = os.path.join(cwd, "recipe.yaml")
@@ -68,9 +73,21 @@ def test_training_steps(max_epochs, num_processes, limit_train_batches, modifier
     with open(recipe_path, "w") as file_handler:
         file_handler.write(modifier)
 
-    model = BoringTransformerModel()
-
-    data_module = BoringDataModule()
+    tokenizer = AutoTokenizer.from_pretrained(pretrained_model_name_or_path="prajjwal1/bert-tiny")
+    dm = TextClassificationDataModule(
+        cfg=TextClassificationDataConfig(
+            batch_size=1,
+            dataset_name="glue",
+            dataset_config_name="sst2",
+            max_length=512,
+            limit_test_samples=64,
+            limit_val_samples=64,
+            limit_train_samples=64,
+            cache_dir=hf_cache_path,
+        ),
+        tokenizer=tokenizer,
+    )
+    model = TextClassificationTransformer(pretrained_model_name_or_path="prajjwal1/bert-tiny")
 
     trainer = Trainer(
         callbacks=TransformerSparseMLCallback(output_dir, recipe_path),
@@ -81,7 +98,7 @@ def test_training_steps(max_epochs, num_processes, limit_train_batches, modifier
         devices=0,
     )
 
-    trainer.fit(model, data_module)
+    trainer.fit(model, dm)
 
     # delete yaml file
     if os.path.exists(recipe_path):
