@@ -13,11 +13,11 @@
 # limitations under the License.
 from dataclasses import dataclass, field
 
-from lightning_transformers.core.nlp import HFTransformerDataConfig
+from lightning_transformers.core.config import TransformerDataConfig
 
 
 @dataclass
-class MaskedLanguageModelingDataConfig(HFTransformerDataConfig):
+class MaskedLanguageModelingDataConfig(TransformerDataConfig):
     mlm_probability: float = field(
         default=0.15,
         metadata={"help": "Ratio of tokens to mask for masked language modeling loss"},

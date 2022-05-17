@@ -21,7 +21,6 @@ from torch.optim.lr_scheduler import LambdaLR
 from torch.utils.data import DataLoader, Dataset
 
 from lightning_transformers.core import TaskTransformer
-from lightning_transformers.core.nlp import HFTransformer
 
 
 class RandomDataset(Dataset):
@@ -99,7 +98,7 @@ class BoringModel(LightningModule):
 
 
 def test_pipeline_kwargs():
-    class TestModel(HFTransformer):
+    class TestModel(TaskTransformer):
         @property
         def hf_pipeline_task(self):
             return "task_name"
@@ -131,6 +130,7 @@ def test_task_transformer_default_optimizer_scheduler():
             return self.model.train_dataloader()
 
     model = TestTransformer(
+        downstream_model_type="transformers.AutoModelForSeq2SeqLM",
         model=BoringModel(),
     )
 

@@ -13,9 +13,9 @@
 # limitations under the License.
 from dataclasses import dataclass
 
-from lightning_transformers.core.nlp import HFTransformerDataConfig
+from lightning_transformers.core.config import TransformerDataConfig
 
 
 @dataclass
-class LanguageModelingDataConfig(HFTransformerDataConfig):
+class LanguageModelingDataConfig(TransformerDataConfig):
     block_size: int = 128

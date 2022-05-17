@@ -18,11 +18,11 @@ from datasets import Dataset
 from pytorch_lightning import _logger as log
 from transformers import PreTrainedTokenizerBase, default_data_collator
 
-from lightning_transformers.core.nlp import HFDataModule
+from lightning_transformers.core import TransformerDataModule
 from lightning_transformers.task.nlp.language_modeling.config import LanguageModelingDataConfig
 
 
-class LanguageModelingDataModule(HFDataModule):
+class LanguageModelingDataModule(TransformerDataModule):
     """Defines ``LightningDataModule`` for Language Modeling Datasets.
 
     Args:

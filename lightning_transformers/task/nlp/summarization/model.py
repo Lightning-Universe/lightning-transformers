@@ -13,7 +13,7 @@
 # limitations under the License.
 from torchmetrics.text.rouge import ROUGEScore
 
-from lightning_transformers.core.nlp.seq2seq import Seq2SeqTransformer
+from lightning_transformers.core.seq2seq.model import Seq2SeqTransformer
 from lightning_transformers.task.nlp.summarization.config import SummarizationConfig
 
 
