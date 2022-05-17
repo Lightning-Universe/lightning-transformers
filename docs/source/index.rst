@@ -6,8 +6,6 @@
 Lightning Transformers
 ======================
 
-.. include:: introduction.rst
-
 .. toctree::
    :maxdepth: 1
    :name: start
