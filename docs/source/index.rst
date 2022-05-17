@@ -31,11 +31,8 @@ Lightning Transformers
 .. toctree::
    :maxdepth: 1
    :name: optimization
-   :caption: Training Optimizations
+   :caption: Transformer Optimizations
 
-   optimizations/lightning
-   optimizations/deepspeed
-   optimizations/sharded
    optimizations/sparseml
 
 .. toctree::
