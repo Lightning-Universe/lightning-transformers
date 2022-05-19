@@ -102,7 +102,7 @@ class TaskTransformer(pl.LightningModule):
         )
         rank_zero_info(f"Inferring number of training steps, set to {self.scheduler_cfg.num_training_steps}")
         rank_zero_info(f"Inferring number of warmup steps from ratio, set to {self.scheduler_cfg.num_warmup_steps}")
-        scheduler = self.instantiator.scheduler(self.scheduler_cfg, self.optimizer)
+        scheduler = self.instantiator.scheduler(self.scheduler_cfg, optimizer)
         return {
             "optimizer": optimizer,
             "lr_scheduler": {"scheduler": scheduler, "interval": "step", "frequency": 1},
