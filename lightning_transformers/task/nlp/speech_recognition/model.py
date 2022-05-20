@@ -15,7 +15,10 @@ from torchmetrics.text.wer import WordErrorRate
 from transformers import MBartTokenizer
 
 from lightning_transformers.core.nlp.seq2seq import Seq2SeqTransformer
-from lightning_transformers.task.nlp.speech_recognition.config import SpeechRecognitionConfig, SpeechRecognitionDataConfig
+from lightning_transformers.task.nlp.speech_recognition.config import (
+    SpeechRecognitionConfig,
+    SpeechRecognitionDataConfig,
+)
 
 
 class SpeechRecognitionTransformer(Seq2SeqTransformer):
@@ -52,11 +55,11 @@ class SpeechRecognitionTransformer(Seq2SeqTransformer):
         super().initialize_model_specific_parameters()
         if isinstance(self.tokenizer, MBartTokenizer):
             cfg: SpeechRecognitionDataConfig = self.trainer.datamodule.cfg
-            #tgt_lang = cfg.target_language
+            # tgt_lang = cfg.target_language
             # set decoder_start_token_id for MBart
-            #if self.model.config.decoder_start_token_id is None:
-                #assert tgt_lang is not None, "mBart requires --target_language"
-                #self.model.config.decoder_start_token_id = self.tokenizer.lang_code_to_id[tgt_lang]
+            # if self.model.config.decoder_start_token_id is None:
+            # assert tgt_lang is not None, "mBart requires --target_language"
+            # self.model.config.decoder_start_token_id = self.tokenizer.lang_code_to_id[tgt_lang]
 
     @property
     def hf_pipeline_task(self) -> str:
