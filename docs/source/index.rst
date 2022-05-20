@@ -6,15 +6,12 @@
 Lightning Transformers
 ======================
 
-.. include:: introduction.rst
-
 .. toctree::
    :maxdepth: 1
    :name: start
    :caption: Get started
 
    quickstart
-   structure/conf
 
 .. toctree::
    :maxdepth: 1
@@ -32,11 +29,8 @@ Lightning Transformers
 .. toctree::
    :maxdepth: 1
    :name: optimization
-   :caption: Training Optimizations
+   :caption: Transformer Optimizations
 
-   optimizations/lightning
-   optimizations/deepspeed
-   optimizations/sharded
    optimizations/sparseml
 
 .. toctree::

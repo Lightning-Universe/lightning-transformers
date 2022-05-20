@@ -11,10 +11,10 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-from lightning_transformers.core.nlp import HFTransformer
+from lightning_transformers.core import TaskTransformer
 
 
-class LanguageModelingTransformer(HFTransformer):
+class LanguageModelingTransformer(TaskTransformer):
     """Defines ``LightningModule`` for the Language Modeling Task.
 
     Args:

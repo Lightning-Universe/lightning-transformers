@@ -13,10 +13,10 @@
 # limitations under the License.
 from dataclasses import dataclass
 
-from lightning_transformers.core.nlp.config import HFTransformerDataConfig
+from lightning_transformers.core.config import TransformerDataConfig
 
 
 @dataclass
-class TokenClassificationDataConfig(HFTransformerDataConfig):
+class TokenClassificationDataConfig(TransformerDataConfig):
     task_name: str = "ner"
     label_all_tokens: bool = False

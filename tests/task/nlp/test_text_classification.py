@@ -15,7 +15,6 @@ from lightning_transformers.task.nlp.text_classification import (
 @pytest.mark.skipif(sys.platform == "win32", reason="Currently Windows is not supported")
 def test_smoke_train(hf_cache_path):
     tokenizer = AutoTokenizer.from_pretrained(pretrained_model_name_or_path="prajjwal1/bert-tiny")
-    model = TextClassificationTransformer(pretrained_model_name_or_path="prajjwal1/bert-tiny")
     dm = TextClassificationDataModule(
         cfg=TextClassificationDataConfig(
             batch_size=1,
@@ -29,6 +28,7 @@ def test_smoke_train(hf_cache_path):
         ),
         tokenizer=tokenizer,
     )
+    model = TextClassificationTransformer(pretrained_model_name_or_path="prajjwal1/bert-tiny")
     trainer = pl.Trainer(fast_dev_run=True)
     trainer.fit(model, dm)
 

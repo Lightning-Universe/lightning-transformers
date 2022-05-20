@@ -14,4 +14,18 @@ The label mapping is automatically generated from the training dataset labels if
 
 .. code-block:: python
 
-    python train.py task=nlp/text_classification dataset.cfg.train_file=train.json dataset.cfg.validation_file=valid.json
+    from lightning_transformers.task.nlp.text_classification import (
+        TextClassificationDataConfig,
+        TextClassificationDataModule,
+        TextClassificationTransformer,
+    )
+
+    dm = TextClassificationDataModule(
+        cfg=TextClassificationDataConfig(
+            batch_size=1,
+            max_length=512,
+            train_file="path/train.json",
+            validation_file="/path/valid.json"
+        ),
+        tokenizer=tokenizer,
+    )

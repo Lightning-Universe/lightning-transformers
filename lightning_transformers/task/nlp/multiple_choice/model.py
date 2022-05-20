@@ -14,10 +14,10 @@
 import torch
 from torchmetrics import Accuracy, Precision, Recall
 
-from lightning_transformers.core.nlp import HFTransformer
+from lightning_transformers.core import TaskTransformer
 
 
-class MultipleChoiceTransformer(HFTransformer):
+class MultipleChoiceTransformer(TaskTransformer):
     """Defines ``LightningModule`` for the Multiple Choice Task.
 
     Args:

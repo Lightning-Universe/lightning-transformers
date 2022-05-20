@@ -18,7 +18,6 @@ if __name__ == "__main__":
         ),
         tokenizer=tokenizer,
     )
-    dm.setup("fit")
     model = TextClassificationTransformer(pretrained_model_name_or_path="bert-base-uncased", num_labels=dm.num_classes)
     trainer = pl.Trainer(accelerator="auto", devices="auto", max_epochs=1)
 

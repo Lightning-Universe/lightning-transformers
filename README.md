@@ -8,8 +8,7 @@ ______________________________________________________________________
 
 <p align="center">
   <a href="https://lightning-transformers.readthedocs.io/">Docs</a> •
-  <a href="#community">Community</a> •
-  <a href="#license">License</a>
+  <a href="#community">Community</a>
 </p>
 
 ______________________________________________________________________
@@ -64,9 +63,7 @@ dm = TextClassificationDataModule(
     ),
     tokenizer=tokenizer,
 )
-model = TextClassificationTransformer(
-    pretrained_model_name_or_path="bert-base-cased", num_labels=dm.num_classes
-)
+model = TextClassificationTransformer(pretrained_model_name_or_path="bert-base-cased")
 
 trainer = pl.Trainer(accelerator="auto", devices="auto", max_epochs=1)
 

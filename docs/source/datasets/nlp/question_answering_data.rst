@@ -22,4 +22,25 @@ We override the dataset files, allowing us to still use the data transforms defi
 
 .. code-block:: python
 
-    python train.py task=nlp/question_answering dataset=nlp/question_answering/squad dataset.cfg.train_file=train.json dataset.cfg.validation_file=valid.json
+
+    from lightning_transformers.task.nlp.question_answering import (
+        QuestionAnsweringDataConfig,
+        SquadDataModule,
+    )
+
+    dm = SquadDataModule(
+        cfg=QuestionAnsweringDataConfig(
+            batch_size=1,
+            dataset_name="squad",
+            dataset_config_name="plain_text",
+            max_length=384,
+            version_2_with_negative=False,
+            null_score_diff_threshold=0.0,
+            doc_stride=128,
+            n_best_size=20,
+            max_answer_length=30,
+            train_file="path/train.csv",
+            validation_file="/path/valid.csv"
+        ),
+        tokenizer=tokenizer,
+    )

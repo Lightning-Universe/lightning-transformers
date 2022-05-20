@@ -13,8 +13,8 @@
 # limitations under the License.
 from typing import Tuple
 
-from lightning_transformers.core.nlp.seq2seq import Seq2SeqDataModule
-from lightning_transformers.task.nlp.translation.config import TranslationDataConfig
+from lightning_transformers.core.seq2seq.data import Seq2SeqDataModule
+from lightning_transformers.task.nlp.translation import TranslationDataConfig
 
 
 class TranslationDataModule(Seq2SeqDataModule):

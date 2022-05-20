@@ -17,11 +17,11 @@ from typing import Callable, Optional, Union
 from datasets import Dataset
 from transformers import DataCollatorForLanguageModeling, DataCollatorForWholeWordMask, PreTrainedTokenizerBase
 
-from lightning_transformers.core.nlp import HFDataModule
+from lightning_transformers.core import TransformerDataModule
 from lightning_transformers.task.nlp.masked_language_modeling.config import MaskedLanguageModelingDataConfig
 
 
-class MaskedLanguageModelingDataModule(HFDataModule):
+class MaskedLanguageModelingDataModule(TransformerDataModule):
     """Defines ``LightningDataModule`` for Language Modeling Datasets.
 
     Args:

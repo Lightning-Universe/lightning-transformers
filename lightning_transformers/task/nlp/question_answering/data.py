@@ -19,11 +19,11 @@ import torch
 from datasets import Dataset
 from transformers import DataCollatorWithPadding, PreTrainedTokenizerBase, default_data_collator
 
-from lightning_transformers.core.nlp import HFDataModule
+from lightning_transformers.core import TransformerDataModule
 from lightning_transformers.task.nlp.question_answering.config import QuestionAnsweringDataConfig
 
 
-class QuestionAnsweringDataModule(HFDataModule):
+class QuestionAnsweringDataModule(TransformerDataModule):
     """Defines the ``LightningDataModule`` for Question Answering Datasets.
 
     Args:
