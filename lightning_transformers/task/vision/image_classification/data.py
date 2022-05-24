@@ -26,12 +26,16 @@ class ImageClassificationDataModule(TransformerDataModule):
 
     cfg: ImageClassificationDataConfig
 
-    def __init__(self, feature_extractor, *args, cfg: ImageClassificationDataConfig = ImageClassificationDataConfig(), **kwargs) -> None:
+    def __init__(
+        self, feature_extractor, *args, cfg: ImageClassificationDataConfig = ImageClassificationDataConfig(), **kwargs
+    ) -> None:
         super().__init__(tokenizer=feature_extractor, *args, cfg=cfg, **kwargs)
         self.labels = None
 
     def process_data(self, dataset: Dataset, stage: Optional[str] = None) -> Dataset:
-        input_feature_fields = [k for k, v in dataset["train"].features.items() if k not in ["label", "idx", 'labels', 'image_file_path']]
+        input_feature_fields = [
+            k for k, v in dataset["train"].features.items() if k not in ["label", "idx", "labels", "image_file_path"]
+        ]
 
         self.input_feature_fields = input_feature_fields
         dataset = dataset.with_transform(self.convert_to_features)
@@ -44,13 +48,8 @@ class ImageClassificationDataModule(TransformerDataModule):
 
     def convert_to_features(self, example_batch: Any):
         images = example_batch[self.input_feature_fields[0]]
-        inputs = self.tokenizer(
-                [x for x in images], 
-                batched=True, 
-                with_indices=True, 
-                return_tensors='pt'
-                )
-        inputs['labels'] = example_batch['labels']
+        inputs = self.tokenizer([x for x in images], batched=True, with_indices=True, return_tensors="pt")
+        inputs["labels"] = example_batch["labels"]
         return inputs
 
     @property
