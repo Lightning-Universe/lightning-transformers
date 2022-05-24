@@ -19,7 +19,7 @@ from torchmetrics import Accuracy, Precision, Recall
 from lightning_transformers.core import TaskTransformer
 
 
-class TextClassificationTransformer(TaskTransformer):
+class ImageClassificationTransformer(TaskTransformer):
     """Defines ``LightningModule`` for the Text Classification Task.
 
     Args:
@@ -30,14 +30,12 @@ class TextClassificationTransformer(TaskTransformer):
     """
 
     def __init__(
-        self, *args, downstream_model_type: str = "transformers.AutoModelForSequenceClassification", **kwargs
+        self, *args, downstream_model_type: str = "transformers.AutoModelForImageClassification", **kwargs
     ) -> None:
         super().__init__(downstream_model_type, *args, **kwargs)
         self.metrics = {}
 
     def training_step(self, batch: Any, batch_idx: int) -> torch.Tensor:
-        print(batch)
-        exit()
         outputs = self.model(**batch)
         loss = outputs[0]
         self.log("train_loss", loss)

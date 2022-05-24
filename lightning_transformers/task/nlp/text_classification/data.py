@@ -45,7 +45,6 @@ class TextClassificationDataModule(TransformerDataModule):
         ]
         if not isinstance(dataset["train"].features["labels"], ClassLabel):
             dataset = dataset.class_encode_column("labels")
-
         dataset.set_format("torch", columns=cols_to_keep)
         self.labels = dataset["train"].features["labels"]
         return dataset
