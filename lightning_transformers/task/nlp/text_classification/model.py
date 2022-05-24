@@ -36,8 +36,6 @@ class TextClassificationTransformer(TaskTransformer):
         self.metrics = {}
 
     def training_step(self, batch: Any, batch_idx: int) -> torch.Tensor:
-        print(batch)
-        exit()
         outputs = self.model(**batch)
         loss = outputs[0]
         self.log("train_loss", loss)
