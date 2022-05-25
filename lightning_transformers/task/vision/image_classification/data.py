@@ -11,11 +11,10 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, Optional
 
 from datasets import ClassLabel, Dataset
 from pytorch_lightning.utilities import rank_zero_warn
-from transformers import PreTrainedTokenizerBase
 
 from lightning_transformers.core import TransformerDataModule
 from lightning_transformers.task.vision.image_classification.config import ImageClassificationDataConfig

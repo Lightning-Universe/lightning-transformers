@@ -11,12 +11,15 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-from typing import Any, Dict
+from typing import TYPE_CHECKING, Any, Dict
 
 import torch
 from torchmetrics import Accuracy, Precision, Recall
 
 from lightning_transformers.core import TaskTransformer
+
+if TYPE_CHECKING:
+    from transformers import Pipeline
 
 
 class ImageClassificationTransformer(TaskTransformer):
@@ -76,4 +79,9 @@ class ImageClassificationTransformer(TaskTransformer):
 
     @property
     def hf_pipeline_task(self) -> str:
-        return "sentiment-analysis"
+        return "image-classification"
+
+    @property
+    def hf_pipeline(self) -> "Pipeline":
+        self._hf_pipeline_kwargs["feature_extractor"] = self.tokenizer
+        return super().hf_pipeline
