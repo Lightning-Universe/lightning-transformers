@@ -16,7 +16,7 @@ from lightning_transformers.task.vision.image_classification import (
 def test_smoke_train(hf_cache_path):
     feature_extractor = AutoFeatureExtractor.from_pretrained(pretrained_model_name_or_path="nateraw/tiny-vit-random")
     dm = ImageClassificationDataModule(
-        cfg=ImageClassificationDataConfig(batch_size=2, dataset_name="beans", num_workers=8),
+        cfg=ImageClassificationDataConfig(batch_size=2, dataset_name="beans"),
         feature_extractor=feature_extractor,
     )
     model = ImageClassificationTransformer(pretrained_model_name_or_path="nateraw/tiny-vit-random")
