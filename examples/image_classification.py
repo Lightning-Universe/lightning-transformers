@@ -12,7 +12,9 @@ dm = ImageClassificationDataModule(
     cfg=ImageClassificationDataConfig(batch_size=8, dataset_name="beans", num_workers=8),
     feature_extractor=feature_extractor,
 )
-model = ImageClassificationTransformer(pretrained_model_name_or_path="nateraw/vit-base-beans")
+model = ImageClassificationTransformer(
+    pretrained_model_name_or_path="nateraw/vit-base-beans", num_labels=dm.num_classes
+)
 
 trainer = pl.Trainer(accelerator="auto", devices="auto", max_epochs=5)
 trainer.fit(model, dm)

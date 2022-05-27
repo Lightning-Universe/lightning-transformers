@@ -19,7 +19,9 @@ def test_smoke_train(hf_cache_path):
         cfg=ImageClassificationDataConfig(batch_size=2, dataset_name="beans"),
         feature_extractor=feature_extractor,
     )
-    model = ImageClassificationTransformer(pretrained_model_name_or_path="nateraw/tiny-vit-random")
+    model = ImageClassificationTransformer(
+        pretrained_model_name_or_path="nateraw/tiny-vit-random", num_labels=dm.num_classes
+    )
 
     trainer = pl.Trainer(fast_dev_run=True)
     trainer.fit(model, dm)
@@ -30,13 +32,14 @@ def test_smoke_predict():
     model = ImageClassificationTransformer(
         pretrained_model_name_or_path="nateraw/tiny-vit-random",
         tokenizer=AutoFeatureExtractor.from_pretrained(pretrained_model_name_or_path="nateraw/tiny-vit-random"),
+        num_labels=3,
     )
     # predict on the logo
     y = model.hf_predict(
         "https://github.com/PyTorchLightning/lightning-transformers/blob/master/"
         "docs/source/_static/images/logo.png?raw=true"
     )
-    assert len(y) == 2
+    assert len(y) == 3
 
 
 def test_model_has_correct_cfg():

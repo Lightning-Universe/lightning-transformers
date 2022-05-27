@@ -25,6 +25,7 @@ Lightning Transformers
    tasks/nlp/text_classification
    tasks/nlp/token_classification
    tasks/nlp/translation
+   tasks/vision/image_classification
 
 .. toctree::
    :maxdepth: 1
