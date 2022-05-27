@@ -7,7 +7,7 @@ tqdm
 torchmetrics>=0.7.0
 
 # huggingface
-transformers
+transformers>=4.11.2
 datasets
 
 # hydra
@@ -16,3 +16,7 @@ hydra-core>=1.1.0
 # task-specific
 sentencepiece
 torchmetrics[text]
+Pillow
+
+# todo remove once protobuf fixed
+protobuf==3.20.1
