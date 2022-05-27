@@ -17,3 +17,6 @@ hydra-core>=1.1.0
 sentencepiece
 torchmetrics[text]
 Pillow
+
+# todo remove once protobuf fixed
+protobuf==3.20.1
