@@ -6,15 +6,12 @@
 Lightning Transformers
 ======================
 
-.. include:: introduction.rst
-
 .. toctree::
    :maxdepth: 1
    :name: start
    :caption: Get started
 
    quickstart
-   structure/conf
 
 .. toctree::
    :maxdepth: 1
@@ -28,15 +25,13 @@ Lightning Transformers
    tasks/nlp/text_classification
    tasks/nlp/token_classification
    tasks/nlp/translation
+   tasks/vision/image_classification
 
 .. toctree::
    :maxdepth: 1
    :name: optimization
-   :caption: Training Optimizations
+   :caption: Transformer Optimizations
 
-   optimizations/lightning
-   optimizations/deepspeed
-   optimizations/sharded
    optimizations/sparseml
 
 .. toctree::

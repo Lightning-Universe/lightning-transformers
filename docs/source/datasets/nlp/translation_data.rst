@@ -14,4 +14,22 @@ We override the dataset files, allowing us to still use the data transforms defi
 
 .. code-block:: python
 
-    python train.py task=nlp/translation dataset.cfg.train_file=train.json dataset.cfg.validation_file=valid.json
+    from lightning_transformers.task.nlp.translation import (
+        TranslationDataConfig,
+        WMT16TranslationDataModule,
+    )
+
+    dm = WMT16TranslationDataModule(
+        cfg=TranslationDataConfig(
+            dataset_name="wmt16",
+            # WMT translation datasets: ['cs-en', 'de-en', 'fi-en', 'ro-en', 'ru-en', 'tr-en']
+            dataset_config_name="ro-en",
+            source_language="en",
+            target_language="ro",
+            max_source_length=128,
+            max_target_length=128,
+            train_file="path/train.json",
+            validation_file="/path/valid.json"
+        ),
+        tokenizer=tokenizer,
+    )

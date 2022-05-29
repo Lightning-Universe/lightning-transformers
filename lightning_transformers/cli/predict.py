@@ -18,9 +18,9 @@ from hydra.utils import get_class
 from omegaconf import DictConfig, OmegaConf
 from pytorch_lightning.utilities.distributed import rank_zero_info
 
-from lightning_transformers.core.config import TaskConfig
+from lightning_transformers.core import TaskTransformer
+from lightning_transformers.core.config import TaskConfig, TokenizerConfig
 from lightning_transformers.core.instantiator import HydraInstantiator, Instantiator
-from lightning_transformers.core.nlp import HFTokenizerConfig, HFTransformer
 
 
 def run(
@@ -29,11 +29,11 @@ def run(
     checkpoint_path: Optional[str] = None,
     task: TaskConfig = TaskConfig(),
     model_data_kwargs: Optional[Dict[str, Any]] = None,
-    tokenizer: Optional[HFTokenizerConfig] = None,
+    tokenizer: Optional[TokenizerConfig] = None,
     pipeline_kwargs: Optional[dict] = None,  # mostly for the device
     predict_kwargs: Optional[dict] = None,
 ) -> List[Dict[str, Any]]:
-    model: HFTransformer
+    model: TaskTransformer
     if checkpoint_path:
         model = get_class(task._target_).load_from_checkpoint(checkpoint_path)
     else:

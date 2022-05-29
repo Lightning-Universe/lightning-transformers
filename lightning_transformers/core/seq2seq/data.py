@@ -4,11 +4,11 @@ from typing import Any, Callable, Optional, Tuple
 from datasets import Dataset
 from transformers import PreTrainedTokenizerBase, default_data_collator
 
-from lightning_transformers.core.nlp import HFDataModule
-from lightning_transformers.core.nlp.seq2seq import Seq2SeqDataConfig
+from lightning_transformers.core import TransformerDataModule
+from lightning_transformers.core.seq2seq.config import Seq2SeqDataConfig
 
 
-class Seq2SeqDataModule(HFDataModule):
+class Seq2SeqDataModule(TransformerDataModule):
     """Defines the ``LightningDataModule`` for Seq2Seq Datasets, such as Summarization and Translation.
 
     Args:

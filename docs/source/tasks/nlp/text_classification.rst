@@ -24,37 +24,46 @@ For this task, you can rely on most Transformer models as your backbone.
 
 .. code-block:: python
 
-    python train.py task=nlp/text_classification dataset=nlp/text_classification/emotion # can be swapped to xlni or glue
+    import pytorch_lightning as pl
+    from transformers import AutoTokenizer
 
-Swap to GPT backbone:
+    from lightning_transformers.task.nlp.text_classification import (
+        TextClassificationDataConfig,
+        TextClassificationDataModule,
+        TextClassificationTransformer,
+    )
 
-.. code-block:: python
+    tokenizer = AutoTokenizer.from_pretrained(pretrained_model_name_or_path="bert-base-uncased")
+    dm = TextClassificationDataModule(
+        cfg=TextClassificationDataConfig(
+            batch_size=1,
+            dataset_name="glue",
+            dataset_config_name="sst2",
+            max_length=512,
+        ),
+        tokenizer=tokenizer,
+    )
+    model = TextClassificationTransformer(pretrained_model_name_or_path="bert-base-uncased", num_labels=dm.num_classes)
+    trainer = pl.Trainer(accelerator="auto", devices="auto", max_epochs=1)
 
-    python train.py task=nlp/text_classification dataset=nlp/text_classification/emotion backbone.pretrained_model_name_or_path=gpt2
+    trainer.fit(model, dm)
 
-We report the Precision, Recall, Accuracy and Cross Entropy Loss for validation. Find all options available for the task `here <https://github.com/PyTorchLightning/lightning-transformers/blob/master/conf/task/nlp/text_classification.yaml>`_.
+We report the Precision, Recall, Accuracy and Cross Entropy Loss for validation.
 
 .. include:: /datasets/nlp/text_classification_data.rst
 
-Text Classification Inference Pipeline (experimental)
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Text Classification Inference Pipeline
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 By default we use the sentiment-analysis pipeline, which requires an input string.
 
-For Hydra to correctly parse your input argument, if your input contains any special characters you must either wrap the entire call in single quotes like `'+x="my, sentence"'` or escape special characters. See `escaped characters in unquoted values <https://hydra.cc/docs/advanced/override_grammar/basic/#escaped-characters-in-unquoted-values>`_.
-
 .. code-block:: python
 
-    python predict.py task=nlp/text_classification +checkpoint_path=/path/to/model.ckpt '+x="I dont like this at all!"'
+    from transformers import AutoTokenizer
+    from lightning_transformers.task.nlp.text_classification import TextClassificationTransformer
 
-You can also run prediction using a default HuggingFace pre-trained model:
-
-.. code-block:: python
-
-   python predict.py task=nlp/text_classification '+x="I dont like this at all!"'
-
-Or run prediction on a specified HuggingFace pre-trained model:
-
-.. code-block:: python
-
-   python predict.py task=nlp/text_classification backbone.pretrained_model_name_or_path=bert-base-cased '+x="I dont like this at all!"'
+    model = TextClassificationTransformer(
+        pretrained_model_name_or_path="prajjwal1/bert-tiny",
+        tokenizer=AutoTokenizer.from_pretrained(pretrained_model_name_or_path="prajjwal1/bert-tiny"),
+    )
+    model.hf_predict("Lightning rocks!")

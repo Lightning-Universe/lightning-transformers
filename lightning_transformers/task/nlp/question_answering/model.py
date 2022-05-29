@@ -16,12 +16,12 @@ from typing import Any
 
 import torch
 
-from lightning_transformers.core.nlp import HFTransformer
+from lightning_transformers.core import TaskTransformer
 from lightning_transformers.task.nlp.question_answering import QuestionAnsweringDataModule
 from lightning_transformers.task.nlp.question_answering.datasets.squad.metric import SquadMetric
 
 
-class QuestionAnsweringTransformer(HFTransformer):
+class QuestionAnsweringTransformer(TaskTransformer):
     """Defines ``LightningModule`` for the Question Answering Task.
 
     Args:

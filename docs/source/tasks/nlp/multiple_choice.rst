@@ -30,15 +30,31 @@ Training
 
 .. code-block:: python
 
-    python train.py task=nlp/multiple_choice dataset=nlp/multiple_choice/race # can use the swag dataset instead
+    import pytorch_lightning as pl
+    from transformers import AutoTokenizer
 
-Swap to GPT backbone:
+    from lightning_transformers.task.nlp.multiple_choice import (
+        MultipleChoiceDataConfig,
+        MultipleChoiceTransformer,
+        SwagMultipleChoiceDataModule,
+    )
 
-.. code-block:: python
+    tokenizer = AutoTokenizer.from_pretrained(pretrained_model_name_or_path="bert-base-uncased")
+    model = MultipleChoiceTransformer(pretrained_model_name_or_path="bert-base-uncased")
+    dm = SwagMultipleChoiceDataModule(
+        cfg=MultipleChoiceDataConfig(
+            batch_size=1,
+            dataset_name="swag",
+            dataset_config_name="regular",
+            padding=False,
+        ),
+        tokenizer=tokenizer,
+    )
+    trainer = pl.Trainer(accelerator="auto", devices="auto", max_epochs=1)
 
-    python train.py task=nlp/multiple_choice dataset=nlp/multiple_choice/race backbone.pretrained_model_name_or_path=gpt2
+    trainer.fit(model, dm)
 
-We report Cross Entropy Loss, Precision, Recall and Accuracy for validation. Find all options available for the task `here <https://github.com/PyTorchLightning/lightning-transformers/blob/master/conf/task/nlp/multiple_choice.yaml>`_.
+We report Cross Entropy Loss, Precision, Recall and Accuracy for validation.
 
 .. include:: /datasets/nlp/multiple_choice_data.rst
 

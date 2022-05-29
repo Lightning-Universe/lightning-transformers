@@ -13,11 +13,11 @@
 # limitations under the License.
 from dataclasses import dataclass
 
-from lightning_transformers.core.nlp.seq2seq import HFSeq2SeqConfig, Seq2SeqDataConfig
+from lightning_transformers.core.seq2seq.config import Seq2SeqConfig, Seq2SeqDataConfig
 
 
 @dataclass
-class TranslationConfig(HFSeq2SeqConfig):
+class TranslationConfig(Seq2SeqConfig):
     n_gram: int = 4
     smooth: bool = False
 

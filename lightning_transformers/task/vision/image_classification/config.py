@@ -4,5 +4,5 @@ from lightning_transformers.core.config import TransformerDataConfig
 
 
 @dataclass
-class TextClassificationDataConfig(TransformerDataConfig):
+class ImageClassificationDataConfig(TransformerDataConfig):
     ...
