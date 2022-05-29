@@ -33,7 +33,9 @@ class SpeechRecognitionDataModule(TransformerDataModule):
     def process_data(self, dataset: Dataset, stage: Optional[str] = None) -> Dataset:
 
         # batched output is "un-batched" to ensure mapping is correct
-        dataset["input_values"] = self.processor(dataset["array"], sampling_rate=dataset["sampling_rate"]).input_values[0]
+        dataset["input_values"] = self.processor(dataset["array"], sampling_rate=dataset["sampling_rate"]).input_values[
+            0
+        ]
 
         with self.processor.as_target_processor():
             dataset["labels"] = self.processor(dataset["text"]).input_ids
