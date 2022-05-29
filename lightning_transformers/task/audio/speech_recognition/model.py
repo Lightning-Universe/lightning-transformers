@@ -52,19 +52,6 @@ class SpeechRecognitionTransformer(TaskTransformer):
             batch["labels"] = None
         return self.common_step("test", batch)
 
-    def configure_metrics(self, _) -> None:
-        self.prec = Precision(num_classes=self.num_classes)
-        self.recall = Recall(num_classes=self.num_classes)
-        self.acc = Accuracy()
-        self.metrics = {"precision": self.prec, "recall": self.recall, "accuracy": self.acc}
-
-    @property
-    def num_classes(self) -> int:
-        return self.trainer.datamodule.num_classes
-
-    def compute_metrics(self, preds, labels, mode="val") -> Dict[str, torch.Tensor]:
-        # Not required by all models. Only required for classification
-        return {f"{mode}_{k}": metric(preds, labels) for k, metric in self.metrics.items()}
 
     @property
     def hf_pipeline_task(self) -> str:
