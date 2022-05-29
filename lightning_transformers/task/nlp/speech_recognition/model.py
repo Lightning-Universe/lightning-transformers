@@ -20,6 +20,9 @@ from torchmetrics.text.mer import MatchErrorRate
 from lightning_transformers.core.nlp import HFDataModule
 from lightning_transformers.task.nlp.speech_recognition.config import SpeechRecognitionDataConfig, SpeechRecognitionConfig
 
+from typing import (
+    Any
+)
 
 class SpeechRecognitionTransformer(HFDataModule):
     """Defines ``LightningModule`` for the SpeechRecognition Task.
@@ -41,6 +44,23 @@ class SpeechRecognitionTransformer(HFDataModule):
         super().__init__(downstream_model_type, *args, cfg=cfg, **kwargs)
         self.wer = None
 
+    def common_step(self, prefix: str, batch: Any) -> torch.Tensor:
+        pred_logits = pred.predictions
+        pred_ids = np.argmax(pred_logits, axis=-1)
+
+        pred.label_ids[pred.label_ids == -100] = processor.tokenizer.pad_token_id
+
+        pred_str = processor.batch_decode(pred_ids)
+        # we do not want to group tokens when computing the metrics
+        label_str = processor.batch_decode(pred.label_ids, group_tokens=False)
+
+        
+        outputs = self.model(**batch)
+        loss, logits = outputs[:2]
+        if self.cfg.compute_generate_metrics:
+            self.compute_generate_metrics(batch, prefix)
+        return loss
+
     def training_step(self, batch, batch_idx):
         loss = self._step(batch, batch_idx, "train")
         return loss
@@ -61,6 +81,8 @@ class SpeechRecognitionTransformer(HFDataModule):
         self.log_dict(metric_dict, prog_bar=True, on_step=False, on_epoch=True)
         self.log(f"{mode}_loss", loss, prog_bar=True, sync_dist=True)
         return loss
+
+
 
     def configure_metrics(self, stage: str):
         self.wer = WordErrorRate()

@@ -32,7 +32,7 @@ class QuestionAnsweringTransformer(HFTransformer):
     """
 
     def __init__(
-        self, *args, downstream_model_type: str = "transformers.AutoModelForSpeechSeq2Seq", **kwargs
+        self, *args, downstream_model_type: str = "transformers.AutoModelForQuestionAnswering", **kwargs
     ) -> None:
         super().__init__(downstream_model_type, *args, **kwargs)
 

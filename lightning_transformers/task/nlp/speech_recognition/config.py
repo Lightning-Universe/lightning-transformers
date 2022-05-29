@@ -24,7 +24,6 @@ class SpeechRecognitionConfig(HFTransformerDataConfig):
 
 @dataclass
 class SpeechRecognitionDataConfig(HFTransformerDataConfig):
-    max_length = 5
+    max_length = 5 #seconds
     sampling_rate: int = 16000
-    padding: float = 0.0
-    
+    padding: bool = True

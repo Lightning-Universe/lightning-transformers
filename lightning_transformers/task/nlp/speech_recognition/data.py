@@ -13,19 +13,21 @@
 # limitations under the License.
 from functools import partial
 from typing import (
+    Any,
     Tuple,
     List,
     Union,
     Optional,
-    Dict
+    Dict,
+    Callable
 )
 
 from datasets import Dataset
 from lightning_transformers.core.nlp import HFDataModule
 from lightning_transformers.task.nlp.speech_recognition.config import SpeechRecognitionDataConfig
-
 import torch
-from transformers import default_data_collator
+from transformers import PreTrainedTokenizerBase, default_data_collator
+from utils import DataCollatorCTCWithPadding
 
 
 class SpeechRecognitionDataModule(HFDataModule):
@@ -47,10 +49,7 @@ class SpeechRecognitionDataModule(HFDataModule):
         **kwargs
     ) -> None:
         super().__init__(*args, cfg=cfg, **kwargs)
-        input_fields="file"
-        target_fields="text"
-        train_file="data/train.json"
-        test_file="data/test.json"
+
 
     def process_data(self, dataset: Dataset, stage: Optional[str] = None) -> Dataset:
         train = stage == "fit"
@@ -62,7 +61,6 @@ class SpeechRecognitionDataModule(HFDataModule):
 
         kwargs = {
             "tokenizer": self.tokenizer,
-            "pad_on_right": self.tokenizer.padding_side == "right",
             "audio_column_name": audio_column_name,
             "sentence_column_name": sentence_column_name,
             "max_length": self.cfg.max_length,
@@ -97,4 +95,39 @@ class SpeechRecognitionDataModule(HFDataModule):
                 load_from_cache_file=False,
             )
         return dataset
+
+    @property
+    def collate_fn(self) -> Callable:
+        return default_data_collator if self.pad_to_max_length else DataCollatorCTCWithPadding(self.tokenizer)
+
+    @staticmethod
+    def convert_to_train_features(
+        examples: Any,
+        tokenizer: PreTrainedTokenizerBase,
+        audio_column_name: str,
+        sentences_column_name: str,
+        max_length: int,
+        padding: str,
+    ):
+        raise NotImplementedError
+
+    @staticmethod
+    def convert_to_validation_features(
+        examples: Any,
+        tokenizer: PreTrainedTokenizerBase,
+        audio_column_name: str,
+        sentences_column_name: str,
+        max_length: int,
+        padding: str,
+    ):
+        raise NotImplementedError
+
+    def postprocess_func(
+        self,
+        dataset: Dataset,
+        validation_dataset: Dataset,
+        original_validation_dataset: Dataset,
+        predictions: Dict[int, torch.Tensor],
+    ) -> Any:
+        raise NotImplementedError
 
