@@ -1,11 +1,9 @@
-import torch
-
 from dataclasses import dataclass, field
 from typing import Any, Dict, List, Optional, Union
 
-
-from transformers.tokenization_utils_base import PaddingStrategy, PreTrainedTokenizerBase
+import torch
 from transformers import AutoModelForSequenceClassification
+from transformers.tokenization_utils_base import PaddingStrategy, PreTrainedTokenizerBase
 
 
 class DataCollatorCTCWithPadding:

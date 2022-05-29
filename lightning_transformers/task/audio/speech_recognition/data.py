@@ -13,12 +13,12 @@
 # limitations under the License.
 from typing import Any, Dict, Optional, Union
 
-from datasets import Dataset, Audio
+from datasets import Audio, Dataset
 from pytorch_lightning.utilities import rank_zero_warn
+from transformers import PreTrainedTokenizerBase, default_data_collator
 
 from lightning_transformers.core import TransformerDataModule
 from lightning_transformers.task.audio.speech_recognition.config import SpeechRecognitionDataConfig
-from transformers import PreTrainedTokenizerBase, default_data_collator
 
 
 class SpeechRecognitionDataModule(TransformerDataModule):
@@ -26,29 +26,26 @@ class SpeechRecognitionDataModule(TransformerDataModule):
 
     cfg: SpeechRecognitionDataConfig
 
-    def __init__(
-        self,
-        *args, cfg: SpeechRecognitionDataConfig = SpeechRecognitionDataConfig(),
-        **kwargs
-    ) -> None:
-    
+    def __init__(self, *args, cfg: SpeechRecognitionDataConfig = SpeechRecognitionDataConfig(), **kwargs) -> None:
+
         super().__init__(*args, cfg=cfg, **kwargs)
 
     def process_data(self, dataset: Dataset, stage: Optional[str] = None) -> Dataset:
 
         # batched output is "un-batched" to ensure mapping is correct
         dataset["input_values"] = processor(dataset["array"], sampling_rate=dataset["sampling_rate"]).input_values[0]
-    
+
     with processor.as_target_processor():
         batch["labels"] = processor(batch["text"]).input_ids
     return batch
+
     def process_data(self, dataset: Dataset, stage: Optional[str] = None) -> Dataset:
         input_feature_fields = [
             k for k, v in dataset["train"].features.items() if k not in ["label", "sentence", "text", "path"]
         ]
 
         dataset = dataset.cast_column("audio", Audio(sampling_rate=16_000))
-        
+
         self.labels = dataset["train"].features["sentence"]
         return dataset
 
