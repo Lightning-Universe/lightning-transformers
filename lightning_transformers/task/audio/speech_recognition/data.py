@@ -13,12 +13,12 @@
 # limitations under the License.
 from typing import Any, Dict, Optional, Union
 
-from datasets import Dataset, Audio
+from datasets import Audio, Dataset
 from pytorch_lightning.utilities import rank_zero_warn
+from transformers import PreTrainedTokenizerBase, default_data_collator
 
 from lightning_transformers.core import TransformerDataModule
 from lightning_transformers.task.audio.speech_recognition.config import SpeechRecognitionDataConfig
-from transformers import PreTrainedTokenizerBase, default_data_collator
 
 
 class SpeechRecognitionDataModule(TransformerDataModule):
@@ -26,12 +26,8 @@ class SpeechRecognitionDataModule(TransformerDataModule):
 
     cfg: SpeechRecognitionDataConfig
 
-    def __init__(
-        self,
-        *args, cfg: SpeechRecognitionDataConfig = SpeechRecognitionDataConfig(),
-        **kwargs
-    ) -> None:
-    
+    def __init__(self, *args, cfg: SpeechRecognitionDataConfig = SpeechRecognitionDataConfig(), **kwargs) -> None:
+
         super().__init__(*args, cfg=cfg, **kwargs)
 
     def process_data(self, dataset: Dataset, stage: Optional[str] = None) -> Dataset:
@@ -49,7 +45,7 @@ class SpeechRecognitionDataModule(TransformerDataModule):
         ]
 
         dataset = dataset.cast_column("audio", Audio(sampling_rate=16_000))
-        
+
         self.labels = dataset["train"].features["sentence"]
         return dataset
 

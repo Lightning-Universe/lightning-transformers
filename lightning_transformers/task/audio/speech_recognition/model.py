@@ -52,7 +52,6 @@ class SpeechRecognitionTransformer(TaskTransformer):
             batch["labels"] = None
         return self.common_step("test", batch)
 
-
     @property
     def hf_pipeline_task(self) -> str:
         return "speech-recognition"
