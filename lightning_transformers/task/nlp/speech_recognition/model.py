@@ -11,94 +11,77 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+from typing import TYPE_CHECKING, Any, Dict
+
 import torch
-from regex import Match
-from torchmetrics.text.wer import WordErrorRate
-from torchmetrics.text.cer import CharErrorRate
-from torchmetrics.text.mer import MatchErrorRate
+from torchmetrics import Accuracy, Precision, Recall
 
-from lightning_transformers.core.nlp import HFDataModule
-from lightning_transformers.task.nlp.speech_recognition.config import SpeechRecognitionDataConfig, SpeechRecognitionConfig
+from lightning_transformers.core import TaskTransformer
 
-from typing import (
-    Any
-)
+if TYPE_CHECKING:
+    from transformers import Pipeline
 
-class SpeechRecognitionTransformer(HFDataModule):
-    """Defines ``LightningModule`` for the SpeechRecognition Task.
+
+class SpeechRecognitionTransformer(TaskTransformer):
+    """Defines ``LightningModule`` for the Text Classification Task.
 
     Args:
-        *args: :class:`lightning_transformers.core.nlp.seq2seq.Seq2SeqTransformer` arguments.
+        *args: :class:`lightning_transformers.core.nlp.HFTransformer` arguments.
         downstream_model_type: Downstream HuggingFace AutoModel to load.
-            (default ``transformers.AutoModelForSpeechSeq2Seq``)
-        **kwargs: :class:`lightning_transformers.core.nlp.seq2seq.Seq2SeqTransformer` arguments.
+            (default ``transformers.AutoModelForSequenceClassification``)
+        **kwargs: :class:`lightning_transformers.core.nlp.HFTransformer` arguments.
     """
 
     def __init__(
-        self,
-        *args,
-        downstream_model_type: str = "transformers.AutoModelForSpeechSeq2Seq",
-        cfg: SpeechRecognitionConfig = SpeechRecognitionConfig(),
-        **kwargs,
+        self, *args, downstream_model_type: str = "transformers.AutoModelForSequenceClassification", **kwargs
     ) -> None:
-        super().__init__(downstream_model_type, *args, cfg=cfg, **kwargs)
-        self.wer = None
+        super().__init__(downstream_model_type, *args, **kwargs)
+        self.metrics = {}
+
+    def training_step(self, batch: Any, batch_idx: int) -> torch.Tensor:
+        outputs = self.model(**batch)
+        loss = outputs[0]
+        self.log("train_loss", loss)
+        return loss
 
     def common_step(self, prefix: str, batch: Any) -> torch.Tensor:
-        pred_logits = pred.predictions
-        pred_ids = np.argmax(pred_logits, axis=-1)
-
-        pred.label_ids[pred.label_ids == -100] = processor.tokenizer.pad_token_id
-
-        pred_str = processor.batch_decode(pred_ids)
-        # we do not want to group tokens when computing the metrics
-        label_str = processor.batch_decode(pred.label_ids, group_tokens=False)
-
-        
         outputs = self.model(**batch)
-        loss, logits = outputs[:2]
-        if self.cfg.compute_generate_metrics:
-            self.compute_generate_metrics(batch, prefix)
+        loss = outputs.loss
+        logits = outputs.logits
+        preds = torch.argmax(logits, dim=1)
+        if batch["labels"] is not None:
+            metric_dict = self.compute_metrics(preds, batch["labels"], mode=prefix)
+            self.log_dict(metric_dict, prog_bar=True, on_step=False, on_epoch=True)
+            self.log(f"{prefix}_loss", loss, prog_bar=True, sync_dist=True)
         return loss
 
-    def training_step(self, batch, batch_idx):
-        loss = self._step(batch, batch_idx, "train")
-        return loss
+    def validation_step(self, batch: Any, batch_idx: int, dataloader_idx: int = 0) -> torch.Tensor:
+        return self.common_step("val", batch)
 
-    def validation_step(self, batch, batch_idx, dataloader_idx=0):
-        loss = self._step(batch, batch_idx, "val")
-        return loss
+    def test_step(self, batch: Any, batch_idx: int, dataloader_idx: int = 0) -> torch.Tensor:
+        if -1 in batch["labels"]:
+            batch["labels"] = None
+        return self.common_step("test", batch)
 
-    def test_step(self, batch, batch_idx, dataloader_idx=0):
-        loss = self._step(batch, batch_idx, "test")
-        return loss
-
-    def _step(self, batch, batch_idx, mode):
-        outputs = self.model(**batch)
-        loss, logits = outputs[:2]
-        preds = torch.argmax(logits, axis=1)
-        metric_dict = self.compute_metrics(preds, batch["labels"], mode=mode)
-        self.log_dict(metric_dict, prog_bar=True, on_step=False, on_epoch=True)
-        self.log(f"{mode}_loss", loss, prog_bar=True, sync_dist=True)
-        return loss
-
-
-
-    def configure_metrics(self, stage: str):
-        self.wer = WordErrorRate()
-        self.cer = CharErrorRate()
-        self.mer = MatchErrorRate()
-        self.metrics = {"wer": self.wer, "cer": self.cer, "mer": self.mer}
+    def configure_metrics(self, _) -> None:
+        self.prec = Precision(num_classes=self.num_classes)
+        self.recall = Recall(num_classes=self.num_classes)
+        self.acc = Accuracy()
+        self.metrics = {"precision": self.prec, "recall": self.recall, "accuracy": self.acc}
 
     @property
-    def num_classes(self):
+    def num_classes(self) -> int:
         return self.trainer.datamodule.num_classes
 
-    def compute_metrics(self, preds, labels, mode="val"):
-        # Remove ignored index (special tokens)
+    def compute_metrics(self, preds, labels, mode="val") -> Dict[str, torch.Tensor]:
         # Not required by all models. Only required for classification
         return {f"{mode}_{k}": metric(preds, labels) for k, metric in self.metrics.items()}
 
     @property
     def hf_pipeline_task(self) -> str:
-        return "speech_recognition"
+        return "speech-recognition"
+
+    @property
+    def hf_pipeline(self) -> "Pipeline":
+        self._hf_pipeline_kwargs["feature_extractor"] = self.tokenizer
+        return super().hf_pipeline
