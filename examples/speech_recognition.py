@@ -1,33 +1,19 @@
 import pytorch_lightning as pl
-from transformers import Wav2Vec2CTCTokenizer
 
-from lightning_transformers.task.nlp.speech_recognition import (
-    SpeechRecognitionConfig,
+from lightning_transformers.task.audio.speech_recognition import (
     SpeechRecognitionDataConfig,
-    SpeechRecognitionTransformer,
     SpeechRecognitionDataModule,
+    SpeechRecognitionTransformer,
 )
 
 if __name__ == "__main__":
-    tokenizer = Wav2Vec2CTCTokenizer.from_pretrained(pretrained_model_name_or_path="facebook/wav2vec2-base")
-    model = SpeechRecognitionTransformer(
-        pretrained_model_name_or_path="facebook/wav2vec2-base",
-        cfg=SpeechRecognitionConfig(
-            feature_size=1,
-            sampling_rate=16000,
-            padding_value=0.0,
-            do_normalize=True,
-            return_attention_mask=False
-        ),
-    )
+    model = SpeechRecognitionTransformer("facebook/wav2vec2-base", ctc_loss_reduction="mean", vocab_file="vocab.json")
     dm = SpeechRecognitionDataModule(
         cfg=SpeechRecognitionDataConfig(
-            dataset_name="common_voice",
-            subset="en",
-            sampling_rate=16_000,
-            max_length=5
+            batch_size=1,
+            dataset_name="timit_asr",
         ),
-        tokenizer=tokenizer,
+        tokenizer=model.tokenizer,
     )
     trainer = pl.Trainer(accelerator="auto", devices="auto", max_epochs=1)
 

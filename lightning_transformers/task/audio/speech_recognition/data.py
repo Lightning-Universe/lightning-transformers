@@ -17,7 +17,7 @@ from datasets import ClassLabel, Dataset
 from pytorch_lightning.utilities import rank_zero_warn
 
 from lightning_transformers.core import TransformerDataModule
-from lightning_transformers.task.nlp.speech_recognition.config import SpeechRecognitionDataConfig
+from lightning_transformers.task.audio.speech_recognition.config import SpeechRecognitionDataConfig
 
 
 class SpeechRecognitionDataModule(TransformerDataModule):

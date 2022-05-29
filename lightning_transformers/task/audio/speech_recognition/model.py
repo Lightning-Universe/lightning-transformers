@@ -14,7 +14,7 @@
 from typing import TYPE_CHECKING, Any, Dict
 
 import torch
-from torchmetrics import Accuracy, Precision, Recall
+from torchmetrics import WordErrorRate
 
 from lightning_transformers.core import TaskTransformer
 
@@ -42,17 +42,6 @@ class SpeechRecognitionTransformer(TaskTransformer):
         outputs = self.model(**batch)
         loss = outputs[0]
         self.log("train_loss", loss)
-        return loss
-
-    def common_step(self, prefix: str, batch: Any) -> torch.Tensor:
-        outputs = self.model(**batch)
-        loss = outputs.loss
-        logits = outputs.logits
-        preds = torch.argmax(logits, dim=1)
-        if batch["labels"] is not None:
-            metric_dict = self.compute_metrics(preds, batch["labels"], mode=prefix)
-            self.log_dict(metric_dict, prog_bar=True, on_step=False, on_epoch=True)
-            self.log(f"{prefix}_loss", loss, prog_bar=True, sync_dist=True)
         return loss
 
     def validation_step(self, batch: Any, batch_idx: int, dataloader_idx: int = 0) -> torch.Tensor:
