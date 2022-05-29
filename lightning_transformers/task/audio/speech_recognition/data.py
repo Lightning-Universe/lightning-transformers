@@ -36,6 +36,5 @@ class SpeechRecognitionDataModule(TransformerDataModule):
             k for k, v in dataset["train"].features.items() if k not in ["label", "sentence", "text", "path"]
         ]
 
-
         self.labels = dataset["train"].features["sentence"]
         return dataset
