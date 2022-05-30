@@ -61,8 +61,8 @@ class TextClassificationTransformer(TaskTransformer):
         return self.common_step("test", batch)
 
     def configure_metrics(self, _) -> None:
-        self.prec = Precision(num_classes=self.num_classes)
-        self.recall = Recall(num_classes=self.num_classes)
+        self.prec = Precision(num_classes=self.num_classes, average="macro")
+        self.recall = Recall(num_classes=self.num_classes, average="macro")
         self.acc = Accuracy()
         self.metrics = {"precision": self.prec, "recall": self.recall, "accuracy": self.acc}
 
