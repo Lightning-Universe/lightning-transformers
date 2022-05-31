@@ -8,6 +8,7 @@ from torch.utils.data import DataLoader
 from transformers import PreTrainedTokenizerBase
 
 from lightning_transformers.core.config import TransformerDataConfig
+from lightning_transformers.core.iterable import IterableDataLoader
 
 
 class TransformerDataModule(pl.LightningDataModule):
@@ -60,6 +61,7 @@ class TransformerDataModule(pl.LightningDataModule):
                 cache_dir=self.cfg.cache_dir,
                 data_files=data_files,
                 revision=self.cfg.revision,
+                streaming=self.cfg.streaming,
             )
 
         # Load straight from data files
@@ -112,7 +114,8 @@ class TransformerDataModule(pl.LightningDataModule):
         self.tokenizer = checkpoint["tokenizer"]
 
     def train_dataloader(self) -> DataLoader:
-        return DataLoader(
+        cls = DataLoader if not self.cfg.streaming else IterableDataLoader
+        return cls(
             self.ds["train"],
             batch_size=self.batch_size,
             num_workers=self.cfg.num_workers,
@@ -120,7 +123,8 @@ class TransformerDataModule(pl.LightningDataModule):
         )
 
     def val_dataloader(self) -> DataLoader:
-        return DataLoader(
+        cls = DataLoader if not self.cfg.streaming else IterableDataLoader
+        return cls(
             self.ds["validation"],
             batch_size=self.batch_size,
             num_workers=self.cfg.num_workers,
@@ -129,7 +133,8 @@ class TransformerDataModule(pl.LightningDataModule):
 
     def test_dataloader(self) -> Optional[DataLoader]:
         if "test" in self.ds:
-            return DataLoader(
+            cls = DataLoader if not self.cfg.streaming else IterableDataLoader
+            return cls(
                 self.ds["test"],
                 batch_size=self.batch_size,
                 num_workers=self.cfg.num_workers,

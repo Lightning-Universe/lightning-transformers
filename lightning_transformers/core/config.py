@@ -42,6 +42,7 @@ class TransformerDataConfig:
     train_subset_name: Optional[str] = None
     validation_subset_name: Optional[str] = None
     test_subset_name: Optional[str] = None
+    streaming: bool = False
 
 
 @dataclass
