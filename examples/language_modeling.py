@@ -14,6 +14,6 @@ if __name__ == "__main__":
         cfg=LanguageModelingDataConfig(batch_size=1, dataset_name="wikitext", dataset_config_name="wikitext-2-raw-v1"),
         tokenizer=tokenizer,
     )
-    trainer = pl.Trainer(accelerator="auto", devices="auto")
+    trainer = pl.Trainer(accelerator="auto", devices="auto", max_epochs=1)
 
     trainer.fit(model, dm)
