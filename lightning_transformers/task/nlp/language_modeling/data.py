@@ -14,7 +14,7 @@
 from functools import partial
 from typing import Callable, Optional, Union
 
-from datasets import Dataset
+from datasets import Dataset, IterableDataset
 from pytorch_lightning import _logger as log
 from transformers import PreTrainedTokenizerBase, default_data_collator
 
@@ -38,10 +38,22 @@ class LanguageModelingDataModule(TransformerDataModule):
         super().__init__(*args, cfg=cfg, **kwargs)
 
     def process_data(self, dataset: Dataset, stage: Optional[str] = None) -> Dataset:
-        column_names = dataset["train" if stage == "fit" else "validation"].column_names
-        text_column_name = "text" if "text" in column_names else column_names[0]
+        dataset_split = dataset["train" if stage == "fit" else "validation"]
+        streaming_dataset = isinstance(dataset_split, IterableDataset)
+        if streaming_dataset:
+            # assume we just have a single text column name
+            column_names = ["text"]
+            text_column_name = "text"
+        else:
+            column_names = dataset_split.column_names
+            text_column_name = "text" if "text" in column_names else column_names[0]
 
         tokenize_function = partial(self.tokenize_function, tokenizer=self.tokenizer, text_column_name=text_column_name)
+        convert_to_features = partial(self.convert_to_features, block_size=self.effective_block_size)
+
+        if streaming_dataset:
+            dataset = dataset.map(tokenize_function, batched=True, remove_columns=column_names)
+            return dataset.map(convert_to_features, batched=True)
 
         dataset = dataset.map(
             tokenize_function,
@@ -51,16 +63,12 @@ class LanguageModelingDataModule(TransformerDataModule):
             load_from_cache_file=self.cfg.load_from_cache_file,
         )
 
-        convert_to_features = partial(self.convert_to_features, block_size=self.effective_block_size)
-
-        dataset = dataset.map(
+        return dataset.map(
             convert_to_features,
             batched=True,
             num_proc=self.cfg.preprocessing_num_workers,
             load_from_cache_file=self.cfg.load_from_cache_file,
         )
-
-        return dataset
 
     @property
     def effective_block_size(self) -> int:

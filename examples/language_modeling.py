@@ -12,12 +12,10 @@ if __name__ == "__main__":
     model = LanguageModelingTransformer(pretrained_model_name_or_path="gpt2")
     dm = LanguageModelingDataModule(
         cfg=LanguageModelingDataConfig(
-            batch_size=1,
-            dataset_name="wikitext",
-            dataset_config_name="wikitext-2-raw-v1",
+            batch_size=1, dataset_name="wikitext", dataset_config_name="wikitext-2-raw-v1", streaming=True
         ),
         tokenizer=tokenizer,
     )
-    trainer = pl.Trainer(accelerator="auto", devices="auto", max_epochs=1)
+    trainer = pl.Trainer(accelerator="auto", devices=1, max_steps=100)
 
     trainer.fit(model, dm)
