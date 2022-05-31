@@ -63,7 +63,9 @@ dm = TextClassificationDataModule(
     ),
     tokenizer=tokenizer,
 )
-model = TextClassificationTransformer(pretrained_model_name_or_path="bert-base-cased")
+model = TextClassificationTransformer(
+    pretrained_model_name_or_path="bert-base-cased", num_labels=dm.num_classes
+)
 
 trainer = pl.Trainer(accelerator="auto", devices="auto", max_epochs=1)
 
