@@ -75,7 +75,7 @@ class TransformerDataModule(pl.LightningDataModule):
             )
 
         # Use special subset names if provided, and rename them back to standard ones
-        for subset in ("train", "validation", "test"):
+        for subset in ("train", "validation", "test", "predict"):
             config_attr = f"{subset}_subset_name"
             if getattr(self.cfg, config_attr) is not None:
                 special_subset_name = getattr(self.cfg, config_attr)
@@ -136,6 +136,16 @@ class TransformerDataModule(pl.LightningDataModule):
             cls = DataLoader if not self.cfg.streaming else IterableDataLoader
             return cls(
                 self.ds["test"],
+                batch_size=self.batch_size,
+                num_workers=self.cfg.num_workers,
+                collate_fn=self.collate_fn,
+            )
+
+    def predict_dataloader(self) -> Optional[DataLoader]:
+        if "predict" in self.ds:
+            cls = DataLoader if not self.cfg.streaming else IterableDataLoader
+            return cls(
+                self.ds["predict"],
                 batch_size=self.batch_size,
                 num_workers=self.cfg.num_workers,
                 collate_fn=self.collate_fn,
