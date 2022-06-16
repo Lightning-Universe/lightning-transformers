@@ -32,6 +32,7 @@ def test_smoke_train(hf_cache_path):
     trainer = pl.Trainer(fast_dev_run=True)
     trainer.fit(model, dm)
 
+
 def test_smoke_predict_with_trainer(hf_cache_path):
     tokenizer = AutoTokenizer.from_pretrained(pretrained_model_name_or_path="prajjwal1/bert-tiny")
     dm = TextClassificationDataModule(
@@ -43,8 +44,8 @@ def test_smoke_predict_with_trainer(hf_cache_path):
             limit_test_samples=64,
             limit_val_samples=64,
             limit_train_samples=64,
-            cache_dir=hf_cache_path, 
-            predict_subset_name="test" # Use the "test" split of the dataset as our prediction subset
+            cache_dir=hf_cache_path,
+            predict_subset_name="test",  # Use the "test" split of the dataset as our prediction subset
         ),
         tokenizer=tokenizer,
     )
@@ -52,7 +53,8 @@ def test_smoke_predict_with_trainer(hf_cache_path):
     trainer = pl.Trainer(fast_dev_run=True)
     y = trainer.predict(model, dm)
     assert len(y) == 1
-    assert int(y[0]) in (0,1)
+    assert int(y[0]) in (0, 1)
+
 
 @pytest.mark.skipif(sys.platform == "win32", reason="Currently Windows is not supported")
 def test_smoke_predict():
