@@ -59,7 +59,7 @@ class TextClassificationTransformer(TaskTransformer):
         if -1 in batch["labels"]:
             batch["labels"] = None
         return self.common_step("test", batch)
-    
+
     def predict_step(self, batch: Any, batch_idx: int, dataloader_idx: int = 0) -> torch.Tensor:
         batch["labels"] = None
         outputs = self.model(**batch)
