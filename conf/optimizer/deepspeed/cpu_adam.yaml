@@ -1,5 +1,0 @@
-_target_: deepspeed.ops.adam.DeepSpeedCPUAdam
-lr: ${training.lr}
-betas: [ 0.8, 0.999 ]
-eps: 1e-8
-weight_decay: 3e-7

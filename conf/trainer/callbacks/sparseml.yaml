@@ -1,3 +1,0 @@
-_target_: lightning_transformers.core.callback.TransformerSparseMLCallback
-output_dir: /content/MODELS
-recipe_path: /content/recipe.yaml

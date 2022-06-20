@@ -1,6 +1,0 @@
-# @package task
-defaults:
-  - nlp/default
-  - override /dataset@_group_: nlp/token_classification/default
-_target_: lightning_transformers.task.nlp.token_classification.TokenClassificationTransformer
-downstream_model_type: transformers.AutoModelForTokenClassification

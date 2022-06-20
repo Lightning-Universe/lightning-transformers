@@ -1,7 +1,0 @@
-run_test_after_fit: True
-lr: 5e-5
-output_dir: '.'
-
-# read in dataset
-batch_size: 16
-num_workers: 16

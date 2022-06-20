@@ -1,8 +1,0 @@
-# @package dataset
-defaults:
-  - nlp/default
-_target_: lightning_transformers.task.nlp.multiple_choice.SwagMultipleChoiceDataModule
-cfg:
-  dataset_name: swag
-  dataset_config_name: 'regular'
-  padding: False

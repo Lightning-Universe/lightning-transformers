@@ -10,9 +10,6 @@ torchmetrics>=0.7.0
 transformers>=4.11.2
 datasets
 
-# hydra
-hydra-core>=1.1.0
-
 # task-specific
 sentencepiece
 torchmetrics[text]

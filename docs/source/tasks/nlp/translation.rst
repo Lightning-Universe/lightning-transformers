@@ -69,8 +69,6 @@ Translation Inference Pipeline
 
 By default we use the translation pipeline, which requires a source text string.
 
-For Hydra to correctly parse your input argument, if your input contains any special characters you must either wrap the entire call in single quotes like `'+x="my, sentence"'` or escape special characters. See `escaped characters in unquoted values <https://hydra.cc/docs/advanced/override_grammar/basic/#escaped-characters-in-unquoted-values>`_.
-
 .. code-block:: python
 
     from transformers import AutoTokenizer

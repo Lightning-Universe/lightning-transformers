@@ -1,2 +1,0 @@
-_target_: pytorch_lightning.plugins.DeepSpeedPlugin
-stage: 2

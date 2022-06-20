@@ -38,12 +38,6 @@ setup(
     setup_requires=[],
     extras_require=extras,
     install_requires=setup_tools._load_requirements(_PATH_ROOT),
-    entry_points={
-        "console_scripts": [
-            "pl-transformers-train=lightning_transformers.cli.train:hydra_entry",
-            "pl-transformers-predict=lightning_transformers.cli.predict:hydra_entry",
-        ],
-    },
     project_urls={
         "Bug Tracker": "https://github.com/PyTorchLightning/lightning-transformers/issues",
         "Documentation": "https://lightning-transformers.readthedocs.io/en/stable/",
