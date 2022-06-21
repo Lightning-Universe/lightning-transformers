@@ -53,7 +53,7 @@ def test_smoke_predict():
 
 def test_model_has_correct_cfg():
     model = TranslationTransformer(pretrained_model_name_or_path="patrickvonplaten/t5-tiny-random")
-    assert isinstance(model.model, transformers.AutoModelForSeq2SeqLM)
+    assert isinstance(model.model, transformers.T5ForConditionalGeneration)
     assert type(model.cfg) is TranslationConfig
 
 

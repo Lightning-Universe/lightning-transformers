@@ -47,7 +47,7 @@ def test_model_has_correct_cfg():
     model = ImageClassificationTransformer(
         pretrained_model_name_or_path="nateraw/tiny-vit-random",
     )
-    assert isinstance(model.model, transformers.AutoModelForImageClassification)
+    assert isinstance(model.model, transformers.ViTForImageClassification)
 
 
 def test_datamodule_has_correct_cfg():

@@ -55,7 +55,7 @@ def test_model_has_correct_cfg():
         pretrained_model_name_or_path="bert-base-cased",
         labels=2,
     )
-    assert isinstance(model.model, transformers.AutoModelForTokenClassification)
+    assert isinstance(model.model, transformers.BertForTokenClassification)
     assert model.num_labels == 2
 
 

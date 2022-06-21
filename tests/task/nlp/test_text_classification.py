@@ -70,7 +70,7 @@ def test_smoke_predict():
 
 def test_model_has_correct_cfg():
     model = TextClassificationTransformer(pretrained_model_name_or_path="prajjwal1/bert-tiny")
-    assert isinstance(model.model, transformers.AutoModelForSequenceClassification)
+    assert isinstance(model.model, transformers.BertForSequenceClassification)
 
 
 def test_datamodule_has_correct_cfg():
