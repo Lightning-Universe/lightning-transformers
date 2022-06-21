@@ -8,6 +8,7 @@ from torch.utils.data import DataLoader
 from transformers import PreTrainedTokenizerBase
 
 from lightning_transformers.core.config import TransformerDataConfig
+from lightning_transformers.core.iterable import IterableDataLoader
 
 
 class TransformerDataModule(pl.LightningDataModule):
@@ -60,6 +61,7 @@ class TransformerDataModule(pl.LightningDataModule):
                 cache_dir=self.cfg.cache_dir,
                 data_files=data_files,
                 revision=self.cfg.revision,
+                streaming=self.cfg.streaming,
             )
 
         # Load straight from data files
@@ -73,7 +75,7 @@ class TransformerDataModule(pl.LightningDataModule):
             )
 
         # Use special subset names if provided, and rename them back to standard ones
-        for subset in ("train", "validation", "test"):
+        for subset in ("train", "validation", "test", "predict"):
             config_attr = f"{subset}_subset_name"
             if getattr(self.cfg, config_attr) is not None:
                 special_subset_name = getattr(self.cfg, config_attr)
@@ -112,7 +114,8 @@ class TransformerDataModule(pl.LightningDataModule):
         self.tokenizer = checkpoint["tokenizer"]
 
     def train_dataloader(self) -> DataLoader:
-        return DataLoader(
+        cls = DataLoader if not self.cfg.streaming else IterableDataLoader
+        return cls(
             self.ds["train"],
             batch_size=self.batch_size,
             num_workers=self.cfg.num_workers,
@@ -120,7 +123,8 @@ class TransformerDataModule(pl.LightningDataModule):
         )
 
     def val_dataloader(self) -> DataLoader:
-        return DataLoader(
+        cls = DataLoader if not self.cfg.streaming else IterableDataLoader
+        return cls(
             self.ds["validation"],
             batch_size=self.batch_size,
             num_workers=self.cfg.num_workers,
@@ -129,8 +133,19 @@ class TransformerDataModule(pl.LightningDataModule):
 
     def test_dataloader(self) -> Optional[DataLoader]:
         if "test" in self.ds:
-            return DataLoader(
+            cls = DataLoader if not self.cfg.streaming else IterableDataLoader
+            return cls(
                 self.ds["test"],
+                batch_size=self.batch_size,
+                num_workers=self.cfg.num_workers,
+                collate_fn=self.collate_fn,
+            )
+
+    def predict_dataloader(self) -> Optional[DataLoader]:
+        if "predict" in self.ds:
+            cls = DataLoader if not self.cfg.streaming else IterableDataLoader
+            return cls(
+                self.ds["predict"],
                 batch_size=self.batch_size,
                 num_workers=self.cfg.num_workers,
                 collate_fn=self.collate_fn,

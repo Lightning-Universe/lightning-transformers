@@ -29,6 +29,7 @@ class TransformerDataConfig:
     train_val_split: Optional[int] = None
     train_file: Optional[str] = None
     test_file: Optional[str] = None
+    predict_file: Optional[str] = None
     validation_file: Optional[str] = None
     padding: Union[str, bool] = "max_length"
     truncation: str = "only_first"
@@ -42,6 +43,8 @@ class TransformerDataConfig:
     train_subset_name: Optional[str] = None
     validation_subset_name: Optional[str] = None
     test_subset_name: Optional[str] = None
+    predict_subset_name: Optional[str] = None
+    streaming: bool = False
 
 
 @dataclass
