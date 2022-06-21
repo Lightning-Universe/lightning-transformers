@@ -64,7 +64,7 @@ def test_smoke_predict():
 
 def test_model_has_correct_cfg():
     model = SummarizationTransformer(pretrained_model_name_or_path="t5-base")
-    assert isinstance(model.model, transformers.AutoModelForSeq2SeqLM)
+    assert isinstance(model.model, transformers.T5ForConditionalGeneration)
     assert type(model.cfg) is SummarizationConfig
 
 

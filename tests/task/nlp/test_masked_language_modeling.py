@@ -44,7 +44,7 @@ def test_smoke_predict():
 
 def test_model_has_correct_cfg():
     model = MaskedLanguageModelingTransformer(pretrained_model_name_or_path="prajjwal1/bert-tiny")
-    assert isinstance(model.model, transformers.AutoModelForMaskedLM)
+    assert isinstance(model.model, transformers.BertForMaskedLM)
 
 
 def test_datamodule_has_correct_cfg():

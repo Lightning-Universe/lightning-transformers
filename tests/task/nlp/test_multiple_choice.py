@@ -35,7 +35,7 @@ def test_smoke_train(hf_cache_path):
 
 def test_model_has_correct_cfg():
     model = MultipleChoiceTransformer(pretrained_model_name_or_path="bert-base-cased")
-    assert isinstance(model.model, transformers.AutoModelForMultipleChoice)
+    assert isinstance(model.model, transformers.BertForMultipleChoice)
 
 
 def test_datamodule_has_correct_cfg():

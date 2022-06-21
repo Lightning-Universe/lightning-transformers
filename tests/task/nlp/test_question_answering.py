@@ -56,7 +56,7 @@ def test_smoke_predict():
 
 def test_model_has_correct_cfg():
     model = QuestionAnsweringTransformer(pretrained_model_name_or_path="bert-base-cased")
-    assert isinstance(model.model, transformers.AutoModelForQuestionAnswering)
+    assert isinstance(model.model, transformers.BertForQuestionAnswering)
 
 
 def test_datamodule_has_correct_cfg():
