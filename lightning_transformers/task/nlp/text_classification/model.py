@@ -60,6 +60,13 @@ class TextClassificationTransformer(TaskTransformer):
             batch["labels"] = None
         return self.common_step("test", batch)
 
+    def predict_step(self, batch: Any, batch_idx: int, dataloader_idx: int = 0) -> torch.Tensor:
+        batch["labels"] = None
+        outputs = self.model(**batch)
+        logits = outputs.logits
+        preds = torch.argmax(logits, dim=1)
+        return preds
+
     def configure_metrics(self, _) -> None:
         self.prec = Precision(num_classes=self.num_classes, average="macro")
         self.recall = Recall(num_classes=self.num_classes, average="macro")
