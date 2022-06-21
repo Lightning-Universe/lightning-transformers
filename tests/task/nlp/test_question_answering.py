@@ -3,6 +3,7 @@ from unittest.mock import MagicMock
 
 import pytest
 import pytorch_lightning as pl
+import transformers
 from transformers import AutoTokenizer
 
 from lightning_transformers.task.nlp.question_answering import (
@@ -55,7 +56,7 @@ def test_smoke_predict():
 
 def test_model_has_correct_cfg():
     model = QuestionAnsweringTransformer(pretrained_model_name_or_path="bert-base-cased")
-    assert model.hparams.downstream_model_type == "transformers.AutoModelForQuestionAnswering"
+    assert isinstance(model.model, transformers.BertForQuestionAnswering)
 
 
 def test_datamodule_has_correct_cfg():

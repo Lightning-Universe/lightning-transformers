@@ -1,6 +1,0 @@
-# @package dataset
-_target_: lightning_transformers.core.data.TransformerDataModule
-cfg:
-  # torch data-loader specific arguments
-  batch_size: ${training.batch_size}
-  num_workers: ${training.num_workers}

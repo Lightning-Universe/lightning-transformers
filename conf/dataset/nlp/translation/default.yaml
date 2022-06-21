@@ -1,4 +1,0 @@
-# @package dataset
-defaults:
-  - nlp/default
-_target_: lightning_transformers.task.nlp.translation.TranslationDataModule

@@ -1,2 +1,0 @@
-_target_: pytorch_lightning.loggers.TestTubeLogger
-save_dir: logs/

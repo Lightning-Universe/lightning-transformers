@@ -36,13 +36,6 @@ Lightning Transformers
 
 .. toctree::
    :maxdepth: 1
-   :name: trainer
-   :caption: Trainer Features
-
-   trainer/logging
-
-.. toctree::
-   :maxdepth: 1
    :name: advanced
    :caption: Advanced
 

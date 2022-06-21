@@ -3,6 +3,7 @@ from unittest.mock import MagicMock
 
 import pytest
 import pytorch_lightning as pl
+import transformers
 from transformers import AutoTokenizer
 
 from lightning_transformers.task.nlp.language_modeling import (
@@ -45,7 +46,7 @@ def test_smoke_predict():
 
 def test_model_has_correct_cfg():
     model = LanguageModelingTransformer(pretrained_model_name_or_path="prajjwal1/bert-tiny")
-    assert model.hparams.downstream_model_type == "transformers.AutoModelForCausalLM"
+    assert isinstance(model.model, transformers.BertLMHeadModel)
 
 
 def test_datamodule_has_correct_cfg():

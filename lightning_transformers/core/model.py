@@ -16,13 +16,9 @@ from typing import IO, TYPE_CHECKING, Any, Callable, Dict, Optional, Tuple, Type
 import pytorch_lightning as pl
 import torch
 import transformers
-from hydra.utils import get_class
-from pytorch_lightning.utilities import rank_zero_info, rank_zero_warn
+from pytorch_lightning.utilities import rank_zero_warn
 from transformers import PreTrainedTokenizerBase
 from transformers import pipeline as hf_transformers_pipeline
-
-from lightning_transformers.core.config import BackboneConfig, OptimizerConfig, SchedulerConfig
-from lightning_transformers.core.instantiator import Instantiator
 
 if TYPE_CHECKING:
     from transformers import AutoModel, Pipeline
@@ -37,13 +33,7 @@ class TaskTransformer(pl.LightningModule):
     Args:
         downstream_model_type: The AutoModel downstream model type.
             See https://huggingface.co/transformers/model_doc/auto.html
-        backbone: Config containing backbone specific arguments.
         pretrained_model_name_or_path: Huggingface model to use if backbone config not passed.
-        optimizer: Config containing optimizer specific arguments.
-        scheduler: Config containing scheduler specific arguments.
-        instantiator: Used to instantiate objects (when using Hydra).
-            If Hydra is not being used the instantiator is not required,
-            and functions that use instantiation such as ``configure_optimizers`` has been overridden.
         tokenizer: The pre-trained tokenizer.
         pipeline_kwargs: Arguments required for the HuggingFace inference pipeline class.
         **model_data_kwargs: Arguments passed from the data module to the class.
@@ -51,72 +41,37 @@ class TaskTransformer(pl.LightningModule):
 
     def __init__(
         self,
-        downstream_model_type: str,
-        optimizer: OptimizerConfig = OptimizerConfig(),
-        scheduler: SchedulerConfig = SchedulerConfig(),
+        downstream_model_type: Type["AutoModel"],
         pretrained_model_name_or_path: Optional[str] = None,
-        backbone: Optional[BackboneConfig] = None,
-        instantiator: Optional[Instantiator] = None,
         tokenizer: Optional[PreTrainedTokenizerBase] = None,
         pipeline_kwargs: Optional[dict] = None,
         **model_data_kwargs,
     ) -> None:
         super().__init__()
         self.save_hyperparameters()
-        model_cls: Type["AutoModel"] = get_class(downstream_model_type)
-        model_path = backbone.pretrained_model_name_or_path if backbone else pretrained_model_name_or_path
-        self.model = model_cls.from_pretrained(model_path, **model_data_kwargs)
+        self.model = downstream_model_type.from_pretrained(pretrained_model_name_or_path, **model_data_kwargs)
         self._tokenizer = tokenizer  # necessary for hf_pipeline
         self._hf_pipeline = None
         self._hf_pipeline_kwargs = pipeline_kwargs or {}
-        self.instantiator = instantiator
-        self.optimizer_cfg = optimizer
-        self.scheduler_cfg = scheduler
 
     def configure_optimizers(self) -> Dict:
-        if self.instantiator is None:
-            rank_zero_warn(
-                "You haven't specified an optimizer or lr scheduler. "
-                "Defaulting to AdamW with an lr of 1e-5 and linear warmup for 10% of steps. "
-                "To change this, override ``configure_optimizers`` in the TransformerModule."
-            )
-            optimizer = torch.optim.AdamW(self.parameters(), lr=1e-5)
-            num_training_steps, num_warmup_steps = self.compute_warmup(
-                num_training_steps=-1,
-                num_warmup_steps=0.1,
-            )
-            scheduler = transformers.get_linear_schedule_with_warmup(
-                optimizer, num_warmup_steps=num_warmup_steps, num_training_steps=num_training_steps
-            )
-            return {
-                "optimizer": optimizer,
-                "lr_scheduler": {"scheduler": scheduler, "interval": "step", "frequency": 1},
-            }
-
-        optimizer = self.instantiator.optimizer(self.model, self.optimizer_cfg)
-        # compute_warmup needs the datamodule to be available when `self.num_training_steps`
-        # is called that is why this is done here and not in the __init__
-        self.scheduler_cfg.num_training_steps, self.scheduler_cfg.num_warmup_steps = self.compute_warmup(
-            num_training_steps=self.scheduler_cfg.num_training_steps,
-            num_warmup_steps=self.scheduler_cfg.num_warmup_steps,
+        rank_zero_warn(
+            "You haven't specified an optimizer or lr scheduler. "
+            "Defaulting to AdamW with an lr of 1e-5 and linear warmup for 10% of steps. "
+            "To change this, override ``configure_optimizers`` in the TransformerModule."
         )
-        rank_zero_info(f"Inferring number of training steps, set to {self.scheduler_cfg.num_training_steps}")
-        rank_zero_info(f"Inferring number of warmup steps from ratio, set to {self.scheduler_cfg.num_warmup_steps}")
-        scheduler = self.instantiator.scheduler(self.scheduler_cfg, optimizer)
+        optimizer = torch.optim.AdamW(self.parameters(), lr=1e-5)
+        num_training_steps, num_warmup_steps = self.compute_warmup(
+            num_training_steps=-1,
+            num_warmup_steps=0.1,
+        )
+        scheduler = transformers.get_linear_schedule_with_warmup(
+            optimizer, num_warmup_steps=num_warmup_steps, num_training_steps=num_training_steps
+        )
         return {
             "optimizer": optimizer,
             "lr_scheduler": {"scheduler": scheduler, "interval": "step", "frequency": 1},
         }
-
-    def on_save_checkpoint(self, checkpoint: Dict[str, Any]):
-        # Save tokenizer from datamodule for predictions
-        if self.instantiator:
-            checkpoint["instantiator"] = self.instantiator
-
-    def on_load_checkpoint(self, checkpoint: Dict[str, Any]) -> None:
-        if "tokenizer" in checkpoint:
-            self.tokenizer = checkpoint["tokenizer"]
-        self.instantiator = checkpoint.get("instantiator")
 
     @property
     def num_training_steps(self) -> int:

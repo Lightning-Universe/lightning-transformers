@@ -11,7 +11,14 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+from typing import TYPE_CHECKING, Type
+
+import transformers
+
 from lightning_transformers.core import TaskTransformer
+
+if TYPE_CHECKING:
+    from transformers import AutoModel
 
 
 class MaskedLanguageModelingTransformer(TaskTransformer):
@@ -23,7 +30,9 @@ class MaskedLanguageModelingTransformer(TaskTransformer):
         **kwargs: :class:`lightning_transformers.core.nlp.HFTransformer` arguments.
     """
 
-    def __init__(self, *args, downstream_model_type: str = "transformers.AutoModelForMaskedLM", **kwargs) -> None:
+    def __init__(
+        self, *args, downstream_model_type: Type["AutoModel"] = transformers.AutoModelForMaskedLM, **kwargs
+    ) -> None:
         super().__init__(downstream_model_type, *args, **kwargs)
 
     def on_fit_start(self):

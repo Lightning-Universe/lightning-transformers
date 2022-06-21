@@ -1,2 +1,0 @@
-_target_: torch.optim.RMSprop
-lr: ${training.lr}

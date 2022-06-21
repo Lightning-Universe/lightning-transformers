@@ -1,6 +1,0 @@
-# @package task
-defaults:
-  - nlp/default
-  - override /dataset@_group_: nlp/masked_language_modeling/default
-_target_: lightning_transformers.task.nlp.masked_language_modeling.MaskedLanguageModelingTransformer
-downstream_model_type: transformers.AutoModelForMaskedLM

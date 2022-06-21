@@ -3,6 +3,7 @@ from unittest.mock import MagicMock
 
 import pytest
 import pytorch_lightning as pl
+import transformers
 from transformers import AutoTokenizer
 
 from lightning_transformers.task.nlp.multiple_choice import (
@@ -34,7 +35,7 @@ def test_smoke_train(hf_cache_path):
 
 def test_model_has_correct_cfg():
     model = MultipleChoiceTransformer(pretrained_model_name_or_path="bert-base-cased")
-    assert model.hparams.downstream_model_type == "transformers.AutoModelForMultipleChoice"
+    assert isinstance(model.model, transformers.BertForMultipleChoice)
 
 
 def test_datamodule_has_correct_cfg():

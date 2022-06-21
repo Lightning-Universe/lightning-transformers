@@ -130,7 +130,6 @@ PACKAGE_MAPPING = {
     "scikit-learn": "sklearn",
     "Pillow": "PIL",
     "PyYAML": "yaml",
-    "hydra-core": "hydra",
     "rouge-score": "rouge_score",
 }
 MOCK_PACKAGES = ["omegaconf"]

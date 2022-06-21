@@ -3,6 +3,7 @@ from unittest.mock import MagicMock
 
 import pytest
 import pytorch_lightning as pl
+import transformers
 from transformers import AutoTokenizer
 
 from lightning_transformers.task.nlp.summarization import (
@@ -63,7 +64,7 @@ def test_smoke_predict():
 
 def test_model_has_correct_cfg():
     model = SummarizationTransformer(pretrained_model_name_or_path="t5-base")
-    assert model.hparams.downstream_model_type == "transformers.AutoModelForSeq2SeqLM"
+    assert isinstance(model.model, transformers.T5ForConditionalGeneration)
     assert type(model.cfg) is SummarizationConfig
 
 

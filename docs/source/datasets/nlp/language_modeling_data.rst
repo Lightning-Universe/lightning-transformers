@@ -14,8 +14,6 @@ Below we have defined a csv file to use as our input data.
     this is the second sentence,
 
 
-When specifying the file path with hydra, it is important to use the absolute path to the file.
-
 .. code-block:: python
 
     from lightning_transformers.task.nlp.language_modeling import (

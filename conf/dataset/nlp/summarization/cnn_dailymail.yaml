@@ -1,9 +1,0 @@
-# @package dataset
-defaults:
-  - nlp/default
-_target_: lightning_transformers.task.nlp.summarization.CNNDailyMailSummarizationDataModule
-cfg:
-  dataset_name: cnn_dailymail
-  dataset_config_name: 3.0.0
-  max_source_length: 1024
-  max_target_length: 128

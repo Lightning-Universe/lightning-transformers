@@ -11,10 +11,16 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+from typing import TYPE_CHECKING, Type
+
+import transformers
 from torchmetrics.text.rouge import ROUGEScore
 
 from lightning_transformers.core.seq2seq.model import Seq2SeqTransformer
 from lightning_transformers.task.nlp.summarization.config import SummarizationConfig
+
+if TYPE_CHECKING:
+    from transformers import AutoModel
 
 
 class SummarizationTransformer(Seq2SeqTransformer):
@@ -30,7 +36,7 @@ class SummarizationTransformer(Seq2SeqTransformer):
     def __init__(
         self,
         *args,
-        downstream_model_type: str = "transformers.AutoModelForSeq2SeqLM",
+        downstream_model_type: Type["AutoModel"] = transformers.AutoModelForSeq2SeqLM,
         cfg: SummarizationConfig = SummarizationConfig(),
         **kwargs
     ) -> None:

@@ -1,5 +1,0 @@
-defaults:
-  - default # inherit from default trainer conf
-  - plugins: deepspeed
-accelerator: ddp
-precision: 16
