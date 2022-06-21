@@ -3,6 +3,7 @@ from unittest.mock import MagicMock
 
 import pytest
 import pytorch_lightning as pl
+import transformers
 from transformers import AutoTokenizer
 
 from lightning_transformers.task.nlp.token_classification import (
@@ -54,7 +55,7 @@ def test_model_has_correct_cfg():
         pretrained_model_name_or_path="bert-base-cased",
         labels=2,
     )
-    assert model.hparams.downstream_model_type == "transformers.AutoModelForTokenClassification"
+    assert isinstance(model.model, transformers.AutoModelForTokenClassification)
     assert model.num_labels == 2
 
 

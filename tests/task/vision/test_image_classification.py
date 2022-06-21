@@ -3,6 +3,7 @@ from unittest.mock import MagicMock
 
 import pytest
 import pytorch_lightning as pl
+import transformers
 from transformers import AutoFeatureExtractor
 
 from lightning_transformers.task.vision.image_classification import (
@@ -46,7 +47,7 @@ def test_model_has_correct_cfg():
     model = ImageClassificationTransformer(
         pretrained_model_name_or_path="nateraw/tiny-vit-random",
     )
-    assert model.hparams.downstream_model_type == "transformers.AutoModelForImageClassification"
+    assert isinstance(model.model, transformers.AutoModelForImageClassification)
 
 
 def test_datamodule_has_correct_cfg():

@@ -3,6 +3,7 @@ from unittest.mock import MagicMock
 
 import pytest
 import pytorch_lightning as pl
+import transformers
 from transformers import AutoTokenizer
 
 from lightning_transformers.task.nlp.text_classification import (
@@ -69,7 +70,7 @@ def test_smoke_predict():
 
 def test_model_has_correct_cfg():
     model = TextClassificationTransformer(pretrained_model_name_or_path="prajjwal1/bert-tiny")
-    assert model.hparams.downstream_model_type == "transformers.AutoModelForSequenceClassification"
+    assert isinstance(model.model, transformers.AutoModelForSequenceClassification)
 
 
 def test_datamodule_has_correct_cfg():
