@@ -7,7 +7,7 @@ tqdm
 torchmetrics>=0.7.0
 
 # huggingface
-transformers>=4.11.2
+transformers>=4.16.0
 datasets
 
 # hydra
