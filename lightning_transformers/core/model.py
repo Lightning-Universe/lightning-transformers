@@ -20,8 +20,6 @@ from pytorch_lightning.utilities import rank_zero_warn
 from transformers import PreTrainedTokenizerBase
 from transformers import pipeline as hf_transformers_pipeline
 
-from lightning_transformers.core.config import BackboneConfig, OptimizerConfig, SchedulerConfig
-
 if TYPE_CHECKING:
     from transformers import AutoModel, Pipeline
 
@@ -35,10 +33,7 @@ class TaskTransformer(pl.LightningModule):
     Args:
         downstream_model_type: The AutoModel downstream model type.
             See https://huggingface.co/transformers/model_doc/auto.html
-        backbone: Config containing backbone specific arguments.
         pretrained_model_name_or_path: Huggingface model to use if backbone config not passed.
-        optimizer: Config containing optimizer specific arguments.
-        scheduler: Config containing scheduler specific arguments.
         tokenizer: The pre-trained tokenizer.
         pipeline_kwargs: Arguments required for the HuggingFace inference pipeline class.
         **model_data_kwargs: Arguments passed from the data module to the class.
@@ -47,23 +42,17 @@ class TaskTransformer(pl.LightningModule):
     def __init__(
         self,
         downstream_model_type: Type["AutoModel"],
-        optimizer: OptimizerConfig = OptimizerConfig(),
-        scheduler: SchedulerConfig = SchedulerConfig(),
         pretrained_model_name_or_path: Optional[str] = None,
-        backbone: Optional[BackboneConfig] = None,
         tokenizer: Optional[PreTrainedTokenizerBase] = None,
         pipeline_kwargs: Optional[dict] = None,
         **model_data_kwargs,
     ) -> None:
         super().__init__()
         self.save_hyperparameters()
-        model_path = backbone.pretrained_model_name_or_path if backbone else pretrained_model_name_or_path
-        self.model = downstream_model_type.from_pretrained(model_path, **model_data_kwargs)
+        self.model = downstream_model_type.from_pretrained(pretrained_model_name_or_path, **model_data_kwargs)
         self._tokenizer = tokenizer  # necessary for hf_pipeline
         self._hf_pipeline = None
         self._hf_pipeline_kwargs = pipeline_kwargs or {}
-        self.optimizer_cfg = optimizer
-        self.scheduler_cfg = scheduler
 
     def configure_optimizers(self) -> Dict:
         rank_zero_warn(

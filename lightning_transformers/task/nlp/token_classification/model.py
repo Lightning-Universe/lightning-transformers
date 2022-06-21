@@ -11,12 +11,16 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-from typing import Any, Dict, List, Union
+from typing import TYPE_CHECKING, Any, Dict, List, Type, Union
 
 import torch
+import transformers
 from torchmetrics import Accuracy, F1Score, Precision, Recall
 
 from lightning_transformers.core import TaskTransformer
+
+if TYPE_CHECKING:
+    from transformers import AutoModel
 
 
 class TokenClassificationTransformer(TaskTransformer):
@@ -33,7 +37,7 @@ class TokenClassificationTransformer(TaskTransformer):
         self,
         *args,
         labels: Union[int, List[str]],
-        downstream_model_type: str = "transformers.AutoModelForTokenClassification",
+        downstream_model_type: Type["AutoModel"] = transformers.AutoModelForTokenClassification,
         **kwargs,
     ) -> None:
         num_labels = labels if isinstance(labels, int) else len(labels)

@@ -12,13 +12,17 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 from functools import partial
-from typing import Any
+from typing import TYPE_CHECKING, Any, Type
 
 import torch
+import transformers
 
 from lightning_transformers.core import TaskTransformer
 from lightning_transformers.task.nlp.question_answering import QuestionAnsweringDataModule
 from lightning_transformers.task.nlp.question_answering.datasets.squad.metric import SquadMetric
+
+if TYPE_CHECKING:
+    from transformers import AutoModel
 
 
 class QuestionAnsweringTransformer(TaskTransformer):
@@ -32,7 +36,7 @@ class QuestionAnsweringTransformer(TaskTransformer):
     """
 
     def __init__(
-        self, *args, downstream_model_type: str = "transformers.AutoModelForQuestionAnswering", **kwargs
+        self, *args, downstream_model_type: Type["AutoModel"] = transformers.AutoModelForQuestionAnswering, **kwargs
     ) -> None:
         super().__init__(downstream_model_type, *args, **kwargs)
 
