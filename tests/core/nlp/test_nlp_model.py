@@ -117,7 +117,7 @@ def test_pipeline_kwargs():
     with patch("lightning_transformers.core.model.hf_transformers_pipeline") as pipeline_mock:
         model.hf_pipeline
         pipeline_mock.assert_called_once_with(
-            task="task_name", model=cls_mock.from_config.return_value, tokenizer=None, device=0
+            task="task_name", model=cls_mock.from_pretrained.return_value, tokenizer=None, device=0
         )
 
 
