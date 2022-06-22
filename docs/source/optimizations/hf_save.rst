@@ -11,6 +11,8 @@ To manually save checkpoints from your model:
 
 .. code-block:: python
 
+   from lightning_transformers.task.nlp.text_classification import TextClassificationTransformer
+
    model = TextClassificationTransformer(pretrained_model_name_or_path="prajjwal1/bert-tiny")
 
    # saves a HF checkpoint to this path.
