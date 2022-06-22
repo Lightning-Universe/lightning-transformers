@@ -11,14 +11,20 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+from pathlib import Path
 from typing import IO, TYPE_CHECKING, Any, Callable, Dict, Optional, Tuple, Type, Union
 
 import pytorch_lightning as pl
 import torch
 import transformers
 from pytorch_lightning.utilities import rank_zero_warn
-from transformers import PreTrainedTokenizerBase
+from transformers import AutoConfig, PreTrainedTokenizerBase
 from transformers import pipeline as hf_transformers_pipeline
+
+from lightning_transformers.utilities.imports import _ACCELERATE_AVAILABLE
+
+if _ACCELERATE_AVAILABLE:
+    from accelerate import load_checkpoint_and_dispatch
 
 if TYPE_CHECKING:
     from transformers import AutoModel, Pipeline
@@ -49,7 +55,8 @@ class TaskTransformer(pl.LightningModule):
     ) -> None:
         super().__init__()
         self.save_hyperparameters()
-        self.model = downstream_model_type.from_pretrained(pretrained_model_name_or_path, **model_data_kwargs)
+        config = AutoConfig.from_pretrained(pretrained_model_name_or_path, **model_data_kwargs)
+        self.model = downstream_model_type.from_config(config)
         self._tokenizer = tokenizer  # necessary for hf_pipeline
         self._hf_pipeline = None
         self._hf_pipeline_kwargs = pipeline_kwargs or {}
@@ -152,3 +159,26 @@ class TaskTransformer(pl.LightningModule):
         if hf_pipeline_kwargs is not None:
             model._hf_pipeline_kwargs.update(hf_pipeline_kwargs)
         return model
+
+    def load_checkpoint_and_dispatch(self, *args, **kwargs) -> None:
+        """Use when loading checkpoint via accelerate for large model support.
+
+        Useful for when loading sharded checkpoints.
+        """
+        self.model = load_checkpoint_and_dispatch(self.model, *args, **kwargs)
+
+    @property
+    def hf_device_map(self) -> Dict:
+        """
+        Returns: Device Map as defined when using `load_checkpoint_and_dispatch`.
+        """
+        return self.model.hf_device_map
+
+    def save_hf_checkpoint(self, path: Union[str, Path]) -> None:
+        """Save the model using the original HF AutoModel.
+
+        This is useful for when you'd like to export the model to the hub.
+        Args:
+            path: Path to save the model to.
+        """
+        self.model.save_pretrained(path)

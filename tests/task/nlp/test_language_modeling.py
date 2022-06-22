@@ -1,8 +1,10 @@
+import os
 import sys
 from unittest.mock import MagicMock
 
 import pytest
 import pytorch_lightning as pl
+import torch
 import transformers
 from transformers import AutoTokenizer
 
@@ -11,6 +13,10 @@ from lightning_transformers.task.nlp.language_modeling import (
     LanguageModelingDataModule,
     LanguageModelingTransformer,
 )
+from lightning_transformers.utilities.imports import _ACCELERATE_AVAILABLE
+
+if _ACCELERATE_AVAILABLE:
+    from accelerate import init_empty_weights
 
 
 @pytest.mark.skipif(sys.platform == "win32", reason="Currently Windows is not supported")
@@ -54,3 +60,25 @@ def test_datamodule_has_correct_cfg():
     dm = LanguageModelingDataModule(tokenizer)
     assert isinstance(dm.cfg, LanguageModelingDataConfig)
     assert dm.tokenizer is tokenizer
+
+
+@pytest.mark.skipif(not _ACCELERATE_AVAILABLE, reason="Accelerate not installed.")
+def test_generate_inference(tmpdir):
+    model = LanguageModelingTransformer(
+        pretrained_model_name_or_path="sshleifer/tiny-gpt2",
+        tokenizer=AutoTokenizer.from_pretrained("sshleifer/tiny-gpt2"),
+    )
+    ckpt_path = os.path.join(tmpdir, "checkpoint.ckpt")
+    torch.save(model.model.state_dict(), ckpt_path)
+
+    with init_empty_weights():
+        model = LanguageModelingTransformer(
+            pretrained_model_name_or_path="sshleifer/tiny-gpt2",
+            tokenizer=AutoTokenizer.from_pretrained("sshleifer/tiny-gpt2"),
+        )
+
+    model.load_checkpoint_and_dispatch(ckpt_path, device_map="auto", no_split_module_classes=["GPTJBlock"])
+
+    output = model.generate("Hello, my name is", device=torch.device("cuda"))
+    output = model.tokenizer.decode(output[0].tolist())
+    assert "Hello, my name is" in output
