@@ -14,6 +14,7 @@ from lightning_transformers.task.vision.image_classification import (
 
 
 @pytest.mark.skipif(sys.platform == "win32", reason="Currently Windows is not supported")
+@pytest.mark.skipif(sys.platform == "darwin", reason="Currently darwin is not working")
 def test_smoke_train(hf_cache_path):
     feature_extractor = AutoFeatureExtractor.from_pretrained(pretrained_model_name_or_path="nateraw/tiny-vit-random")
     dm = ImageClassificationDataModule(
