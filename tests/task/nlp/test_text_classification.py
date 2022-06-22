@@ -1,11 +1,14 @@
+import os
 import sys
 from unittest.mock import MagicMock
 
 import pytest
 import pytorch_lightning as pl
 import transformers
+from pytorch_lightning.callbacks import ModelCheckpoint
 from transformers import AutoTokenizer
 
+from lightning_transformers.plugins.checkpoint import HFSaveCheckpoint
 from lightning_transformers.task.nlp.text_classification import (
     TextClassificationDataConfig,
     TextClassificationDataModule,
@@ -78,3 +81,33 @@ def test_datamodule_has_correct_cfg():
     dm = TextClassificationDataModule(tokenizer)
     assert isinstance(dm.cfg, TextClassificationDataConfig)
     assert dm.tokenizer is tokenizer
+
+
+@pytest.mark.skipif(sys.platform == "win32", reason="Currently Windows is not supported")
+def test_huggingface_checkpoint_train(hf_cache_path, tmpdir):
+    tokenizer = AutoTokenizer.from_pretrained(pretrained_model_name_or_path="prajjwal1/bert-tiny")
+    dm = TextClassificationDataModule(
+        cfg=TextClassificationDataConfig(
+            batch_size=1,
+            dataset_name="glue",
+            dataset_config_name="sst2",
+            max_length=512,
+            limit_test_samples=64,
+            limit_val_samples=64,
+            limit_train_samples=64,
+            cache_dir=hf_cache_path,
+        ),
+        tokenizer=tokenizer,
+    )
+    ckpt_path = os.path.join(tmpdir, "checkpoints")
+    model = TextClassificationTransformer(pretrained_model_name_or_path="prajjwal1/bert-tiny")
+    trainer = pl.Trainer(
+        default_root_dir=tmpdir,
+        max_epochs=1,
+        limit_train_batches=1,
+        limit_val_batches=1,
+        plugins=HFSaveCheckpoint(model=model),
+        callbacks=ModelCheckpoint(save_last=True, dirpath=ckpt_path),
+    )
+    trainer.fit(model, dm)
+    assert os.path.exists(os.path.join(ckpt_path, "last_huggingface"))
