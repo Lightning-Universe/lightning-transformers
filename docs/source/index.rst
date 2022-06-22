@@ -33,6 +33,7 @@ Lightning Transformers
    :caption: Optimizations
 
    optimizations/sparseml
+   optimizations/hf_save
    optimizations/large_model
 
 .. toctree::
