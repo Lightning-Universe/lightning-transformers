@@ -25,8 +25,8 @@ from lightning_transformers.task.nlp.question_answering.datasets.squad.processin
 
 
 class SquadDataModule(QuestionAnsweringDataModule):
-    def __init__(self, *args, cfg, **kwargs):
-        super().__init__(*args, cfg=cfg, **kwargs)
+    def __init__(self, *args, dataset_name: str = "squad", **kwargs):
+        super().__init__(*args, dataset_name=dataset_name, **kwargs)
 
     @staticmethod
     def convert_to_train_features(*args, **kwargs):
@@ -49,9 +49,9 @@ class SquadDataModule(QuestionAnsweringDataModule):
             answer_column_name=self.answer_column_name,
             features=validation_dataset,
             examples=original_validation_dataset,
-            version_2_with_negative=self.cfg.version_2_with_negative,
-            n_best_size=self.cfg.n_best_size,
-            max_answer_length=self.cfg.max_answer_length,
-            null_score_diff_threshold=self.cfg.null_score_diff_threshold,
-            output_dir=self.cfg.output_dir,
+            version_2_with_negative=self.version_2_with_negative,
+            n_best_size=self.n_best_size,
+            max_answer_length=self.max_answer_length,
+            null_score_diff_threshold=self.null_score_diff_threshold,
+            output_dir=self.output_dir,
         )

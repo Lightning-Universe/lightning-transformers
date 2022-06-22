@@ -19,7 +19,6 @@ from pytorch_lightning.utilities import rank_zero_warn
 from transformers import DataCollatorForTokenClassification, PreTrainedTokenizerBase
 
 from lightning_transformers.core import TransformerDataModule
-from lightning_transformers.task.nlp.token_classification.config import TokenClassificationDataConfig
 
 
 class TokenClassificationDataModule(TransformerDataModule):
@@ -27,16 +26,14 @@ class TokenClassificationDataModule(TransformerDataModule):
 
     Args:
         *args: ``HFDataModule`` specific arguments.
-        cfg: Contains data specific parameters when processing/loading the dataset
-            (Default ``TokenClassificationDataConfig``)
         **kwargs: ``HFDataModule`` specific arguments.
     """
 
-    cfg: TokenClassificationDataConfig
-
-    def __init__(self, *args, cfg: TokenClassificationDataConfig = TokenClassificationDataConfig(), **kwargs) -> None:
+    def __init__(self, *args, task_name: str = "ner", label_all_tokens: bool = False, **kwargs) -> None:
         self.labels = None
-        super().__init__(*args, cfg=cfg, **kwargs)
+        super().__init__(*args, **kwargs)
+        self.task_name = task_name
+        self.label_all_tokens = label_all_tokens
 
     def process_data(self, dataset: Dataset, stage: Optional[str] = None) -> Dataset:
         features, label_column_name, text_column_name = self._setup_input_fields(dataset, stage)
@@ -46,8 +43,8 @@ class TokenClassificationDataModule(TransformerDataModule):
         convert_to_features = partial(
             TokenClassificationDataModule.convert_to_features,
             tokenizer=self.tokenizer,
-            padding=self.cfg.padding,
-            label_all_tokens=self.cfg.label_all_tokens,
+            padding=self.padding,
+            label_all_tokens=self.label_all_tokens,
             label_to_id=self.label_to_id,
             text_column_name=text_column_name,
             label_column_name=label_column_name,
@@ -55,8 +52,8 @@ class TokenClassificationDataModule(TransformerDataModule):
         dataset = dataset.map(
             convert_to_features,
             batched=True,
-            num_proc=self.cfg.preprocessing_num_workers,
-            load_from_cache_file=self.cfg.load_from_cache_file,
+            num_proc=self.preprocessing_num_workers,
+            load_from_cache_file=self.load_from_cache_file,
         )
         cols_to_keep = [
             x
@@ -71,9 +68,7 @@ class TokenClassificationDataModule(TransformerDataModule):
         column_names = dataset[split].column_names
         features = dataset[split].features
         text_column_name = "tokens" if "tokens" in column_names else column_names[0]
-        label_column_name = (
-            f"{self.cfg.task_name}_tags" if f"{self.cfg.task_name}_tags" in column_names else column_names[1]
-        )
+        label_column_name = f"{self.task_name}_tags" if f"{self.task_name}_tags" in column_names else column_names[1]
         return features, label_column_name, text_column_name
 
     def _prepare_labels(self, dataset, features, label_column_name):

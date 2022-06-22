@@ -19,6 +19,9 @@ from lightning_transformers.task.nlp.translation.data import TranslationDataModu
 
 
 class WMT16TranslationDataModule(TranslationDataModule):
+    def __init__(self, dataset_name: str = "wmt16", *args, **kwargs) -> None:
+        super().__init__(*args, dataset_name=dataset_name, **kwargs)
+
     @staticmethod
     def convert_to_features(
         examples: Any,

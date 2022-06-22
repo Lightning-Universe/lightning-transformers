@@ -18,7 +18,7 @@ from torchmetrics.text.bleu import BLEUScore
 from transformers import MBartTokenizer
 
 from lightning_transformers.core.seq2seq.model import Seq2SeqTransformer
-from lightning_transformers.task.nlp.translation.config import TranslationConfig, TranslationDataConfig
+from lightning_transformers.task.nlp.translation import TranslationDataModule
 
 if TYPE_CHECKING:
     from transformers import AutoModel
@@ -38,11 +38,14 @@ class TranslationTransformer(Seq2SeqTransformer):
         self,
         *args,
         downstream_model_type: Type["AutoModel"] = transformers.AutoModelForSeq2SeqLM,
-        cfg: TranslationConfig = TranslationConfig(),
+        n_gram: int = 4,
+        smooth: bool = False,
         **kwargs,
     ) -> None:
-        super().__init__(downstream_model_type, *args, cfg=cfg, **kwargs)
+        super().__init__(downstream_model_type, *args, **kwargs)
         self.bleu = None
+        self.n_gram = n_gram
+        self.smooth = smooth
 
     def compute_generate_metrics(self, batch, prefix):
         tgt_lns = self.tokenize_labels(batch["labels"])
@@ -52,13 +55,13 @@ class TranslationTransformer(Seq2SeqTransformer):
         self.log(f"{prefix}_bleu_score", result, on_step=False, on_epoch=True, prog_bar=True)
 
     def configure_metrics(self, stage: str):
-        self.bleu = BLEUScore(self.cfg.n_gram, self.cfg.smooth)
+        self.bleu = BLEUScore(self.n_gram, self.smooth)
 
     def initialize_model_specific_parameters(self):
         super().initialize_model_specific_parameters()
         if isinstance(self.tokenizer, MBartTokenizer):
-            cfg: TranslationDataConfig = self.trainer.datamodule.cfg
-            tgt_lang = cfg.target_language
+            dm: TranslationDataModule = self.trainer.datamodule
+            tgt_lang = dm.target_language
             # set decoder_start_token_id for MBart
             if self.model.config.decoder_start_token_id is None:
                 assert tgt_lang is not None, "mBart requires --target_language"

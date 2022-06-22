@@ -19,7 +19,6 @@ from pytorch_lightning import _logger as log
 from transformers import PreTrainedTokenizerBase, default_data_collator
 
 from lightning_transformers.core import TransformerDataModule
-from lightning_transformers.task.nlp.language_modeling.config import LanguageModelingDataConfig
 
 
 class LanguageModelingDataModule(TransformerDataModule):
@@ -27,15 +26,12 @@ class LanguageModelingDataModule(TransformerDataModule):
 
     Args:
         *args: ``HFDataModule`` specific arguments.
-        cfg: Contains data specific parameters when processing/loading the dataset
-            (Default ``LanguageModelingDataConfig``)
         **kwargs: ``HFDataModule`` specific arguments.
     """
 
-    cfg: LanguageModelingDataConfig
-
-    def __init__(self, *args, cfg: LanguageModelingDataConfig = LanguageModelingDataConfig(), **kwargs) -> None:
-        super().__init__(*args, cfg=cfg, **kwargs)
+    def __init__(self, *args, block_size: int = 128, **kwargs) -> None:
+        super().__init__(*args, **kwargs)
+        self.block_size = block_size
 
     def process_data(self, dataset: Dataset, stage: Optional[str] = None) -> Dataset:
         dataset_split = dataset["train" if stage == "fit" else "validation"]
@@ -58,36 +54,36 @@ class LanguageModelingDataModule(TransformerDataModule):
         dataset = dataset.map(
             tokenize_function,
             batched=True,
-            num_proc=self.cfg.preprocessing_num_workers,
+            num_proc=self.preprocessing_num_workers,
             remove_columns=column_names,
-            load_from_cache_file=self.cfg.load_from_cache_file,
+            load_from_cache_file=self.load_from_cache_file,
         )
 
         return dataset.map(
             convert_to_features,
             batched=True,
-            num_proc=self.cfg.preprocessing_num_workers,
-            load_from_cache_file=self.cfg.load_from_cache_file,
+            num_proc=self.preprocessing_num_workers,
+            load_from_cache_file=self.load_from_cache_file,
         )
 
     @property
     def effective_block_size(self) -> int:
-        if self.cfg.block_size is None:
+        if self.block_size is None:
             block_size = self.tokenizer.model_max_length
             if block_size > 1024:
                 log.warn(
                     f"The tokenizer picked seems to have a very large `model_max_length` "
                     f"({self.tokenizer.model_max_length}). "
-                    "Picking 1024 instead. You can change that default value by passing dataset.cfg.block_size=x."
+                    "Picking 1024 instead. You can change that default value by passing block_size=x to the DataModule."
                 )
             block_size = 1024
         else:
-            if self.cfg.block_size > self.tokenizer.model_max_length:
+            if self.block_size > self.tokenizer.model_max_length:
                 log.warn(
-                    f"The block_size passed ({self.cfg.block_size}) is larger than the maximum length for the model"
+                    f"The block_size passed ({self.block_size}) is larger than the maximum length for the model"
                     f"({self.tokenizer.model_max_length}). Using block_size={self.tokenizer.model_max_length}."
                 )
-            block_size = min(self.cfg.block_size, self.tokenizer.model_max_length)
+            block_size = min(self.block_size, self.tokenizer.model_max_length)
         return block_size
 
     @staticmethod

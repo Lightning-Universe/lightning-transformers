@@ -7,7 +7,6 @@ import transformers
 from transformers import AutoTokenizer
 
 from lightning_transformers.task.nlp.token_classification import (
-    TokenClassificationDataConfig,
     TokenClassificationDataModule,
     TokenClassificationTransformer,
 )
@@ -17,18 +16,16 @@ from lightning_transformers.task.nlp.token_classification import (
 def test_smoke_train(hf_cache_path):
     tokenizer = AutoTokenizer.from_pretrained(pretrained_model_name_or_path="prajjwal1/bert-tiny")
     dm = TokenClassificationDataModule(
-        cfg=TokenClassificationDataConfig(
-            batch_size=1,
-            task_name="ner",
-            dataset_name="conll2003",
-            preprocessing_num_workers=1,
-            label_all_tokens=False,
-            revision="master",
-            limit_test_samples=64,
-            limit_val_samples=64,
-            limit_train_samples=64,
-            cache_dir=hf_cache_path,
-        ),
+        batch_size=1,
+        task_name="ner",
+        dataset_name="conll2003",
+        preprocessing_num_workers=1,
+        label_all_tokens=False,
+        revision="master",
+        limit_test_samples=64,
+        limit_val_samples=64,
+        limit_train_samples=64,
+        cache_dir=hf_cache_path,
         tokenizer=tokenizer,
     )
     model = TokenClassificationTransformer(pretrained_model_name_or_path="prajjwal1/bert-tiny", labels=dm.num_classes)
@@ -59,8 +56,7 @@ def test_model_has_correct_cfg():
     assert model.num_labels == 2
 
 
-def test_datamodule_has_correct_cfg():
+def test_datamodule_has_tokenizer():
     tokenizer = MagicMock()
     dm = TokenClassificationDataModule(tokenizer)
-    assert isinstance(dm.cfg, TokenClassificationDataConfig)
     assert dm.tokenizer is tokenizer

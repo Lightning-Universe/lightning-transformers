@@ -17,6 +17,9 @@ from lightning_transformers.task.nlp.summarization import SummarizationDataModul
 
 
 class XsumSummarizationDataModule(SummarizationDataModule):
+    def __init__(self, *args, dataset_name: str = "xsum", **kwargs):
+        super().__init__(*args, dataset_name=dataset_name, **kwargs)
+
     @property
     def source_target_column_names(self) -> Tuple[str, str]:
         return "document", "summary"

@@ -7,7 +7,6 @@ import transformers
 from transformers import AutoTokenizer
 
 from lightning_transformers.task.nlp.question_answering import (
-    QuestionAnsweringDataConfig,
     QuestionAnsweringDataModule,
     QuestionAnsweringTransformer,
     SquadDataModule,
@@ -20,21 +19,18 @@ def test_smoke_train(hf_cache_path):
     tokenizer = AutoTokenizer.from_pretrained(pretrained_model_name_or_path="sshleifer/tiny-gpt2")
     model = QuestionAnsweringTransformer(pretrained_model_name_or_path="sshleifer/tiny-gpt2")
     dm = SquadDataModule(
-        cfg=QuestionAnsweringDataConfig(
-            batch_size=1,
-            dataset_name="squad",
-            dataset_config_name="plain_text",
-            max_length=384,
-            version_2_with_negative=False,
-            null_score_diff_threshold=0.0,
-            doc_stride=128,
-            n_best_size=20,
-            max_answer_length=30,
-            limit_train_samples=64,
-            limit_test_samples=64,
-            limit_val_samples=64,
-            cache_dir=hf_cache_path,
-        ),
+        batch_size=1,
+        dataset_config_name="plain_text",
+        max_length=384,
+        version_2_with_negative=False,
+        null_score_diff_threshold=0.0,
+        doc_stride=128,
+        n_best_size=20,
+        max_answer_length=30,
+        limit_train_samples=64,
+        limit_test_samples=64,
+        limit_val_samples=64,
+        cache_dir=hf_cache_path,
         tokenizer=tokenizer,
     )
     trainer = pl.Trainer(fast_dev_run=True)
@@ -59,8 +55,7 @@ def test_model_has_correct_cfg():
     assert isinstance(model.model, transformers.BertForQuestionAnswering)
 
 
-def test_datamodule_has_correct_cfg():
+def test_datamodule_has_tokenizer():
     tokenizer = MagicMock()
     dm = QuestionAnsweringDataModule(tokenizer)
-    assert isinstance(dm.cfg, QuestionAnsweringDataConfig)
     assert dm.tokenizer is tokenizer

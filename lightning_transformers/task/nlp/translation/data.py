@@ -14,7 +14,6 @@
 from typing import Tuple
 
 from lightning_transformers.core.seq2seq.data import Seq2SeqDataModule
-from lightning_transformers.task.nlp.translation import TranslationDataConfig
 
 
 class TranslationDataModule(Seq2SeqDataModule):
@@ -22,16 +21,14 @@ class TranslationDataModule(Seq2SeqDataModule):
 
     Args:
         *args: ``Seq2SeqDataModule`` specific arguments.
-        cfg: Contains data specific parameters when processing/loading the dataset
-            (Default ``TranslationDataConfig``)
         **kwargs: ``Seq2SeqDataModule`` specific arguments.
     """
 
-    cfg: TranslationDataConfig
-
-    def __init__(self, *args, cfg: TranslationDataConfig = TranslationDataConfig(), **kwargs) -> None:
-        super().__init__(*args, cfg=cfg, **kwargs)
+    def __init__(self, *args, source_language: str = "", target_language: str = "", **kwargs) -> None:
+        super().__init__(*args, **kwargs)
+        self.source_language = source_language
+        self.target_language = target_language
 
     @property
     def source_target_column_names(self) -> Tuple[str, str]:
-        return self.cfg.source_language, self.cfg.target_language
+        return self.source_language, self.target_language
