@@ -19,6 +19,7 @@ with init_empty_weights():
     model = LanguageModelingTransformer(
         pretrained_model_name_or_path="EleutherAI/gpt-j-6B",
         tokenizer=AutoTokenizer.from_pretrained("EleutherAI/gpt-j-6B"),
+        load_weights=False,
     )
 
 model.load_checkpoint_and_dispatch("sharded-gpt-j-6B", device_map="auto", no_split_module_classes=["GPTJBlock"])

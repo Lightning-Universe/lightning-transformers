@@ -51,12 +51,16 @@ class TaskTransformer(pl.LightningModule):
         pretrained_model_name_or_path: Optional[str] = None,
         tokenizer: Optional[PreTrainedTokenizerBase] = None,
         pipeline_kwargs: Optional[dict] = None,
+        load_weights: bool = True,
         **model_data_kwargs,
     ) -> None:
         super().__init__()
         self.save_hyperparameters()
-        config = AutoConfig.from_pretrained(pretrained_model_name_or_path, **model_data_kwargs)
-        self.model = downstream_model_type.from_config(config)
+        if load_weights:
+            config = AutoConfig.from_pretrained(pretrained_model_name_or_path)
+            self.model = downstream_model_type.from_config(config, **model_data_kwargs)
+        else:
+            self.model = downstream_model_type.from_pretrained(pretrained_model_name_or_path)
         self._tokenizer = tokenizer  # necessary for hf_pipeline
         self._hf_pipeline = None
         self._hf_pipeline_kwargs = pipeline_kwargs or {}

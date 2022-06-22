@@ -63,6 +63,7 @@ def test_datamodule_has_correct_cfg():
 
 
 @pytest.mark.skipif(not _ACCELERATE_AVAILABLE, reason="Accelerate not installed.")
+@pytest.mark.skipif(not torch.cuda.is_available(), reason="Requires a GPU to run.")
 def test_generate_inference(tmpdir):
     model = LanguageModelingTransformer(
         pretrained_model_name_or_path="sshleifer/tiny-gpt2",
@@ -75,9 +76,10 @@ def test_generate_inference(tmpdir):
         model = LanguageModelingTransformer(
             pretrained_model_name_or_path="sshleifer/tiny-gpt2",
             tokenizer=AutoTokenizer.from_pretrained("sshleifer/tiny-gpt2"),
+            load_weights=False,
         )
 
-    model.load_checkpoint_and_dispatch(ckpt_path, device_map="auto", no_split_module_classes=["GPTJBlock"])
+    model.load_checkpoint_and_dispatch(ckpt_path, device_map="auto")
 
     output = model.generate("Hello, my name is", device=torch.device("cuda"))
     output = model.tokenizer.decode(output[0].tolist())

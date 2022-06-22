@@ -5,6 +5,8 @@ Inference for Big Transformers
 
 Lightning Transformers provides out of the box support for running inference with very large billion parameter models. Under-the-hood we use HF Accelerates' Transformer support to auto-select devices for optimal throughput and memory usage.
 
+This will allow the model to be split onto GPUs/CPUs and even kept onto Disk to optimize memory space.
+
 Below is an example of how you can run generation with a large 6B parameter transformer model using Lightning Transformers.
 
 
