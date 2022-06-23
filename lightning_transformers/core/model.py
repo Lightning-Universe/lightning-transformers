@@ -62,10 +62,8 @@ class TaskTransformer(pl.LightningModule):
         self._hf_pipeline = None
         self._hf_pipeline_kwargs = pipeline_kwargs or {}
 
-    
     def intiailaize_model(self):
-        """
-        create and initialize the model to use with this task, 
+        """create and initialize the model to use with this task,
 
         Feel free to overwrite this method if you are initializing the model in a different way
         """
@@ -74,7 +72,7 @@ class TaskTransformer(pl.LightningModule):
         else:
             config = AutoConfig.from_pretrained(pretrained_model_name_or_path, **self.model_data_kwargs)
             self.model = downstream_model_type.from_config(config)
-    
+
     def configure_optimizers(self) -> Dict:
         rank_zero_warn(
             "You haven't specified an optimizer or lr scheduler. "
