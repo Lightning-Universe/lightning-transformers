@@ -26,10 +26,11 @@ class SummarizationTransformer(Seq2SeqTransformer):
     """Defines ``LightningModule`` for the Summarization Task.
 
     Args:
-        *args: :class:`lightning_transformers.core.nlp.seq2seq.Seq2SeqTransformer` arguments.
+        *args: :class:`lightning_transformers.core.model.TaskTransformer` arguments.
         downstream_model_type: Downstream HuggingFace AutoModel to load.
             (default ``transformers.AutoModelForSeq2SeqLM``)
-        **kwargs: :class:`lightning_transformers.core.nlp.seq2seq.Seq2SeqTransformer` arguments.
+        use_stemmer: Use Porter stemmer to strip word suffixes to improve matching.
+        **kwargs: :class:`lightning_transformers.core.model.TaskTransformer` arguments.
     """
 
     def __init__(
