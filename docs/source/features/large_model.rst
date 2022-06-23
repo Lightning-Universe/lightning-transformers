@@ -1,7 +1,7 @@
 .. _large_model:
 
-Inference for Big Transformers
-==============================
+Big Transformer Models Inference
+================================
 
 Lightning Transformers provides out of the box support for running inference with very large billion parameter models. Under-the-hood we use HF Accelerates' Transformer support to auto-select devices for optimal throughput and memory usage.
 
