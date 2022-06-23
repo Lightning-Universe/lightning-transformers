@@ -3,7 +3,7 @@ import os
 
 __ROOT_DIR__ = os.path.dirname(os.path.dirname(__file__))
 
-__version__ = "0.2.0rc1"
+__version__ = "0.2.0"
 __author__ = "PyTorchLightning et al."
 __author_email__ = "name@pytorchlightning.ai"
 __license__ = "Apache-2.0"
