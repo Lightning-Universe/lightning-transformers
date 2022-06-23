@@ -61,7 +61,6 @@ class TaskTransformer(pl.LightningModule):
         self._tokenizer = tokenizer  # necessary for hf_pipeline
         self._hf_pipeline = None
         self._hf_pipeline_kwargs = pipeline_kwargs or {}
-        self.intiailaize_model()
 
     
     def intiailaize_model(self):
