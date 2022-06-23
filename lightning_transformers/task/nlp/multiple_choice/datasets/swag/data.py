@@ -24,6 +24,9 @@ from lightning_transformers.task.nlp.multiple_choice.data import MultipleChoiceD
 class SwagMultipleChoiceDataModule(MultipleChoiceDataModule):
     num_choices: int = 4  # there are four different endings to select in the SWAG dataset
 
+    def __init__(self, *args, dataset_name: str = "swag", dataset_config_name="regular", **kwargs):
+        super().__init__(*args, dataset_name=dataset_name, dataset_config_name=dataset_config_name, **kwargs)
+
     @property
     def num_classes(self) -> int:
         return len(self.ending_column_names)
@@ -36,15 +39,15 @@ class SwagMultipleChoiceDataModule(MultipleChoiceDataModule):
             context_name=self.context_name,
             question_header_name=self.question_header_name,
             ending_names=self.ending_column_names,
-            max_length=self.cfg.max_length,
-            padding=self.cfg.padding,
+            max_length=self.max_length,
+            padding=self.padding,
         )
 
         dataset = dataset.map(
             convert_to_features,
             batched=True,
-            num_proc=self.cfg.preprocessing_num_workers,
-            load_from_cache_file=self.cfg.load_from_cache_file,
+            num_proc=self.preprocessing_num_workers,
+            load_from_cache_file=self.load_from_cache_file,
         )
 
         cols_to_keep = [

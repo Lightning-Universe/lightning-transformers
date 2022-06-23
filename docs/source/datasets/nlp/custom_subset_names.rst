@@ -10,18 +10,15 @@ An example for how to train and validate on MNLI would the the following:
 .. code-block:: python
 
     from lightning_transformers.task.nlp.text_classification import (
-        TextClassificationDataConfig,
         TextClassificationDataModule,
         TextClassificationTransformer,
     )
 
     dm = TextClassificationDataModule(
-        cfg=TextClassificationDataConfig(
-            batch_size=1,
-            dataset_name="glue",
-            dataset_config_name="mnli",
-            max_length=512,
-            validation_subset_name="validation_matched"
-        ),
+        batch_size=1,
+        dataset_name="glue",
+        dataset_config_name="mnli",
+        max_length=512,
+        validation_subset_name="validation_matched"
         tokenizer=tokenizer,
     )

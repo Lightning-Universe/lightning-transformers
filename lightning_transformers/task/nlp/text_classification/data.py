@@ -18,16 +18,13 @@ from pytorch_lightning.utilities import rank_zero_warn
 from transformers import PreTrainedTokenizerBase
 
 from lightning_transformers.core import TransformerDataModule
-from lightning_transformers.task.nlp.text_classification.config import TextClassificationDataConfig
 
 
 class TextClassificationDataModule(TransformerDataModule):
     """Defines the ``LightningDataModule`` for Text Classification Datasets."""
 
-    cfg: TextClassificationDataConfig
-
-    def __init__(self, *args, cfg: TextClassificationDataConfig = TextClassificationDataConfig(), **kwargs) -> None:
-        super().__init__(*args, cfg=cfg, **kwargs)
+    def __init__(self, *args, **kwargs) -> None:
+        super().__init__(*args, **kwargs)
         self.labels = None
 
     def process_data(self, dataset: Dataset, stage: Optional[str] = None) -> Dataset:
@@ -36,9 +33,9 @@ class TextClassificationDataModule(TransformerDataModule):
             dataset,
             tokenizer=self.tokenizer,
             input_feature_fields=input_feature_fields,
-            padding=self.cfg.padding,
-            truncation=self.cfg.truncation,
-            max_length=self.cfg.max_length,
+            padding=self.padding,
+            truncation=self.truncation,
+            max_length=self.max_length,
         )
         cols_to_keep = [
             x for x in ["input_ids", "attention_mask", "token_type_ids", "labels"] if x in dataset["train"].features

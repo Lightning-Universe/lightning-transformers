@@ -17,7 +17,6 @@ import transformers
 from torchmetrics.text.rouge import ROUGEScore
 
 from lightning_transformers.core.seq2seq.model import Seq2SeqTransformer
-from lightning_transformers.task.nlp.summarization.config import SummarizationConfig
 
 if TYPE_CHECKING:
     from transformers import AutoModel
@@ -27,21 +26,23 @@ class SummarizationTransformer(Seq2SeqTransformer):
     """Defines ``LightningModule`` for the Summarization Task.
 
     Args:
-        *args: :class:`lightning_transformers.core.nlp.seq2seq.Seq2SeqTransformer` arguments.
+        *args: :class:`lightning_transformers.core.model.TaskTransformer` arguments.
         downstream_model_type: Downstream HuggingFace AutoModel to load.
             (default ``transformers.AutoModelForSeq2SeqLM``)
-        **kwargs: :class:`lightning_transformers.core.nlp.seq2seq.Seq2SeqTransformer` arguments.
+        use_stemmer: Use Porter stemmer to strip word suffixes to improve matching.
+        **kwargs: :class:`lightning_transformers.core.model.TaskTransformer` arguments.
     """
 
     def __init__(
         self,
         *args,
         downstream_model_type: Type["AutoModel"] = transformers.AutoModelForSeq2SeqLM,
-        cfg: SummarizationConfig = SummarizationConfig(),
+        use_stemmer: bool = True,
         **kwargs
     ) -> None:
-        super().__init__(downstream_model_type, *args, cfg=cfg, **kwargs)
+        super().__init__(downstream_model_type, *args, **kwargs)
         self.rouge = None
+        self.use_stemmer = use_stemmer
 
     def compute_generate_metrics(self, batch, prefix):
         tgt_lns = self.tokenize_labels(batch["labels"])
@@ -50,7 +51,7 @@ class SummarizationTransformer(Seq2SeqTransformer):
         self.log_dict(result, on_step=False, on_epoch=True)
 
     def configure_metrics(self, stage: str):
-        self.rouge = ROUGEScore(use_stemmer=self.cfg.use_stemmer)
+        self.rouge = ROUGEScore(use_stemmer=self.use_stemmer)
 
     @property
     def hf_pipeline_task(self) -> str:

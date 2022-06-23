@@ -27,18 +27,15 @@ Here is an example of training `bert-base-cased <https://huggingface.co/bert-bas
     from lightning_transformers.task.nlp.text_classification import (
         TextClassificationDataModule,
         TextClassificationTransformer,
-        TextClassificationDataConfig,
     )
 
     tokenizer = AutoTokenizer.from_pretrained(
         pretrained_model_name_or_path="bert-base-cased"
     )
     dm = TextClassificationDataModule(
-        cfg=TextClassificationDataConfig(
-            batch_size=1,
-            dataset_name="emotion",
-            max_length=512,
-        ),
+        batch_size=1,
+        dataset_name="emotion",
+        max_length=512,
         tokenizer=tokenizer,
     )
     model = TextClassificationTransformer(pretrained_model_name_or_path="bert-base-cased")
@@ -63,7 +60,6 @@ Swapping to the RMSProp optimizer:
     from lightning_transformers.task.nlp.text_classification import (
         TextClassificationDataModule,
         TextClassificationTransformer,
-        TextClassificationDataConfig,
     )
 
 
@@ -85,11 +81,9 @@ Swapping to the RMSProp optimizer:
         pretrained_model_name_or_path="bert-base-cased"
     )
     dm = TextClassificationDataModule(
-        cfg=TextClassificationDataConfig(
-            batch_size=1,
-            dataset_name="emotion",
-            max_length=512,
-        ),
+        batch_size=1,
+        dataset_name="emotion",
+        max_length=512,
         tokenizer=tokenizer,
     )
     model = RMSPropTransformer(pretrained_model_name_or_path="bert-base-cased")

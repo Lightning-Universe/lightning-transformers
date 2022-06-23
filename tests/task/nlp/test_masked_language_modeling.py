@@ -7,7 +7,6 @@ import transformers
 from transformers import AutoTokenizer
 
 from lightning_transformers.task.nlp.masked_language_modeling import (
-    MaskedLanguageModelingDataConfig,
     MaskedLanguageModelingDataModule,
     MaskedLanguageModelingTransformer,
 )
@@ -18,12 +17,10 @@ def test_smoke_train(hf_cache_path):
     tokenizer = AutoTokenizer.from_pretrained(pretrained_model_name_or_path="prajjwal1/bert-tiny")
     model = MaskedLanguageModelingTransformer(pretrained_model_name_or_path="prajjwal1/bert-tiny")
     dm = MaskedLanguageModelingDataModule(
-        cfg=MaskedLanguageModelingDataConfig(
-            batch_size=1,
-            dataset_name="wikitext",
-            dataset_config_name="wikitext-2-raw-v1",
-            cache_dir=hf_cache_path,
-        ),
+        batch_size=1,
+        dataset_name="wikitext",
+        dataset_config_name="wikitext-2-raw-v1",
+        cache_dir=hf_cache_path,
         tokenizer=tokenizer,
     )
     trainer = pl.Trainer(fast_dev_run=True)
@@ -47,8 +44,7 @@ def test_model_has_correct_cfg():
     assert isinstance(model.model, transformers.BertForMaskedLM)
 
 
-def test_datamodule_has_correct_cfg():
+def test_datamodule_has_tokenizer():
     tokenizer = MagicMock()
     dm = MaskedLanguageModelingDataModule(tokenizer)
-    assert isinstance(dm.cfg, MaskedLanguageModelingDataConfig)
     assert dm.tokenizer is tokenizer

@@ -21,6 +21,9 @@ from lightning_transformers.task.nlp.multiple_choice import MultipleChoiceDataMo
 
 
 class RaceMultipleChoiceDataModule(MultipleChoiceDataModule):
+    def __init__(self, *args, dataset_name: str = "race", dataset_config_name="all", **kwargs):
+        super().__init__(*args, dataset_name=dataset_name, dataset_config_name=dataset_config_name, **kwargs)
+
     @property
     def choices(self) -> list:
         return ["A", "B", "C", "D"]
@@ -34,15 +37,15 @@ class RaceMultipleChoiceDataModule(MultipleChoiceDataModule):
             question_header_name=self.question_header_name,
             answer_column_name=self.answer_column_name,
             options_column_name=self.options_column_name,
-            max_length=self.cfg.max_length,
-            padding=self.cfg.padding,
+            max_length=self.max_length,
+            padding=self.padding,
         )
 
         dataset = dataset.map(
             convert_to_features,
             batched=True,
-            num_proc=self.cfg.preprocessing_num_workers,
-            load_from_cache_file=self.cfg.load_from_cache_file,
+            num_proc=self.preprocessing_num_workers,
+            load_from_cache_file=self.load_from_cache_file,
         )
 
         cols_to_keep = [

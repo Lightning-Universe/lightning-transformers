@@ -28,7 +28,6 @@ Language Models pre-trained or fine-tuned to the Causal Language Modeling task c
     from transformers import AutoTokenizer
 
     from lightning_transformers.task.nlp.language_modeling import (
-        LanguageModelingDataConfig,
         LanguageModelingDataModule,
         LanguageModelingTransformer,
     )
@@ -36,11 +35,9 @@ Language Models pre-trained or fine-tuned to the Causal Language Modeling task c
     tokenizer = AutoTokenizer.from_pretrained(pretrained_model_name_or_path="gpt2")
     model = LanguageModelingTransformer(pretrained_model_name_or_path="gpt2")
     dm = LanguageModelingDataModule(
-        cfg=LanguageModelingDataConfig(
-            batch_size=1,
-            dataset_name="wikitext",
-            dataset_config_name="wikitext-2-raw-v1",
-        ),
+        batch_size=1,
+        dataset_name="wikitext",
+        dataset_config_name="wikitext-2-raw-v1",
         tokenizer=tokenizer,
     )
     trainer = pl.Trainer(accelerator="auto", devices="auto", max_epochs=1)

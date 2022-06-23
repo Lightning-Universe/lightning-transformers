@@ -12,9 +12,6 @@ The base data module can be used to modify this code, and follows a simple patte
 
     class LanguageModelingDataModule(HFDataModule):
 
-        def __init__(self, cfg: LanguageModelingDataConfig = LanguageModelingDataConfig()):
-            super().__init__(cfg=cfg)
-
         def process_data(self, dataset: Dataset, stage: Optional[str] = None) -> Dataset:
             # `process_data` converting the dataset into features.
             # The dataset is pre-loaded using `load_dataset`.
@@ -63,14 +60,13 @@ Below we have the pseudo code version to show where most of the changes happened
     from datasets import Dataset, Optional
     from transformers import PreTrainedTokenizerBase
 
-    from lightning_transformers.core.nlp.huggingface import HFTransformerDataConfig
     from lightning_transformers.task.nlp.language_modeling import LanguageModelingDataModule
 
 
     class MyLanguageModelingDataModule(LanguageModelingDataModule):
 
-        def __init__(self, cfg: HFTransformerDataConfig, tokenizer: PreTrainedTokenizerBase):
-            super().__init__(cfg, tokenizer)
+        def __init__(self, tokenizer: PreTrainedTokenizerBase, *args, **kwargs):
+            super().__init__(tokenizer, *args, **kwargs)
             self.tokenized_condition_term = tokenizer("This is a story: ")
 
         def process_data(self, dataset: Dataset, stage: Optional[str] = None) -> Dataset:

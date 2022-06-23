@@ -7,8 +7,6 @@ import transformers
 from transformers import AutoTokenizer
 
 from lightning_transformers.task.nlp.summarization import (
-    SummarizationConfig,
-    SummarizationDataConfig,
     SummarizationDataModule,
     SummarizationTransformer,
     XsumSummarizationDataModule,
@@ -20,24 +18,19 @@ def test_smoke_train(hf_cache_path):
     tokenizer = AutoTokenizer.from_pretrained(pretrained_model_name_or_path="patrickvonplaten/t5-tiny-random")
     model = SummarizationTransformer(
         pretrained_model_name_or_path="patrickvonplaten/t5-tiny-random",
-        cfg=SummarizationConfig(
-            use_stemmer=True,
-            val_target_max_length=142,
-            num_beams=None,
-            compute_generate_metrics=True,
-        ),
+        use_stemmer=True,
+        val_target_max_length=142,
+        num_beams=None,
+        compute_generate_metrics=True,
     )
     dm = XsumSummarizationDataModule(
-        cfg=SummarizationDataConfig(
-            limit_train_samples=64,
-            limit_val_samples=64,
-            limit_test_samples=64,
-            batch_size=1,
-            dataset_name="xsum",
-            max_source_length=128,
-            max_target_length=128,
-            cache_dir=hf_cache_path,
-        ),
+        limit_train_samples=64,
+        limit_val_samples=64,
+        limit_test_samples=64,
+        batch_size=1,
+        max_source_length=128,
+        max_target_length=128,
+        cache_dir=hf_cache_path,
         tokenizer=tokenizer,
     )
     trainer = pl.Trainer(fast_dev_run=True)
@@ -62,14 +55,12 @@ def test_smoke_predict():
     assert 2 <= len(output.split()) <= 12
 
 
-def test_model_has_correct_cfg():
+def test_model_has_correct_class():
     model = SummarizationTransformer(pretrained_model_name_or_path="t5-base")
     assert isinstance(model.model, transformers.T5ForConditionalGeneration)
-    assert type(model.cfg) is SummarizationConfig
 
 
-def test_datamodule_has_correct_cfg():
+def test_datamodule_has_tokenizer():
     tokenizer = MagicMock()
     dm = SummarizationDataModule(tokenizer)
-    assert isinstance(dm.cfg, SummarizationDataConfig)
     assert dm.tokenizer is tokenizer

@@ -7,7 +7,6 @@ import transformers
 from transformers import AutoTokenizer
 
 from lightning_transformers.task.nlp.multiple_choice import (
-    MultipleChoiceDataConfig,
     MultipleChoiceDataModule,
     MultipleChoiceTransformer,
     SwagMultipleChoiceDataModule,
@@ -19,13 +18,10 @@ def test_smoke_train(hf_cache_path):
     tokenizer = AutoTokenizer.from_pretrained(pretrained_model_name_or_path="prajjwal1/bert-tiny")
     model = MultipleChoiceTransformer(pretrained_model_name_or_path="prajjwal1/bert-tiny")
     dm = SwagMultipleChoiceDataModule(
-        cfg=MultipleChoiceDataConfig(
-            batch_size=1,
-            dataset_name="swag",
-            dataset_config_name="regular",
-            padding=False,
-            cache_dir=hf_cache_path,
-        ),
+        batch_size=1,
+        dataset_config_name="regular",
+        padding=False,
+        cache_dir=hf_cache_path,
         tokenizer=tokenizer,
     )
     trainer = pl.Trainer(fast_dev_run=True)
@@ -38,8 +34,7 @@ def test_model_has_correct_cfg():
     assert isinstance(model.model, transformers.BertForMultipleChoice)
 
 
-def test_datamodule_has_correct_cfg():
+def test_datamodule_has_tokenizer():
     tokenizer = MagicMock()
     dm = MultipleChoiceDataModule(tokenizer)
-    assert isinstance(dm.cfg, MultipleChoiceDataConfig)
     assert dm.tokenizer is tokenizer

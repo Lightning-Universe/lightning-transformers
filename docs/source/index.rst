@@ -29,12 +29,12 @@ Lightning Transformers
 
 .. toctree::
    :maxdepth: 1
-   :name: optimization
-   :caption: Optimizations
+   :name: features
+   :caption: Features
 
-   optimizations/sparseml
-   optimizations/hf_save
-   optimizations/large_model
+   features/sparseml
+   features/hf_save
+   features/large_model
 
 .. toctree::
    :maxdepth: 1

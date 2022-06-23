@@ -12,13 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 from lightning_transformers.core.seq2seq.data import Seq2SeqDataModule
-from lightning_transformers.task.nlp.summarization.config import SummarizationDataConfig
 
 
 class SummarizationDataModule(Seq2SeqDataModule):
     """Defines the ``LightningDataModule`` for Summarization Datasets."""
 
-    cfg: SummarizationDataConfig
-
-    def __init__(self, *args, cfg: SummarizationDataConfig = SummarizationDataConfig(), **kwargs) -> None:
-        super().__init__(*args, cfg=cfg, **kwargs)
+    ...

@@ -27,10 +27,10 @@ class TextClassificationTransformer(TaskTransformer):
     """Defines ``LightningModule`` for the Text Classification Task.
 
     Args:
-        *args: :class:`lightning_transformers.core.nlp.HFTransformer` arguments.
+        *args: :class:`lightning_transformers.core.model.TaskTransformer` arguments.
         downstream_model_type: Downstream HuggingFace AutoModel to load.
             (default ``transformers.AutoModelForSequenceClassification``)
-        **kwargs: :class:`lightning_transformers.core.nlp.HFTransformer` arguments.
+        **kwargs: :class:`lightning_transformers.core.model.TaskTransformer` arguments.
     """
 
     def __init__(

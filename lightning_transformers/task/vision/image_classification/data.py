@@ -17,18 +17,13 @@ from datasets import ClassLabel, Dataset
 from pytorch_lightning.utilities import rank_zero_warn
 
 from lightning_transformers.core import TransformerDataModule
-from lightning_transformers.task.vision.image_classification.config import ImageClassificationDataConfig
 
 
 class ImageClassificationDataModule(TransformerDataModule):
     """Defines the ``LightningDataModule`` for Image Classification Datasets."""
 
-    cfg: ImageClassificationDataConfig
-
-    def __init__(
-        self, feature_extractor, *args, cfg: ImageClassificationDataConfig = ImageClassificationDataConfig(), **kwargs
-    ) -> None:
-        super().__init__(tokenizer=feature_extractor, *args, cfg=cfg, **kwargs)
+    def __init__(self, feature_extractor, *args, **kwargs) -> None:
+        super().__init__(tokenizer=feature_extractor, *args, **kwargs)
         self.labels = None
 
     def process_data(self, dataset: Dataset, stage: Optional[str] = None) -> Dataset:

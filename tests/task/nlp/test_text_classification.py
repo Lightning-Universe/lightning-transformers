@@ -10,7 +10,6 @@ from transformers import AutoTokenizer
 
 from lightning_transformers.plugins.checkpoint import HFSaveCheckpoint
 from lightning_transformers.task.nlp.text_classification import (
-    TextClassificationDataConfig,
     TextClassificationDataModule,
     TextClassificationTransformer,
 )
@@ -20,16 +19,14 @@ from lightning_transformers.task.nlp.text_classification import (
 def test_smoke_train(hf_cache_path):
     tokenizer = AutoTokenizer.from_pretrained(pretrained_model_name_or_path="prajjwal1/bert-tiny")
     dm = TextClassificationDataModule(
-        cfg=TextClassificationDataConfig(
-            batch_size=1,
-            dataset_name="glue",
-            dataset_config_name="sst2",
-            max_length=512,
-            limit_test_samples=64,
-            limit_val_samples=64,
-            limit_train_samples=64,
-            cache_dir=hf_cache_path,
-        ),
+        batch_size=1,
+        dataset_name="glue",
+        dataset_config_name="sst2",
+        max_length=512,
+        limit_test_samples=64,
+        limit_val_samples=64,
+        limit_train_samples=64,
+        cache_dir=hf_cache_path,
         tokenizer=tokenizer,
     )
     model = TextClassificationTransformer(pretrained_model_name_or_path="prajjwal1/bert-tiny")
@@ -40,17 +37,15 @@ def test_smoke_train(hf_cache_path):
 def test_smoke_predict_with_trainer(hf_cache_path):
     tokenizer = AutoTokenizer.from_pretrained(pretrained_model_name_or_path="prajjwal1/bert-tiny")
     dm = TextClassificationDataModule(
-        cfg=TextClassificationDataConfig(
-            batch_size=1,
-            dataset_name="glue",
-            dataset_config_name="sst2",
-            max_length=512,
-            limit_test_samples=64,
-            limit_val_samples=64,
-            limit_train_samples=64,
-            cache_dir=hf_cache_path,
-            predict_subset_name="test",  # Use the "test" split of the dataset as our prediction subset
-        ),
+        batch_size=1,
+        dataset_name="glue",
+        dataset_config_name="sst2",
+        max_length=512,
+        limit_test_samples=64,
+        limit_val_samples=64,
+        limit_train_samples=64,
+        cache_dir=hf_cache_path,
+        predict_subset_name="test",  # Use the "test" split of the dataset as our prediction subset
         tokenizer=tokenizer,
     )
     model = TextClassificationTransformer(pretrained_model_name_or_path="prajjwal1/bert-tiny")
@@ -76,10 +71,9 @@ def test_model_has_correct_cfg():
     assert isinstance(model.model, transformers.BertForSequenceClassification)
 
 
-def test_datamodule_has_correct_cfg():
+def test_datamodule_has_tokenizer():
     tokenizer = MagicMock()
     dm = TextClassificationDataModule(tokenizer)
-    assert isinstance(dm.cfg, TextClassificationDataConfig)
     assert dm.tokenizer is tokenizer
 
 
@@ -87,16 +81,14 @@ def test_datamodule_has_correct_cfg():
 def test_huggingface_checkpoint_train(hf_cache_path, tmpdir):
     tokenizer = AutoTokenizer.from_pretrained(pretrained_model_name_or_path="prajjwal1/bert-tiny")
     dm = TextClassificationDataModule(
-        cfg=TextClassificationDataConfig(
-            batch_size=1,
-            dataset_name="glue",
-            dataset_config_name="sst2",
-            max_length=512,
-            limit_test_samples=64,
-            limit_val_samples=64,
-            limit_train_samples=64,
-            cache_dir=hf_cache_path,
-        ),
+        batch_size=1,
+        dataset_name="glue",
+        dataset_config_name="sst2",
+        max_length=512,
+        limit_test_samples=64,
+        limit_val_samples=64,
+        limit_train_samples=64,
+        cache_dir=hf_cache_path,
         tokenizer=tokenizer,
     )
     ckpt_path = os.path.join(tmpdir, "checkpoints")

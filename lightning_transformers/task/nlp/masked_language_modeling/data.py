@@ -18,7 +18,6 @@ from datasets import Dataset
 from transformers import DataCollatorForLanguageModeling, DataCollatorForWholeWordMask, PreTrainedTokenizerBase
 
 from lightning_transformers.core import TransformerDataModule
-from lightning_transformers.task.nlp.masked_language_modeling.config import MaskedLanguageModelingDataConfig
 
 
 class MaskedLanguageModelingDataModule(TransformerDataModule):
@@ -26,17 +25,19 @@ class MaskedLanguageModelingDataModule(TransformerDataModule):
 
     Args:
         *args: ``HFDataModule`` specific arguments.
-        cfg: Contains data specific parameters when processing/loading the dataset
-            (Default ``MaskedLanguageModelingDataConfig``)
+        mlm_probability: Ratio of tokens to mask for masked language modeling loss
+        line_by_line: Whether distinct lines of text in the dataset are to be handled as distinct sequences.
+        wwm: Whether or not use whole word masking.
         **kwargs: ``HFDataModule`` specific arguments.
     """
 
-    cfg: MaskedLanguageModelingDataConfig
-
     def __init__(
-        self, *args, cfg: MaskedLanguageModelingDataConfig = MaskedLanguageModelingDataConfig(), **kwargs
+        self, *args, mlm_probability: float = 0.15, line_by_line: bool = False, wwm: bool = False, **kwargs
     ) -> None:
-        super().__init__(*args, cfg=cfg, **kwargs)
+        super().__init__(*args, **kwargs)
+        self.mlm_probability = mlm_probability
+        self.line_by_line = line_by_line
+        self.wwm = wwm
 
     def process_data(self, dataset: Dataset, stage: Optional[str] = None) -> Dataset:
         column_names = dataset["train" if stage == "fit" else "validation"].column_names
@@ -45,30 +46,30 @@ class MaskedLanguageModelingDataModule(TransformerDataModule):
             self.tokenize_function,
             tokenizer=self.tokenizer,
             text_column_name=text_column_name,
-            line_by_line=self.cfg.line_by_line,
-            padding=self.cfg.padding,
-            max_length=self.cfg.max_length,
+            line_by_line=self.line_by_line,
+            padding=self.padding,
+            max_length=self.max_length,
         )
 
         dataset = dataset.map(
             tokenize_function,
             batched=True,
-            num_proc=self.cfg.preprocessing_num_workers,
+            num_proc=self.preprocessing_num_workers,
             remove_columns=column_names,
-            load_from_cache_file=self.cfg.load_from_cache_file,
+            load_from_cache_file=self.load_from_cache_file,
         )
 
-        if not self.cfg.line_by_line:
+        if not self.line_by_line:
             convert_to_features = partial(
                 self.convert_to_features,
-                max_seq_length=self.cfg.max_length,
+                max_seq_length=self.max_length,
             )
 
             dataset = dataset.map(
                 convert_to_features,
                 batched=True,
-                num_proc=self.cfg.preprocessing_num_workers,
-                load_from_cache_file=self.cfg.load_from_cache_file,
+                num_proc=self.preprocessing_num_workers,
+                load_from_cache_file=self.load_from_cache_file,
             )
 
         return dataset
@@ -118,7 +119,7 @@ class MaskedLanguageModelingDataModule(TransformerDataModule):
 
     @property
     def collate_fn(self) -> Callable:
-        if self.cfg.wwm:
-            return DataCollatorForWholeWordMask(self.tokenizer, mlm_probability=self.cfg.mlm_probability)
+        if self.wwm:
+            return DataCollatorForWholeWordMask(self.tokenizer, mlm_probability=self.mlm_probability)
         else:
-            return DataCollatorForLanguageModeling(self.tokenizer, mlm_probability=self.cfg.mlm_probability)
+            return DataCollatorForLanguageModeling(self.tokenizer, mlm_probability=self.mlm_probability)
