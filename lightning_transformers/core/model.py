@@ -56,7 +56,7 @@ class TaskTransformer(pl.LightningModule):
         super().__init__()
         self.save_hyperparameters()
         self.load_weights = load_weights
-        sefl.model_data_kwarg = model_data_kwarg
+        sefl.model_data_kwargs = model_data_kwargs
         self.intiailaize_model()
         self._tokenizer = tokenizer  # necessary for hf_pipeline
         self._hf_pipeline = None
