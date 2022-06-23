@@ -98,6 +98,7 @@ dm = WMT16TranslationDataModule(
     target_language="ro",
     max_source_length=128,
     max_target_length=128,
+    padding="max_length",
     tokenizer=tokenizer,
 )
 trainer = pl.Trainer(accelerator="auto", devices="auto", max_epochs=1)
