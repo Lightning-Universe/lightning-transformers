@@ -56,7 +56,8 @@ class TaskTransformer(pl.LightningModule):
         super().__init__()
         self.save_hyperparameters()
         self.load_weights = load_weights
-        sefl.model_data_kwargs = model_data_kwargs
+        self.model_data_kwargs = model_data_kwargs
+        self.downstream_model_type = downstream_model_type
         self.intiailaize_model(pretrained_model_name_or_path)
         self._tokenizer = tokenizer  # necessary for hf_pipeline
         self._hf_pipeline = None
@@ -68,10 +69,10 @@ class TaskTransformer(pl.LightningModule):
         Feel free to overwrite this method if you are initializing the model in a different way
         """
         if self.load_weights:
-            self.model = downstream_model_type.from_pretrained(pretrained_model_name_or_path, **self.model_data_kwargs)
+            self.model = self.downstream_model_type.from_pretrained(pretrained_model_name_or_path, **self.model_data_kwargs)
         else:
             config = AutoConfig.from_pretrained(pretrained_model_name_or_path, **self.model_data_kwargs)
-            self.model = downstream_model_type.from_config(config)
+            self.model = self.downstream_model_type.from_config(config)
 
     def configure_optimizers(self) -> Dict:
         rank_zero_warn(
