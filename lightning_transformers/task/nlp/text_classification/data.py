@@ -11,7 +11,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-from typing import Any, Dict, List, Optional
+from typing import Any, List, Optional
 
 from datasets import ClassLabel, Dataset
 from pytorch_lightning.utilities import rank_zero_warn
@@ -52,10 +52,6 @@ class TextClassificationDataModule(TransformerDataModule):
             rank_zero_warn("Labels has not been set, calling `setup('fit')`.")
             self.setup("fit")
         return self.labels.num_classes
-
-    @property
-    def model_data_kwargs(self) -> Dict[str, int]:
-        return {"num_labels": self.num_classes}
 
     @staticmethod
     def convert_to_features(
