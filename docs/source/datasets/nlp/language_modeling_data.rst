@@ -17,15 +17,12 @@ Below we have defined a csv file to use as our input data.
 .. code-block:: python
 
     from lightning_transformers.task.nlp.language_modeling import (
-        LanguageModelingDataConfig,
         LanguageModelingDataModule,
     )
 
     dm = LanguageModelingDataModule(
-        cfg=LanguageModelingDataConfig(
-            batch_size=1,
-            train_file="path/train.csv",
-            validation_file="/path/valid.csv"
-        ),
+        batch_size=1,
+        train_file="path/train.csv",
+        validation_file="/path/valid.csv"
         tokenizer=tokenizer,
     )

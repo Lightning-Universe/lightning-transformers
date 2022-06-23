@@ -12,9 +12,6 @@ The base data module can be used to modify this code, and follows a simple patte
 
     class TranslationDataModule(Seq2SeqDataModule):
 
-        def __init__(self, cfg: TranslationDataConfig = TranslationDataConfig()):
-            super().__init__(cfg=cfg)
-
         @property
         def source_target_column_names(self) -> Tuple[str, str]:
             return self.cfg.source_language, self.cfg.target_language
@@ -22,9 +19,6 @@ The base data module can be used to modify this code, and follows a simple patte
     ...
 
     class Seq2SeqDataModule(HFDataModule):
-
-        def __init__(self, cfg: Seq2SeqDataConfig = Seq2SeqDataConfig()):
-            super().__init__(cfg=cfg)
 
         def process_data(self, dataset: Dataset, stage: Optional[str] = None) -> Dataset:
             # `process_data` converting the dataset into features.

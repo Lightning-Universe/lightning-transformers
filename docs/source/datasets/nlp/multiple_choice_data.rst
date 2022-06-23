@@ -22,18 +22,14 @@ We override the dataset files, allowing us to still use the data transforms defi
 .. code-block:: python
 
     from lightning_transformers.task.nlp.multiple_choice import (
-        MultipleChoiceDataConfig,
         RaceMultipleChoiceDataModule,
     )
 
     dm = RaceMultipleChoiceDataModule(
-        cfg=MultipleChoiceDataConfig(
-            batch_size=1,
-            dataset_name="race",
-            dataset_config_name="all",
-            padding=False,
-            train_file="path/train.json",
-            validation_file="/path/valid.json"
-        ),
+        batch_size=1,
+        dataset_config_name="all",
+        padding=False,
+        train_file="path/train.json",
+        validation_file="/path/valid.json"
         tokenizer=tokenizer,
     )

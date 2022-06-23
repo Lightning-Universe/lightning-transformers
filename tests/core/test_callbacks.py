@@ -8,7 +8,6 @@ from transformers import AutoTokenizer
 from lightning_transformers.callbacks import TransformerSparseMLCallback
 from lightning_transformers.core.loggers import WABLogger
 from lightning_transformers.task.nlp.text_classification import (
-    TextClassificationDataConfig,
     TextClassificationDataModule,
     TextClassificationTransformer,
 )
@@ -75,16 +74,14 @@ def test_training_steps(max_epochs, num_processes, limit_train_batches, modifier
 
     tokenizer = AutoTokenizer.from_pretrained(pretrained_model_name_or_path="prajjwal1/bert-tiny")
     dm = TextClassificationDataModule(
-        cfg=TextClassificationDataConfig(
-            batch_size=1,
-            dataset_name="glue",
-            dataset_config_name="sst2",
-            max_length=512,
-            limit_test_samples=64,
-            limit_val_samples=64,
-            limit_train_samples=64,
-            cache_dir=hf_cache_path,
-        ),
+        batch_size=1,
+        dataset_name="glue",
+        dataset_config_name="sst2",
+        max_length=512,
+        limit_test_samples=64,
+        limit_val_samples=64,
+        limit_train_samples=64,
+        cache_dir=hf_cache_path,
         tokenizer=tokenizer,
     )
     model = TextClassificationTransformer(pretrained_model_name_or_path="prajjwal1/bert-tiny")

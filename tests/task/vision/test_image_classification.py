@@ -7,7 +7,6 @@ import transformers
 from transformers import AutoFeatureExtractor
 
 from lightning_transformers.task.vision.image_classification import (
-    ImageClassificationDataConfig,
     ImageClassificationDataModule,
     ImageClassificationTransformer,
 )
@@ -18,7 +17,8 @@ from lightning_transformers.task.vision.image_classification import (
 def test_smoke_train(hf_cache_path):
     feature_extractor = AutoFeatureExtractor.from_pretrained(pretrained_model_name_or_path="nateraw/tiny-vit-random")
     dm = ImageClassificationDataModule(
-        cfg=ImageClassificationDataConfig(batch_size=1, dataset_name="beans"),
+        batch_size=1,
+        dataset_name="beans",
         feature_extractor=feature_extractor,
     )
     model = ImageClassificationTransformer(
@@ -51,8 +51,7 @@ def test_model_has_correct_cfg():
     assert isinstance(model.model, transformers.ViTForImageClassification)
 
 
-def test_datamodule_has_correct_cfg():
+def test_datamodule_has_extractor():
     feature_extractor = MagicMock()
     dm = ImageClassificationDataModule(feature_extractor)
-    assert isinstance(dm.cfg, ImageClassificationDataConfig)
     assert dm.tokenizer is feature_extractor

@@ -15,19 +15,14 @@ We override the dataset files, allowing us to still use the data transforms defi
 .. code-block:: python
 
     from lightning_transformers.task.nlp.summarization import (
-        SummarizationConfig,
-        SummarizationDataConfig,
         XsumSummarizationDataModule,
     )
 
     dm = XsumSummarizationDataModule(
-        cfg=SummarizationDataConfig(
-            batch_size=1,
-            dataset_name="xsum",
-            max_source_length=128,
-            max_target_length=128,
-            train_file="path/train.csv",
-            validation_file="/path/valid.csv"
-        ),
+        batch_size=1,
+        max_source_length=128,
+        max_target_length=128,
+        train_file="path/train.csv",
+        validation_file="/path/valid.csv"
         tokenizer=tokenizer,
     )
