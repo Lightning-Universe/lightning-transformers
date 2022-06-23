@@ -18,10 +18,9 @@ class Seq2SeqDataModule(TransformerDataModule):
     def __init__(
         self, *args, max_target_length: int = 128, max_source_length: int = 1024, padding: str = "longest", **kwargs
     ) -> None:
-        super().__init__(*args, **kwargs)
+        super().__init__(*args, padding=padding, **kwargs)
         self.max_target_length = max_target_length
         self.max_source_length = max_source_length
-        self.padding = padding
 
     def process_data(self, dataset: Dataset, stage: Optional[str] = None) -> Dataset:
         src_text_column_name, tgt_text_column_name = self.source_target_column_names
@@ -60,14 +59,16 @@ class Seq2SeqDataModule(TransformerDataModule):
         src_text_column_name: str,
         tgt_text_column_name: str,
     ):
-        encoded_results = tokenizer.prepare_seq2seq_batch(
-            src_texts=examples[src_text_column_name],
-            tgt_texts=examples[tgt_text_column_name],
-            max_length=max_source_length,
-            max_target_length=max_target_length,
-            padding=padding,
-        )
-        return encoded_results
+        inputs = examples[src_text_column_name]
+        targets = examples[tgt_text_column_name]
+        model_inputs = tokenizer(inputs, max_length=max_source_length, padding=padding, truncation=True)
+
+        # Setup the tokenizer for targets
+        with tokenizer.as_target_tokenizer():
+            labels = tokenizer(targets, max_length=max_target_length, padding=padding, truncation=True)
+
+        model_inputs["labels"] = labels["input_ids"]
+        return model_inputs
 
     @property
     def collate_fn(self) -> Callable:

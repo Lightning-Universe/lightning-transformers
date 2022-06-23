@@ -35,7 +35,7 @@ Training
         revision="master",
         tokenizer=tokenizer,
     )
-    model = TokenClassificationTransformer(pretrained_model_name_or_path="bert-base-uncased", labels=dm.labels)
+    model = TokenClassificationTransformer(pretrained_model_name_or_path="bert-base-uncased", labels=dm.num_classes)
     trainer = pl.Trainer(accelerator="auto", devices="auto", max_epochs=1)
 
     trainer.fit(model, dm)

@@ -32,16 +32,13 @@ class WMT16TranslationDataModule(TranslationDataModule):
         src_text_column_name: str,
         tgt_text_column_name: str,
     ):
-        translations = examples["translation"]  # Extract translations from dict
+        inputs = [ex[src_text_column_name] for ex in examples["translation"]]
+        targets = [ex[tgt_text_column_name] for ex in examples["translation"]]
+        model_inputs = tokenizer(inputs, max_length=max_source_length, padding=padding, truncation=True)
 
-        def extract_text(lang):
-            return [text[lang] for text in translations]
+        # Setup the tokenizer for targets
+        with tokenizer.as_target_tokenizer():
+            labels = tokenizer(targets, max_length=max_target_length, padding=padding, truncation=True)
 
-        encoded_results = tokenizer.prepare_seq2seq_batch(
-            src_texts=extract_text(src_text_column_name),
-            tgt_texts=extract_text(tgt_text_column_name),
-            max_length=max_source_length,
-            max_target_length=max_target_length,
-            padding=padding,
-        )
-        return encoded_results
+        model_inputs["labels"] = labels["input_ids"]
+        return model_inputs

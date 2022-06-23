@@ -4,7 +4,7 @@ from transformers import AutoTokenizer
 from lightning_transformers.task.nlp.translation import TranslationTransformer, WMT16TranslationDataModule
 
 if __name__ == "__main__":
-    tokenizer = AutoTokenizer.from_pretrained(pretrained_model_name_or_path="t5-base")
+    tokenizer = AutoTokenizer.from_pretrained(pretrained_model_name_or_path="t5-base", model_max_length=512)
     model = TranslationTransformer(
         pretrained_model_name_or_path="t5-base",
         n_gram=4,
@@ -20,6 +20,7 @@ if __name__ == "__main__":
         target_language="ro",
         max_source_length=128,
         max_target_length=128,
+        padding="max_length",
         tokenizer=tokenizer,
     )
     trainer = pl.Trainer(accelerator="auto", devices="auto", max_epochs=1)
