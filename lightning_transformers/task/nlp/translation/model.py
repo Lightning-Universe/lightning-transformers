@@ -53,7 +53,7 @@ class TranslationTransformer(Seq2SeqTransformer):
         tgt_lns = self.tokenize_labels(batch["labels"])
         pred_lns = self.generate(batch["input_ids"], batch["attention_mask"])
         # wrap targets in list as score expects a list of potential references
-        result = self.bleu(pred_lns, tgt_lns)
+        result = self.bleu(preds=pred_lns, target=tgt_lns)
         self.log(f"{prefix}_bleu_score", result, on_step=False, on_epoch=True, prog_bar=True)
 
     def configure_metrics(self, stage: str):

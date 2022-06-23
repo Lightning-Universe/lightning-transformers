@@ -212,12 +212,3 @@ class TransformerDataModule(pl.LightningDataModule):
     @property
     def collate_fn(self) -> Optional[Callable]:
         return None
-
-    @property
-    def model_data_kwargs(self) -> Dict:
-        """Override to provide the model with additional kwargs.
-
-        This is useful to provide the number of classes/pixels to the model or any other data specific args
-        Returns: Dict of args
-        """
-        return {}

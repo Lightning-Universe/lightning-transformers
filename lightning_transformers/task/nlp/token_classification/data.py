@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 from functools import partial
-from typing import Any, Callable, Dict, Optional
+from typing import Any, Callable, Optional
 
 from datasets import ClassLabel, Dataset
 from pytorch_lightning.utilities import rank_zero_warn
@@ -89,10 +89,6 @@ class TokenClassificationDataModule(TransformerDataModule):
             rank_zero_warn("Labels has not been set, calling `setup('fit')`.")
             self.setup("fit")
         return len(self.labels)
-
-    @property
-    def model_data_kwargs(self) -> Dict[str, Any]:
-        return {"labels": self.labels}
 
     @staticmethod
     def convert_to_features(

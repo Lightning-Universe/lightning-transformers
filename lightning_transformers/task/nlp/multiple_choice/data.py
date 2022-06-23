@@ -11,7 +11,6 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-from typing import Dict
 
 from transformers import default_data_collator
 
@@ -35,7 +34,3 @@ class MultipleChoiceDataModule(TransformerDataModule):
     @property
     def num_classes(self) -> int:
         raise NotImplementedError
-
-    @property
-    def model_data_kwargs(self) -> Dict[str, int]:
-        return {"num_labels": self.num_classes}

@@ -42,7 +42,6 @@ class TaskTransformer(pl.LightningModule):
         pretrained_model_name_or_path: Huggingface model to use if backbone config not passed.
         tokenizer: The pre-trained tokenizer.
         pipeline_kwargs: Arguments required for the HuggingFace inference pipeline class.
-        **model_data_kwargs: Arguments passed from the data module to the class.
     """
 
     def __init__(
