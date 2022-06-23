@@ -55,20 +55,32 @@ class TaskTransformer(pl.LightningModule):
     ) -> None:
         super().__init__()
         self.save_hyperparameters()
-        if load_weights:
-            self.model = downstream_model_type.from_pretrained(pretrained_model_name_or_path, **model_data_kwargs)
-        else:
-            config = AutoConfig.from_pretrained(pretrained_model_name_or_path, **model_data_kwargs)
-            self.model = downstream_model_type.from_config(config)
+        self.load_weights = load_weights
+        sefl.model_data_kwarg = model_data_kwarg
+        self.intiailaize_model()
         self._tokenizer = tokenizer  # necessary for hf_pipeline
         self._hf_pipeline = None
         self._hf_pipeline_kwargs = pipeline_kwargs or {}
+        self.intiailaize_model()
 
+    
+    def intiailaize_model(self):
+        """
+        create and initialize the model to use with this task, 
+
+        Feel free to overwrite this method if you are initializing the model in a different way
+        """
+        if self.load_weights:
+            self.model = downstream_model_type.from_pretrained(pretrained_model_name_or_path, **self.model_data_kwargs)
+        else:
+            config = AutoConfig.from_pretrained(pretrained_model_name_or_path, **self.model_data_kwargs)
+            self.model = downstream_model_type.from_config(config)
+    
     def configure_optimizers(self) -> Dict:
         rank_zero_warn(
             "You haven't specified an optimizer or lr scheduler. "
             "Defaulting to AdamW with an lr of 1e-5 and linear warmup for 10% of steps. "
-            "To change this, override ``configure_optimizers`` in the TransformerModule."
+            "To change this, override ``configure_optimizers`` in  TransformerModule."
         )
         optimizer = torch.optim.AdamW(self.parameters(), lr=1e-5)
         num_training_steps, num_warmup_steps = self.compute_warmup(
