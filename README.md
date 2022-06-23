@@ -49,18 +49,15 @@ from transformers import AutoTokenizer
 from lightning_transformers.task.nlp.text_classification import (
     TextClassificationDataModule,
     TextClassificationTransformer,
-    TextClassificationDataConfig,
 )
 
 tokenizer = AutoTokenizer.from_pretrained(
     pretrained_model_name_or_path="bert-base-cased"
 )
 dm = TextClassificationDataModule(
-    cfg=TextClassificationDataConfig(
-        batch_size=1,
-        dataset_name="emotion",
-        max_length=512,
-    ),
+    batch_size=1,
+    dataset_name="emotion",
+    max_length=512,
     tokenizer=tokenizer,
 )
 model = TextClassificationTransformer(
@@ -81,8 +78,6 @@ from transformers import AutoTokenizer
 from lightning_transformers.task.nlp.translation import (
     TranslationTransformer,
     WMT16TranslationDataModule,
-    TranslationConfig,
-    TranslationDataConfig,
 )
 
 tokenizer = AutoTokenizer.from_pretrained(
@@ -90,24 +85,19 @@ tokenizer = AutoTokenizer.from_pretrained(
 )
 model = TranslationTransformer(
     pretrained_model_name_or_path="google/mt5-base",
-    cfg=TranslationConfig(
-        n_gram=4,
-        smooth=False,
-        val_target_max_length=142,
-        num_beams=None,
-        compute_generate_metrics=True,
-    ),
+    n_gram=4,
+    smooth=False,
+    val_target_max_length=142,
+    num_beams=None,
+    compute_generate_metrics=True,
 )
 dm = WMT16TranslationDataModule(
-    cfg=TranslationDataConfig(
-        dataset_name="wmt16",
-        # WMT translation datasets: ['cs-en', 'de-en', 'fi-en', 'ro-en', 'ru-en', 'tr-en']
-        dataset_config_name="ro-en",
-        source_language="en",
-        target_language="ro",
-        max_source_length=128,
-        max_target_length=128,
-    ),
+    # WMT translation datasets: ['cs-en', 'de-en', 'fi-en', 'ro-en', 'ru-en', 'tr-en']
+    dataset_config_name="ro-en",
+    source_language="en",
+    target_language="ro",
+    max_source_length=128,
+    max_target_length=128,
     tokenizer=tokenizer,
 )
 trainer = pl.Trainer(accelerator="auto", devices="auto", max_epochs=1)
