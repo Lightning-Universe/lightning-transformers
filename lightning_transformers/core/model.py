@@ -62,7 +62,7 @@ class TaskTransformer(pl.LightningModule):
         self._hf_pipeline = None
         self._hf_pipeline_kwargs = pipeline_kwargs or {}
 
-    def intiailaize_model(self, pretrained_model_name_or_path:str):
+    def intiailaize_model(self, pretrained_model_name_or_path: str):
         """create and initialize the model to use with this task,
 
         Feel free to overwrite this method if you are initializing the model in a different way
