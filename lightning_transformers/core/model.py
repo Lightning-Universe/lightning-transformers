@@ -57,12 +57,12 @@ class TaskTransformer(pl.LightningModule):
         self.save_hyperparameters()
         self.load_weights = load_weights
         sefl.model_data_kwargs = model_data_kwargs
-        self.intiailaize_model()
+        self.intiailaize_model(pretrained_model_name_or_path)
         self._tokenizer = tokenizer  # necessary for hf_pipeline
         self._hf_pipeline = None
         self._hf_pipeline_kwargs = pipeline_kwargs or {}
 
-    def intiailaize_model(self):
+    def intiailaize_model(self, pretrained_model_name_or_path:str):
         """create and initialize the model to use with this task,
 
         Feel free to overwrite this method if you are initializing the model in a different way
