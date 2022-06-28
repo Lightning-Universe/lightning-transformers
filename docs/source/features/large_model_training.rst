@@ -42,6 +42,6 @@ If you have your own `pl.LightningModule` you can use DeepSpeed Stage 3 sharding
     class MyModel(pl.LightningModule):
 
         def setup(self, stage: Optional[str] = None) -> None:
-            if stage == "fit" and not hasattr(self, "ptlm"):
+            if not hasattr(self, "ptlm"):
                 enable_transformers_pretrained_deepspeed_sharding(self)
                 self.ptlm = T5ForConditionalGeneration.from_pretrained("t5-11b")
