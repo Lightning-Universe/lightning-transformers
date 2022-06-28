@@ -35,6 +35,7 @@ Lightning Transformers
    features/sparseml
    features/hf_save
    features/large_model
+   features/large_model_training
 
 .. toctree::
    :maxdepth: 1
