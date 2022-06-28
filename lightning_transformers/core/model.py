@@ -21,6 +21,7 @@ from pytorch_lightning.utilities import rank_zero_warn
 from transformers import AutoConfig, PreTrainedTokenizerBase
 from transformers import pipeline as hf_transformers_pipeline
 
+from lightning_transformers.utilities.deepspeed import enable_transformers_pretrained_deepspeed_sharding
 from lightning_transformers.utilities.imports import _ACCELERATE_AVAILABLE
 
 if _ACCELERATE_AVAILABLE:
@@ -51,6 +52,7 @@ class TaskTransformer(pl.LightningModule):
         tokenizer: Optional[PreTrainedTokenizerBase] = None,
         pipeline_kwargs: Optional[dict] = None,
         load_weights: bool = True,
+        deepspeed_sharding: bool = False,
         **model_data_kwargs,
     ) -> None:
         super().__init__()
@@ -58,7 +60,10 @@ class TaskTransformer(pl.LightningModule):
         self.load_weights = load_weights
         self.model_data_kwargs = model_data_kwargs
         self.downstream_model_type = downstream_model_type
-        self.initialize_model(pretrained_model_name_or_path)
+        self.deepspeed_sharding = deepspeed_sharding
+        self.pretrained_model_name_or_path = pretrained_model_name_or_path
+        if not self.deepspeed_sharding:
+            self.initialize_model(self.pretrained_model_name_or_path)
         self._tokenizer = tokenizer  # necessary for hf_pipeline
         self._hf_pipeline = None
         self._hf_pipeline_kwargs = pipeline_kwargs or {}
@@ -110,6 +115,9 @@ class TaskTransformer(pl.LightningModule):
 
     def setup(self, stage: Optional[str] = None) -> None:
         self.configure_metrics(stage)
+        if self.deepspeed_sharding and not hasattr(self, "model"):
+            enable_transformers_pretrained_deepspeed_sharding(self)
+            self.initialize_model(self.pretrained_model_name_or_path)
 
     def configure_metrics(self, stage: str) -> Optional[Any]:
         """Override to configure metrics for train/validation/test.
