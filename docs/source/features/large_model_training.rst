@@ -1,4 +1,4 @@
-.. _large_model:
+.. _large_model_training:
 
 DeepSpeed Training with Big Transformer Models
 ==============================================
