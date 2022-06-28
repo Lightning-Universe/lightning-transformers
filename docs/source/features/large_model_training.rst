@@ -33,6 +33,7 @@ The below script was tested on an 8 A100 machine.
 If you have your own `pl.LightningModule` you can use DeepSpeed Stage 3 sharding + Transformers as well, just add this code:
 
 .. code-block:: python
+
     import pytorch_lightning as pl
     from transformers import T5ForConditionalGeneration
     from lightning_transformers.utilities.deepspeed import enable_transformers_pretrained_deepspeed_sharding
