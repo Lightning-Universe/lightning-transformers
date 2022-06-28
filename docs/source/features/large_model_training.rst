@@ -31,7 +31,7 @@ The below script was tested on an 8 A100 machine.
     trainer = pl.Trainer(accelerator="gpu", devices="auto", strategy="deepspeed_stage_3", precision=16, max_epochs=1)
     trainer.fit(model, dm)
 
-If you have your own `pl.LightningModule` you can use DeepSpeed Stage 3 sharding + Transformers as well, just add this code:
+If you have your own ``pl.LightningModule`` you can use DeepSpeed ZeRO Stage 3 parameter sharding & Transformers as well, just add this code:
 
 .. code-block:: python
 

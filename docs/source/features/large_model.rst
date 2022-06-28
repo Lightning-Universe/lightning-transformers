@@ -70,6 +70,3 @@ Download the sharded checkpoint weights that we'll be using:
 
 
 To see more details about the API, see `here <https://huggingface.co/docs/accelerate/big_modeling>`__.
-
-DeepSpeed Training
-^^^^^^^^^^^^^^^^^^
