@@ -3,7 +3,7 @@
 DeepSpeed Training with Big Transformer Models
 ==============================================
 
-Below is an example of how you can run train a 6B parameter transformer model using Lightning Transformers and DeepSpeed.
+Below is an example of how you can train a 6B parameter transformer model using Lightning Transformers and DeepSpeed.
 
 The below script was tested on an 8 A100 machine.
 
@@ -13,6 +13,8 @@ The below script was tested on an 8 A100 machine.
     from transformers import AutoTokenizer
 
     from lightning_transformers.task.nlp.language_modeling import LanguageModelingDataModule, LanguageModelingTransformer
+
+    tokenizer = AutoTokenizer.from_pretrained(pretrained_model_name_or_path="gpt2")
 
     model = LanguageModelingTransformer(
         pretrained_model_name_or_path="EleutherAI/gpt-j-6B",
@@ -27,7 +29,6 @@ The below script was tested on an 8 A100 machine.
         tokenizer=tokenizer,
     )
     trainer = pl.Trainer(accelerator="gpu", devices="auto", strategy="deepspeed_stage_3", precision=16, max_epochs=1)
-
     trainer.fit(model, dm)
 
 If you have your own `pl.LightningModule` you can use DeepSpeed Stage 3 sharding + Transformers as well, just add this code:

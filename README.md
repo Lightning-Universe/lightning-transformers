@@ -108,6 +108,77 @@ trainer.fit(model, dm)
 
 Lightning Transformers supports a bunch of :hugs: tasks and datasets. See the [documentation](https://lightning-transformers.readthedocs.io/en/latest/).
 
+## Billion Parameter Model Support
+
+### Big Model Inference
+
+It's really easy to enable large model support for the pre-built LightningModule :hugs: tasks.
+
+Below is an example to enable automatic model partitioning (across CPU/GPU and even leveraging disk space) to run text generation using a 6B parameter model.
+
+```python
+import torch
+from accelerate import init_empty_weights
+from transformers import AutoTokenizer
+
+from lightning_transformers.task.nlp.language_modeling import (
+    LanguageModelingTransformer,
+)
+
+with init_empty_weights():
+    model = LanguageModelingTransformer(
+        pretrained_model_name_or_path="EleutherAI/gpt-j-6B",
+        tokenizer=AutoTokenizer.from_pretrained("EleutherAI/gpt-j-6B"),
+        low_cpu_mem_usage=True,
+        device_map="auto",  # automatically partitions the model based on the available hardware.
+    )
+
+output = model.generate("Hello, my name is", device=torch.device("cuda"))
+print(model.tokenizer.decode(output[0].tolist()))
+```
+
+For more information see [Big Transformers Model Inference](https://lightning-transformers.readthedocs.io/en/latest/features/large_model.html).
+
+### Big Model Training with DeepSpeed
+
+Below is an example of how you can train a 6B parameter transformer model using Lightning Transformers and DeepSpeed.
+
+```python
+import pytorch_lightning as pl
+from transformers import AutoTokenizer
+
+from lightning_transformers.task.nlp.language_modeling import (
+    LanguageModelingDataModule,
+    LanguageModelingTransformer,
+)
+
+tokenizer = AutoTokenizer.from_pretrained(pretrained_model_name_or_path="gpt2")
+
+model = LanguageModelingTransformer(
+    pretrained_model_name_or_path="EleutherAI/gpt-j-6B",
+    tokenizer=AutoTokenizer.from_pretrained("EleutherAI/gpt-j-6B"),
+    deepspeed_sharding=True,  # defer initialization of the model to shard/load pre-train weights
+)
+
+dm = LanguageModelingDataModule(
+    batch_size=1,
+    dataset_name="wikitext",
+    dataset_config_name="wikitext-2-raw-v1",
+    tokenizer=tokenizer,
+)
+trainer = pl.Trainer(
+    accelerator="gpu",
+    devices="auto",
+    strategy="deepspeed_stage_3",
+    precision=16,
+    max_epochs=1,
+)
+
+trainer.fit(model, dm)
+```
+
+For more information see [DeepSpeed Training with Big Transformers Models](https://lightning-transformers.readthedocs.io/en/latest/features/large_model_training.html) or the [Model Parallelism](https://pytorch-lightning.readthedocs.io/en/latest/advanced/model_parallel.html#fully-sharded-training) documentation.
+
 ## Contribute
 
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
