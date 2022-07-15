@@ -63,7 +63,7 @@ class LanguageModelingTransformer(TaskTransformer):
     def hf_pipeline_task(self) -> str:
         return "text-generation"
 
-    def generate(self, text: str, device: torch.device = torch.device("cpu")) -> Any:
+    def generate(self, text: str, device: torch.device = torch.device("cpu"), **kwargs) -> Any:
         if self.tokenizer is None:
             raise MisconfigurationException(
                 "A tokenizer is required to use the `generate` function. "
@@ -71,4 +71,4 @@ class LanguageModelingTransformer(TaskTransformer):
             )
         inputs = self.tokenizer(text, return_tensors="pt")
         inputs = inputs.to(device)
-        return self.model.generate(inputs["input_ids"])
+        return self.model.generate(inputs["input_ids"], **kwargs)
