@@ -3,9 +3,9 @@
 Big Transformers Model Inference
 ================================
 
-Lightning Transformers provides out of the box support for running inference with very large billion parameter models. Under-the-hood we use HF Accelerates' Transformer support to auto-select devices for optimal throughput and memory usage.
+Lightning Transformers provides out of the box support for running inference with very large billion parameter models. Under-the-hood we use HF Transformer's large model support to auto-select devices for optimal throughput and memory usage.
 
-Below is an example of how you can run generation with a large 6B parameter transformer model using Lightning Transformers.
+Below is an example of how you can run generation with a large 6B parameter transformer model using Lightning Transformers. We've also managed to run ``bigscience/bloom`` which is 176B parameters using 8 A100s with the below code.
 
 
 .. code-block:: bash
@@ -15,18 +15,16 @@ Below is an example of how you can run generation with a large 6B parameter tran
 .. code-block:: python
 
     import torch
-    from accelerate import init_empty_weights
     from transformers import AutoTokenizer
 
     from lightning_transformers.task.nlp.language_modeling import LanguageModelingTransformer
 
-    with init_empty_weights():
-        model = LanguageModelingTransformer(
-            pretrained_model_name_or_path="EleutherAI/gpt-j-6B",
-            tokenizer=AutoTokenizer.from_pretrained("EleutherAI/gpt-j-6B"),
-            low_cpu_mem_usage=True,
-            device_map="auto"
-        )
+    model = LanguageModelingTransformer(
+        pretrained_model_name_or_path="EleutherAI/gpt-j-6B",
+        tokenizer=AutoTokenizer.from_pretrained("EleutherAI/gpt-j-6B"),
+        low_cpu_mem_usage=True,
+        device_map="auto",
+    )
 
     output = model.generate("Hello, my name is", device=torch.device("cuda"))
     print(model.tokenizer.decode(output[0].tolist()))
