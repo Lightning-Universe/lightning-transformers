@@ -38,7 +38,7 @@ Here is an example of training `bert-base-cased <https://huggingface.co/bert-bas
         max_length=512,
         tokenizer=tokenizer,
     )
-    model = TextClassificationTransformer(pretrained_model_name_or_path="bert-base-cased")
+    model = TextClassificationTransformer(pretrained_model_name_or_path="bert-base-cased", num_labels=dm.num_classes)
 
     trainer = pl.Trainer(accelerator="auto", devices="auto", max_epochs=1)
 
@@ -65,7 +65,7 @@ Swapping to the RMSProp optimizer:
 
     class RMSPropTransformer(TextClassificationTransformer):
         def configure_optimizers(self):
-            optimizer = torch.optim.AdamW(self.parameters(), lr=1e-5)
+            optimizer = torch.optim.RMSprop(self.parameters(), lr=1e-5)
             # automatically find the total number of steps we need!
             num_training_steps, num_warmup_steps = self.compute_warmup(self.num_training_steps, num_warmup_steps=0.1)
             scheduler = transformers.get_linear_schedule_with_warmup(
@@ -86,7 +86,7 @@ Swapping to the RMSProp optimizer:
         max_length=512,
         tokenizer=tokenizer,
     )
-    model = RMSPropTransformer(pretrained_model_name_or_path="bert-base-cased")
+    model = RMSPropTransformer(pretrained_model_name_or_path="bert-base-cased", num_labels=dm.num_classes)
 
     trainer = pl.Trainer(accelerator="auto", devices="auto", max_epochs=1)
 
