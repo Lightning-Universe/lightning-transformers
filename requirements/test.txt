@@ -8,4 +8,4 @@ yapf
 flake8
 pre-commit
 mypy>=0.920
-wandb==0.10.13
+wandb>=0.10.22, <0.13.2
