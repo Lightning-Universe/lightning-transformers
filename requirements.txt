@@ -15,5 +15,9 @@ sentencepiece
 torchmetrics[text]
 Pillow
 
-# todo remove once protobuf fixed
-protobuf==3.20.1
+# From https://github.com/tensorflow/tensorboard/commit/fd4f5ff79374252e313c2e7e9b247bc49ab0d54d
+# Protobuf 4.0 is incompatible with TF. Force < 3.20 until they unblock upgrade.
+# See: http://b/182876485
+# See: https://github.com/protocolbuffers/protobuf/issues/9954#issuecomment-1128283911
+# See: https://cs.opensource.google/tensorflow/tensorflow/+/master:tensorflow/tools/pip_package/setup.py?q=protobuf
+protobuf >= 3.9.2, < 3.20
