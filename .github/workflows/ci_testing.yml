@@ -73,8 +73,10 @@ jobs:
 
     - name: Tests
       run: |
-        coverage run --source lightning_transformers -m py.test lightning_transformers tests -v --junitxml=junit/test-results-${{ runner.os }}-${{ matrix.python-version }}-${{ matrix.requires }}.xml
-        coverage xml
+        # suggested by https://github.com/Lightning-AI/lightning-transformers/pull/286#issuecomment-1243954206
+        #coverage run --source lightning_transformers -m py.test lightning_transformers tests -v --junitxml=junit/test-results-${{ runner.os }}-${{ matrix.python-version }}-${{ matrix.requires }}.xml
+        python -m py.test lightning_transformers tests -v
+        #coverage xml
 
     - name: Upload pytest test results
       uses: actions/upload-artifact@v3
