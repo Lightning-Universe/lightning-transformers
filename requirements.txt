@@ -14,6 +14,3 @@ datasets
 sentencepiece
 torchmetrics[text]
 Pillow
-
-# todo remove once protobuf fixed
-protobuf==3.20.1
