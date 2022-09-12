@@ -109,14 +109,19 @@ def test_pipeline_kwargs():
             return "task_name"
 
     cls_mock = MagicMock()
+    tokenizer = MagicMock()
     model = TestModel(
-        cls_mock, pretrained_model_name_or_path="prajjwal1/bert-tiny", pipeline_kwargs=dict(device=0), foo="bar"
+        cls_mock,
+        pretrained_model_name_or_path="prajjwal1/bert-tiny",
+        tokenizer=tokenizer,
+        pipeline_kwargs=dict(device=0),
+        foo="bar",
     )
 
     with patch("lightning_transformers.core.model.hf_transformers_pipeline") as pipeline_mock:
         model.hf_pipeline
         pipeline_mock.assert_called_once_with(
-            task="task_name", model=cls_mock.from_pretrained.return_value, tokenizer=None, device=0
+            task="task_name", model=cls_mock.from_pretrained.return_value, tokenizer=tokenizer, device=0
         )
 
 
