@@ -26,9 +26,7 @@ from torch.optim import Optimizer
 
 class TransformersBaseFinetuning(BaseFinetuning):
     def __init__(self, attr_names: Union[str, List[str]] = "backbone", train_bn: bool = True):
-        r"""
-
-        TransformersBaseFinetuning can be used to create a custom Finetuning Callback.
+        r"""`TransformersBaseFinetuning` can be used to create a custom Finetuning Callback.
 
         Override ``finetune_function`` to put your unfreeze logic.
 
@@ -36,7 +34,6 @@ class TransformersBaseFinetuning(BaseFinetuning):
             attr_names: Name(s) of the module attributes of the model to be frozen.
 
             train_bn: Whether to train Batch Norm layer
-
         """
 
         self.attr_names = [attr_names] if isinstance(attr_names, str) else attr_names
