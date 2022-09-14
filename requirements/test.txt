@@ -1,11 +1,9 @@
 coverage>5.2.0,<6.3
 codecov>=2.1
 pytest==6.0.0
+pytest-cov
 check-manifest
 twine==1.13.0
-isort
-yapf
-flake8
 pre-commit
 mypy>=0.920
 wandb>=0.10.22, <0.13.2

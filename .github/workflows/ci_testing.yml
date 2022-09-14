@@ -56,10 +56,7 @@ jobs:
 
     - name: Install dependencies
       run: |
-        pip install --requirement requirements.txt --upgrade --quiet --find-links https://download.pytorch.org/whl/cpu/torch_stable.html
-        pip install --requirement requirements/test.txt --quiet
-        pip install --requirement requirements/extra.txt --quiet
-        pip install .
+        pip install -e . --upgrade --quiet -r requirements/test.txt -r requirements/extra.txt --find-links https://download.pytorch.org/whl/cpu/torch_stable.html
         python --version
         pip --version
         pip list
@@ -73,14 +70,7 @@ jobs:
 
     - name: Tests
       run: |
-        coverage run --source lightning_transformers -m pytest lightning_transformers tests -v --junitxml=junit/test-results-${{ runner.os }}-${{ matrix.python-version }}-${{ matrix.requires }}.xml
-
-    - name: Upload pytest test results
-      uses: actions/upload-artifact@v3
-      with:
-        name: pytest-results-${{ runner.os }}-${{ matrix.python-version }}-${{ matrix.requires }}
-        path: junit/test-results-${{ runner.os }}-${{ matrix.python-version }}-${{ matrix.requires }}.xml
-      if: failure()
+        python -m pytest lightning_transformers tests -v --cov=lightning_transformers
 
     - name: Statistics
       if: success()
