@@ -73,7 +73,7 @@ jobs:
 
     - name: Tests
       run: |
-        coverage run --source lightning_transformers -m pytest -v --junitxml=junit/test-results-${{ runner.os }}-${{ matrix.python-version }}-${{ matrix.requires }}.xml
+        coverage run --source lightning_transformers -m pytest lightning_transformers tests -v --junitxml=junit/test-results-${{ runner.os }}-${{ matrix.python-version }}-${{ matrix.requires }}.xml
 
     - name: Upload pytest test results
       uses: actions/upload-artifact@v3
