@@ -45,10 +45,10 @@ warn_no_return = "False"
 # the list can be generated with:
 # mypy --no-error-summary 2>&1 | tr ':' ' ' | awk '{print $1}' | sort | uniq | sed 's/\.py//g; s|src/||g;  s|\/|\.|g' | xargs -I {} echo '"{}",'
 module = [
-    "lightning_transformers.callbacks",
-    "lightning_transformers.core",
-    "lightning_transformers.plugins",
-    "lightning_transformers.task",
-    "lightning_transformers.utilities",
+    "lightning_transformers.callbacks.*",
+    "lightning_transformers.core.*",
+    "lightning_transformers.plugins.*",
+    "lightning_transformers.task.*",
+    "lightning_transformers.utilities.*",
 ]
 ignore_errors = "True"
