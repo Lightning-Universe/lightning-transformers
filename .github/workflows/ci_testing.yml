@@ -72,20 +72,18 @@ jobs:
         key: pl-transformers-cache-${{ hashFiles('tests/conftest.py') }}
 
     - name: Tests
-      working-directory: tests
       run: |
-        coverage run --source lightning_transformers -m pytest lightning_transformers tests -v --junitxml=results-${{ runner.os }}-${{ matrix.python-version }}-${{ matrix.requires }}.xml
+        coverage run --source lightning_transformers -m pytest lightning_transformers tests -v --junitxml=junit/test-results-${{ runner.os }}-${{ matrix.python-version }}-${{ matrix.requires }}.xml
 
     - name: Upload pytest test results
       uses: actions/upload-artifact@v3
       with:
         name: pytest-results-${{ runner.os }}-${{ matrix.python-version }}-${{ matrix.requires }}
-        path: tests/results-${{ runner.os }}-${{ matrix.python-version }}-${{ matrix.requires }}.xml
+        path: junit/test-results-${{ runner.os }}-${{ matrix.python-version }}-${{ matrix.requires }}.xml
       if: failure()
 
     - name: Statistics
       if: success()
-      working-directory: tests
       run: |
         coverage report
         coverage xml
@@ -94,7 +92,7 @@ jobs:
       uses: codecov/codecov-action@v3
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
-        file: tests/coverage.xml
+        file: ./coverage.xml
         flags: unittests
         env_vars: OS,PYTHON
         name: codecov-umbrella
