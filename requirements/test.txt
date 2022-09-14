@@ -1,7 +1,6 @@
-coverage>5.2.0,<6.3
-codecov>=2.1
+coverage==6.2
+codecov==2.1
 pytest==6.0.0
 pytest-cov==3.0.0
 pre-commit
-mypy>=0.920
 wandb>=0.10.22, <0.13.2
