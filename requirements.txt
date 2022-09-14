@@ -1,4 +1,4 @@
-pytorch-lightning>=1.6.0
+pytorch-lightning>=1.7.0
 torch>=1.10.0
 numpy
 tqdm
@@ -7,13 +7,10 @@ tqdm
 torchmetrics>=0.7.0
 
 # huggingface
-transformers>=4.11.2
+transformers>=4.21.0
 datasets
 
 # task-specific
 sentencepiece
 torchmetrics[text]
 Pillow
-
-# todo remove once protobuf fixed
-protobuf==3.20.1

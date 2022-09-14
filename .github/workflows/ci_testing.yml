@@ -13,7 +13,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-20.04, macOS-10.15]
+        os: [ubuntu-22.04, macOS-12]
         python-version: [3.8]
         requires: ['minimal', 'latest']
 
@@ -36,8 +36,10 @@ jobs:
     - name: Set min. dependencies
       if: matrix.requires == 'minimal'
       run: |
-        python -c "fpath = 'requirements.txt' ; req = open(fpath).read().replace('>=', '==') ; open(fpath, 'w').write(req)"
-        python -c "fpath = 'requirements/test.txt' ; req = open(fpath).read().replace('>=', '==') ; open(fpath, 'w').write(req)"
+        fpath = 'requirements.txt' ; req = open(fpath).read().replace('>=', '==') ; open(fpath, 'w').write(req)
+        fpath = 'requirements/extra.txt' ; req = open(fpath).read().replace('>=', '==') ; open(fpath, 'w').write(req)
+        fpath = 'requirements/test.txt' ; req = open(fpath).read().replace('>=', '==') ; open(fpath, 'w').write(req)  # FIXME
+      shell: python
 
     # Note: This uses an internal pip API and may not always work
     # https://github.com/actions/cache/blob/master/examples.md#multiple-oss-in-a-workflow
@@ -56,10 +58,7 @@ jobs:
 
     - name: Install dependencies
       run: |
-        pip install --requirement requirements.txt --upgrade --quiet --find-links https://download.pytorch.org/whl/cpu/torch_stable.html
-        pip install --requirement requirements/test.txt --quiet
-        pip install --requirement requirements/extra.txt --quiet
-        pip install .
+        pip install -e . --upgrade --quiet -r requirements/devel.txt --find-links https://download.pytorch.org/whl/cpu/torch_stable.html
         python --version
         pip --version
         pip list
@@ -73,20 +72,14 @@ jobs:
 
     - name: Tests
       run: |
-        coverage run --source lightning_transformers -m py.test lightning_transformers tests -v --junitxml=junit/test-results-${{ runner.os }}-${{ matrix.python-version }}-${{ matrix.requires }}.xml
-        coverage xml
-
-    - name: Upload pytest test results
-      uses: actions/upload-artifact@v3
-      with:
-        name: pytest-results-${{ runner.os }}-${{ matrix.python-version }}-${{ matrix.requires }}
-        path: junit/test-results-${{ runner.os }}-${{ matrix.python-version }}-${{ matrix.requires }}.xml
-      if: failure()
+        python -m pytest lightning_transformers tests -v --cov=lightning_transformers
+      shell: bash
 
     - name: Statistics
       if: success()
       run: |
         coverage report
+        coverage xml
 
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v3

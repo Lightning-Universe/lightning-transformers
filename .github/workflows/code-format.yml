@@ -24,18 +24,17 @@ jobs:
       - name: Run pre-commit hooks on all files
         run: pre-commit run --all-files
 
-  typing-check-mypy:
-    runs-on: ubuntu-20.04
-    steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-python@v4
-        with:
-          python-version: 3.8
-      - name: Install mypy
-        run: |
-          pip install mypy
-          pip list
-      - name: mypy
-        run: |
-          # TODO: disallow failure when fixed
-          mypy lightning_transformers || true
+# TODO
+#  typing-check-mypy:
+#    runs-on: ubuntu-20.04
+#    steps:
+#      - uses: actions/checkout@v3
+#      - uses: actions/setup-python@v4
+#        with:
+#          python-version: 3.8
+#      - name: Install mypy
+#        run: |
+#          pip install mypy==0.920 -r requirements.txt --find-links https://download.pytorch.org/whl/cpu/torch_stable.html
+#          pip list
+#      - name: mypy
+#        run: mypy lightning_transformers

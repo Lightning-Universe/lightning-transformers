@@ -19,6 +19,3 @@ known_first_party = [
 skip_glob = []
 profile = "black"
 line_length = 120
-
-[tool.autopep8]
-ignore = ["E731", "E203"]

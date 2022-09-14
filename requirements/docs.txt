@@ -6,7 +6,7 @@ pandoc>=1.0
 docutils>=0.16
 sphinxcontrib-fulltoc>=1.0
 sphinxcontrib-mockautodoc
-https://github.com/PyTorchLightning/lightning_sphinx_theme/archive/master.zip#egg=pt-lightning-sphinx-theme
+pt-lightning-sphinx-theme @ https://github.com/Lightning-AI/lightning_sphinx_theme/archive/master.zip
 sphinx-autodoc-typehints>=1.11.1  # required by: https://github.com/agronholm/sphinx-autodoc-typehints/pull/153
 sphinx-paramlinks>=0.4.0
 sphinx-togglebutton>=0.2
