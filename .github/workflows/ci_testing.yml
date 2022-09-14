@@ -38,7 +38,7 @@ jobs:
       run: |
         fpath = 'requirements.txt' ; req = open(fpath).read().replace('>=', '==') ; open(fpath, 'w').write(req)
         fpath = 'requirements/extra.txt' ; req = open(fpath).read().replace('>=', '==') ; open(fpath, 'w').write(req)
-        # fpath = 'requirements/test.txt' ; req = open(fpath).read().replace('>=', '==') ; open(fpath, 'w').write(req)  # FIXME
+        fpath = 'requirements/test.txt' ; req = open(fpath).read().replace('>=', '==') ; open(fpath, 'w').write(req)  # FIXME
       shell: python
 
     # Note: This uses an internal pip API and may not always work

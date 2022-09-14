@@ -20,5 +20,30 @@ skip_glob = []
 profile = "black"
 line_length = 120
 
-[tool.autopep8]
-ignore = ["E731", "E203"]
+
+[tool.mypy]
+files = [
+    "lightning_transformers",
+]
+install_types = "True"
+non_interactive = "True"
+disallow_untyped_defs = "True"
+ignore_missing_imports = "True"
+show_error_codes = "True"
+warn_redundant_casts = "True"
+warn_unused_configs = "True"
+warn_unused_ignores = "True"
+allow_redefinition = "True"
+# disable this rule as the Trainer attributes are defined in the connectors, not in its __init__
+disable_error_code = "attr-defined"
+# style choices
+warn_no_return = "False"
+
+# Ignore mypy errors for these files
+# TODO: the goal is for this to be empty
+[[tool.mypy.overrides]]
+# the list can be generated with:
+# mypy --no-error-summary 2>&1 | tr ':' ' ' | awk '{print $1}' | sort | uniq | sed 's/\.py//g; s|src/||g;  s|\/|\.|g' | xargs -I {} echo '"{}",'
+module = [
+]
+ignore_errors = "True"
