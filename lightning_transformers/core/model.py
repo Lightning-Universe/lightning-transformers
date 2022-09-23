@@ -12,23 +12,21 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 from pathlib import Path
-from typing import IO, TYPE_CHECKING, Any, Callable, Dict, Optional, Tuple, Type, Union
+from typing import IO, Any, Callable, Dict, Optional, Tuple, Type, Union
 
 import pytorch_lightning as pl
 import torch
 import transformers
 from pytorch_lightning.utilities import rank_zero_warn
-from transformers import AutoConfig, PreTrainedTokenizerBase
+from transformers import AutoConfig, Pipeline, PreTrainedTokenizerBase
 from transformers import pipeline as hf_transformers_pipeline
+from transformers.models.auto.auto_factory import _BaseAutoModelClass
 
 from lightning_transformers.utilities.deepspeed import enable_transformers_pretrained_deepspeed_sharding
 from lightning_transformers.utilities.imports import _ACCELERATE_AVAILABLE
 
 if _ACCELERATE_AVAILABLE:
     from accelerate import load_checkpoint_and_dispatch
-
-if TYPE_CHECKING:
-    from transformers import AutoModel, Pipeline
 
 
 class TaskTransformer(pl.LightningModule):
@@ -47,7 +45,7 @@ class TaskTransformer(pl.LightningModule):
 
     def __init__(
         self,
-        downstream_model_type: Type["AutoModel"],
+        downstream_model_type: Type[_BaseAutoModelClass],
         pretrained_model_name_or_path: Optional[str] = None,
         tokenizer: Optional[PreTrainedTokenizerBase] = None,
         pipeline_kwargs: Optional[dict] = None,
@@ -127,7 +125,7 @@ class TaskTransformer(pl.LightningModule):
         pass
 
     @property
-    def tokenizer(self) -> Optional["PreTrainedTokenizerBase"]:
+    def tokenizer(self) -> Optional[PreTrainedTokenizerBase]:
         if (
             self._tokenizer is None
             and hasattr(self, "trainer")  # noqa: W503
@@ -138,7 +136,7 @@ class TaskTransformer(pl.LightningModule):
         return self._tokenizer
 
     @tokenizer.setter
-    def tokenizer(self, tokenizer: "PreTrainedTokenizerBase") -> None:
+    def tokenizer(self, tokenizer: PreTrainedTokenizerBase) -> None:
         self._tokenizer = tokenizer
 
     @property
@@ -150,7 +148,7 @@ class TaskTransformer(pl.LightningModule):
         return None
 
     @property
-    def hf_pipeline(self) -> "Pipeline":
+    def hf_pipeline(self) -> Pipeline:
         if self._hf_pipeline is None:
             if self.hf_pipeline_task is not None:
                 self._hf_pipeline = hf_transformers_pipeline(
@@ -161,7 +159,7 @@ class TaskTransformer(pl.LightningModule):
         return self._hf_pipeline
 
     @hf_pipeline.setter
-    def hf_pipeline(self, pipeline: "Pipeline") -> None:
+    def hf_pipeline(self, pipeline: Pipeline) -> None:
         self._hf_pipeline = pipeline
 
     def hf_predict(self, *args, **kwargs) -> Any:
