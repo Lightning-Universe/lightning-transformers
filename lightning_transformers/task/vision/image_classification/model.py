@@ -11,16 +11,14 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-from typing import TYPE_CHECKING, Any, Dict, Type
+from typing import Any, Dict, Type
 
 import torch
 import transformers
 from torchmetrics import Accuracy, Precision, Recall
+from transformers.models.auto.auto_factory import _BaseAutoModelClass
 
 from lightning_transformers.core import TaskTransformer
-
-if TYPE_CHECKING:
-    from transformers import AutoModel, Pipeline
 
 
 class ImageClassificationTransformer(TaskTransformer):
@@ -34,7 +32,10 @@ class ImageClassificationTransformer(TaskTransformer):
     """
 
     def __init__(
-        self, *args, downstream_model_type: Type["AutoModel"] = transformers.AutoModelForImageClassification, **kwargs
+        self,
+        *args,
+        downstream_model_type: Type[_BaseAutoModelClass] = transformers.AutoModelForImageClassification,
+        **kwargs,
     ) -> None:
         super().__init__(downstream_model_type, *args, **kwargs)
         self.metrics = {}
@@ -83,6 +84,6 @@ class ImageClassificationTransformer(TaskTransformer):
         return "image-classification"
 
     @property
-    def hf_pipeline(self) -> "Pipeline":
+    def hf_pipeline(self) -> transformers.Pipeline:
         self._hf_pipeline_kwargs["feature_extractor"] = self.tokenizer
         return super().hf_pipeline

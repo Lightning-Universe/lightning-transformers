@@ -11,16 +11,14 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-from typing import TYPE_CHECKING, Type
+from typing import Type
 
 import torch
 import transformers
 from torchmetrics import Accuracy, Precision, Recall
+from transformers.models.auto.auto_factory import _BaseAutoModelClass
 
 from lightning_transformers.core import TaskTransformer
-
-if TYPE_CHECKING:
-    from transformers import AutoModel
 
 
 class MultipleChoiceTransformer(TaskTransformer):
@@ -34,7 +32,10 @@ class MultipleChoiceTransformer(TaskTransformer):
     """
 
     def __init__(
-        self, *args, downstream_model_type: Type["AutoModel"] = transformers.AutoModelForMultipleChoice, **kwargs
+        self,
+        *args,
+        downstream_model_type: Type[_BaseAutoModelClass] = transformers.AutoModelForMultipleChoice,
+        **kwargs,
     ) -> None:
         super().__init__(downstream_model_type, *args, **kwargs)
 

@@ -21,7 +21,7 @@ def test_smoke_train(hf_cache_path):
         dataset_name="conll2003",
         preprocessing_num_workers=1,
         label_all_tokens=False,
-        revision="master",
+        revision="main",
         limit_test_samples=64,
         limit_val_samples=64,
         limit_train_samples=64,

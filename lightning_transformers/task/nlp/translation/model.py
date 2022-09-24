@@ -11,17 +11,15 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-from typing import TYPE_CHECKING, Type
+from typing import Type
 
 import transformers
 from torchmetrics.text.bleu import BLEUScore
 from transformers import MBartTokenizer
+from transformers.models.auto.auto_factory import _BaseAutoModelClass
 
 from lightning_transformers.core.seq2seq.model import Seq2SeqTransformer
 from lightning_transformers.task.nlp.translation import TranslationDataModule
-
-if TYPE_CHECKING:
-    from transformers import AutoModel
 
 
 class TranslationTransformer(Seq2SeqTransformer):
@@ -39,7 +37,7 @@ class TranslationTransformer(Seq2SeqTransformer):
     def __init__(
         self,
         *args,
-        downstream_model_type: Type["AutoModel"] = transformers.AutoModelForSeq2SeqLM,
+        downstream_model_type: Type[_BaseAutoModelClass] = transformers.AutoModelForSeq2SeqLM,
         n_gram: int = 4,
         smooth: bool = False,
         **kwargs,
