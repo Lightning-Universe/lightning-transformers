@@ -1,4 +1,5 @@
 pytorch-lightning>=1.7.0
+lightning-utilities>=0.3.0
 torch>=1.10.0
 numpy
 tqdm
