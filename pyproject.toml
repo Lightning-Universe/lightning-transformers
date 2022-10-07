@@ -81,4 +81,3 @@ module = [
     "lightning_transformers.task.nlp.summarization.model",
 ]
 ignore_errors = "True"
-
