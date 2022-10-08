@@ -52,6 +52,7 @@ module = [
     'lightning_transformers.task.nlp.token_classification.*',
     'lightning_transformers.task.nlp.question_answering.*',
     'lightning_transformers.task.nlp.question_answering.datasets.squad.*',
+    'lightning_transformers.task.nlp.masked_language_modeling.*',
     'lightning_transformers.task.nlp.multiple_choice.*',
     'lightning_transformers.task.nlp.multiple_choice.datasets.race.*',
     'lightning_transformers.task.nlp.language_modeling.*',
