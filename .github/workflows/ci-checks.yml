@@ -1,0 +1,32 @@
+name: General checks
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}-${{ github.head_ref }}
+  cancel-in-progress: ${{ ! (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/release/')) }}
+
+jobs:
+  check-code:
+    uses: Lightning-AI/utilities/.github/workflows/check-code.yml@v0.1.0
+
+  check-schema:
+    uses: Lightning-AI/utilities/.github/workflows/check-schema.yml@v0.1.0
+    with:
+      azure-dir: ""
+
+  check-package:
+    uses: Lightning-AI/utilities/.github/workflows/check-package.yml@v0.1.0
+    with:
+      import-name: "lightning_transformers"
+      pypi-name: "lightning-transformers"
+
+# TODO: use also this after resolving bug with actions: https://github.com/Lightning-AI/utilities/pull/51
+#  check-docs:
+#    uses: Lightning-AI/utilities/.github/workflows/check-docs.yml@main
+#    with:
+#      requirements-file: "docs/requirements.txt"
