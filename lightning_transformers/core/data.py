@@ -165,7 +165,7 @@ class TransformerDataModule(pl.LightningDataModule):
                 dataset[column_name] = dataset[column_name].select(indices)
         return dataset
 
-    def state_dict(self) -> None:
+    def state_dict(self) -> Dict[str, Any]:
         return {"tokenizer": self.tokenizer}
 
     def load_state_dict(self, state_dict: Dict[str, Any]) -> None:
