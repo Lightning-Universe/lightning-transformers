@@ -1,11 +1,4 @@
-pytorch-lightning>=1.7.0
-lightning-utilities>=0.3.0
-torch>=1.10.0
-numpy
-tqdm
-
-#metrics
-torchmetrics>=0.7.0
+pytorch-lightning>=1.8.0
 
 # huggingface
 transformers>=4.21.0
