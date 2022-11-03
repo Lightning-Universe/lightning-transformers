@@ -6,6 +6,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.2.4] - 2022-11-03
 
-### Added
+### Changed
 
 - Added support for Lightning v1.8.0 ([#297](https://github.com/Lightning-AI/lightning-transformers/pull/297))
