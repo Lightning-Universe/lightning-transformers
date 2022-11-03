@@ -6,4 +6,5 @@ datasets
 
 # task-specific
 sentencepiece
+torchmetrics[text]
 Pillow
