@@ -26,7 +26,7 @@ setup(
     author=ltf.__author__,
     author_email=ltf.__author_email__,
     url=ltf.__homepage__,
-    download_url="https://github.com/PyTorchLightning/lightning-transformers",
+    download_url="https://github.com/Lightning-AI/lightning-transformers",
     license=ltf.__license__,
     packages=find_packages(exclude=["tests", "docs"]),
     long_description=long_description,
@@ -39,9 +39,9 @@ setup(
     extras_require=extras,
     install_requires=setup_tools._load_requirements(_PATH_ROOT),
     project_urls={
-        "Bug Tracker": "https://github.com/PyTorchLightning/lightning-transformers/issues",
+        "Bug Tracker": "https://github.com/Lightning-AI/lightning-transformers/issues",
         "Documentation": "https://lightning-transformers.readthedocs.io/en/stable/",
-        "Source Code": "https://github.com/PyTorchLightning/lightning-transformers",
+        "Source Code": "https://github.com/Lightning-AI/lightning-transformers",
     },
     classifiers=[
         "Environment :: Console",

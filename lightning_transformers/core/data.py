@@ -165,11 +165,11 @@ class TransformerDataModule(pl.LightningDataModule):
                 dataset[column_name] = dataset[column_name].select(indices)
         return dataset
 
-    def on_save_checkpoint(self, checkpoint: Dict[str, Any]) -> None:
-        checkpoint["tokenizer"] = self.tokenizer
+    def state_dict(self) -> Dict[str, Any]:
+        return {"tokenizer": self.tokenizer}
 
-    def on_load_checkpoint(self, checkpoint: Dict[str, Any]) -> None:
-        self.tokenizer = checkpoint["tokenizer"]
+    def load_state_dict(self, state_dict: Dict[str, Any]) -> None:
+        self.tokenizer = state_dict["tokenizer"]
 
     def train_dataloader(self) -> DataLoader:
         cls = DataLoader if not self.streaming else IterableDataLoader
