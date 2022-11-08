@@ -1,3 +1,17 @@
+# Deprecation notice
+
+### Nov 8 2022
+
+This repository is being deprecated and **will be archived (read-only) on Nov 18, 2022**. Thanks to everyone who contributed to `lightning-transformers`, we feel it's time to move on.
+
+:hugs: Transformers can **already be easily trained using the Lightning :zap: Trainer**. Here's a recent example from the community: <https://sachinruk.github.io/blog/deep-learning/2022/11/07/t5-for-grammar-correction.html>. Note that there are **no limitations or workarounds**, things just work out of the box.
+
+The `lightning-transformers` repo explored the possibility to provide task-specific modules and pre-baked defaults, at the cost of introducing extra abstractions. In the spirit of keeping ourselves focused, these abstractions are not something we wish to continue supporting.
+
+If you liked `lightning-transformers` and want to continue developing it in the future, feel free to fork the repo and choose another name for the project.
+
+______________________________________________________________________
+
 <div align="center">
 
 <img src="docs/source/_static/images/logo.png" width="500px">
