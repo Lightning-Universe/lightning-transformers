@@ -1,8 +1,6 @@
-# Deprecation notice
+# Deprecation notice 🔒
 
-### Nov 18 2022
-
-**This repository has been archived (read-only) on Nov 18, 2022**. Thanks to everyone who contributed to `lightning-transformers`, we feel it's time to move on.
+**This repository has been archived (read-only) on Nov 18th, 2022**. Thanks to everyone who contributed to `lightning-transformers`, we feel it's time to move on.
 
 :hugs: Transformers can **already be easily trained using the Lightning :zap: Trainer**. Here's a recent example from the community: <https://sachinruk.github.io/blog/deep-learning/2022/11/07/t5-for-grammar-correction.html>. Note that there are **no limitations or workarounds**, things just work out of the box.
 
@@ -16,7 +14,7 @@ ______________________________________________________________________
 
 <img src="docs/source/_static/images/logo.png" width="500px">
 
-**Flexible components pairing :hugs: Transformers with [Pytorch Lightning](https://github.com/PyTorchLightning/pytorch-lightning)**
+**Flexible components pairing :hugs: Transformers with [Pytorch Lightning](https://github.com/PyTorchLightning/pytorch-lightning) :zap:**
 
 ______________________________________________________________________
 
