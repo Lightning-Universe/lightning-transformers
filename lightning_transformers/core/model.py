@@ -76,7 +76,9 @@ class TaskTransformer(pl.LightningModule):
                 pretrained_model_name_or_path, **self.model_data_kwargs
             )
         else:
-            config = AutoConfig.from_pretrained(pretrained_model_name_or_path, **self.model_data_kwargs)
+            config = AutoConfig.from_pretrained(
+                pretrained_model_name_or_path=self.model_data_kwargs["pretrained_model"], **self.model_data_kwargs
+            )
             self.model = self.downstream_model_type.from_config(config)
 
     def configure_optimizers(self) -> Dict:
