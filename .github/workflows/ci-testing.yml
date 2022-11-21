@@ -15,7 +15,7 @@ jobs:
       matrix:
         os: [ubuntu-22.04, macOS-12]
         python-version: [3.8]
-        requires: ['minimal', 'latest']
+        requires: ['oldest', 'latest']
 
     # Timeout: https://stackoverflow.com/a/59076067/4521646
     timeout-minutes: 35
@@ -48,11 +48,19 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-${{ matrix.python-version }}-${{ matrix.requires }}-pip-
 
+    - name: Set min. dependencies
+      if: matrix.requires == 'oldest'
+      run: |
+        for fpath in ('requirements.txt', 'requirements/extra.txt'):
+            req = open(fpath).read().replace('>=', '==')
+            open(fpath, 'w').write(req)
+      shell: python
+
     - name: Install dependencies
       run: |
-        pip install -e . --upgrade --quiet -r requirements/devel.txt --find-links https://download.pytorch.org/whl/cpu/torch_stable.html
-        python --version
         pip --version
+        pip install -e . --upgrade --find-links https://download.pytorch.org/whl/cpu/torch_stable.html
+        pip install -U -q -r requirements/devel.txt -f https://download.pytorch.org/whl/cpu/torch_stable.html
         pip list
       shell: bash
 
