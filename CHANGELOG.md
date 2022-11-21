@@ -12,6 +12,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed loading HF model ([#306](https://github.com/Lightning-AI/lightning-transformers/pull/306))
 
 
+- Fixed passing config name to `CNNDailyMailSummarizationDataModule` ([#310](https://github.com/Lightning-AI/lightning-transformers/pull/310))
+
+
 ## [0.2.4] - 2022-11-03
 
 ### Changed
