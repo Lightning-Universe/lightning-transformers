@@ -151,6 +151,7 @@ class TaskTransformer(pl.LightningModule):
     def hf_pipeline(self) -> Pipeline:
         if self._hf_pipeline is None:
             if self.hf_pipeline_task is not None:
+                self._hf_pipeline_kwargs["device"] = self._hf_pipeline_kwargs.get("device", self.device)
                 self._hf_pipeline = hf_transformers_pipeline(
                     task=self.hf_pipeline_task, model=self.model, tokenizer=self.tokenizer, **self._hf_pipeline_kwargs
                 )
