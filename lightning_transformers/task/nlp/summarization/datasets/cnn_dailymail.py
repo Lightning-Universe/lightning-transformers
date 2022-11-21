@@ -17,8 +17,8 @@ from lightning_transformers.task.nlp.summarization import SummarizationDataModul
 
 
 class CNNDailyMailSummarizationDataModule(SummarizationDataModule):
-    def __init__(self, *args, dataset_name: str = "cnn_dailymail", **kwargs):
-        super().__init__(*args, dataset_name=dataset_name, **kwargs)
+    def __init__(self, *args, dataset_name: str = "cnn_dailymail", config_name: str = "3.0.0", **kwargs):
+        super().__init__(*args, dataset_name=dataset_name, dataset_config_name=config_name, **kwargs)
 
     @property
     def source_target_column_names(self) -> Tuple[str, str]:

@@ -7,29 +7,29 @@ import transformers
 from transformers import AutoTokenizer
 
 from lightning_transformers.task.nlp.summarization import (
+    CNNDailyMailSummarizationDataModule,
     SummarizationDataModule,
     SummarizationTransformer,
-    XsumSummarizationDataModule,
 )
 
-_MODEL_T5_TINY = "hf-internal-testing/tiny-random-t5"
+_MODEL_TINY = "patrickvonplaten/t5-tiny-random"
 
 
 @pytest.mark.skipif(sys.platform == "win32", reason="Currently Windows is not supported")
 def test_smoke_train(hf_cache_path):
-    tokenizer = AutoTokenizer.from_pretrained(pretrained_model_name_or_path=_MODEL_T5_TINY)
+    tokenizer = AutoTokenizer.from_pretrained(pretrained_model_name_or_path=_MODEL_TINY)
     model = SummarizationTransformer(
-        pretrained_model_name_or_path=_MODEL_T5_TINY,
+        pretrained_model_name_or_path=_MODEL_TINY,
         use_stemmer=True,
         val_target_max_length=142,
         num_beams=None,
         compute_generate_metrics=True,
     )
-    dm = XsumSummarizationDataModule(
+    dm = CNNDailyMailSummarizationDataModule(
         limit_train_samples=64,
         limit_val_samples=64,
         limit_test_samples=64,
-        batch_size=1,
+        batch_size=32,
         max_source_length=128,
         max_target_length=128,
         cache_dir=hf_cache_path,
@@ -43,8 +43,8 @@ def test_smoke_train(hf_cache_path):
 @pytest.mark.skipif(sys.platform == "win32", reason="Currently Windows is not supported")
 def test_smoke_predict():
     model = SummarizationTransformer(
-        pretrained_model_name_or_path=_MODEL_T5_TINY,
-        tokenizer=AutoTokenizer.from_pretrained(pretrained_model_name_or_path=_MODEL_T5_TINY),
+        pretrained_model_name_or_path=_MODEL_TINY,
+        tokenizer=AutoTokenizer.from_pretrained(pretrained_model_name_or_path=_MODEL_TINY),
     )
 
     y = model.hf_predict(
