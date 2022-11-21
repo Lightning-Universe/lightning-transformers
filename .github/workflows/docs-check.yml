@@ -2,7 +2,8 @@ name: "Docs check"
 # https://github.com/marketplace/actions/sphinx-build
 
 on:
-- pull_request
+  - push
+  - pull_request
 
 jobs:
   test-docs:
