@@ -1,10 +1,10 @@
-pytorch-lightning>=1.7.0
+pytorch-lightning >=1.7.0
 
 # huggingface
-transformers>=4.21.0
-datasets
+transformers >=4.21.0
+datasets >2.0.0
 
 # task-specific
-sentencepiece
-torchmetrics[text]
-Pillow
+sentencepiece >=0.1.96
+torchmetrics[text] >=0.8.0
+Pillow >=9.0.0
