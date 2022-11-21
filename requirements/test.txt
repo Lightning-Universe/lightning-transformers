@@ -1,6 +1,6 @@
-coverage==6.2
-codecov==2.1
-pytest==6.0.0
-pytest-cov==3.0.0
+coverage ==6.2
+codecov ==2.1
+pytest ==7.2.0
+pytest-cov ==3.0.0
 pre-commit
-wandb==0.10.22
+wandb ==0.10.22
