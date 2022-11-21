@@ -12,12 +12,13 @@ from lightning_transformers.task.nlp.summarization import (
     XsumSummarizationDataModule,
 )
 
+_MODEL_T5_TINY = "hf-internal-testing/tiny-random-t5"
 
 @pytest.mark.skipif(sys.platform == "win32", reason="Currently Windows is not supported")
 def test_smoke_train(hf_cache_path):
-    tokenizer = AutoTokenizer.from_pretrained(pretrained_model_name_or_path="patrickvonplaten/t5-tiny-random")
+    tokenizer = AutoTokenizer.from_pretrained(pretrained_model_name_or_path=_MODEL_T5_TINY)
     model = SummarizationTransformer(
-        pretrained_model_name_or_path="patrickvonplaten/t5-tiny-random",
+        pretrained_model_name_or_path=_MODEL_T5_TINY,
         use_stemmer=True,
         val_target_max_length=142,
         num_beams=None,
@@ -41,8 +42,8 @@ def test_smoke_train(hf_cache_path):
 @pytest.mark.skipif(sys.platform == "win32", reason="Currently Windows is not supported")
 def test_smoke_predict():
     model = SummarizationTransformer(
-        pretrained_model_name_or_path="patrickvonplaten/t5-tiny-random",
-        tokenizer=AutoTokenizer.from_pretrained(pretrained_model_name_or_path="patrickvonplaten/t5-tiny-random"),
+        pretrained_model_name_or_path=_MODEL_T5_TINY,
+        tokenizer=AutoTokenizer.from_pretrained(pretrained_model_name_or_path=_MODEL_T5_TINY),
     )
 
     y = model.hf_predict(
