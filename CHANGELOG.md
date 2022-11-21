@@ -12,6 +12,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed passing config name to `CNNDailyMailSummarizationDataModule` ([#310](https://github.com/Lightning-AI/lightning-transformers/pull/310))
 
 
+- Fixed move pipeline to `self.device` as default ([#309](https://github.com/Lightning-AI/lightning-transformers/pull/309))
+
+
 ## [0.2.4] - 2022-11-03
 
 ### Changed
