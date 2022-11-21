@@ -24,7 +24,7 @@ import lightning_transformers  # noqa: E402
 # -- Project information -----------------------------------------------------
 
 project = "Lightning Transformers"
-copyright = "2020-2021, PyTorch Lightning"
+copyright = "2020-2022, PyTorch Lightning"
 author = "PyTorch Lightning"
 
 # -- General configuration ---------------------------------------------------
@@ -36,8 +36,6 @@ extensions = [
     "sphinx.ext.autodoc",
     "sphinx.ext.doctest",
     "sphinx.ext.intersphinx",
-    # 'sphinx.ext.todo',
-    # 'sphinx.ext.coverage',
     "sphinx.ext.autosummary",
     "sphinx.ext.napoleon",
     "sphinx.ext.imgmath",
