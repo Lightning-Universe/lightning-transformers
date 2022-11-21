@@ -14,6 +14,7 @@ from lightning_transformers.task.nlp.summarization import (
 
 _MODEL_T5_TINY = "hf-internal-testing/tiny-random-t5"
 
+
 @pytest.mark.skipif(sys.platform == "win32", reason="Currently Windows is not supported")
 def test_smoke_train(hf_cache_path):
     tokenizer = AutoTokenizer.from_pretrained(pretrained_model_name_or_path=_MODEL_T5_TINY)
