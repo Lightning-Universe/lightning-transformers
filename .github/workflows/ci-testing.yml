@@ -15,7 +15,7 @@ jobs:
       matrix:
         os: [ubuntu-22.04, macOS-12]
         python-version: [3.8]
-        requires: ['minimal', 'latest']
+        requires: ['oldest', 'latest']
 
     # Timeout: https://stackoverflow.com/a/59076067/4521646
     timeout-minutes: 35
@@ -47,6 +47,14 @@ jobs:
         key: ${{ runner.os }}-${{ matrix.python-version }}-${{ matrix.requires }}-pip-${{ hashFiles('requirements.txt') }}
         restore-keys: |
           ${{ runner.os }}-${{ matrix.python-version }}-${{ matrix.requires }}-pip-
+
+    - name: Set min. dependencies
+      if: matrix.requires == 'oldest'
+      run: |
+        for fpath in ('requirements.txt', 'requirements/extra.txt', 'requirements/test.txt'):
+            req = open(fpath).read().replace('>=', '==')
+            open(fpath, 'w').write(req)
+      shell: python
 
     - name: Install dependencies
       run: |
