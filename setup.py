@@ -1,14 +1,23 @@
 #!/usr/bin/env python
 import os
 import re
+from importlib.util import module_from_spec, spec_from_file_location
 from typing import List
 
 from setuptools import find_packages, setup
 
-import lightning_transformers as ltf
-
 _PATH_ROOT = os.path.dirname(__file__)
 _PATH_REQUIRE = os.path.join(_PATH_ROOT, "requirements")
+
+
+def _load_py_module(fname, pkg="lightning_transformers"):
+    spec = spec_from_file_location(os.path.join(pkg, fname), os.path.join(_PATH_ROOT, pkg, fname))
+    py = module_from_spec(spec)
+    spec.loader.exec_module(py)
+    return py
+
+
+ltf = _load_py_module("__init__.py")
 
 
 def _load_requirements(path_dir: str, file_name: str = "requirements.txt", comment_char: str = "#") -> List[str]:
@@ -106,14 +115,14 @@ setup(
         "Natural Language :: English",
         # How mature is this project? Common values are
         #   3 - Alpha, 4 - Beta, 5 - Production/Stable
-        "Development Status :: 3 - Alpha",
+        "Development Status :: 4 - Beta",
         # Indicate who your project is intended for
         "Intended Audience :: Developers",
         "Topic :: Scientific/Engineering :: Artificial Intelligence",
         "Topic :: Scientific/Engineering :: Image Recognition",
         "Topic :: Scientific/Engineering :: Information Analysis",
         # Pick your license as you wish
-        # 'License :: OSI Approved :: BSD License',
+        "License :: OSI Approved :: Apache Software License",
         "Operating System :: OS Independent",
         # Specify the Python versions you support here. In particular, ensure
         # that you indicate whether you support Python 2, Python 3 or both.
